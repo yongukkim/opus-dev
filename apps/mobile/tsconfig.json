@@ -1,0 +1,10 @@
+{
+  "extends": "@opus/config/typescript/base",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "types": ["expo"]
+  },
+  "include": ["App.tsx", "index.js", ".expo/types/**/*.ts", "expo-env.d.ts"]
+}

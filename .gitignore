@@ -1,0 +1,48 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build / cache
+.turbo
+.next
+out
+dist
+build
+*.tsbuildinfo
+
+# Expo / React Native
+.expo
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Environment — never commit secrets (GCP Secret Manager per SECURITY_GOVERNANCE.md)
+.env
+.env.local
+.env.*.local
+!.env.example
+!**/.env.*.example
+
+# Docker DB volumes & env (Mac Mini / local; never commit secrets)
+infrastructure/.env
+infrastructure/data/
+infrastructure/docker/.env
+infrastructure/docker/data/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS / IDE
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Coverage
+coverage

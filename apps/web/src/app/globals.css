@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  /**
+   * Brighter champagne brass — multi-stop gradients for surface light / shade.
+   * Accent aligns with `opus.gold` in tailwind preset.
+   */
+  --opus-brass-highlight: #f2e9dc;
+  --opus-brass-mid: #e4d2b8;
+  --opus-brass-body: #d6bc96;
+  --opus-brass-shadow: #c4a06e;
+  --opus-brass-accent: #deb892;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+  }
+}
+
+body {
+  @apply min-h-screen bg-opus-charcoal text-opus-warm antialiased;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--opus-brass-accent) 48%, transparent);
+  color: #000000;
+}
+
+/**
+ * Display type — gradient simulates rolled brass (highlight → body → shade).
+ */
+@layer components {
+  .opus-text-metallic {
+    background-image: linear-gradient(
+      138deg,
+      var(--opus-brass-highlight) 0%,
+      var(--opus-brass-accent) 34%,
+      var(--opus-brass-body) 58%,
+      var(--opus-brass-shadow) 82%,
+      #c9a97e 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+  }
+
+  .opus-text-metallic-soft {
+    background-image: linear-gradient(
+      135deg,
+      #faf6ef 0%,
+      var(--opus-brass-accent) 42%,
+      var(--opus-brass-shadow) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /**
+   * Primary pill — linear stops = 면의 전반적 명암; ::before = 상단 하이라이트; ::after = 하단·모서리 음영.
+   */
+  .opus-surface-metallic {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-image: linear-gradient(
+      142deg,
+      #f7f0e6 0%,
+      #ead8c4 18%,
+      #dcc7a8 40%,
+      #c9a972 62%,
+      #b89158 82%,
+      #d4b88a 100%
+    );
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -10px 24px rgba(72, 48, 28, 0.22),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+      0 4px 22px rgba(0, 0, 0, 0.38);
+  }
+
+  .opus-surface-metallic::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse 115% 85% at 18% 12%,
+      rgba(255, 252, 248, 0.55) 0%,
+      rgba(255, 250, 242, 0.12) 38%,
+      transparent 62%
+    );
+    pointer-events: none;
+  }
+
+  .opus-surface-metallic::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.035) 2px,
+        rgba(255, 255, 255, 0.035) 3px
+      ),
+      linear-gradient(
+        168deg,
+        transparent 0%,
+        transparent 42%,
+        rgba(58, 38, 22, 0.14) 88%,
+        rgba(42, 28, 16, 0.2) 100%
+      );
+    pointer-events: none;
+  }
+
+  .opus-surface-metallic:hover {
+    filter: brightness(1.035);
+  }
+
+  .opus-surface-metallic:active {
+    filter: brightness(0.97);
+  }
+}

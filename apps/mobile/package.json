@@ -1,0 +1,32 @@
+{
+  "name": "@opus/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "dev": "expo start",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .expo dist"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.1.0",
+    "@opus/api": "workspace:*",
+    "expo": "~55.0.8",
+    "expo-status-bar": "~3.0.7",
+    "react": "19.0.0",
+    "react-native": "0.79.2",
+    "react-native-safe-area-context": "~5.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@opus/config": "workspace:*",
+    "@types/react": "~19.0.10",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.25.0"
+  }
+}
