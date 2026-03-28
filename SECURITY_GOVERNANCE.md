@@ -16,6 +16,20 @@ OPUS는 **향후 일본 법인 등에 사업·자산 양도가 이루어질 수 
 - 모든 API는 **JWT 기반 인증**을 필수로 하며, `HttpOnly`, `Secure` 쿠키 정책을 사용한다.
 - **RBAC(Role-Based Access Control):** '작가', '컬렉터', '관리자' 권한을 엄격히 분리하여 설계한다.
 
+#### 1.1 계단식 신원·연령 확인 (step-up: 권한이 필요할 때 인증한다)
+전 사용자에게 신분증을 요구하면 이탈이 커지므로, **최소 수집·단계적 강화**를 원칙으로 한다. (법률 자문이 아닌 **제품·엔지니어링 전제**이며, 출시 전 법무·규제 검토로 확정한다.)
+
+| 구분 | 수단 | 비고 |
+|------|------|------|
+| **일반 이용자 (Buyer / 컬렉터)** | **SNS·OAuth 로그인** + **「만 18세 이상」자가 진술 체크박스** | 신분증 불요. 동의·연령 진술 시각은 감사용으로만 최소 보관 (`buyer_age_self_attested_at` 등). |
+| **R-18 콘텐츠 구매·열람** | **신용카드 기반 연령·본인 확인** (결제/인증 PSP 등) | 일본에서는 **카드 보유·인증**이 성인 확인의 1차 수단으로 널리 쓰인다. **카드번호·CVV·신분증 이미지는 OPUS DB에 저장하지 않고**, 업체가 반환하는 **불투명 참조 ID·검증 시각**만 매핑한다 (`is_adult`, `credit_card_verification_ref`). |
+| **판매자 (Seller / 작가)** | **전문 eKYC 솔루션** (신분증 + 얼굴 대조 등) | **원본 이미지·파일 경로는 DB에 두지 않는다.** 업체 처리 결과·상태·참조 ID만 저장 (`seller_ekyc_status`, `seller_ekyc_external_ref`). |
+
+- **JA (要約):** 全員に身分証を求めず、**必要な権限のときだけ**段階的に強化する。買い手はSNS＋18歳以上チェック、R-18はカード認証、売り手はeKYC。画像パスやPANは当社DBに保存しない。
+- **EN (summary):** Do not require ID from everyone; **step up when a permission requires it.** Buyers: OAuth + 18+ attestation. R-18: card-based age verification (common in Japan). Sellers: full eKYC via vendor. No PAN, CVV, or ID image paths in the OPUS database—vendor references only.
+
+구현 시 `prisma/schema.prisma`의 필드명·주석과 본 절을 **동기화**하고, API·화면 분기에는 **ISO 27001 A.18.1.4 (§7) · CLAUDE.md §7** 추적 주석을 남긴다.
+
 ### 2. 데이터 보호 (Data Protection)
 - **PII(개인정보):** 일본 APPI 규정에 따라 이름, 이메일 등은 DB 저장 시 암호화하거나 식별 불가능하게 처리한다.
 - **The Chronicle:** 모든 소유권 변경 이력은 수정 불가능한(Immutable) 로그 형태로 설계하며, DB 수준에서 감사 추적(Audit Trail)이 가능해야 한다.

@@ -20,7 +20,7 @@ const preset = {
         },
       },
       fontFamily: {
-        /** Loaded via Next.js `next/font` in apps/web — variables `--font-cinzel`, `--font-noto`, `--font-mono-jb` */
+        /** Display/mono via Next `next/font` in apps/web (`--font-cinzel`, `--font-mono-jb`). Sans = system stack (no gstatic). */
         display: [
           "var(--font-cinzel)",
           "Georgia",
@@ -29,12 +29,20 @@ const preset = {
           "serif",
         ],
         sans: [
-          "var(--font-noto)",
           "ui-sans-serif",
           "system-ui",
-          "Segoe UI",
-          "Helvetica Neue",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          '"Segoe UI"',
+          "Roboto",
+          '"Helvetica Neue"',
           "Arial",
+          '"Apple SD Gothic Neo"',
+          '"Malgun Gothic"',
+          '"Noto Sans KR"',
+          '"Noto Sans JP"',
+          '"Hiragino Sans"',
+          '"Hiragino Kaku Gothic ProN"',
           "sans-serif",
         ],
         mono: ["var(--font-mono-jb)", "ui-monospace", "SFMono-Regular", "monospace"],

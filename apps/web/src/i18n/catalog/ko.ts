@@ -1,0 +1,279 @@
+import type { Messages } from "../types";
+
+export const ko: Messages = {
+  meta: {
+    siteDescription:
+      "OPUS — 작가 공증 디지털 아트 에디션과 The Chronicle. 수집·감상 경험을 위해 설계되었으며 투자 상품이 아닙니다.",
+    ogDescription:
+      "복제 불가 디지털 아트 아카이브 — 차콜, 샴페인 브라스, 출처와 Vault. 투자 상품이 아닙니다.",
+    tokushohoTitle: "특정상거래법 표시",
+    tokushohoDescription:
+      "일본 특정상거래법에 따른 표기(초안). 법무·세무 최종 확인 전 템플릿입니다.",
+    privacyTitle: "개인정보 처리방침",
+    privacyDescription:
+      "OPUS 개인정보 처리방침(초안). 법무·일본 APPI 확장 검토 전 템플릿입니다.",
+    termsTitle: "이용약관",
+    termsDescription:
+      "OPUS 서비스 이용약관(초안). 법무 최종 확정 전 템플릿입니다.",
+  },
+  a11y: {
+    primaryNav: "주요 메뉴",
+    utilityNav: "보조 링크",
+    language: "언어",
+    vaultNav: "Vault 메뉴",
+    designPhilosophy: "디자인 철학",
+    hero: "OPUS 히어로",
+    stats: "신뢰 지표",
+    cta: "행동 유도",
+    archivePreview: "아카이브 미리보기",
+  },
+  nav: { archive: "아카이브", vault: "Vault", legal: "법적 고지" },
+  auth: {
+    signIn: "로그인",
+    title: "로그인",
+    subtitle: "이용자는 Apple, Google, LINE으로 바로 시작합니다.",
+    roleLabel: "로그인 유형",
+    roleCollector: "이용자",
+    roleArtist: "작가",
+    continueWithApple: "Apple로 계속하기",
+    continueWithGoogle: "Google로 계속하기",
+    continueWithLine: "LINE으로 계속하기",
+    hintSoon: "준비 중",
+    consentPreamble: "계속하기를 누르면 ",
+    consentBetween: " 및 ",
+    consentConclude: "에 동의하는 것으로 간주합니다.",
+    ageCheckbox: "나는 만 18세 이상입니다.",
+    consentRequiredAlert:
+      "만 18세 이상임을 확인하고, 이용약관 및 개인정보처리방침에 동의해 주세요.",
+    ssoNotReadyAlert: "SSO 연동은 준비 중입니다. 곧 제공될 예정입니다.",
+    note: "현재는 UI만 제공됩니다. 실제 연동은 다음 단계에서 연결합니다.",
+  },
+  signup: {
+    title: "작가 등록",
+    subtitle: "작품 등록을 위한 작가 계정은 별도 등록 절차로 진행됩니다.",
+    roleLabel: "등록 유형",
+    roleCollector: "이용자",
+    roleArtist: "작가",
+    displayNameLabel: "표시 이름",
+    emailLabel: "이메일",
+    passwordLabel: "비밀번호",
+    passwordConfirmLabel: "비밀번호 확인",
+    passwordMismatchAlert: "비밀번호와 비밀번호 확인이 일치하지 않습니다.",
+    createAccount: "작가 계정 만들기",
+    consentPreamble: "가입을 진행하면 ",
+    signupNotReadyAlert: "작가 가입 처리는 준비 중입니다. 곧 제공될 예정입니다.",
+    alreadyHaveAccount: "이미 계정이 있나요?",
+    signInLink: "로그인",
+    note: "현재는 UI만 제공됩니다. 실제 가입/검증은 다음 단계에서 연결합니다.",
+  },
+  trust: {
+    line: "인증 에디션 · 출처 · 투자 상품 아님",
+    tokushoho: "특정상거래법 표시",
+    chronicle: "The Chronicle",
+    vaultShort: "Vault",
+  },
+  footer: {
+    about:
+      "디지털 원작의 아카이브 — 인증 에디션, 컬렉터 출처, Vault.",
+    design:
+      "디자인: Classic Luxury — near-black 차콜, 샴페인 브라스(그라데이션 금속), 웜 화이트, 절제된 장식. 투자·실물자산 상품이 아닙니다.",
+    archive: "아카이브",
+    vault: "Vault",
+    legal: "특정상거래법 표시",
+    privacy: "개인정보 처리방침",
+    terms: "이용약관",
+    chronicleTrust: "The Chronicle 기술을 통한 기록 무결성 검증",
+  },
+  legalPrivacy: {
+    back: "← 홈으로",
+    title: "개인정보 처리방침",
+    lead: "본 문서는 일본 시장·M&A 실사(DD) 및 개인정보보호법(APPI) 확장을 고려한 초안입니다. 법무 확정 후 갱신합니다.",
+    body:
+      "수집 항목, 이용 목적, 보관 기간, 제3자 제공·재위탁, 국외 이전, 개인정보 주체의 권리(열람·정정·삭제·이용정지), 문의 창구, 보안 조치를 정의합니다. 실제 운영 시 개인정보를 처리하는 시스템·로그·암호화 정책과 일치하도록 반드시 업데이트하세요.",
+  },
+  legalTerms: {
+    back: "← 홈으로",
+    title: "이용약관",
+    lead: "디지털 아트 에디션의 인증·소유·감상 경험을 규정합니다. 투자·금융 상품으로의 해석을 목적으로 하지 않습니다.",
+    body:
+      "서비스 범위, 계정·역할(작가·이용자·운영), 저작권·라이선스, The Chronicle 기록, 금지 행위, 책임 제한, 준거법·분쟁 해결 절차를 명시합니다. NFT는 기술 수단이며, 복제 불가능한 디지털 아트의 출처·에디션 표시를 위한 것입니다.",
+  },
+  vaultNav: {
+    overview: "개요",
+    collection: "컬렉션",
+    activity: "활동",
+    submit: "작품 등록",
+    myArtworks: "내 작품",
+    settings: "설정",
+  },
+  submitArtwork: {
+    kicker: "Artist",
+    title: "작품 등록",
+    subtitle: "작가 공식 등록을 위한 기본 정보를 입력하고 파일을 업로드하세요.",
+    artistNameLabel: "작가명(실명)",
+    nicknameLabel: "필명",
+    artworkTitleLabel: "작품 제목",
+    genreLabel: "장르",
+    genrePlaceholder: "장르를 선택하세요",
+    yearLabel: "제작 연도",
+    descriptionLabel: "작품 설명",
+    tagsLabel: "태그",
+    tagsHint: "쉼표로 구분 (예: abstract, monochrome, portrait)",
+    editionModeLabel: "에디션 타입",
+    editionModeUnique: "유일본 (1/1)",
+    editionModeLimited: "한정판 (복수 에디션)",
+    editionTotalLabel: "총 에디션 수",
+    editionTotalHint: "최대 20개까지 설정할 수 있습니다.",
+    initialMintLabel: "초기 발행 수량",
+    initialMintHint: "최초 등록 시 발행할 수량입니다. 총 에디션 수를 초과할 수 없습니다.",
+    numberingPolicyLabel: "에디션 번호 정책",
+    numberingPolicyAuto: "자동 부여",
+    numberingPolicyManual: "수동 지정",
+    lockEditionLabel: "총 에디션 수 잠금",
+    lockEditionHint: "제출 후 총 에디션 수 변경을 제한합니다.",
+    rightsConfirmLabel: "권리 확인",
+    rightsConfirmHint: "본인이 권리를 보유하거나 업로드 권한이 있음을 확인합니다.",
+    uploadLabel: "파일 업로드",
+    uploadHint: "이미지( JPG/PNG/WEBP ) 또는 영상( MP4/WEBM ). 최대 10MB.",
+    apiSaveOk: "저장되었습니다. 아카이브에서 확인할 수 있어요.",
+    apiSaveErr: "저장에 실패했습니다. 입력값과 파일을 확인해 주세요.",
+    saveDraft: "초안 저장",
+    submit: "제출하기",
+    previewTitle: "미리보기",
+  },
+  hero: {
+    kicker: "인증된 대체 불가능 디지털 아트 에디션",
+    line1:
+      "복제가 아닌, 당신만의 「디지털 원화」. 작가 공식 인증을 프라이빗 Vault로 이어 줍니다.",
+    line2:
+      "디지털 원작의 아카이브 — 진본성, 에디션, 컬렉터 출처가 하나의 기록으로 이어집니다.",
+    exploreArchive: "아카이브 둘러보기",
+    viewPremieres: "프리미어 보기",
+  },
+  design: {
+    title: "Classic Luxury",
+    body:
+      "딥 블랙에 가까운 차콜 캔버스에, 채도를 낮춘 샴페인 브라스(밝은 황동)를 포인트로 둡니다. CTA 등 금속 면은 다단 그라데이션과 아주 얕은 하이라이트·음영만으로 빛의 방향과 질감을 보여 주며, 원색 금·네온·저가형 광택은 쓰지 않습니다.",
+    note:
+      "본 서비스는 복제 불가 디지털 아트의 수집 경험을 위한 것이며, 실물자산이나 투자 상품으로 포지셔닝하지 않습니다.",
+  },
+  home: {
+    kicker: "OPUS",
+    title: "사진과 컬렉션을 위한 공간",
+    lead: "결제·안내는 이 사이트에서. 작품 감상은 모바일 앱에서.",
+    buyCta: "구매·결제하기",
+    legalLink: "특정상거래법 표시",
+    pillarChronicle: {
+      sub: "변조에 강한 기록",
+      body: "소유와 에디션의 연쇄를 하나의 기록으로 남깁니다. 감정과 한정판 정보를 분명히 보존합니다.",
+    },
+    pillarVault: {
+      sub: "프라이빗 보관",
+      body: "컬렉션의 위치와 접근을 역할에 따라 최소 권한으로 통제합니다.",
+    },
+    pillarPremieres: {
+      sub: "공식 인증 작품",
+      body: "작가 공식 인증과 한정 에디션. 감상은 모바일에서, 절차와 결제는 웹에서 진행합니다.",
+    },
+  },
+  stats: {
+    weekBest: "이번주 베스트",
+    monthBest: "이번달 베스트",
+    yearBest: "올해의 베스트",
+    caption: "선정 기준은 운영 정책에 따라 달라질 수 있습니다.",
+  },
+  archiveGrid: {
+    kicker: "Archive preview",
+    heading: "From the vault",
+    body:
+      "작가 공식 인증 에디션 중 주목할 만한 한정판을 먼저 보여 줍니다. 각 카드에서 출처와 판 정보를 확인할 수 있습니다.",
+    viewAll: "전체 보기",
+    artwork: "Artwork",
+  },
+  marketing: {
+    title: "컬렉션을 공식 기록과 함께",
+    body:
+      "아카이브 열람, Vault 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 투자 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
+    buy: "구매·결제하기",
+    openVault: "Vault 열기",
+  },
+  artworks: {
+    kicker: "Archive",
+    title: "Artworks",
+    body:
+      "인증된 디지털 아트 목록을 여기서 열람할 수 있습니다. 각 작품 페이지에서 출처·에디션 정보를 확인하세요.",
+    back: "← 홈으로",
+    editionLabel: "Edition:",
+    paginationPrev: "이전",
+    paginationNext: "다음",
+    paginationPageOf: "{current} / {total} 페이지",
+  },
+  artistArtworks: {
+    title: "Artworks",
+    body: "등록한 작품 목록입니다. 썸네일은 본인 소유 작품만 서버에서 제공됩니다.",
+    empty: "표시할 등록 작품이 없습니다. 작품 등록을 완료했는지, 아래 안내의 작가 ID가 맞는지 확인하세요.",
+    devHint:
+      "개발용: URL에 ?artist=작가ID 를 붙이면 해당 ID로 등록된 작품을 불러옵니다. (예: 작품 등록 폼의 Actor userId)",
+    backVault: "← Vault로",
+    backHome: "← 홈으로",
+  },
+  vault: {
+    overviewKicker: "Vault",
+    overviewTitle: "개요",
+    overviewBody:
+      "프라이빗 보관 중인 컬렉션 상태, 알림, Chronicle 갱신 이력을 이 화면에서 확인합니다.",
+    balance: "잔액",
+    activeBids: "진행 중 입찰",
+    collectionTitle: "컬렉션",
+    collectionBody: "보유 에디션 목록 플레이스홀더입니다.",
+    activityTitle: "활동",
+    activityBody: "입찰·결제·Chronicle 이벤트 플레이스홀더입니다.",
+    settingsTitle: "설정",
+    settingsBody: "계정·알림·보안 영역 플레이스홀더입니다.",
+  },
+  tokushoho: {
+    back: "← 홈으로",
+    h1: "특정상거래법 표시",
+    statutory: "일본 특정상거래법에 기반한 표기",
+    intro:
+      "아래 항목은 템플릿입니다. 사업자 정보를 확정한 뒤 공개 전에 반드시 갱신하세요.",
+    nftNote:
+      "본 서비스는 NFT 기술을 활용한 복제 불가 디지털 아트의 제공·소유 경험을 목적으로 하며, 실물자산이나 투자 상품으로의 권유를 목적으로 하지 않습니다.",
+    sections: {
+      sellerName: {
+        title: "판매 사업자명",
+        hint: "（정식 명칭을 기재）",
+      },
+      operator: { title: "운영 책임자", hint: "（성명을 기재）" },
+      address: {
+        title: "소재지",
+        hint: "（청구 시 지체 없이 공개할 수 있는 주소를 기재）",
+      },
+      phone: {
+        title: "전화번호",
+        hint: "（고객 연락용. 공개에 어려움이 있으면 청구 시 지체 없이 공개할 수 있음을 병기）",
+      },
+      email: { title: "이메일 주소", hint: "（문의 창구）" },
+      extraFees: {
+        title: "상품 대금 외 필요 비용",
+        hint: "（소비세, 배송비, 결제 수수료, 다운로드 통신료 등 해당 시 구체적으로 기재）",
+      },
+      payment: {
+        title: "대금 지급 시기 및 방법",
+        hint: "（신용카드, 청구서 결제 등 결제 수단명과 시기를 기재）",
+      },
+      delivery: {
+        title: "상품 인도 시기",
+        hint: "（디지털 콘텐츠 제공 방식·즉시/일시, 실물 상품이면 발송 목표）",
+      },
+      returns: {
+        title: "반품·취소·불량품",
+        hint: "디지털 상품 특성에 맞는 특약을 법령에 맞게 명시하세요.",
+      },
+      env: {
+        title: "동작 환경",
+        hint: "（권장 OS·브라우저, 모바일 앱 지원 버전 등）",
+      },
+    },
+  },
+};

@@ -18,6 +18,7 @@
     "@opus/ui": "workspace:*",
     "@tanstack/react-query": "^5.67.2",
     "next": "^16.2.1",
+    "pg": "^8.20.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

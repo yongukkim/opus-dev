@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
+import { Cinzel, JetBrains_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import type { ReactNode } from "react";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
-import { TrustStrip } from "@/components/TrustStrip";
+import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -12,13 +11,6 @@ const cinzel = Cinzel({
   weight: ["400", "600", "700"],
   display: "swap",
   variable: "--font-cinzel",
-});
-
-const notoSansJp = Noto_Sans_JP({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-  variable: "--font-noto",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -41,7 +33,7 @@ export const metadata: Metadata = {
     description:
       "Premium digital art archive for collectible ownership experiences — near-black charcoal, champagne brass, provenance and the vault. Not an investment product.",
     type: "website",
-    locale: "ja_JP",
+    locale: "ko_KR",
   },
 };
 
@@ -50,21 +42,21 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+function headerLocale(value: string | null): Locale {
+  if (value && (locales as readonly string[]).includes(value)) {
+    return value as Locale;
+  }
+  return defaultLocale;
+}
+
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const h = await headers();
+  const lang = headerLocale(h.get("x-opus-locale"));
+
   return (
-    <html
-      lang="ja"
-      className={`${cinzel.variable} ${notoSansJp.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang={lang} className={`${cinzel.variable} ${jetbrainsMono.variable}`}>
       <body className="font-sans">
-        <Providers>
-          <div className="flex min-h-screen flex-col bg-opus-charcoal">
-            <SiteHeader />
-            <TrustStrip />
-            <div className="flex-1">{children}</div>
-            <SiteFooter />
-          </div>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

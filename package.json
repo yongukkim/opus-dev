@@ -5,15 +5,22 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "web": "sh scripts/dev-web-open.sh",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:validate": "prisma validate",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,md}\"",
     "clean": "turbo run clean && rm -rf node_modules"
   },
+  "dependencies": {
+    "@prisma/client": "^6.19.0"
+  },
   "devDependencies": {
     "@opus/config": "workspace:*",
     "eslint": "^9.39.0",
+    "prisma": "^6.19.0",
     "prettier": "^3.5.3",
     "turbo": "^2.4.4",
     "typescript": "^5.7.3"

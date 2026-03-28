@@ -2,33 +2,41 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { Locale } from "@/i18n/config";
+import type { Messages } from "@/i18n/types";
+import { withLocale } from "@/i18n/paths";
 
 /**
  * Account sidebar (pattern: Web_Template 2135_mini_finance dashboard nav).
  */
-const links = [
-  { href: "/vault", label: "Overview" },
-  { href: "/vault/collection", label: "Collection" },
-  { href: "/vault/activity", label: "Activity" },
-  { href: "/vault/settings", label: "Settings" },
-] as const;
-
-function linkActive(pathname: string, href: string): boolean {
-  if (href === "/vault") return pathname === "/vault";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-export function VaultSidebar() {
+export function VaultSidebar({ locale, m }: { locale: Locale; m: Messages }) {
   const pathname = usePathname();
+  const v = m.vaultNav;
+  const links = [
+    { path: "/vault" as const, label: v.overview },
+    { path: "/vault/collection" as const, label: v.collection },
+    { path: "/vault/activity" as const, label: v.activity },
+    { path: "/vault/submit" as const, label: v.submit },
+    { path: "/vault/my-artworks" as const, label: v.myArtworks },
+    { path: "/vault/settings" as const, label: v.settings },
+  ].map(({ path, label }) => ({ href: withLocale(locale, path), label }));
+
+  function linkActive(href: string): boolean {
+    const overviewHref = withLocale(locale, "/vault");
+    if (href === overviewHref) {
+      return pathname === overviewHref || pathname === `${overviewHref}/`;
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   return (
     <aside
       className="shrink-0 border-b border-white/[0.08] bg-opus-slate/20 md:w-56 md:border-b-0 md:border-r"
-      aria-label="Vault navigation"
+      aria-label={m.a11y.vaultNav}
     >
       <nav className="flex gap-1 overflow-x-auto p-3 md:flex-col md:overflow-visible md:p-4">
         {links.map(({ href, label }) => {
-          const active = linkActive(pathname, href);
+          const active = linkActive(href);
           return (
             <Link
               key={href}

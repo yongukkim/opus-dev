@@ -18,6 +18,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    background-color: #0e0e0e;
   }
 
   body {
@@ -133,5 +134,23 @@ body {
 
   .opus-surface-metallic:active {
     filter: brightness(0.97);
+  }
+}
+
+@layer utilities {
+  @keyframes vault-enclosure-glow {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 5px rgba(222, 184, 146, 0.16));
+      opacity: 0.78;
+    }
+    50% {
+      filter: drop-shadow(0 0 14px rgba(222, 184, 146, 0.36));
+      opacity: 1;
+    }
+  }
+
+  .animate-vault-enclosure-glow {
+    animation: vault-enclosure-glow 4.5s ease-in-out infinite;
   }
 }

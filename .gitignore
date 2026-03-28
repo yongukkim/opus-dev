@@ -44,5 +44,11 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 
+# Local-only artwork drops (do not commit licensed/copyrighted covers)
+apps/web/public/local-artworks/
+
+# Server-side local storage (dev-only artifacts)
+apps/web/storage/
+
 # Coverage
 coverage
