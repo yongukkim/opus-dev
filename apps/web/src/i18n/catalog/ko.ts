@@ -276,4 +276,37 @@ export const ko: Messages = {
       },
     },
   },
+  sellerVerifyConsent: {
+    overlayAriaLabel: "보안 연결 생성 중",
+    overlayLine1: "보안 연결을 생성 중입니다…",
+    overlayLine2:
+      "The Vault — 본인 확인을 위해 암호화된 세션을 준비하고 있습니다.",
+    kicker: "OPUS · Seller",
+    title: "판매자 권한 획득을 위한 본인 확인",
+    subtitle: "본인 확인",
+    intro:
+      "일본 범죄수익이전방지법 및 서비스 운영 정책에 따라, 판매자 정산을 위한 eKYC가 진행됩니다.",
+    sectionHeading: "필수 동의",
+    requiredBadge: "[필수]",
+    consentCollection:
+      "개인정보 수집 및 이용 동의 (성명, 생년월일, 주소, 신분증 정보)",
+    consentSensitive: "고유식별정보 처리 동의 (신분증 번호 등)",
+    consentThirdParty:
+      "제3자 제공 동의 (본인 확인 전문 기관: Stripe Identity, Liquid eKYC 등)",
+    dbNote:
+      "OPUS DB에는 신분증 이미지 경로·카드번호를 저장하지 않으며, 검증 결과 참조만 연동합니다.",
+    back: "이전으로",
+    next: "다음으로",
+    footerPrivacyMd: "Privacy (MD)",
+    footerPrivacy: "개인정보 처리방침",
+    footerVault: "Vault",
+    alertConsentFail: "동의 기록에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    alertNetwork: "네트워크 오류입니다. 연결을 확인한 뒤 다시 시도해 주세요.",
+  },
+  sellerVerifyStart: {
+    title: "본인 확인 세션",
+    body: "이 화면은 eKYC 전문 기관 연동 전 플레이스홀더입니다. 곧 안전한 리다이렉트 또는 임베드 플로우가 연결됩니다.",
+    backToConsent: "동의 화면으로",
+    vaultLink: "Vault",
+  },
 };

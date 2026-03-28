@@ -275,4 +275,38 @@ export const en: Messages = {
       },
     },
   },
+  sellerVerifyConsent: {
+    overlayAriaLabel: "Establishing secure connection",
+    overlayLine1: "Establishing a secure connection…",
+    overlayLine2:
+      "The Vault — preparing an encrypted session for your verification.",
+    kicker: "OPUS · Seller",
+    title: "Identity verification for seller privileges",
+    subtitle: "Identity Verification",
+    intro:
+      "Under Japan’s Act on Prevention of Transfer of Criminal Proceeds and our operating policies, we conduct eKYC for seller settlement.",
+    sectionHeading: "Required consent",
+    requiredBadge: "[Required]",
+    consentCollection:
+      "Consent to collect and use personal information (name, date of birth, address, ID details)",
+    consentSensitive:
+      "Consent to process unique identification information (e.g. ID numbers)",
+    consentThirdParty:
+      "Consent to disclosure to third parties (identity providers such as Stripe Identity, Liquid eKYC)",
+    dbNote:
+      "OPUS does not store ID image paths or card numbers; only verification outcomes are linked.",
+    back: "Back",
+    next: "Continue",
+    footerPrivacyMd: "Privacy (MD)",
+    footerPrivacy: "Privacy policy",
+    footerVault: "Vault",
+    alertConsentFail: "Could not record consent. Please try again shortly.",
+    alertNetwork: "Network error. Check your connection and try again.",
+  },
+  sellerVerifyStart: {
+    title: "Verification session",
+    body: "This screen is a placeholder before eKYC provider integration. A secure redirect or embedded flow will connect here soon.",
+    backToConsent: "Back to consent",
+    vaultLink: "Vault",
+  },
 };

@@ -213,4 +213,33 @@ export type Messages = {
       env: LegalSection;
     };
   };
+  /** Seller eKYC consent (one UI language per locale; no KO/JA mix on one screen). */
+  sellerVerifyConsent: {
+    overlayAriaLabel: string;
+    overlayLine1: string;
+    overlayLine2: string;
+    kicker: string;
+    title: string;
+    subtitle: string;
+    intro: string;
+    sectionHeading: string;
+    requiredBadge: string;
+    consentCollection: string;
+    consentSensitive: string;
+    consentThirdParty: string;
+    dbNote: string;
+    back: string;
+    next: string;
+    footerPrivacyMd: string;
+    footerPrivacy: string;
+    footerVault: string;
+    alertConsentFail: string;
+    alertNetwork: string;
+  };
+  sellerVerifyStart: {
+    title: string;
+    body: string;
+    backToConsent: string;
+    vaultLink: string;
+  };
 };

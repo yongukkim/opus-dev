@@ -67,6 +67,54 @@ body {
   }
 
   /**
+   * Seller eKYC consent body — one weight, no synthetic bold; script-first stacks reduce per-glyph fallback mismatch.
+   * KO: 괄호·라틴 혼용 줄에서 글리프별 폰트가 갈라져 굵기가 달라 보이는 현상을 완화한다.
+   * JA: 括弧内やラテン混在でグリフごとに別フォントになり太さが変わる現象を抑える。
+   * EN: Mitigate mixed-script lines where fallback fonts change apparent weight.
+   */
+  .opus-seller-verify-uniform {
+    font-synthesis: none;
+    font-weight: 300;
+  }
+
+  .opus-seller-verify-uniform[data-locale="ja"] {
+    font-family:
+      "Hiragino Kaku Gothic ProN",
+      "Hiragino Sans",
+      "Noto Sans JP",
+      ui-sans-serif,
+      system-ui,
+      sans-serif;
+  }
+
+  .opus-seller-verify-uniform[data-locale="ko"] {
+    font-family:
+      "Apple SD Gothic Neo",
+      "Malgun Gothic",
+      "Noto Sans KR",
+      ui-sans-serif,
+      system-ui,
+      sans-serif;
+  }
+
+  .opus-seller-verify-uniform[data-locale="en"] {
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+
+  .opus-seller-verify-uniform :is(b, strong) {
+    font-weight: inherit;
+  }
+
+  /**
    * Primary pill — linear stops = 면의 전반적 명암; ::before = 상단 하이라이트; ::after = 하단·모서리 음영.
    */
   .opus-surface-metallic {

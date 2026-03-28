@@ -276,4 +276,39 @@ export const ja: Messages = {
       },
     },
   },
+  sellerVerifyConsent: {
+    overlayAriaLabel: "セキュア接続を確立しています",
+    overlayLine1: "セキュア接続を確立しています…",
+    overlayLine2:
+      "The Vault — 本人確認のための暗号化セッションを準備しています。",
+    kicker: "OPUS · Seller",
+    title: "出品者向け本人確認",
+    subtitle: "本人確認",
+    intro:
+      "日本の犯罪収益移転防止法およびサービス運営方針に基づき、出品者の精算に向けた本人確認（eKYC）を実施します。",
+    sectionHeading: "必須の同意",
+    requiredBadge: "[必須]",
+    consentCollection:
+      "個人情報の収集・利用への同意（氏名、生年月日、住所、身分証情報）",
+    consentSensitive: "固有識別情報の取扱いへの同意（身分証番号等）",
+    consentThirdParty:
+      "第三者提供への同意（本人確認の専門事業者：Stripe Identity、Liquid eKYC 等）",
+    dbNote:
+      "OPUSのデータベースには身分証画像のパスやカード番号は保存せず、検証結果の参照のみを連携します。",
+    back: "戻る",
+    next: "次へ",
+    footerPrivacyMd: "Privacy (MD)",
+    footerPrivacy: "プライバシーポリシー",
+    footerVault: "Vault",
+    alertConsentFail:
+      "同意の記録に失敗しました。しばらくしてから再度お試しください。",
+    alertNetwork:
+      "ネットワークエラーです。接続を確認のうえ、再度お試しください。",
+  },
+  sellerVerifyStart: {
+    title: "本人確認セッション",
+    body: "この画面は、eKYC事業者との連携前のプレースホルダです。安全なリダイレクトまたは埋め込みフローがまもなく接続されます。",
+    backToConsent: "同意画面へ",
+    vaultLink: "Vault",
+  },
 };

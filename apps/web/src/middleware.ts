@@ -22,6 +22,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  /** Legacy /seller/* → default locale so bookmarks and shared links resolve. */
+  if (pathname.startsWith("/seller")) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${defaultLocale}${pathname}`;
+    return NextResponse.redirect(url);
+  }
+
   const found = localeFromPath(pathname);
   if (found) {
     const res = NextResponse.next();
