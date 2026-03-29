@@ -4,13 +4,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
+import type { VaultUiRole } from "@/lib/vaultRole";
 import { withLocale } from "@/i18n/paths";
 
 /**
  * Account sidebar (pattern: Web_Template 2135_mini_finance dashboard nav).
  */
-export function VaultSidebar({ locale, m }: { locale: Locale; m: Messages }) {
+const ARTIST_ONLY_PATHS = ["/vault/submit", "/vault/my-artworks"] as const;
+
+export function VaultSidebar({
+  locale,
+  m,
+  vaultRole,
+}: {
+  locale: Locale;
+  m: Messages;
+  vaultRole: VaultUiRole;
+}) {
   const pathname = usePathname();
+  const ja = locale === "ja";
   const v = m.vaultNav;
   const links = [
     { path: "/vault" as const, label: v.overview },
@@ -19,7 +31,14 @@ export function VaultSidebar({ locale, m }: { locale: Locale; m: Messages }) {
     { path: "/vault/submit" as const, label: v.submit },
     { path: "/vault/my-artworks" as const, label: v.myArtworks },
     { path: "/vault/settings" as const, label: v.settings },
-  ].map(({ path, label }) => ({ href: withLocale(locale, path), label }));
+  ]
+    .filter(({ path }) => {
+      if (vaultRole !== "artist" && (ARTIST_ONLY_PATHS as readonly string[]).includes(path)) {
+        return false;
+      }
+      return true;
+    })
+    .map(({ path, label }) => ({ href: withLocale(locale, path), label }));
 
   function linkActive(href: string): boolean {
     const overviewHref = withLocale(locale, "/vault");
@@ -42,8 +61,12 @@ export function VaultSidebar({ locale, m }: { locale: Locale; m: Messages }) {
               key={href}
               href={href}
               className={`whitespace-nowrap rounded-md px-3 py-2 font-sans text-xs transition md:px-3 ${
+                ja ? "break-keep tracking-tight" : ""
+              } ${
                 active
-                  ? "bg-opus-gold/15 text-opus-gold"
+                  ? ja
+                    ? "bg-opus-gold/15 text-opus-gold font-medium"
+                    : "bg-opus-gold/15 text-opus-gold"
                   : "text-opus-warm/55 hover:bg-white/[0.04] hover:text-opus-warm"
               }`}
             >

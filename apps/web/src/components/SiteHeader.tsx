@@ -9,6 +9,14 @@ import { LocaleSwitcher } from "./LocaleSwitcher";
  * Locale control: KO / EN / JA (pattern: marketplace.aline.team).
  */
 export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
+  const ja = locale === "ja";
+  const navItemClass = ja
+    ? "shrink-0 text-[0.7rem] font-medium tracking-tight break-keep text-opus-warm/65 transition hover:text-opus-gold md:text-xs"
+    : "shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-opus-warm/65 transition hover:text-opus-gold md:text-xs md:tracking-[0.28em]";
+  const authItemClass = ja
+    ? "hidden shrink-0 font-mono text-[0.65rem] tracking-tight break-keep text-opus-warm/55 transition hover:text-opus-gold sm:inline"
+    : "hidden shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/55 transition hover:text-opus-gold sm:inline";
+
   return (
     <header
       className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.09] bg-opus-charcoal/72 backdrop-blur-xl"
@@ -27,35 +35,23 @@ export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
             className="flex min-w-0 shrink items-center justify-end gap-3 overflow-x-auto py-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 md:gap-8 lg:gap-10 [&::-webkit-scrollbar]:hidden"
             aria-label={m.a11y.primaryNav}
           >
-            <Link
-              href={withLocale(locale, "/artworks")}
-              className="shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-opus-warm/65 transition hover:text-opus-gold md:text-xs md:tracking-[0.28em]"
-            >
+            <Link href={withLocale(locale, "/artworks")} className={navItemClass}>
               {m.nav.archive}
             </Link>
-            <Link
-              href={withLocale(locale, "/vault")}
-              className="shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-opus-warm/65 transition hover:text-opus-gold md:text-xs md:tracking-[0.28em]"
-            >
+            <Link href={withLocale(locale, "/vault")} className={navItemClass}>
               {m.nav.vault}
             </Link>
             <Link
               href={withLocale(locale, "/tokushoho")}
-              className="hidden shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-opus-warm/65 transition hover:text-opus-gold sm:inline md:text-xs md:tracking-[0.28em]"
+              className={`hidden sm:inline ${navItemClass}`}
             >
               {m.nav.legal}
             </Link>
           </nav>
-          <Link
-            href={withLocale(locale, "/login")}
-            className="hidden shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/55 transition hover:text-opus-gold sm:inline"
-          >
+          <Link href={withLocale(locale, "/login")} className={authItemClass}>
             {m.auth.signIn}
           </Link>
-          <Link
-            href={withLocale(locale, "/signup")}
-            className="hidden shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/55 transition hover:text-opus-gold sm:inline"
-          >
+          <Link href={withLocale(locale, "/signup")} className={authItemClass}>
             {m.signup.title}
           </Link>
           <LocaleSwitcher ariaLabel={m.a11y.language} />

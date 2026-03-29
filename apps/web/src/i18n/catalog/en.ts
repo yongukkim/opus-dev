@@ -229,6 +229,15 @@ export const en: Messages = {
     activityBody: "Placeholder for bids, payments, and Chronicle events.",
     settingsTitle: "Settings",
     settingsBody: "Placeholder for account, notifications, and security.",
+    artistGateTitle: "Artist-only area",
+    artistGateSubmitBody:
+      "Artwork registration is available to artist accounts only. As a member (collector), use Collection, Activity, and other Vault areas. In production, access follows your signed-in role.",
+    artistGateMyArtworksBody:
+      "Managing registered works is available to artist accounts only. It is hidden from the standard member Vault.",
+    artistGateSignupCta: "Register as an artist",
+    artistGateBackVault: "← Back to Vault overview",
+    demoSwitchArtist: "Demo: switch to artist mode",
+    demoSwitchCollector: "Demo: switch to member mode",
   },
   tokushoho: {
     back: "← Back home",

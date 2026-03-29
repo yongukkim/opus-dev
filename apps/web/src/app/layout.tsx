@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, JetBrains_Mono } from "next/font/google";
+import { Cinzel, JetBrains_Mono, Noto_Sans_JP, Zen_Old_Mincho } from "next/font/google";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
@@ -18,6 +18,24 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
   display: "swap",
   variable: "--font-mono-jb",
+});
+
+/** Japanese UI: body / UI text (loaded when `data-opus-typography="ja"`). */
+const notoSansJp = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
+  variable: "--font-noto-sans-jp",
+  adjustFontFallback: true,
+});
+
+/** Japanese UI: headings / `.font-serif` (loaded when `data-opus-typography="ja"`). */
+const zenOldMincho = Zen_Old_Mincho({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-zen-old-mincho",
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -52,9 +70,23 @@ function headerLocale(value: string | null): Locale {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const h = await headers();
   const lang = headerLocale(h.get("x-opus-locale"));
+  const isJa = lang === "ja";
+
+  const fontVars = [
+    cinzel.variable,
+    jetbrainsMono.variable,
+    isJa ? notoSansJp.variable : "",
+    isJa ? zenOldMincho.variable : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <html lang={lang} className={`${cinzel.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang={lang}
+      data-opus-typography={isJa ? "ja" : undefined}
+      className={fontVars}
+    >
       <body className="font-sans">
         <Providers>{children}</Providers>
       </body>

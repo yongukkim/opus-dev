@@ -7,6 +7,7 @@ import { withLocale } from "@/i18n/paths";
  * Secondary trust / utility bar (pattern: Web_Template finance-business sub-header).
  */
 export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
+  const ja = locale === "ja";
   const items = [
     { href: withLocale(locale, "/tokushoho"), label: m.trust.tokushoho },
     { href: withLocale(locale, "/artworks"), label: m.trust.chronicle },
@@ -20,7 +21,9 @@ export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
       aria-label={m.a11y.utilityNav}
     >
       <div className="mx-auto flex h-[2.25rem] max-w-6xl items-center justify-between gap-3 px-6 md:px-10">
-        <p className="hidden max-w-[14rem] font-sans text-[0.6rem] leading-snug text-opus-warm/42 sm:block md:max-w-none md:text-[0.65rem]">
+        <p
+          className={`hidden max-w-[14rem] font-sans text-[0.6rem] leading-snug text-opus-warm/42 sm:block md:max-w-none md:text-[0.65rem] ${ja ? "tracking-tight break-keep" : ""}`}
+        >
           <span className="opus-text-metallic-soft font-mono uppercase tracking-[0.18em]">Classic Luxury</span>
           <span className="mx-1.5 text-opus-warm/25">·</span>
           <span className="text-opus-warm/45">{m.trust.line}</span>
@@ -30,7 +33,7 @@ export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
             <li key={href}>
               <Link
                 href={href}
-                className="whitespace-nowrap font-sans text-[0.65rem] text-opus-warm/50 transition hover:text-opus-gold md:text-xs"
+                className={`whitespace-nowrap font-sans text-[0.65rem] text-opus-warm/50 transition hover:text-opus-gold md:text-xs ${ja ? "tracking-tight break-keep hover:font-medium" : ""}`}
               >
                 {label}
               </Link>

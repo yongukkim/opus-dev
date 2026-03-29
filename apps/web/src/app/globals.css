@@ -24,6 +24,31 @@
   body {
     text-rendering: optimizeLegibility;
   }
+
+  /**
+   * Japanese locale: Noto Sans JP for body / UI sans; Zen Old Mincho for `.font-serif` titles.
+   * KO: ja 레이아웃에서 본문은 Noto Sans JP, 제목용 유틸 `.font-serif`는 명조 계열로 통일한다.
+   * JA: 日本語UIでは本文をNoto Sans JP、`.font-serif`見出しをZen Old Minchoに揃える。
+   * EN: For `data-opus-typography="ja"`, body uses Noto Sans JP; `.font-serif` uses Zen Old Mincho.
+   */
+  html[data-opus-typography="ja"] body {
+    font-family: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  html[data-opus-typography="ja"] .font-serif {
+    font-family: var(--font-zen-old-mincho), "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  }
+
+  /**
+   * Japanese UI: CJK line breaking (keep word units); nav/buttons add `tracking-tight` in components.
+   * JA: 日本語は全角幅が広いため、メニュー・ボタンで詰め字と keep-all を併用する。
+   */
+  html[data-opus-typography="ja"] main,
+  html[data-opus-typography="ja"] header,
+  html[data-opus-typography="ja"] footer {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
 }
 
 body {
@@ -67,6 +92,22 @@ body {
   }
 
   /**
+   * Japanese + thin Mincho / gradient gold: bump weight so strokes stay legible on charcoal.
+   * JA: 明細い明朝・グラデ金文字でも輪郭が潰れにくいようウェイトを上げる。
+   */
+  html[data-opus-typography="ja"] .opus-text-metallic {
+    font-weight: 700;
+  }
+
+  html[data-opus-typography="ja"] .opus-text-metallic-soft {
+    font-weight: 600;
+  }
+
+  html[data-opus-typography="ja"] .text-opus-gold-vivid {
+    font-weight: 600;
+  }
+
+  /**
    * Seller eKYC consent body — one weight, no synthetic bold; script-first stacks reduce per-glyph fallback mismatch.
    * KO: 괄호·라틴 혼용 줄에서 글리프별 폰트가 갈라져 굵기가 달라 보이는 현상을 완화한다.
    * JA: 括弧内やラテン混在でグリフごとに別フォントになり太さが変わる現象を抑える。
@@ -79,6 +120,7 @@ body {
 
   .opus-seller-verify-uniform[data-locale="ja"] {
     font-family:
+      var(--font-noto-sans-jp),
       "Hiragino Kaku Gothic ProN",
       "Hiragino Sans",
       "Noto Sans JP",

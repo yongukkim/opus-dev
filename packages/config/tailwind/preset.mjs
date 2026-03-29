@@ -12,6 +12,8 @@ const preset = {
         opus: {
           charcoal: "#0E0E0E",
           gold: "#DEB892",
+          /** Vivid screen gold — pair with `font-semibold` on JA + Mincho per design notes */
+          "gold-vivid": "#C5A028",
           "gold-light": "#EDE4D4",
           "gold-dim": "#c6a06e",
           slate: "#252525",

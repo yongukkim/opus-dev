@@ -230,6 +230,15 @@ export const ko: Messages = {
     activityBody: "입찰·결제·Chronicle 이벤트 플레이스홀더입니다.",
     settingsTitle: "설정",
     settingsBody: "계정·알림·보안 영역 플레이스홀더입니다.",
+    artistGateTitle: "작가 전용 기능",
+    artistGateSubmitBody:
+      "작품 등록은 작가 계정에서만 이용할 수 있습니다. 일반 회원은 Vault에서 컬렉션·활동 등을 이용해 주세요. 실제 서비스에서는 로그인 역할에 따라 자동으로 구분됩니다.",
+    artistGateMyArtworksBody:
+      "등록 작품 관리는 작가 계정에서만 이용할 수 있습니다. 일반 회원 화면에서는 표시되지 않습니다.",
+    artistGateSignupCta: "작가로 등록하기",
+    artistGateBackVault: "← Vault 개요로",
+    demoSwitchArtist: "데모: 작가 모드로 전환",
+    demoSwitchCollector: "데모: 일반 회원 모드로 전환",
   },
   tokushoho: {
     back: "← 홈으로",

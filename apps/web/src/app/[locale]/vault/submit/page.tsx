@@ -1,6 +1,9 @@
 import { ArtworkSubmissionForm } from "@/components/artist/ArtworkSubmissionForm";
+import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
 import { getDictionary } from "@/i18n/catalog";
+import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { normalizeLocale } from "@/i18n/paths";
+import { cookies } from "next/headers";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -8,6 +11,14 @@ export default async function VaultSubmitArtworkPage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
+  const vaultRole = getVaultUiRoleFromCookies(await cookies());
+
+  if (vaultRole !== "artist") {
+    return (
+      <VaultArtistGate variant="submit" locale={locale} vault={m.vault} currentRole={vaultRole} />
+    );
+  }
+
   const s = m.submitArtwork;
 
   return (

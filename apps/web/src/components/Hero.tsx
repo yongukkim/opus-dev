@@ -24,6 +24,15 @@ const TILES: { span: string; featured?: boolean }[] = [
  */
 export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
   const h = m.hero;
+  const ja = locale === "ja";
+  const cjkTight = ja ? "tracking-tight break-keep" : "";
+  const cjkKicker = ja
+    ? "opus-text-metallic-soft text-[0.65rem] font-semibold tracking-tight break-keep md:text-xs"
+    : "opus-text-metallic-soft text-[0.65rem] font-medium uppercase tracking-[0.45em] md:text-xs";
+  const ctaPrimary = ja
+    ? "opus-surface-metallic inline-flex min-w-[14rem] items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold tracking-tight break-keep text-black transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm"
+    : "opus-surface-metallic inline-flex min-w-[14rem] items-center justify-center rounded-full px-10 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] text-black transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm";
+
   return (
     <section
       className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-opus-charcoal px-6 pb-28 pt-[calc(6.5rem+3rem)] md:pb-36 md:pt-[calc(6.5rem+4rem)]"
@@ -55,9 +64,7 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
       <div className="relative z-10 mx-auto w-full max-w-2xl">
         <div className="rounded-2xl border border-white/[0.12] bg-white/[0.055] px-8 py-12 shadow-[0_24px_72px_rgba(0,0,0,0.42)] backdrop-blur-md md:px-14 md:py-14">
           <div className="flex flex-col items-center text-center">
-            <p className="opus-text-metallic-soft text-[0.65rem] font-medium uppercase tracking-[0.45em] md:text-xs">
-              {h.kicker}
-            </p>
+            <p className={cjkKicker}>{h.kicker}</p>
 
             <h1 className="relative mt-10 inline-block pb-8 text-center md:pb-9">
               <span className="opus-text-metallic block font-display text-[clamp(3.5rem,11.7vw,6.2rem)] font-semibold uppercase leading-[0.88] tracking-[0.14em] md:tracking-[0.18em]">
@@ -69,26 +76,33 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
               </span>
             </h1>
 
-            <p className="mt-12 max-w-lg font-sans text-sm leading-relaxed text-opus-warm/70 md:mt-14 md:text-[0.95rem]">
+            <p
+              className={`mt-12 max-w-lg font-sans text-sm leading-relaxed text-opus-warm/70 md:mt-14 md:text-[0.95rem] ${cjkTight}`}
+            >
               {h.line1}
             </p>
 
-            <p className="mt-4 max-w-md text-sm leading-relaxed tracking-wide text-opus-warm/50">{h.line2}</p>
+            <p
+              className={`mt-4 max-w-md text-sm leading-relaxed text-opus-warm/50 ${ja ? "tracking-tight break-keep" : "tracking-wide"}`}
+            >
+              {h.line2}
+            </p>
 
             <p className="opus-text-metallic-soft mt-3 font-mono text-[0.65rem] uppercase tracking-[0.35em] opacity-90">
               Edition · The Log · Vault
             </p>
 
             <div className="mt-10 flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link
-                href={withLocale(locale, "/artworks")}
-                className="opus-surface-metallic inline-flex min-w-[14rem] items-center justify-center rounded-full px-10 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] text-black transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm"
-              >
+              <Link href={withLocale(locale, "/artworks")} className={ctaPrimary}>
                 <span className="relative z-[1]">{h.exploreArchive}</span>
               </Link>
               <Link
                 href={withLocale(locale, "/artworks")}
-                className="opus-text-metallic-soft text-[0.7rem] font-medium uppercase tracking-[0.28em] underline-offset-4 transition hover:opacity-100 hover:underline"
+                className={
+                  ja
+                    ? "opus-text-metallic-soft text-[0.7rem] font-semibold tracking-tight break-keep underline-offset-4 transition hover:opacity-100 hover:underline"
+                    : "opus-text-metallic-soft text-[0.7rem] font-medium uppercase tracking-[0.28em] underline-offset-4 transition hover:opacity-100 hover:underline"
+                }
               >
                 {h.viewPremieres}
               </Link>

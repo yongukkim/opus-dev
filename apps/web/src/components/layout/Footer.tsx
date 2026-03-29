@@ -50,11 +50,14 @@ function VaultEnclosureIcon({ className }: { className?: string }) {
 }
 
 export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
-  const linkClass =
-    "block text-sm text-opus-gold/50 transition hover:text-opus-gold/85 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-opus-gold/40";
+  const ja = locale === "ja";
+  const linkClass = ja
+    ? "block text-sm font-medium text-opus-gold/55 transition hover:text-opus-gold/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-opus-gold/40 tracking-tight break-keep"
+    : "block text-sm text-opus-gold/50 transition hover:text-opus-gold/85 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-opus-gold/40";
 
-  const headingClass =
-    "font-mono text-[0.65rem] font-medium uppercase tracking-[0.38em] text-opus-gold/55";
+  const headingClass = ja
+    ? "font-mono text-[0.65rem] font-semibold tracking-tight text-opus-gold/60"
+    : "font-mono text-[0.65rem] font-medium uppercase tracking-[0.38em] text-opus-gold/55";
 
   return (
     <footer
@@ -66,7 +69,11 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           <div>
             <p className={headingClass}>Service</p>
-            <p className="opus-text-metallic-soft mt-4 font-display text-xs tracking-[0.2em]">OPUS</p>
+            <p
+              className={`opus-text-metallic-soft mt-4 font-display text-xs ${ja ? "font-semibold tracking-tight" : "tracking-[0.2em]"}`}
+            >
+              OPUS
+            </p>
             <nav className="mt-6 flex flex-col gap-2.5" aria-label="Service links">
               <Link href={withLocale(locale, "/")} className={linkClass}>
                 Home
@@ -82,7 +89,11 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
 
           <div>
             <p className={headingClass}>The Chronicle</p>
-            <p className="mt-6 text-sm leading-relaxed text-opus-gold/42">{m.footer.chronicleTrust}</p>
+            <p
+              className={`mt-6 text-sm leading-relaxed text-opus-gold/42 ${ja ? "tracking-tight break-keep font-medium" : ""}`}
+            >
+              {m.footer.chronicleTrust}
+            </p>
           </div>
 
           <div>

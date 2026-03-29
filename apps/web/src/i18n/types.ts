@@ -193,6 +193,15 @@ export type Messages = {
     activityBody: string;
     settingsTitle: string;
     settingsBody: string;
+    /** Collector (일반 회원)가 작가 전용 경로를 열었을 때 */
+    artistGateTitle: string;
+    artistGateSubmitBody: string;
+    artistGateMyArtworksBody: string;
+    artistGateSignupCta: string;
+    artistGateBackVault: string;
+    /** Until SSO: switch UI role for local demo */
+    demoSwitchArtist: string;
+    demoSwitchCollector: string;
   };
   tokushoho: {
     back: string;

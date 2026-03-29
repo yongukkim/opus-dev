@@ -1,3 +1,4 @@
+import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import {
@@ -5,6 +6,7 @@ import {
   decodeArtistNicknameFromCookie,
 } from "@/lib/artistSignupProfile";
 import { listArtistSubmissions } from "@/lib/privateStorage";
+import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -45,10 +47,21 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
   const aa = m.artistArtworks;
   const a = m.artworks;
 
+  const cookieStore = await cookies();
+  const vaultRole = getVaultUiRoleFromCookies(cookieStore);
+  if (vaultRole !== "artist") {
+    return (
+      <VaultArtistGate
+        variant="myArtworks"
+        locale={locale}
+        vault={m.vault}
+        currentRole={vaultRole}
+      />
+    );
+  }
+
   const artistId = artistParam?.trim() ?? "";
   const displayNameFromQuery = nameParam?.trim() ?? "";
-
-  const cookieStore = await cookies();
   const signupNickname = decodeArtistNicknameFromCookie(
     cookieStore.get(OPUS_ARTIST_NICKNAME_COOKIE)?.value,
   );
