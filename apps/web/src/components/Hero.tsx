@@ -82,11 +82,15 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
               {h.line1}
             </p>
 
-            <p
-              className={`mt-4 max-w-md text-sm leading-relaxed text-opus-warm/50 ${ja ? "tracking-tight break-keep" : "tracking-wide"}`}
-            >
-              {h.line2}
-            </p>
+            {h.line2?.trim() ? (
+              <p
+                className={`mt-4 max-w-md text-sm leading-relaxed text-opus-warm/50 ${
+                  ja ? "tracking-tight break-keep" : "tracking-wide"
+                }`}
+              >
+                {h.line2}
+              </p>
+            ) : null}
 
             <p className="opus-text-metallic-soft mt-3 font-mono text-[0.65rem] uppercase tracking-[0.35em] opacity-90">
               Edition · The Log · Vault
