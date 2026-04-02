@@ -272,9 +272,9 @@ export const en: Messages = {
   hero: {
     kicker: "Authenticated non-fungible digital art editions",
     line1:
-      "Not a copy — your own “digital original.” Artist-official authentication flows into a private Vault.",
+      "A quietly held, personal digital limited edition.",
     line2:
-      "The archive of digital masterpieces — authenticity, edition, and collector provenance in one chain of record.",
+      "An original collectible that exists nowhere else — yours alone.",
     exploreArchive: "Explore the Archive",
     viewPremieres: "View premieres",
   },
