@@ -1,14 +1,21 @@
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 import { LoginPanel } from "@/components/auth/LoginPanel";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export default async function LoginPage({ params }: Props) {
+export default async function LoginPage({
+  params,
+  searchParams,
+}: Props & { searchParams: Promise<{ returnTo?: string }> }) {
   const { locale: raw } = await params;
+  const { returnTo: returnToParam } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
+  const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
+  const signupHref = `${withLocale(locale, "/signup")}?returnTo=${encodeURIComponent(returnTo)}`;
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
@@ -24,6 +31,7 @@ export default async function LoginPage({ params }: Props) {
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}
           privacyLabel={m.footer.privacy}
+          returnTo={returnTo}
           strings={{
             continueWithApple: m.auth.continueWithApple,
             continueWithGoogle: m.auth.continueWithGoogle,
@@ -44,7 +52,7 @@ export default async function LoginPage({ params }: Props) {
 
         <div className="mt-10 text-center text-sm text-opus-warm/55">
           <Link
-            href={withLocale(locale, "/signup")}
+            href={signupHref}
             className="text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
             {m.signup.title}

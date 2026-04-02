@@ -10,7 +10,12 @@ import { withLocale } from "@/i18n/paths";
 /**
  * Account sidebar (pattern: Web_Template 2135_mini_finance dashboard nav).
  */
-const ARTIST_ONLY_PATHS = ["/vault/submit", "/vault/my-artworks"] as const;
+const ARTIST_ONLY_PATHS = [
+  "/vault/submit",
+  "/vault/my-artworks",
+  "/vault/payouts",
+  "/vault/artist-profile",
+] as const;
 
 export function VaultSidebar({
   locale,
@@ -30,6 +35,8 @@ export function VaultSidebar({
     { path: "/vault/activity" as const, label: v.activity },
     { path: "/vault/submit" as const, label: v.submit },
     { path: "/vault/my-artworks" as const, label: v.myArtworks },
+    { path: "/vault/payouts" as const, label: v.payouts },
+    { path: "/vault/artist-profile" as const, label: v.artistProfile },
     { path: "/vault/settings" as const, label: v.settings },
   ]
     .filter(({ path }) => {

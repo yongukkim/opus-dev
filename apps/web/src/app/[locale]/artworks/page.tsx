@@ -136,6 +136,10 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                 const globalIdx = offset + idx;
                 const { title, artist } = parseTitleArtist(file, globalIdx);
                 const edition = `${a.editionLabel} ${globalIdx + 1}/${TOTAL_EDITIONS}`;
+                const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(
+                  title,
+                )}&returnTo=${encodeURIComponent(withLocale(locale, "/vault"))}`;
+                const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
                 return (
               <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
                 <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
@@ -154,6 +158,17 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                     <span className="font-display text-sm tracking-wide text-opus-warm/55">{artist}</span>
                   </p>
                   <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
+                  <div className="mt-4 flex items-center justify-between gap-3">
+                    <Link
+                      href={loginPath}
+                      className="opus-surface-metallic inline-flex shrink-0 items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
+                    >
+                      {a.buyCta}
+                    </Link>
+                    <span className="text-right font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
+                      {a.buyHint}
+                    </span>
+                  </div>
                 </div>
               </div>
                 );

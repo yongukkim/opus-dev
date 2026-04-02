@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AuthConsentBlock } from "@/components/auth/AuthConsentBlock";
 
 function IconApple() {
@@ -74,12 +75,14 @@ export function LoginPanel({
   privacyHref,
   termsLabel,
   privacyLabel,
+  returnTo,
   strings,
 }: {
   termsHref: string;
   privacyHref: string;
   termsLabel: string;
   privacyLabel: string;
+  returnTo: string;
   strings: {
     continueWithApple: string;
     continueWithGoogle: string;
@@ -94,13 +97,29 @@ export function LoginPanel({
   };
 }) {
   const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
 
-  function handleSsoClick() {
+  async function handleSsoClick() {
     if (!ageConfirmed) {
       window.alert(strings.consentRequiredAlert);
       return;
     }
-    window.alert(strings.ssoNotReadyAlert);
+    if (pending) return;
+    setPending(true);
+    try {
+      const res = await fetch("/api/auth/demo-session", { method: "POST" });
+      if (!res.ok) {
+        window.alert(strings.ssoNotReadyAlert);
+        return;
+      }
+      router.push(returnTo);
+      router.refresh();
+    } catch {
+      window.alert(strings.ssoNotReadyAlert);
+    } finally {
+      setPending(false);
+    }
   }
 
   const ssoInactive = !ageConfirmed;
@@ -127,21 +146,21 @@ export function LoginPanel({
           icon={<IconApple />}
           label={strings.continueWithApple}
           hint={strings.hint}
-          inactive={ssoInactive}
+          inactive={ssoInactive || pending}
           onClick={handleSsoClick}
         />
         <ProviderButton
           icon={<IconGoogle />}
           label={strings.continueWithGoogle}
           hint={strings.hint}
-          inactive={ssoInactive}
+          inactive={ssoInactive || pending}
           onClick={handleSsoClick}
         />
         <ProviderButton
           icon={<IconLine />}
           label={strings.continueWithLine}
           hint={strings.hint}
-          inactive={ssoInactive}
+          inactive={ssoInactive || pending}
           onClick={handleSsoClick}
         />
       </div>

@@ -257,10 +257,12 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
 
         setBanner(s.apiSaveOk);
         const uid = draft.actorUserId.trim();
+        const displayName = draft.nickname.trim() || draft.artistName.trim();
         const q = new URLSearchParams();
         if (uid) q.set("artist", uid);
+        if (displayName) q.set("name", displayName);
         const qs = q.toString();
-        const path = qs ? `/vault/my-artworks?${qs}` : "/vault/my-artworks";
+        const path = qs ? `/vault/submit/success?${qs}` : "/vault/submit/success";
         window.setTimeout(() => {
           window.location.href = withLocale(locale, path);
         }, 900);

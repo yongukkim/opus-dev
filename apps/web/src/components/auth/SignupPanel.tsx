@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AuthConsentBlock } from "@/components/auth/AuthConsentBlock";
 
 function Field({
@@ -44,12 +45,14 @@ export function SignupPanel({
   privacyHref,
   termsLabel,
   privacyLabel,
+  returnTo,
   strings,
 }: {
   termsHref: string;
   privacyHref: string;
   termsLabel: string;
   privacyLabel: string;
+  returnTo: string;
   strings: {
     displayNameLabel: string;
     emailLabel: string;
@@ -71,6 +74,8 @@ export function SignupPanel({
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [showPasswordMismatch, setShowPasswordMismatch] = useState(false);
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
 
   const inactive = !ageConfirmed;
   const passwordMismatch =
@@ -95,7 +100,7 @@ export function SignupPanel({
 
       <form
         className="space-y-4"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
           if (!ageConfirmed) {
             window.alert(strings.consentRequiredAlert);
@@ -113,7 +118,21 @@ export function SignupPanel({
             return;
           }
           setShowPasswordMismatch(false);
-          window.alert(strings.signupNotReadyAlert);
+          if (pending) return;
+          setPending(true);
+          try {
+            const res = await fetch("/api/auth/demo-session", { method: "POST" });
+            if (!res.ok) {
+              window.alert(strings.signupNotReadyAlert);
+              return;
+            }
+            router.push(returnTo);
+            router.refresh();
+          } catch {
+            window.alert(strings.signupNotReadyAlert);
+          } finally {
+            setPending(false);
+          }
         }}
       >
         <Field

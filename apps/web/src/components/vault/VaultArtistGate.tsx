@@ -11,13 +11,19 @@ export function VaultArtistGate({
   vault,
   currentRole,
 }: {
-  variant: "submit" | "myArtworks";
+  variant: "submit" | "myArtworks" | "payouts" | "artistProfile";
   locale: Locale;
   vault: Messages["vault"];
   currentRole: VaultUiRole;
 }) {
   const body =
-    variant === "submit" ? vault.artistGateSubmitBody : vault.artistGateMyArtworksBody;
+    variant === "submit"
+      ? vault.artistGateSubmitBody
+      : variant === "myArtworks"
+        ? vault.artistGateMyArtworksBody
+        : variant === "payouts"
+          ? vault.artistGatePayoutsBody
+          : vault.artistGateProfileBody;
 
   return (
     <main className="p-6 md:p-10">

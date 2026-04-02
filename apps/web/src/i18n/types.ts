@@ -92,6 +92,8 @@ export type Messages = {
     activity: string;
     submit: string;
     myArtworks: string;
+    payouts: string;
+    artistProfile: string;
     settings: string;
   };
   hero: {
@@ -133,10 +135,110 @@ export type Messages = {
     back: string;
     /** Shown before edition fraction, e.g. "Edition: 4/50". */
     editionLabel: string;
+    buyCta: string;
+    buyHint: string;
     paginationPrev: string;
     paginationNext: string;
     /** Placeholders: `{current}`, `{total}`. */
     paginationPageOf: string;
+  };
+  checkout: {
+    title: string;
+    subtitle: string;
+    summaryLabel: string;
+    summaryArtwork: string;
+    summaryFallback: string;
+    payCta: string;
+    note: string;
+    back: string;
+  };
+  purchaseSuccess: {
+    kicker: string;
+    title: string;
+    subtitle: string;
+    body: string;
+    bodyWithArtwork: string;
+    toVault: string;
+    backToArchive: string;
+  };
+  artistKyc: {
+    consentTitle: string;
+    consentSubtitle: string;
+    consentHeading: string;
+    consentBody: string;
+    consentCheckbox: string;
+    consentNote: string;
+    startCta: string;
+    startTitle: string;
+    startSubtitle: string;
+    startHeading: string;
+    startBody: string;
+    startCompleteDemo: string;
+    startPending: string;
+    startNote: string;
+    startNotReadyAlert: string;
+    backToVault: string;
+  };
+  payouts: {
+    title: string;
+    subtitle: string;
+    heading: string;
+    body: string;
+    bankNameLabel: string;
+    bankNamePlaceholder: string;
+    accountHolderLabel: string;
+    accountHolderPlaceholder: string;
+    accountNumberLabel: string;
+    accountNumberPlaceholder: string;
+    accountNumberHint: string;
+    saveCta: string;
+    savedBanner: string;
+    note: string;
+  };
+  artistProfile: {
+    title: string;
+    subtitle: string;
+    heading: string;
+    body: string;
+    displayNameLabel: string;
+    displayNamePlaceholder: string;
+    bioLabel: string;
+    bioPlaceholder: string;
+    saveCta: string;
+    savedBanner: string;
+    note: string;
+  };
+  submitSuccess: {
+    kicker: string;
+    title: string;
+    body: string;
+    toMyArtworks: string;
+    toVault: string;
+  };
+  accountSettings: {
+    title: string;
+    subtitle: string;
+    authGateTitle: string;
+    authGateBody: string;
+    profileHeading: string;
+    profileBody: string;
+    displayNameLabel: string;
+    displayNamePlaceholder: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    saveProfileCta: string;
+    passwordHeading: string;
+    passwordBody: string;
+    currentPasswordLabel: string;
+    newPasswordLabel: string;
+    confirmPasswordLabel: string;
+    passwordMismatchAlert: string;
+    changePasswordCta: string;
+    savedBanner: string;
+    linksHeading: string;
+    toPayouts: string;
+    toArtistProfile: string;
+    note: string;
   };
   /** Artist-only grid (mirrors public artworks layout; kicker = artist display name). */
   artistArtworks: {
@@ -199,8 +301,12 @@ export type Messages = {
     artistGateTitle: string;
     artistGateSubmitBody: string;
     artistGateMyArtworksBody: string;
+    artistGatePayoutsBody: string;
+    artistGateProfileBody: string;
     artistGateSignupCta: string;
     artistGateBackVault: string;
+    artistKycGateBody: string;
+    artistKycGateCta: string;
     /** Until SSO: switch UI role for local demo */
     demoSwitchArtist: string;
     demoSwitchCollector: string;
