@@ -1,4 +1,25 @@
 export type LegalSection = { title: string; hint: string };
+type SignupMessages = {
+  title: string;
+  subtitle: string;
+  roleLabel: string;
+  roleCollector: string;
+  roleArtist: string;
+  displayNameLabel: string;
+  emailLabel: string;
+  passwordLabel: string;
+  passwordConfirmLabel: string;
+  /** Shown when password and confirmation differ on submit. */
+  passwordMismatchAlert: string;
+  createAccount: string;
+  /** Signup consent line lead (before Terms link); shared middle/end/age use auth.* */
+  consentPreamble: string;
+  /** After consent, when submit clicked but signup API is not wired. */
+  signupNotReadyAlert: string;
+  alreadyHaveAccount: string;
+  signInLink: string;
+  note: string;
+};
 
 export type Messages = {
   meta: {
@@ -49,27 +70,8 @@ export type Messages = {
     ssoNotReadyAlert: string;
     note: string;
   };
-  signup: {
-    title: string;
-    subtitle: string;
-    roleLabel: string;
-    roleCollector: string;
-    roleArtist: string;
-    displayNameLabel: string;
-    emailLabel: string;
-    passwordLabel: string;
-    passwordConfirmLabel: string;
-    /** Shown when password and confirmation differ on submit. */
-    passwordMismatchAlert: string;
-    createAccount: string;
-    /** Signup consent line lead (before Terms link); shared middle/end/age use auth.* */
-    consentPreamble: string;
-    /** After consent, when submit clicked but signup API is not wired. */
-    signupNotReadyAlert: string;
-    alreadyHaveAccount: string;
-    signInLink: string;
-    note: string;
-  };
+  signup: SignupMessages;
+  artistSignup: SignupMessages;
   trust: { line: string; tokushoho: string; chronicle: string; vaultShort: string };
   footer: {
     about: string;

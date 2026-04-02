@@ -32,7 +32,7 @@ export function VaultArtistGate({
       </p>
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
         <Link
-          href={withLocale(locale, "/signup")}
+          href={withLocale(locale, "/artist-signup")}
           className="opus-surface-metallic inline-flex w-fit items-center justify-center rounded-full px-8 py-3 text-sm font-medium text-black transition hover:opacity-95"
         >
           {vault.artistGateSignupCta}

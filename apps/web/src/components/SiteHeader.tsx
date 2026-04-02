@@ -10,6 +10,7 @@ import { LocaleSwitcher } from "./LocaleSwitcher";
  */
 export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
   const ja = locale === "ja";
+  const artistSignupLabel = m.artistSignup?.title ?? m.signup.title;
   const navItemClass = ja
     ? "shrink-0 text-[0.7rem] font-medium tracking-tight break-keep text-opus-warm/65 transition hover:text-opus-gold md:text-xs"
     : "shrink-0 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-opus-warm/65 transition hover:text-opus-gold md:text-xs md:tracking-[0.28em]";
@@ -53,6 +54,9 @@ export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
           </Link>
           <Link href={withLocale(locale, "/signup")} className={authItemClass}>
             {m.signup.title}
+          </Link>
+          <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
+            {artistSignupLabel}
           </Link>
           <LocaleSwitcher ariaLabel={m.a11y.language} />
         </div>
