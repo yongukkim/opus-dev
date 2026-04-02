@@ -140,6 +140,8 @@ export async function POST(request: NextRequest) {
       year,
       description,
       tags,
+      reviewStatus: "pending_review",
+      contentRating: "general",
       editionMode,
       editionTotal,
       initialMint,

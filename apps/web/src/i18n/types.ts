@@ -359,4 +359,28 @@ export type Messages = {
     backToConsent: string;
     vaultLink: string;
   };
+  operatorReview: {
+    title: string;
+    subtitle: string;
+    note: string;
+    filterLabel: string;
+    filterPending: string;
+    filterApproved: string;
+    filterChanges: string;
+    filterRejected: string;
+    filterAll: string;
+    colArtwork: string;
+    colArtist: string;
+    colStatus: string;
+    colRating: string;
+    colActions: string;
+    approve: string;
+    approveMature: string;
+    rejectExplicit: string;
+    bootstrapHeading: string;
+    bootstrapBody: string;
+    bootstrapCta: string;
+    bootstrapPending: string;
+    alertFail: string;
+  };
 };

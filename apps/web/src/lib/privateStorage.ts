@@ -19,6 +19,14 @@ export type SubmissionRecord = {
   year?: number;
   description?: string;
   tags: string[];
+  /** Moderation lifecycle: pending review → approved → (optional) changes requested / rejected. */
+  reviewStatus?: "pending_review" | "approved" | "changes_requested" | "rejected";
+  /** Content rating for discovery/purchase gating. Option B: explicit is rejected; mature is age-gated. */
+  contentRating?: "general" | "mature" | "explicit";
+  /** Operator note (e.g., reason for rejection or change request). */
+  reviewNote?: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
   editionMode: "unique" | "limited";
   editionTotal: number;
   initialMint: number;
@@ -91,6 +99,37 @@ export async function getSubmissionById(id: string): Promise<SubmissionRecord | 
     if (records[i]?.id === id) return records[i]!;
   }
   return null;
+}
+
+/** Latest record per submission id (jsonl append order), across all artists. */
+export async function listAllSubmissions(): Promise<SubmissionRecord[]> {
+  const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
+  const byId = new Map<string, SubmissionRecord>();
+  for (const r of records) {
+    if (r?.id) byId.set(r.id, r);
+  }
+  const out = [...byId.values()];
+  out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  return out;
+}
+
+export async function appendSubmissionReviewPatch(input: {
+  submission: SubmissionRecord;
+  reviewerId: string;
+  reviewStatus: NonNullable<SubmissionRecord["reviewStatus"]>;
+  contentRating: NonNullable<SubmissionRecord["contentRating"]>;
+  reviewNote?: string;
+}): Promise<void> {
+  const { submission, reviewerId, reviewStatus, contentRating, reviewNote } = input;
+  const patch: SubmissionRecord = {
+    ...submission,
+    reviewStatus,
+    contentRating,
+    reviewNote: reviewNote?.trim() ? reviewNote.trim().slice(0, 800) : undefined,
+    reviewedAt: new Date().toISOString(),
+    reviewedBy: reviewerId,
+  };
+  await appendSubmission(patch);
 }
 
 export async function getCurrentOwner(submissionId: string, fallbackArtistId: string): Promise<OwnershipState> {

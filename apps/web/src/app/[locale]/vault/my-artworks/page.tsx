@@ -105,6 +105,15 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
               const previewSrc = `/api/artwork-submissions/${rec.id}/preview?artistId=${encodeURIComponent(artistId)}`;
               const edition = `${a.editionLabel} 1/${rec.editionTotal}`;
               const isVideo = rec.storedFile.mime.startsWith("video/");
+              const reviewStatus = rec.reviewStatus ?? "pending_review";
+              const statusLabel =
+                reviewStatus === "approved"
+                  ? m.operatorReview.filterApproved
+                  : reviewStatus === "changes_requested"
+                    ? m.operatorReview.filterChanges
+                    : reviewStatus === "rejected"
+                      ? m.operatorReview.filterRejected
+                      : m.operatorReview.filterPending;
               return (
                 <li key={rec.id}>
                   <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
@@ -132,7 +141,12 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
                         <span className="opus-text-metallic font-display text-sm tracking-wide">{rec.artworkTitle}</span>
                         <span className="font-display text-sm tracking-wide text-opus-warm/55">{rec.nickname}</span>
                       </p>
-                      <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
+                      <p className="mt-1 flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-mono text-[0.65rem] text-opus-warm/45">{edition}</span>
+                        <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2.5 py-1 font-mono text-[0.65rem] text-opus-warm/60">
+                          {statusLabel}
+                        </span>
+                      </p>
                     </div>
                   </div>
                 </li>
