@@ -50,7 +50,7 @@ export const ja: Messages = {
   },
   signup: {
     title: "会員登録",
-    subtitle: "OPUSを利用するためのアカウントを作成します。",
+    subtitle: "ログインと同じく、Apple・Google・LINEで登録できます。",
     roleLabel: "登録種別",
     roleCollector: "利用者",
     roleArtist: "作家",
@@ -64,7 +64,7 @@ export const ja: Messages = {
     signupNotReadyAlert: "会員登録は現在準備中です。近日中に対応予定です。",
     alreadyHaveAccount: "すでにアカウントをお持ちですか？",
     signInLink: "ログイン",
-    note: "現在はUIのみを提供しています。アカウント連携は次の段階で追加します。",
+    note: "一般会員はSNSのSSOで登録します。現時点ではデモ用セッションのみ設定され、実際のSSO連携は次段階で接続します。",
   },
   artistSignup: {
     title: "作家登録",

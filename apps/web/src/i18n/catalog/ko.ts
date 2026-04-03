@@ -50,7 +50,7 @@ export const ko: Messages = {
   },
   signup: {
     title: "회원가입",
-    subtitle: "OPUS 이용을 위한 계정을 생성합니다.",
+    subtitle: "로그인과 동일하게 Apple, Google, LINE으로 가입할 수 있습니다.",
     roleLabel: "등록 유형",
     roleCollector: "이용자",
     roleArtist: "작가",
@@ -64,7 +64,7 @@ export const ko: Messages = {
     signupNotReadyAlert: "회원가입 처리는 준비 중입니다. 곧 제공될 예정입니다.",
     alreadyHaveAccount: "이미 계정이 있나요?",
     signInLink: "로그인",
-    note: "현재는 UI만 제공됩니다. 실제 가입 연동은 다음 단계에서 연결합니다.",
+    note: "일반 회원은 SNS SSO로 가입합니다. 현재는 데모 세션만 설정되며, 실제 SSO 연동은 다음 단계에서 연결합니다.",
   },
   artistSignup: {
     title: "작가 등록",

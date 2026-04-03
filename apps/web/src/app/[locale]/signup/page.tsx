@@ -2,7 +2,7 @@ import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
-import { SignupPanel } from "@/components/auth/SignupPanel";
+import { LoginPanel } from "@/components/auth/LoginPanel";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -26,25 +26,23 @@ export default async function SignupPage({
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{m.signup.subtitle}</p>
 
-        <SignupPanel
+        <LoginPanel
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}
           privacyLabel={m.footer.privacy}
           returnTo={returnTo}
           strings={{
-            displayNameLabel: m.signup.displayNameLabel,
-            emailLabel: m.signup.emailLabel,
-            passwordLabel: m.signup.passwordLabel,
-            passwordConfirmLabel: m.signup.passwordConfirmLabel,
-            passwordMismatchAlert: m.signup.passwordMismatchAlert,
-            createAccount: m.signup.createAccount,
-            consentPreamble: m.signup.consentPreamble,
+            continueWithApple: m.auth.continueWithApple,
+            continueWithGoogle: m.auth.continueWithGoogle,
+            continueWithLine: m.auth.continueWithLine,
+            hint: m.auth.hintSoon,
+            consentPreamble: m.auth.consentPreamble,
             consentBetween: m.auth.consentBetween,
             consentConclude: m.auth.consentConclude,
             ageCheckbox: m.auth.ageCheckbox,
             consentRequiredAlert: m.auth.consentRequiredAlert,
-            signupNotReadyAlert: m.signup.signupNotReadyAlert,
+            ssoNotReadyAlert: m.auth.ssoNotReadyAlert,
           }}
         />
 

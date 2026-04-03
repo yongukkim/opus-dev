@@ -50,7 +50,7 @@ export const en: Messages = {
   },
   signup: {
     title: "Sign up",
-    subtitle: "Create your OPUS account to continue.",
+    subtitle: "Sign up with Apple, Google, or LINE — the same options as Sign in.",
     roleLabel: "Account type",
     roleCollector: "Collector",
     roleArtist: "Artist",
@@ -64,7 +64,7 @@ export const en: Messages = {
     signupNotReadyAlert: "Sign-up is not available yet. This will be available soon.",
     alreadyHaveAccount: "Already have an account?",
     signInLink: "Sign in",
-    note: "UI only for now. Account integration comes next.",
+    note: "General members use SNS SSO to sign up. For now only a demo session is set; real SSO integration comes next.",
   },
   artistSignup: {
     title: "Artist registration",
