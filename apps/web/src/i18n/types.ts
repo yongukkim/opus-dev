@@ -68,6 +68,10 @@ export type Messages = {
     consentRequiredAlert: string;
     /** Shown when SSO is clicked after consent but OAuth is not wired. */
     ssoNotReadyAlert: string;
+    /** Divider between SNS and email on unified auth page. */
+    emailDividerLabel: string;
+    emailLabel: string;
+    passwordLabel: string;
     note: string;
   };
   signup: SignupMessages;

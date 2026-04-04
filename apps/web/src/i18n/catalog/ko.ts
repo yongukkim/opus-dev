@@ -46,6 +46,9 @@ export const ko: Messages = {
     consentRequiredAlert:
       "만 18세 이상임을 확인하고, 이용약관 및 개인정보처리방침에 동의해 주세요.",
     ssoNotReadyAlert: "SSO 연동은 준비 중입니다. 곧 제공될 예정입니다.",
+    emailDividerLabel: "또는 이메일로",
+    emailLabel: "이메일",
+    passwordLabel: "비밀번호",
     note: "현재는 UI만 제공됩니다. 실제 연동은 다음 단계에서 연결합니다.",
   },
   signup: {

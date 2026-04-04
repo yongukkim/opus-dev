@@ -46,6 +46,9 @@ export const ja: Messages = {
     consentRequiredAlert:
       "18歳以上であること、および利用規約・プライバシーポリシーへの同意を確認してください。",
     ssoNotReadyAlert: "SSO連携は現在準備中です。近日中に対応予定です。",
+    emailDividerLabel: "またはメールで",
+    emailLabel: "メールアドレス",
+    passwordLabel: "パスワード",
     note: "現在はUIのみを提供しています。実連携は次の段階で追加します。",
   },
   signup: {

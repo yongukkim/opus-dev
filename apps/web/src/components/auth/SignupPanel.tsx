@@ -47,12 +47,15 @@ export function SignupPanel({
   privacyLabel,
   returnTo,
   strings,
+  sharedConsent,
 }: {
   termsHref: string;
   privacyHref: string;
   termsLabel: string;
   privacyLabel: string;
   returnTo: string;
+  /** When set, consent UI is omitted (parent provides a single AuthConsentBlock for SNS + email). */
+  sharedConsent?: { ageConfirmed: boolean };
   strings: {
     displayNameLabel: string;
     emailLabel: string;
@@ -72,31 +75,34 @@ export function SignupPanel({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [internalAgeConfirmed, setInternalAgeConfirmed] = useState(false);
   const [showPasswordMismatch, setShowPasswordMismatch] = useState(false);
   const [pending, setPending] = useState(false);
   const router = useRouter();
 
+  const ageConfirmed = sharedConsent ? sharedConsent.ageConfirmed : internalAgeConfirmed;
   const inactive = !ageConfirmed;
   const passwordMismatch =
     password.length > 0 && passwordConfirm.length > 0 && password !== passwordConfirm;
 
   return (
-    <div className="mt-10 space-y-5">
-      <AuthConsentBlock
-        termsHref={termsHref}
-        privacyHref={privacyHref}
-        termsLabel={termsLabel}
-        privacyLabel={privacyLabel}
-        strings={{
-          preamble: strings.consentPreamble,
-          between: strings.consentBetween,
-          conclude: strings.consentConclude,
-          ageCheckbox: strings.ageCheckbox,
-        }}
-        checked={ageConfirmed}
-        onCheckedChange={setAgeConfirmed}
-      />
+    <div className={sharedConsent ? "space-y-5" : "mt-10 space-y-5"}>
+      {!sharedConsent ? (
+        <AuthConsentBlock
+          termsHref={termsHref}
+          privacyHref={privacyHref}
+          termsLabel={termsLabel}
+          privacyLabel={privacyLabel}
+          strings={{
+            preamble: strings.consentPreamble,
+            between: strings.consentBetween,
+            conclude: strings.consentConclude,
+            ageCheckbox: strings.ageCheckbox,
+          }}
+          checked={internalAgeConfirmed}
+          onCheckedChange={setInternalAgeConfirmed}
+        />
+      ) : null}
 
       <form
         className="space-y-4"

@@ -2,7 +2,7 @@ import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
-import { LoginPanel } from "@/components/auth/LoginPanel";
+import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -26,24 +26,14 @@ export default async function SignupPage({
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{m.signup.subtitle}</p>
 
-        <LoginPanel
+        <UnifiedAuthSection
+          variant="signup"
+          returnTo={returnTo}
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}
           privacyLabel={m.footer.privacy}
-          returnTo={returnTo}
-          strings={{
-            continueWithApple: m.auth.continueWithApple,
-            continueWithGoogle: m.auth.continueWithGoogle,
-            continueWithLine: m.auth.continueWithLine,
-            hint: m.auth.hintSoon,
-            consentPreamble: m.auth.consentPreamble,
-            consentBetween: m.auth.consentBetween,
-            consentConclude: m.auth.consentConclude,
-            ageCheckbox: m.auth.ageCheckbox,
-            consentRequiredAlert: m.auth.consentRequiredAlert,
-            ssoNotReadyAlert: m.auth.ssoNotReadyAlert,
-          }}
+          m={m}
         />
 
         <p className="mt-6 rounded-xl border border-opus-gold/15 bg-opus-slate/30 px-5 py-4 text-xs leading-relaxed text-opus-warm/55">
@@ -72,4 +62,3 @@ export default async function SignupPage({
     </main>
   );
 }
-
