@@ -88,7 +88,7 @@ export const ko: Messages = {
     note: "현재는 UI만 제공됩니다. 실제 가입/검증은 다음 단계에서 연결합니다.",
   },
   trust: {
-    line: "인증 에디션 · 출처 · 비금융 상품",
+    line: "인증 에디션",
     tokushoho: "특정상거래법 표시",
     chronicle: "The Chronicle",
     vaultShort: "Vault",
@@ -275,7 +275,7 @@ export const ko: Messages = {
   hero: {
     kicker: "인증된 대체 불가능 디지털 아트 에디션",
     line1:
-      "은밀히 소장하는 나만의 디지털 리미티드 에디션",
+      "어디에도 없는 나만의 리미티드 에디션",
     line2:
       "",
     exploreArchive: "아카이브 둘러보기",

@@ -88,7 +88,7 @@ export const en: Messages = {
     note: "UI only for now. Signup and verification come next.",
   },
   trust: {
-    line: "Authenticated editions · Provenance · Not a financial product",
+    line: "Authenticated editions",
     tokushoho: "Commercial disclosures (Japan)",
     chronicle: "The Chronicle",
     vaultShort: "Vault",
@@ -275,9 +275,9 @@ export const en: Messages = {
   hero: {
     kicker: "Authenticated non-fungible digital art editions",
     line1:
-      "A quietly held, personal digital limited edition.",
+      "Your own limited edition — found nowhere else.",
     line2:
-      "An original collectible that exists nowhere else — yours alone.",
+      "An authenticated original for your collection.",
     exploreArchive: "Explore the Archive",
     viewPremieres: "View premieres",
   },

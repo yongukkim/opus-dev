@@ -89,7 +89,7 @@ export const ja: Messages = {
     note: "現在はUIのみを提供しています。登録・検証は次の段階で追加します。",
   },
   trust: {
-    line: "認定版 · 来歴 · 非金融商品",
+    line: "認定版",
     tokushoho: "特定商取引法に基づく表記",
     chronicle: "The Chronicle",
     vaultShort: "Vault",
@@ -282,9 +282,9 @@ export const ja: Messages = {
   hero: {
     kicker: "認証された代替不可能なデジタルアート・エディション",
     line1:
-      "ひそやかに所蔵する、あなただけのデジタル・リミテッドエディション。",
+      "どこにもない、あなただけのリミテッドエディション。",
     line2:
-      "どこにもない、あなただけのオリジナル・コレクティブル。",
+      "認証されたオリジナル・コレクティブルとして、あなたのコレクションに。",
     exploreArchive: "アーカイブを探求する",
     viewPremieres: "プレミアを見る",
   },
