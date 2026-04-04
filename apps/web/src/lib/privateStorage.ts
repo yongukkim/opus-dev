@@ -16,6 +16,8 @@ export type SubmissionRecord = {
   nickname: string;
   artworkTitle: string;
   genre: string;
+  /** Discovery / shelf grouping: male-oriented vs female-oriented (optional for legacy rows). */
+  audienceCategory?: "male" | "female";
   year?: number;
   description?: string;
   tags: string[];
@@ -32,6 +34,8 @@ export type SubmissionRecord = {
   initialMint: number;
   numberingPolicy: "auto" | "manual";
   lockEdition: boolean;
+  /** List price in Japanese yen (integer). Optional for legacy submissions. */
+  priceJpy?: number;
   storedFile: { relativePath: string; filename: string; mime: string; bytes: number };
 };
 

@@ -12,6 +12,10 @@ export type OperatorReviewRow = {
   artistId: string;
   nickname: string;
   artworkTitle: string;
+  /** Male- / female-oriented shelf grouping when present. */
+  audienceCategory?: "male" | "female";
+  /** List price in JPY when present on the submission record. */
+  priceJpy?: number;
   reviewStatus: ReviewStatus;
   contentRating: ContentRating;
   reviewNote?: string;
@@ -22,6 +26,12 @@ function badgeClass(kind: "neutral" | "good" | "warn" | "bad"): string {
   if (kind === "warn") return "bg-amber-500/15 text-amber-200 border-amber-400/20";
   if (kind === "bad") return "bg-rose-500/15 text-rose-200 border-rose-400/20";
   return "bg-white/[0.06] text-opus-warm/70 border-white/[0.10]";
+}
+
+function audienceLabel(m: Messages, cat: "male" | "female" | undefined): string | null {
+  if (cat === "male") return m.submitArtwork.audienceMale;
+  if (cat === "female") return m.submitArtwork.audienceFemale;
+  return null;
 }
 
 export function OperatorReviewTable({
@@ -103,10 +113,19 @@ export function OperatorReviewTable({
                     : "bad";
             const ratingKind = r.contentRating === "general" ? "neutral" : r.contentRating === "mature" ? "warn" : "bad";
             const busy = pending === r.id;
+            const audienceLine = audienceLabel(m, r.audienceCategory);
             return (
               <li key={r.id} className="grid grid-cols-[1.2fr,1fr,0.9fr,0.9fr,1.1fr] gap-3 px-5 py-4">
                 <div className="min-w-0">
                   <p className="truncate font-sans text-sm text-opus-warm/85">{r.artworkTitle}</p>
+                  {audienceLine ? (
+                    <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{audienceLine}</p>
+                  ) : null}
+                  {typeof r.priceJpy === "number" && Number.isFinite(r.priceJpy) ? (
+                    <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/50">
+                      ¥{r.priceJpy.toLocaleString("ja-JP")}
+                    </p>
+                  ) : null}
                   <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/40">{r.id}</p>
                 </div>
                 <div className="min-w-0">

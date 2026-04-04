@@ -18,6 +18,7 @@ type Genre =
 
 type EditionMode = "unique" | "limited";
 type NumberingPolicy = "auto" | "manual";
+type AudienceCategory = "" | "male" | "female";
 
 type Draft = {
   actorUserId: string;
@@ -26,7 +27,10 @@ type Draft = {
   nickname: string;
   artworkTitle: string;
   genre: Genre;
+  audienceCategory: AudienceCategory;
   year: string;
+  /** Whole yen, digits only in UI; submitted as priceJpy. */
+  priceJpy: string;
   description: string;
   tags: string;
   editionMode: EditionMode;
@@ -80,7 +84,9 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
     nickname: "",
     artworkTitle: "",
     genre: "",
+    audienceCategory: "",
     year: "",
+    priceJpy: "",
     description: "",
     tags: "",
     editionMode: "limited",
@@ -108,12 +114,18 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
     if (!trim(draft.nickname)) e["nickname"] = "Required";
     if (!trim(draft.artworkTitle)) e["artworkTitle"] = "Required";
     if (!draft.genre) e["genre"] = "Required";
+    if (!draft.audienceCategory) e["audienceCategory"] = "Required";
     if (!draft.file) e["file"] = "Required";
 
     if (draft.year.trim()) {
       const y = Number.parseInt(draft.year, 10);
       const current = new Date().getFullYear();
       if (!Number.isFinite(y) || y < 1900 || y > current + 1) e["year"] = "Invalid year";
+    }
+
+    const priceParsed = Number.parseInt(draft.priceJpy, 10);
+    if (!draft.priceJpy.trim() || !Number.isFinite(priceParsed) || priceParsed < 1 || priceParsed > 99_999_999) {
+      e["priceJpy"] = "Invalid";
     }
 
     const total = Number.parseInt(draft.editionTotal, 10);
@@ -175,6 +187,11 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
         return { ...d, initialMint: capped };
       }
 
+      if (name === "priceJpy") {
+        const digits = value.replace(/\D/g, "").slice(0, 8);
+        return { ...d, priceJpy: digits };
+      }
+
       return { ...d, [name]: value } as Draft;
     });
   }
@@ -210,7 +227,9 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
       nickname: true,
       artworkTitle: true,
       genre: true,
+      audienceCategory: true,
       year: true,
+      priceJpy: true,
       description: true,
       tags: true,
       editionMode: true,
@@ -234,7 +253,9 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
         fd.set("nickname", draft.nickname);
         fd.set("artworkTitle", draft.artworkTitle);
         fd.set("genre", draft.genre);
+        fd.set("audienceCategory", draft.audienceCategory);
         fd.set("year", draft.year);
+        fd.set("priceJpy", draft.priceJpy);
         fd.set("description", draft.description);
         fd.set("tags", draft.tags);
         fd.set("editionMode", draft.editionMode);
@@ -286,19 +307,30 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
         .map((t) => t.trim())
         .filter(Boolean)
         .slice(0, 8) || [];
+    const priceJpyDisplay = draft.priceJpy.trim()
+      ? `¥${Number(draft.priceJpy).toLocaleString("ja-JP")}`
+      : "—";
+    const audienceDisplay =
+      draft.audienceCategory === "male"
+        ? s.audienceMale
+        : draft.audienceCategory === "female"
+          ? s.audienceFemale
+          : "—";
     return {
       artistName: safe(draft.artistName),
       nickname: safe(draft.nickname),
       artworkTitle: safe(draft.artworkTitle),
       genre,
+      audienceDisplay,
       year,
+      priceJpyDisplay,
       total,
       initialMint,
       numberingPolicy,
       editionMode,
       tags,
     };
-  }, [draft]);
+  }, [draft, s]);
 
   const invalid = (k: keyof Draft) => Boolean((touched[k] || banner) && errors[k]);
 
@@ -403,6 +435,52 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
               placeholder="2026"
             />
           </div>
+
+          <div className="md:col-span-2">
+            <p className={labelClass()}>{s.audienceLabel}</p>
+            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:max-w-lg">
+              <label className="flex items-center gap-2 rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75">
+                <input
+                  type="radio"
+                  name="audienceCategory"
+                  value="male"
+                  checked={draft.audienceCategory === "male"}
+                  onChange={onText}
+                  onBlur={() => markTouched("audienceCategory")}
+                  className="h-4 w-4 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+                />
+                {s.audienceMale}
+              </label>
+              <label className="flex items-center gap-2 rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75">
+                <input
+                  type="radio"
+                  name="audienceCategory"
+                  value="female"
+                  checked={draft.audienceCategory === "female"}
+                  onChange={onText}
+                  onBlur={() => markTouched("audienceCategory")}
+                  className="h-4 w-4 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+                />
+                {s.audienceFemale}
+              </label>
+            </div>
+            <p className={hintClass()}>{s.audienceHint}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 max-w-md">
+          <p className={labelClass()}>{s.priceLabel}</p>
+          <input
+            name="priceJpy"
+            value={draft.priceJpy}
+            onChange={onText}
+            onBlur={() => markTouched("priceJpy")}
+            className={inputClass(invalid("priceJpy"))}
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="10000"
+          />
+          <p className={hintClass()}>{s.priceHint}</p>
         </div>
 
         <div className="mt-5">
@@ -579,7 +657,9 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
             </p>
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-opus-warm/55">
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.genre}</span>
+              <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.audienceDisplay}</span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.year}</span>
+              <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.priceJpyDisplay}</span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.editionMode}</span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.total} editions</span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">
