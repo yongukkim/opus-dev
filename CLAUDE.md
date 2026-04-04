@@ -28,6 +28,11 @@
 * **기획 문서(참고용):** 작품거래사이트.pdf 등 초안에서 뽑은 기능·일정·수익 가정 목록은 **참고만** 한다. 이미 반영된 항목, 보류·취소·변경될 수 있으며 구현 우선순위는 별도 합의로 조정한다.
 * **시각 기준:** 웹·앱 레이아웃·밀도·카피 톤은 `apps/web/public/design-spec`(원본 PNG 및 PDF에서 추출한 시안 이미지 포함)과 **정합**을 맞춘다. 시안에 과거 가칭이 보여도 **구현 시 표기는 OPUS로 통일**하고, OPUS 토큰(**near-black 차콜·챔페인 브라스·웜 화이트**, 위 **재질 표현** 규칙)을 유지한다. **인장·공식 인증** 등은 `opus-seal` 계열로 소량 포인트만 쓴다.
 
+## 고해상 작품 이미지 · 스마트폰 앱 (배포 정책)
+* **원칙:** **구매자에게 제공하는 고해상도(또는 원본에 가까운) 감상용 래스터는 스마트폰 앱에서만** 제공한다. 웹(`apps/web`) 마켓플레이스는 공개·세션 한도 내 **저해상·워터마크 파생**만 유지한다(현재 `/api/catalog-image`의 `preview` / `vault` 등).
+* **앱 제작 시:** 모바일 앱은 **인증된 구매자(Chronicle·에디션 소유 검증)** 만 고해상 자산 URL 또는 스트림을 받도록 API·CDN·DRM(필요 시) 경계를 설계한다. 웹과 동일 엔드포인트로 고해상을 내리지 않는다.
+* **EN (for agents):** Ship **high-fidelity artwork pixels only inside the authenticated mobile app** for verified owners; keep the web on downsampled, watermarked derivatives unless product explicitly changes this policy.
+
 ## 1. 입력값 검증 및 살균 (Input Validation & Sanitization)
 * **통제 항목:** ISO 27001 A.14.2.1
 * **규칙:** 모든 클라이언트 입력값(Form, API Parameter, URL Query 등)은 '신뢰할 수 없는 데이터'로 간주한다.

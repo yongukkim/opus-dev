@@ -32,7 +32,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const m = getDictionary(locale);
 
   return (
-    <div className="flex min-h-screen flex-col bg-opus-charcoal">
+    <div className="opus-app-root flex min-h-screen flex-col bg-opus-charcoal">
       <SiteHeader locale={locale} m={m} />
       <TrustStrip locale={locale} m={m} />
       <div className="flex-1">{children}</div>

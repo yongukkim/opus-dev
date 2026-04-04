@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Messages } from "@/i18n/types";
+import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 
@@ -29,13 +30,14 @@ export async function StatsTrustRow({ m }: { m: Messages }) {
   const s = m.stats;
   const local = await listLocalArtworks();
   const useLocal = local.length >= 3;
-  const base = useLocal ? "/local-artworks" : "/sample-artworks";
-  const files = useLocal ? local.slice(0, 3) : [...FALLBACK];
+  const fileTriple: [string, string, string] = useLocal
+    ? [local[0]!, local[1]!, local[2]!]
+    : [FALLBACK[0], FALLBACK[1], FALLBACK[2]];
 
   const picks = [
-    { label: s.weekBest, file: files[0], tag: "WEEK" },
-    { label: s.monthBest, file: files[1], tag: "MONTH" },
-    { label: s.yearBest, file: files[2], tag: "YEAR" },
+    { label: s.weekBest, file: fileTriple[0], tag: "WEEK" },
+    { label: s.monthBest, file: fileTriple[1], tag: "MONTH" },
+    { label: s.yearBest, file: fileTriple[2], tag: "YEAR" },
   ] as const;
 
   return (
@@ -54,10 +56,11 @@ export async function StatsTrustRow({ m }: { m: Messages }) {
           >
             <div className="relative aspect-[16/10] overflow-hidden">
               <Image
-                src={`${base}/${pick.file}`}
+                src={catalogImageSrcFromFile(pick.file, "thumb")}
                 alt={pick.label}
                 fill
                 sizes="(min-width: 1024px) 320px, 90vw"
+                unoptimized
                 className="object-cover opacity-95 transition duration-700 group-hover:scale-[1.02] group-hover:opacity-100"
               />
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.16),transparent_60%)] opacity-70" />

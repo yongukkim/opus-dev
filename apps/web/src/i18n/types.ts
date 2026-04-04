@@ -43,7 +43,7 @@ export type Messages = {
     cta: string;
     archivePreview: string;
   };
-  nav: { archive: string; vault: string; legal: string };
+  nav: { archive: string; vault: string; legal: string; collectorTransfers: string };
   auth: {
     signIn: string;
     title: string;
@@ -99,6 +99,8 @@ export type Messages = {
     payouts: string;
     artistProfile: string;
     settings: string;
+    /** Vault: register a collector-to-collector transfer offer (demo). */
+    transferRegister: string;
   };
   hero: {
     kicker: string;
@@ -359,6 +361,70 @@ export type Messages = {
     /** Until SSO: switch UI role for local demo */
     demoSwitchArtist: string;
     demoSwitchCollector: string;
+  };
+  /** Collector-to-collector edition handoff (no financial-product framing in UI copy). */
+  collectorTransfer: {
+    registerKicker: string;
+    registerTitle: string;
+    registerSubtitle: string;
+    sectionArtist: string;
+    sectionWork: string;
+    sectionOffer: string;
+    userIdDevLabel: string;
+    userIdDevHint: string;
+    artistLegalNameLabel: string;
+    artistLegalNameHint: string;
+    artistPenNameLabel: string;
+    artistPenNameHint: string;
+    artworkTitleLabel: string;
+    genreLabel: string;
+    genrePlaceholder: string;
+    genreOptDigitalPainting: string;
+    genreOptIllustration: string;
+    genreOptPhotography: string;
+    genreOpt3d: string;
+    genreOptGenerative: string;
+    genreOptVideo: string;
+    genreOptMixedMedia: string;
+    genreOptOther: string;
+    yearLabel: string;
+    yearHint: string;
+    descriptionLabel: string;
+    tagsLabel: string;
+    tagsHint: string;
+    editionRefLabel: string;
+    editionRefHint: string;
+    priceLabel: string;
+    priceHint: string;
+    noteLabel: string;
+    noteHint: string;
+    rightsConfirmLabel: string;
+    rightsConfirmHint: string;
+    saveDraft: string;
+    submitCta: string;
+    successBanner: string;
+    errorBanner: string;
+    consentRequiredAlert: string;
+    previewTitle: string;
+    previewPublicOnly: string;
+    previewLegalHidden: string;
+    previewFooter: string;
+    /** Shown only in development: link to open this flow without demo session. */
+    devPreviewLink: string;
+    /** Banner when viewing register page with ?preview=1 in development. */
+    devPreviewBanner: string;
+    listingsTitle: string;
+    listingsSubtitle: string;
+    listingsEmpty: string;
+    listingsArtistPublic: string;
+    listingsGenre: string;
+    listingsYear: string;
+    listingsSellerRef: string;
+    listingsPrice: string;
+    listingsListedAt: string;
+    listingsDemoNote: string;
+    listingsBackHome: string;
+    listingsRegisterCta: string;
   };
   tokushoho: {
     back: string;

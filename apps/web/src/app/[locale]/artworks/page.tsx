@@ -1,5 +1,6 @@
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import {
   encodeArtworkSlug,
   loadCatalogFiles,
@@ -47,7 +48,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const a = m.artworks;
-  const { files, useLocal, base } = await loadCatalogFiles();
+  const { files, useLocal } = await loadCatalogFiles();
 
   const totalPages = Math.max(1, Math.ceil(files.length / PAGE_SIZE));
   const requestedPage = parsePage(pageParam);
@@ -117,10 +118,11 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                         className="relative block aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
                       >
                         <Image
-                          src={`${base}/${file}`}
+                          src={catalogImageSrcFromFile(file, "thumb")}
                           alt={`${title} — ${artist}`}
                           fill
                           sizes="(min-width: 1024px) 240px, (min-width: 640px) 45vw, 90vw"
+                          unoptimized
                           className="object-cover opacity-95 transition hover:opacity-100"
                         />
                         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
@@ -167,10 +169,11 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                         className="relative mx-auto aspect-[4/5] w-full max-w-[11rem] shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal sm:mx-0 sm:max-w-none sm:w-36"
                       >
                         <Image
-                          src={`${base}/${file}`}
+                          src={catalogImageSrcFromFile(file, "thumb")}
                           alt={`${title} — ${artist}`}
                           fill
                           sizes="(min-width: 640px) 144px, 100vw"
+                          unoptimized
                           className="object-cover opacity-95 transition hover:opacity-100"
                         />
                       </Link>

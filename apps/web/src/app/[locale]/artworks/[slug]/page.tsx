@@ -2,6 +2,8 @@ import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMini
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { catalogImageSrcFromFile, type CatalogImageVariant } from "@/lib/catalogImageUrl";
+import { hasDemoSessionFromCookies } from "@/lib/demoSession";
 import {
   demoListPriceJpy,
   loadCatalogFiles,
@@ -13,6 +15,7 @@ import {
 } from "@/lib/artworksCatalog";
 import Image from "next/image";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -26,7 +29,11 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const resolved = await resolveArtworkBySlug(slug);
   if (!resolved) notFound();
 
-  const { files, base } = await loadCatalogFiles();
+  const cookieStore = await cookies();
+  const hasSession = hasDemoSessionFromCookies(cookieStore);
+  const coverVariant: CatalogImageVariant = hasSession ? "vault" : "preview";
+
+  const { files } = await loadCatalogFiles();
   const m = getDictionary(locale);
   const a = m.artworks;
   const { title, artist } = parseTitleArtist(resolved.file, resolved.globalIndex);
@@ -86,11 +93,12 @@ export default async function ArtworkDetailPage({ params }: Props) {
               className={`relative mx-auto aspect-[4/5] w-full ${COVER_MAX} overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal shadow-opus-card`}
             >
               <Image
-                src={`${resolved.base}/${resolved.file}`}
+                src={catalogImageSrcFromFile(resolved.file, coverVariant)}
                 alt={`${title} — ${artist}`}
                 fill
                 priority
                 sizes="(min-width: 1024px) 300px, (min-width: 640px) 40vw, 85vw"
+                unoptimized
                 className="object-cover opacity-95"
               />
             </div>
@@ -189,7 +197,6 @@ export default async function ArtworkDetailPage({ params }: Props) {
                     locale={locale}
                     file={e.file}
                     globalIndex={e.globalIndex}
-                    base={base}
                   />
                 ))}
               </div>
@@ -211,7 +218,6 @@ export default async function ArtworkDetailPage({ params }: Props) {
                     locale={locale}
                     file={e.file}
                     globalIndex={e.globalIndex}
-                    base={base}
                   />
                 ))}
               </div>

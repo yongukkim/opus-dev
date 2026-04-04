@@ -32,6 +32,7 @@ export function VaultSidebar({
   const links = [
     { path: "/vault" as const, label: v.overview },
     { path: "/vault/collection" as const, label: v.collection },
+    { path: "/vault/transfer/register" as const, label: v.transferRegister },
     { path: "/vault/activity" as const, label: v.activity },
     { path: "/vault/submit" as const, label: v.submit },
     { path: "/vault/my-artworks" as const, label: v.myArtworks },

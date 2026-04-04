@@ -39,6 +39,9 @@ export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
             <Link href={withLocale(locale, "/artworks")} className={navItemClass}>
               {m.nav.archive}
             </Link>
+            <Link href={withLocale(locale, "/listings/collector-transfers")} className={navItemClass}>
+              {m.nav.collectorTransfers}
+            </Link>
             <Link href={withLocale(locale, "/vault")} className={navItemClass}>
               {m.nav.vault}
             </Link>

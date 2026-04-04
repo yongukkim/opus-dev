@@ -244,3 +244,16 @@ body {
     animation: vault-enclosure-glow 4.5s ease-in-out infinite;
   }
 }
+
+/**
+ * Print: hide OPUS shell (bypassable via “Save as PDF”, screenshots, etc.).
+ * KO: 인쇄 대화상자·PDF 저장 등은 브라우저에 따라 여전히 가능할 수 있습니다.
+ * JA: ブラウザや「PDFで保存」経由では回避され得ます。
+ * EN: Browsers may still allow print-to-PDF or similar; this is not a security boundary.
+ */
+@media print {
+  .opus-app-root,
+  .opus-app-root * {
+    display: none !important;
+  }
+}
