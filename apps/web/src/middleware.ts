@@ -33,6 +33,16 @@ export function middleware(request: NextRequest) {
   if (found) {
     const res = NextResponse.next();
     res.headers.set("x-opus-locale", found);
+    /** Dev layout preview: query can be missing from some RSC fetches; mirror ?preview=1 into a request header. */
+    if (
+      process.env.NODE_ENV !== "production" &&
+      pathname.includes("/vault/transfer/register")
+    ) {
+      const preview = request.nextUrl.searchParams.get("preview");
+      if (preview === "1" || preview === "true") {
+        res.headers.set("x-opus-transfer-register-preview", "1");
+      }
+    }
     return res;
   }
 

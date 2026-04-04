@@ -10,9 +10,11 @@ import { OPUS_DEMO_SESSION_COOKIE } from "@/lib/demoSession";
  */
 export async function POST(): Promise<Response> {
   const res = NextResponse.json({ ok: true });
+  const isProd = process.env.NODE_ENV === "production";
   res.cookies.set(OPUS_DEMO_SESSION_COOKIE, "1", {
     httpOnly: true,
-    secure: true,
+    /** Local http://localhost cannot set Secure cookies in most browsers; keep Secure in production only. */
+    secure: isProd,
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 2, // 2 hours

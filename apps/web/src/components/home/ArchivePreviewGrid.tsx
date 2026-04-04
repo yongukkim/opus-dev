@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
+import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { withLocale } from "@/i18n/paths";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
@@ -45,7 +46,6 @@ export async function ArchivePreviewGrid({ locale, m }: { locale: Locale; m: Mes
   const g = m.archiveGrid;
   const local = await listLocalArtworks();
   const useLocal = local.length > 0;
-  const base = useLocal ? "/local-artworks" : "/sample-artworks";
   const items = useLocal
     ? local.slice(0, 8).map((file, idx) => ({
         id: `local-${idx + 1}`,
@@ -88,10 +88,11 @@ export async function ArchivePreviewGrid({ locale, m }: { locale: Locale; m: Mes
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
                   <Image
-                    src={`${base}/${item.file}`}
+                    src={catalogImageSrcFromFile(item.file, "thumb")}
                     alt={g.artwork}
                     fill
                     sizes="(min-width: 1024px) 220px, (min-width: 640px) 45vw, 90vw"
+                    unoptimized
                     className="object-cover opacity-95 transition duration-700 group-hover:scale-[1.02] group-hover:opacity-100"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.18),transparent_60%)] opacity-70" />

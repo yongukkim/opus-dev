@@ -7,10 +7,13 @@ export function VaultAuthGate({
   locale,
   m,
   returnTo,
+  developmentPreview,
 }: {
   locale: Locale;
   m: Messages;
   returnTo: string;
+  /** Local dev only: secondary link to open the same returnTo with ?preview=1 (parent page must honor it). */
+  developmentPreview?: { href: string; label: string };
 }) {
   const s = m.accountSettings;
   const loginHref = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(returnTo)}`;
@@ -35,6 +38,16 @@ export function VaultAuthGate({
           {m.signup.title}
         </Link>
       </div>
+      {process.env.NODE_ENV !== "production" && developmentPreview ? (
+        <p className="mt-10 max-w-xl text-xs leading-relaxed text-opus-warm/40">
+          <Link
+            href={developmentPreview.href}
+            className="text-opus-gold/80 underline-offset-4 hover:text-opus-gold-light hover:underline"
+          >
+            {developmentPreview.label}
+          </Link>
+        </p>
+      ) : null}
     </main>
   );
 }

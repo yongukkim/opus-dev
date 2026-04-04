@@ -12,13 +12,20 @@ const securityHeaders = [
   },
 ];
 
+/** Tell crawlers not to index artwork binaries under `public/` (mirrors `robots.txt` disallow). */
+const catalogImageRobotsHeaders = [{ key: "X-Robots-Tag", value: "noindex, noimageindex" }];
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   transpilePackages: ["@opus/ui", "@opus/api"],
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/local-artworks/:path*", headers: catalogImageRobotsHeaders },
+      { source: "/sample-artworks/:path*", headers: catalogImageRobotsHeaders },
+    ];
   },
 };
 

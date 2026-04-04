@@ -1,3 +1,4 @@
+import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { demoListPriceJpy, encodeArtworkSlug, parseTitleArtist } from "@/lib/artworksCatalog";
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
@@ -8,12 +9,10 @@ export function ArtworkCatalogMiniCard({
   locale,
   file,
   globalIndex,
-  base,
 }: {
   locale: Locale;
   file: string;
   globalIndex: number;
-  base: string;
 }) {
   const { title, artist } = parseTitleArtist(file, globalIndex);
   const href = withLocale(locale, `/artworks/${encodeArtworkSlug(file)}`);
@@ -26,10 +25,11 @@ export function ArtworkCatalogMiniCard({
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-md border border-white/[0.06] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
         <Image
-          src={`${base}/${file}`}
+          src={catalogImageSrcFromFile(file, "thumb")}
           alt={`${title} — ${artist}`}
           fill
           sizes="140px"
+          unoptimized
           className="object-cover opacity-90 transition group-hover:opacity-100"
         />
       </div>
