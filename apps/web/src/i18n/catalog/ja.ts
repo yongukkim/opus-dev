@@ -76,7 +76,7 @@ export const ja: Messages = {
     roleLabel: "登録種別",
     roleCollector: "利用者",
     roleArtist: "作家",
-    displayNameLabel: "表示名",
+    displayNameLabel: "筆名",
     emailLabel: "メールアドレス",
     passwordLabel: "パスワード",
     passwordConfirmLabel: "パスワード（確認）",

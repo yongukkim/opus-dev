@@ -75,7 +75,7 @@ export const en: Messages = {
     roleLabel: "Account type",
     roleCollector: "Collector",
     roleArtist: "Artist",
-    displayNameLabel: "Display name",
+    displayNameLabel: "Pen name",
     emailLabel: "Email",
     passwordLabel: "Password",
     passwordConfirmLabel: "Confirm password",
