@@ -46,6 +46,9 @@ export const en: Messages = {
     consentRequiredAlert:
       "Please confirm you are 18 or older and agree to the Terms of Use and Privacy Policy.",
     ssoNotReadyAlert: "Single sign-on is not connected yet. This will be available soon.",
+    emailDividerLabel: "Or with email",
+    emailLabel: "Email",
+    passwordLabel: "Password",
     note: "UI only for now. OAuth wiring comes next.",
   },
   signup: {
