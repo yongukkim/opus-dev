@@ -141,10 +141,46 @@ export type Messages = {
     editionLabel: string;
     buyCta: string;
     buyHint: string;
+    /** Grid vs list layout toggle (Archive / The Chronicle catalog). */
+    viewGridLabel: string;
+    viewListLabel: string;
+    viewToggleAria: string;
     paginationPrev: string;
     paginationNext: string;
     /** Placeholders: `{current}`, `{total}`. */
     paginationPageOf: string;
+    /** Catalog work detail (purchase flow). */
+    detailListPrice: string;
+    detailDemoNote: string;
+    detailBuyCta: string;
+    /** CTA on grid/list to open the work detail page. */
+    openWorkCta: string;
+    detailBackArchive: string;
+    /** Product-style detail (The Chronicle item page). */
+    detailBreadcrumbHome: string;
+    detailBreadcrumbArchive: string;
+    detailArtistLabel: string;
+    detailPriceTaxNote: string;
+    detailStockNote: string;
+    detailSpecArtist: string;
+    detailSpecEdition: string;
+    detailSpecFormat: string;
+    detailFormatValue: string;
+    detailAboutHeading: string;
+    detailAboutBody: string;
+    detailAddToCart: string;
+    detailAddToWishlist: string;
+    detailAddedToCart: string;
+    detailAddedToWishlist: string;
+    detailCollectDemoNote: string;
+    detailPrecautionsHeading: string;
+    detailPrecautionBullets: readonly string[];
+    detailRelatedHeading: string;
+    detailRelatedLead: string;
+    detailSameArtistHeading: string;
+    detailSameArtistLead: string;
+    detailSameArtistEmpty: string;
+    detailMoreInArchive: string;
   };
   checkout: {
     title: string;
@@ -152,6 +188,8 @@ export type Messages = {
     summaryLabel: string;
     summaryArtwork: string;
     summaryFallback: string;
+    /** Placeholder `{price}` — e.g. formatted JPY. */
+    summaryPrice: string;
     payCta: string;
     note: string;
     back: string;
@@ -263,7 +301,14 @@ export type Messages = {
     artworkTitleLabel: string;
     genreLabel: string;
     genrePlaceholder: string;
+    audienceLabel: string;
+    audienceMale: string;
+    audienceFemale: string;
+    audienceHint: string;
     yearLabel: string;
+    /** Sale list price in JPY (integer). */
+    priceLabel: string;
+    priceHint: string;
     descriptionLabel: string;
     tagsLabel: string;
     tagsHint: string;

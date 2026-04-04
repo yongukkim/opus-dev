@@ -5,16 +5,22 @@ import Link from "next/link";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ artwork?: string; returnTo?: string }>;
+  searchParams: Promise<{ artwork?: string; returnTo?: string; priceJpy?: string }>;
 };
 
 export default async function CheckoutPage({ params, searchParams }: Props) {
   const { locale: raw } = await params;
-  const { artwork: artworkParam, returnTo: returnToParam } = await searchParams;
+  const { artwork: artworkParam, returnTo: returnToParam, priceJpy: priceJpyParam } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
 
   const artwork = (artworkParam ?? "").trim();
+  const priceParsed = Number.parseInt((priceJpyParam ?? "").trim(), 10);
+  const priceDisplay =
+    Number.isFinite(priceParsed) && priceParsed > 0
+      ? `¥${priceParsed.toLocaleString("ja-JP")}`
+      : null;
+
   const safeReturn = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
   const successHref = `${withLocale(locale, "/purchase/success")}?returnTo=${encodeURIComponent(
     safeReturn,
@@ -37,6 +43,11 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
             <p className="mt-3 font-sans text-sm text-opus-warm/80">
               {artwork ? m.checkout.summaryArtwork.replace("{artwork}", artwork) : m.checkout.summaryFallback}
             </p>
+            {priceDisplay ? (
+              <p className="mt-2 font-mono text-sm text-opus-warm/65">
+                {m.checkout.summaryPrice.replace("{price}", priceDisplay)}
+              </p>
+            ) : null}
           </div>
           <div className="px-6 py-6">
             <Link
