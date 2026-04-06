@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
-import { AppInstallCallout } from "@/components/AppInstallCallout";
 
 /**
  * Deep charcoal footer, four-column IA. LEGAL links to public docs + Terms.
@@ -68,15 +67,12 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
     >
       <div className="mx-auto max-w-6xl px-6 py-14 md:px-10">
         <div className="mb-12">
-          <AppInstallCallout
-            m={m}
-            title={m.footer.appRequiredTitle}
-            body={m.footer.appRequiredBody}
-            iosLabel={m.footer.appRequiredIos}
-            androidLabel={m.footer.appRequiredAndroid}
-            comingSoonLabel={m.footer.appRequiredComingSoon}
-            className="rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6"
-          />
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6">
+            <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.32em] text-opus-gold/55">
+              {m.footer.appRequiredTitle}
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-opus-gold/42">{m.footer.appRequiredBody}</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
