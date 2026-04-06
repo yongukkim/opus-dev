@@ -53,10 +53,13 @@ export function AppInstallCallout({
   void m;
   const links = getOpusAppLinksFromEnv();
 
-  const btnClass =
-    "inline-flex items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-3 text-[0.7rem] font-semibold tracking-[0.1em] text-opus-warm/80 transition hover:border-white/[0.18] hover:bg-white/[0.06]";
-  const disabledClass =
-    "inline-flex items-center justify-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-[0.7rem] font-semibold tracking-[0.1em] text-opus-warm/35";
+  const badgeClass =
+    "inline-flex items-center gap-3 rounded-xl border border-white/[0.10] bg-[#0B0B0B] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.45)] transition hover:border-opus-gold/25 hover:bg-[#0A0A0A] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-opus-gold/35";
+  const badgeDisabledClass =
+    "inline-flex items-center gap-3 rounded-xl border border-white/[0.06] bg-[#090909] px-4 py-3 text-opus-warm/30";
+
+  const micro = "text-[0.58rem] font-mono uppercase tracking-[0.28em] text-opus-warm/40";
+  const store = "text-sm font-display tracking-[0.02em] text-opus-warm/85 leading-tight";
 
   return (
     <div className={className ?? "rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"}>
@@ -64,28 +67,40 @@ export function AppInstallCallout({
       <p className="mt-2 text-xs leading-relaxed text-opus-warm/55">{body}</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {links.ios ? (
-          <Link href={links.ios} className={btnClass}>
-            <AppleMark className="h-4 w-4 text-opus-gold/80" />
-            <span>{iosLabel}</span>
+          <Link href={links.ios} className={badgeClass} aria-label={iosLabel}>
+            <AppleMark className="h-6 w-6 text-opus-gold/80" />
+            <span className="min-w-0">
+              <span className={micro}>Download on the</span>
+              <span className={`block ${store}`}>App Store</span>
+            </span>
           </Link>
         ) : (
-          <div className={disabledClass}>
-            <AppleMark className="h-4 w-4 text-opus-gold/35" />
-            <span>
-              {iosLabel} · {comingSoonLabel}
+          <div className={badgeDisabledClass} aria-disabled>
+            <AppleMark className="h-6 w-6 text-opus-gold/30" />
+            <span className="min-w-0">
+              <span className={micro}>Download on the</span>
+              <span className={`block ${store} text-opus-warm/40`}>
+                App Store · {comingSoonLabel}
+              </span>
             </span>
           </div>
         )}
         {links.android ? (
-          <Link href={links.android} className={btnClass}>
-            <AndroidMark className="h-4 w-4 text-opus-gold/80" />
-            <span>{androidLabel}</span>
+          <Link href={links.android} className={badgeClass} aria-label={androidLabel}>
+            <AndroidMark className="h-6 w-6 text-opus-gold/80" />
+            <span className="min-w-0">
+              <span className={micro}>GET IT ON</span>
+              <span className={`block ${store}`}>Google Play</span>
+            </span>
           </Link>
         ) : (
-          <div className={disabledClass}>
-            <AndroidMark className="h-4 w-4 text-opus-gold/35" />
-            <span>
-              {androidLabel} · {comingSoonLabel}
+          <div className={badgeDisabledClass} aria-disabled>
+            <AndroidMark className="h-6 w-6 text-opus-gold/30" />
+            <span className="min-w-0">
+              <span className={micro}>GET IT ON</span>
+              <span className={`block ${store} text-opus-warm/40`}>
+                Google Play · {comingSoonLabel}
+              </span>
             </span>
           </div>
         )}

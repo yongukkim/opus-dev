@@ -1,5 +1,6 @@
 import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMiniCard";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
+import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { catalogImageSrcFromFile, type CatalogImageVariant } from "@/lib/catalogImageUrl";
@@ -131,6 +132,15 @@ export default async function ArtworkDetailPage({ params }: Props) {
               </Link>
               <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-opus-warm/35">{a.buyHint}</p>
               <p className="mt-3 text-xs leading-relaxed text-opus-warm/45">{a.detailDemoNote}</p>
+              <AppInstallCallout
+                m={m}
+                title={a.detailAppRequiredTitle}
+                body={a.detailAppRequiredBody}
+                iosLabel={a.detailAppRequiredIos}
+                androidLabel={a.detailAppRequiredAndroid}
+                comingSoonLabel={a.detailAppRequiredComingSoon}
+                className="mt-5 max-w-sm rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"
+              />
 
               <ArtworkPdpCollectActions
                 slug={slug}
