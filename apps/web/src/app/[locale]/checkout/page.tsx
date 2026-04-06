@@ -1,6 +1,5 @@
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 
@@ -58,17 +57,6 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
               {m.checkout.payCta}
             </Link>
             <p className="mt-4 text-center text-xs text-opus-warm/45">{m.checkout.note}</p>
-
-            <div className="mt-6">
-              <AppInstallCallout
-                m={m}
-                title={m.checkout.appRequiredTitle}
-                body={m.checkout.appRequiredBody}
-                iosLabel={m.checkout.appRequiredIos}
-                androidLabel={m.checkout.appRequiredAndroid}
-                comingSoonLabel={m.checkout.appRequiredComingSoon}
-              />
-            </div>
           </div>
         </div>
 

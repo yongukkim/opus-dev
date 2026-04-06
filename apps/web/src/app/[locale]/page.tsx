@@ -1,6 +1,5 @@
 import { DesignPhilosophyBand } from "@/components/DesignPhilosophyBand";
 import { Hero } from "@/components/Hero";
-import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { ArchivePreviewGrid } from "@/components/home/ArchivePreviewGrid";
 import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
@@ -80,20 +79,6 @@ export default async function HomePage({ params }: Props) {
         <ArchivePreviewGrid locale={locale} m={m} />
 
         <MarketingCtaBand locale={locale} m={m} />
-
-        <div className="mx-auto max-w-6xl px-6 pb-16 md:px-10">
-          <div className="max-w-2xl">
-            <AppInstallCallout
-              m={m}
-              title={m.home.appRequiredTitle}
-              body={m.home.appRequiredBody}
-              iosLabel={m.home.appRequiredIos}
-              androidLabel={m.home.appRequiredAndroid}
-              comingSoonLabel={m.home.appRequiredComingSoon}
-              className="rounded-2xl border border-white/[0.08] bg-opus-slate/30 px-6 py-6 shadow-opus-card"
-            />
-          </div>
-        </div>
       </main>
     </>
   );
