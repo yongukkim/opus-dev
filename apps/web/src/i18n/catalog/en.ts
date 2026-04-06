@@ -399,6 +399,12 @@ export const en: Messages = {
     summaryPrice: "Amount: {price}",
     payCta: "Pay (demo)",
     note: "For flow verification before Stripe / Apple Pay wiring.",
+    appRequiredTitle: "Smartphone app required",
+    appRequiredBody:
+      "High-fidelity viewing after purchase is provided only in the OPUS mobile app. Please install the iOS or Android app.",
+    appRequiredIos: "iPhone (App Store)",
+    appRequiredAndroid: "Android (Google Play)",
+    appRequiredComingSoon: "Store links coming soon",
     back: "← Back to Archive",
   },
   purchaseSuccess: {

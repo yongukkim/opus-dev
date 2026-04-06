@@ -397,6 +397,12 @@ export const ko: Messages = {
     summaryPrice: "금액: {price}",
     payCta: "결제하기 (데모)",
     note: "Stripe / Apple Pay 연동 전, 플로우 확인용 화면입니다.",
+    appRequiredTitle: "스마트폰 앱 설치가 필요합니다",
+    appRequiredBody:
+      "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
+    appRequiredIos: "iPhone (App Store)",
+    appRequiredAndroid: "Android (Google Play)",
+    appRequiredComingSoon: "스토어 링크 준비 중",
     back: "← 아카이브로",
   },
   purchaseSuccess: {

@@ -415,6 +415,12 @@ export const ja: Messages = {
     summaryPrice: "金額: {price}",
     payCta: "決済する（デモ）",
     note: "Stripe / Apple Pay 連携前のフロー確認用画面です。",
+    appRequiredTitle: "スマートフォンアプリのインストールが必要です",
+    appRequiredBody:
+      "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
+    appRequiredIos: "iPhone（App Store）",
+    appRequiredAndroid: "Android（Google Play）",
+    appRequiredComingSoon: "ストアリンク準備中",
     back: "← アーカイブへ",
   },
   purchaseSuccess: {

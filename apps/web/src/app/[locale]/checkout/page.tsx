@@ -1,5 +1,6 @@
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { getOpusAppLinksFromEnv } from "@/lib/appLinks";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 
@@ -13,6 +14,7 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
   const { artwork: artworkParam, returnTo: returnToParam, priceJpy: priceJpyParam } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
+  const appLinks = getOpusAppLinksFromEnv();
 
   const artwork = (artworkParam ?? "").trim();
   const priceParsed = Number.parseInt((priceJpyParam ?? "").trim(), 10);
@@ -57,6 +59,39 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
               {m.checkout.payCta}
             </Link>
             <p className="mt-4 text-center text-xs text-opus-warm/45">{m.checkout.note}</p>
+
+            <div className="mt-6 rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5">
+              <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">
+                {m.checkout.appRequiredTitle}
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-opus-warm/55">{m.checkout.appRequiredBody}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {appLinks.ios ? (
+                  <Link
+                    href={appLinks.ios}
+                    className="inline-flex items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-3 text-xs font-semibold tracking-[0.1em] text-opus-warm/80 transition hover:border-white/[0.18] hover:bg-white/[0.06]"
+                  >
+                    {m.checkout.appRequiredIos}
+                  </Link>
+                ) : (
+                  <div className="inline-flex items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-xs font-semibold tracking-[0.1em] text-opus-warm/35">
+                    {m.checkout.appRequiredIos} · {m.checkout.appRequiredComingSoon}
+                  </div>
+                )}
+                {appLinks.android ? (
+                  <Link
+                    href={appLinks.android}
+                    className="inline-flex items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-3 text-xs font-semibold tracking-[0.1em] text-opus-warm/80 transition hover:border-white/[0.18] hover:bg-white/[0.06]"
+                  >
+                    {m.checkout.appRequiredAndroid}
+                  </Link>
+                ) : (
+                  <div className="inline-flex items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-xs font-semibold tracking-[0.1em] text-opus-warm/35">
+                    {m.checkout.appRequiredAndroid} · {m.checkout.appRequiredComingSoon}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

@@ -194,6 +194,11 @@ export type Messages = {
     summaryPrice: string;
     payCta: string;
     note: string;
+    appRequiredTitle: string;
+    appRequiredBody: string;
+    appRequiredIos: string;
+    appRequiredAndroid: string;
+    appRequiredComingSoon: string;
     back: string;
   };
   purchaseSuccess: {
