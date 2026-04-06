@@ -264,6 +264,7 @@ export const ja: Messages = {
     audienceLabel: "分類",
     audienceMale: "男性向け",
     audienceFemale: "女性向け",
+    audienceNone: "関係なし",
     audienceHint: "主な読者・鑑賞の軸を選びます。アーカイブ・審査で参照します。",
     yearLabel: "制作年",
     priceLabel: "価格（円）",
@@ -397,6 +398,10 @@ export const ja: Messages = {
     detailSpecArtist: "作家",
     detailSpecEdition: "エディション",
     detailSpecFormat: "種別",
+    detailSpecAudienceTone: "傾向",
+    audienceToneMale: "男性向け",
+    audienceToneFemale: "女性向け",
+    audienceToneNone: "関係なし",
     detailFormatValue: "認証デジタルアート・エディション（デモカタログ）",
     detailAboutHeading: "作品情報",
     detailAboutBody:

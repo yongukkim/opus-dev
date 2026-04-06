@@ -18,7 +18,7 @@ type Genre =
 
 type EditionMode = "unique" | "limited";
 type NumberingPolicy = "auto" | "manual";
-type AudienceCategory = "" | "male" | "female";
+type AudienceCategory = "" | "male" | "female" | "none";
 
 type Draft = {
   actorUserId: string;
@@ -84,7 +84,7 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
     nickname: "",
     artworkTitle: "",
     genre: "",
-    audienceCategory: "",
+    audienceCategory: "none",
     year: "",
     priceJpy: "",
     description: "",
@@ -315,7 +315,9 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
         ? s.audienceMale
         : draft.audienceCategory === "female"
           ? s.audienceFemale
-          : "—";
+          : draft.audienceCategory === "none"
+            ? s.audienceNone
+            : "—";
     return {
       artistName: safe(draft.artistName),
       nickname: safe(draft.nickname),
@@ -438,7 +440,7 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
 
           <div className="md:col-span-2">
             <p className={labelClass()}>{s.audienceLabel}</p>
-            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:max-w-lg">
+            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:max-w-2xl">
               <label className="flex items-center gap-2 rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75">
                 <input
                   type="radio"
@@ -462,6 +464,18 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
                   className="h-4 w-4 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
                 />
                 {s.audienceFemale}
+              </label>
+              <label className="flex items-center gap-2 rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75">
+                <input
+                  type="radio"
+                  name="audienceCategory"
+                  value="none"
+                  checked={draft.audienceCategory === "none"}
+                  onChange={onText}
+                  onBlur={() => markTouched("audienceCategory")}
+                  className="h-4 w-4 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+                />
+                {s.audienceNone}
               </label>
             </div>
             <p className={hintClass()}>{s.audienceHint}</p>

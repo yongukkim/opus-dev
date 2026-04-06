@@ -182,6 +182,10 @@ export type Messages = {
     detailSpecArtist: string;
     detailSpecEdition: string;
     detailSpecFormat: string;
+    detailSpecAudienceTone: string;
+    audienceToneMale: string;
+    audienceToneFemale: string;
+    audienceToneNone: string;
     detailFormatValue: string;
     detailAboutHeading: string;
     detailAboutBody: string;
@@ -326,6 +330,7 @@ export type Messages = {
     audienceLabel: string;
     audienceMale: string;
     audienceFemale: string;
+    audienceNone: string;
     audienceHint: string;
     yearLabel: string;
     /** Sale list price in JPY (integer). */

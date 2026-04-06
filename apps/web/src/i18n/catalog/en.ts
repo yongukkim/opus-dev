@@ -255,6 +255,7 @@ export const en: Messages = {
     audienceLabel: "Audience",
     audienceMale: "Male-oriented",
     audienceFemale: "Female-oriented",
+    audienceNone: "Not applicable",
     audienceHint: "Choose the primary audience axis for discovery and review.",
     yearLabel: "Year",
     priceLabel: "Price (JPY)",
@@ -381,6 +382,10 @@ export const en: Messages = {
     detailSpecArtist: "Artist",
     detailSpecEdition: "Edition",
     detailSpecFormat: "Format",
+    detailSpecAudienceTone: "Audience",
+    audienceToneMale: "Male-oriented",
+    audienceToneFemale: "Female-oriented",
+    audienceToneNone: "Not applicable",
     detailFormatValue: "Authenticated digital art edition (demo catalog)",
     detailAboutHeading: "About this work",
     detailAboutBody:

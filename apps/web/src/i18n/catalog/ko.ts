@@ -255,6 +255,7 @@ export const ko: Messages = {
     audienceLabel: "분류",
     audienceMale: "남성향",
     audienceFemale: "여성향",
+    audienceNone: "관계없음",
     audienceHint: "작품의 주요 독자·감상 축을 선택합니다. 아카이브·검수에서 참고합니다.",
     yearLabel: "제작 연도",
     priceLabel: "작품 가격 (엔)",
@@ -380,6 +381,10 @@ export const ko: Messages = {
     detailSpecArtist: "작가",
     detailSpecEdition: "에디션",
     detailSpecFormat: "형식",
+    detailSpecAudienceTone: "성향",
+    audienceToneMale: "남성향",
+    audienceToneFemale: "여성향",
+    audienceToneNone: "관계없음",
     detailFormatValue: "인증 디지털 아트 에디션（데모 카탈로그）",
     detailAboutHeading: "작품 정보",
     detailAboutBody:

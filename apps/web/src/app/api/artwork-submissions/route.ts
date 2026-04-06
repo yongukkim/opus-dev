@@ -67,9 +67,9 @@ function parseTags(value: string | undefined): string[] {
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.14.2.1 (§1) Input Validation & Sanitization
- *   KO: 폼/파일 업로드는 신뢰할 수 없으므로 서버에서 길이·형식·허용 타입·용량·가격·분류(남성향/여성향 열거)를 화이트리스트로 검증한 뒤 저장합니다(에디션 총수 ≤ 20 포함).
- *   JA: フォーム/ファイルは信頼できないため、サーバ側で長さ・形式・許可タイプ・容量・価格・分類（男性向け/女性向けの列挙）をホワイトリスト検証してから保存します（総エディション ≤ 20 を含む）。
- *   EN: Treat form/file uploads as untrusted; validate length/format/allowed types/size, JPY price, and audience category enum with a strict allowlist before persisting (including total editions ≤ 20).
+ *   KO: 폼/파일 업로드는 신뢰할 수 없으므로 서버에서 길이·형식·허용 타입·용량·가격·분류(남성향/여성향/관계없음 열거)를 화이트리스트로 검증한 뒤 저장합니다(에디션 총수 ≤ 20 포함).
+ *   JA: フォーム/ファイルは信頼できないため、サーバ側で長さ・形式・許可タイプ・容量・価格・分類（男性向け/女性向け/関係なしの列挙）をホワイトリスト検証してから保存します（総エディション ≤ 20 を含む）。
+ *   EN: Treat form/file uploads as untrusted; validate length/format/allowed types/size, JPY price, and the audience category enum (male/female/none) with a strict allowlist before persisting (including total editions ≤ 20).
  */
 export async function POST(request: NextRequest) {
   try {
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const nickname = requireString(fd, "nickname");
     const artworkTitle = requireString(fd, "artworkTitle", 200);
     const genre = requireString(fd, "genre", 40);
-    const audienceCategory = requireEnum(fd, "audienceCategory", ["male", "female"] as const);
+    const audienceCategory = requireEnum(fd, "audienceCategory", ["male", "female", "none"] as const);
     const yearRaw = optionalString(fd, "year", 8);
     const description = optionalString(fd, "description", 2000);
     const tags = parseTags(optionalString(fd, "tags", 400));
