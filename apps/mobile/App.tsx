@@ -1,15 +1,45 @@
-import { createHttpClient } from "@opus/api";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import { createHttpClient } from "@opus/api";
 import { useMemo, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { AppTabs } from "./src/navigation/AppTabs";
+import type { RootStackParamList } from "./src/navigation/types";
+import { ArtworkViewerScreen } from "./src/screens/ArtworkViewerScreen";
+import { opusNavTheme } from "./src/theme/opusTheme";
+import { useEffect } from "react";
+import { getOrCreateDeviceId } from "./src/security/deviceId";
+import { pollAndWipeIfRevoked } from "./src/security/deviceStatusPoller";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function RootNavigation() {
+  useEffect(() => {
+    void (async () => {
+      const apiBase = process.env["EXPO_PUBLIC_API_URL"] ?? "http://localhost:3000";
+      const deviceId = await getOrCreateDeviceId();
+      // Demo polling on launch; in production add background fetch + push-driven wipe.
+      await pollAndWipeIfRevoked({ apiBase, userId: "collector-demo-001", deviceId });
+    })();
+  }, []);
+
+  return (
+    <SafeAreaProvider>
+      <StatusBar style="light" />
+      <NavigationContainer theme={opusNavTheme}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Tabs" component={AppTabs} />
+          <Stack.Screen name="ArtworkViewer" component={ArtworkViewerScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
+}
 
 /** OPUS Classic Luxury — near-black charcoal, champagne brass (tokens), warm white; seal for official stamp. */
 const C = {
@@ -178,12 +208,11 @@ function OpusHome() {
   );
 }
 
+// Temporary: keep legacy home prototype reachable for later refactor.
+void OpusHome;
+
 export default function App() {
-  return (
-    <SafeAreaProvider>
-      <OpusHome />
-    </SafeAreaProvider>
-  );
+  return <RootNavigation />;
 }
 
 const styles = StyleSheet.create({
