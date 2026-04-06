@@ -104,6 +104,11 @@ export const ko: Messages = {
     privacy: "개인정보 처리방침",
     terms: "이용약관",
     chronicleTrust: "The Chronicle 기술을 통한 기록 무결성 검증",
+    appRequiredTitle: "앱 설치",
+    appRequiredBody: "구매 후 고해상도 감상은 OPUS 앱에서만 제공됩니다.",
+    appRequiredIos: "iPhone",
+    appRequiredAndroid: "Android",
+    appRequiredComingSoon: "준비 중",
   },
   legalPrivacy: {
     back: "← 홈으로",
@@ -301,6 +306,12 @@ export const ko: Messages = {
     lead: "결제·안내는 이 사이트에서. 작품 감상은 모바일 앱에서.",
     buyCta: "구매·결제하기",
     legalLink: "특정상거래법 표시",
+    appRequiredTitle: "스마트폰 앱 설치가 필요합니다",
+    appRequiredBody:
+      "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
+    appRequiredIos: "iPhone (App Store)",
+    appRequiredAndroid: "Android (Google Play)",
+    appRequiredComingSoon: "스토어 링크 준비 중",
     pillarChronicle: {
       sub: "변조에 강한 기록",
       body: "소유와 에디션의 연쇄를 하나의 기록으로 남깁니다. 감정과 한정판 정보를 분명히 보존합니다.",
@@ -353,6 +364,12 @@ export const ko: Messages = {
     detailListPrice: "표시 가격",
     detailDemoNote: "데모 카탈로그용 금액입니다. 실제 판매가와 다를 수 있습니다.",
     detailBuyCta: "구매·결제로 진행",
+    detailAppRequiredTitle: "스마트폰 앱 설치가 필요합니다",
+    detailAppRequiredBody:
+      "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
+    detailAppRequiredIos: "iPhone (App Store)",
+    detailAppRequiredAndroid: "Android (Google Play)",
+    detailAppRequiredComingSoon: "스토어 링크 준비 중",
     openWorkCta: "상세·구매",
     detailBackArchive: "← 아카이브로",
     detailBreadcrumbHome: "홈",

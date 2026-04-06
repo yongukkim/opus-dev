@@ -87,6 +87,11 @@ export type Messages = {
     terms: string;
     /** Technical integrity line (Chronicle); KO/JA/EN per locale. */
     chronicleTrust: string;
+    appRequiredTitle: string;
+    appRequiredBody: string;
+    appRequiredIos: string;
+    appRequiredAndroid: string;
+    appRequiredComingSoon: string;
   };
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
@@ -116,6 +121,11 @@ export type Messages = {
     lead: string;
     buyCta: string;
     legalLink: string;
+    appRequiredTitle: string;
+    appRequiredBody: string;
+    appRequiredIos: string;
+    appRequiredAndroid: string;
+    appRequiredComingSoon: string;
     pillarChronicle: { sub: string; body: string };
     pillarVault: { sub: string; body: string };
     pillarPremieres: { sub: string; body: string };
@@ -155,6 +165,11 @@ export type Messages = {
     detailListPrice: string;
     detailDemoNote: string;
     detailBuyCta: string;
+    detailAppRequiredTitle: string;
+    detailAppRequiredBody: string;
+    detailAppRequiredIos: string;
+    detailAppRequiredAndroid: string;
+    detailAppRequiredComingSoon: string;
     /** CTA on grid/list to open the work detail page. */
     openWorkCta: string;
     detailBackArchive: string;

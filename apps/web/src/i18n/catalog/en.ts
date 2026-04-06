@@ -104,6 +104,11 @@ export const en: Messages = {
     privacy: "Privacy policy",
     terms: "Terms of use",
     chronicleTrust: "Verified by The Chronicle Technology",
+    appRequiredTitle: "App required",
+    appRequiredBody: "High-fidelity viewing after purchase is provided only in the OPUS mobile app.",
+    appRequiredIos: "iPhone",
+    appRequiredAndroid: "Android",
+    appRequiredComingSoon: "Coming soon",
   },
   legalPrivacy: {
     back: "← Back home",
@@ -302,6 +307,12 @@ export const en: Messages = {
     lead: "Payments and guidance on this site. Viewing works in the mobile app.",
     buyCta: "Purchase & pay",
     legalLink: "Commercial disclosures (Japan)",
+    appRequiredTitle: "Smartphone app required",
+    appRequiredBody:
+      "High-fidelity viewing after purchase is provided only in the OPUS mobile app. Please install the iOS or Android app.",
+    appRequiredIos: "iPhone (App Store)",
+    appRequiredAndroid: "Android (Google Play)",
+    appRequiredComingSoon: "Store links coming soon",
     pillarChronicle: {
       sub: "Tamper-resistant record",
       body: "Chain ownership and editions in one record. Keep appraisal and edition facts clear.",
@@ -354,6 +365,12 @@ export const en: Messages = {
     detailListPrice: "List price",
     detailDemoNote: "Demo amount for this catalog preview; live pricing may differ.",
     detailBuyCta: "Continue to checkout",
+    detailAppRequiredTitle: "Smartphone app required",
+    detailAppRequiredBody:
+      "High-fidelity viewing after purchase is provided only in the OPUS mobile app. Please install the iOS or Android app.",
+    detailAppRequiredIos: "iPhone (App Store)",
+    detailAppRequiredAndroid: "Android (Google Play)",
+    detailAppRequiredComingSoon: "Store links coming soon",
     openWorkCta: "View & purchase",
     detailBackArchive: "← Back to Archive",
     detailBreadcrumbHome: "Home",

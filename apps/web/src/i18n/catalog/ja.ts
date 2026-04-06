@@ -110,6 +110,11 @@ export const ja: Messages = {
     privacy: "プライバシーポリシー",
     terms: "利用規約",
     chronicleTrust: "The Chronicle Technology により検証されています。",
+    appRequiredTitle: "アプリのインストール",
+    appRequiredBody: "購入後の高画質鑑賞は OPUS モバイルアプリでのみ提供されます。",
+    appRequiredIos: "iPhone",
+    appRequiredAndroid: "Android",
+    appRequiredComingSoon: "準備中",
   },
   legalPrivacy: {
     back: "← トップへ",
@@ -314,6 +319,12 @@ export const ja: Messages = {
     lead: "決済・案内は本サイトで行い、作品の鑑賞はモバイルアプリから行えます。",
     buyCta: "購入・決済へ進む",
     legalLink: "特定商取引法に基づく表記",
+    appRequiredTitle: "スマートフォンアプリのインストールが必要です",
+    appRequiredBody:
+      "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
+    appRequiredIos: "iPhone（App Store）",
+    appRequiredAndroid: "Android（Google Play）",
+    appRequiredComingSoon: "ストアリンク準備中",
     pillarChronicle: {
       sub: "改ざん耐性のある履歴",
       body:
@@ -370,6 +381,12 @@ export const ja: Messages = {
     detailListPrice: "表示価格",
     detailDemoNote: "カタログデモ用の金額です。実際の販売価格と異なる場合があります。",
     detailBuyCta: "購入・決済へ進む",
+    detailAppRequiredTitle: "スマートフォンアプリのインストールが必要です",
+    detailAppRequiredBody:
+      "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
+    detailAppRequiredIos: "iPhone（App Store）",
+    detailAppRequiredAndroid: "Android（Google Play）",
+    detailAppRequiredComingSoon: "ストアリンク準備中",
     openWorkCta: "詳細・購入",
     detailBackArchive: "← アーカイブへ",
     detailBreadcrumbHome: "ホーム",
