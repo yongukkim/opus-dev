@@ -4,6 +4,7 @@ import { hasDemoSessionFromCookies } from "@/lib/demoSession";
 import { readActorFromRequest } from "@/lib/authContext";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
 import { signMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
+import { getActiveDeviceState } from "@/lib/deviceBinding";
 
 export const runtime = "nodejs";
 
@@ -66,6 +67,15 @@ export async function POST(
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
+  const deviceId = request.headers.get("x-opus-device-id")?.trim() ?? "";
+  if (!deviceId) {
+    return NextResponse.json({ ok: false, error: "invalid_device" }, { status: 400 });
+  }
+  const deviceState = await getActiveDeviceState(actor.userId);
+  if (!deviceState.activeDeviceId || deviceState.activeDeviceId !== deviceId) {
+    return NextResponse.json({ ok: false, error: "device_revoked" }, { status: 401 });
+  }
+
   const resolved = await resolveArtworkBySlug(slug);
   if (!resolved) {
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
@@ -76,6 +86,7 @@ export async function POST(
   const token = signMobileAssetLeaseTokenV1({
     v: 1,
     userId: actor.userId,
+    deviceId,
     artworkSlug: slug,
     expiresAt,
   });

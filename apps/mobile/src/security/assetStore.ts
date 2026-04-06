@@ -93,3 +93,14 @@ export async function updateLeaseExpiresAt(assetId: string, expiresAt: string): 
   return true;
 }
 
+export async function deleteAllStoredAssets(): Promise<void> {
+  try {
+    const info = await FileSystem.getInfoAsync(ROOT_DIR);
+    if (info.exists) {
+      await FileSystem.deleteAsync(ROOT_DIR, { idempotent: true });
+    }
+  } catch {
+    // ignore
+  }
+}
+

@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 export type MobileAssetLeaseTokenV1 = {
   v: 1;
   userId: string;
+  deviceId: string;
   artworkSlug: string;
   /** ISO string */
   expiresAt: string;

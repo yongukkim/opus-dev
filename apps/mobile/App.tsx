@@ -12,10 +12,22 @@ import { AppTabs } from "./src/navigation/AppTabs";
 import type { RootStackParamList } from "./src/navigation/types";
 import { ArtworkViewerScreen } from "./src/screens/ArtworkViewerScreen";
 import { opusNavTheme } from "./src/theme/opusTheme";
+import { useEffect } from "react";
+import { getOrCreateDeviceId } from "./src/security/deviceId";
+import { pollAndWipeIfRevoked } from "./src/security/deviceStatusPoller";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigation() {
+  useEffect(() => {
+    void (async () => {
+      const apiBase = process.env["EXPO_PUBLIC_API_URL"] ?? "http://localhost:3000";
+      const deviceId = await getOrCreateDeviceId();
+      // Demo polling on launch; in production add background fetch + push-driven wipe.
+      await pollAndWipeIfRevoked({ apiBase, userId: "collector-demo-001", deviceId });
+    })();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <StatusBar style="light" />

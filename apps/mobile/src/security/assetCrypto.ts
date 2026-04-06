@@ -50,3 +50,11 @@ export async function decryptBytesV1(enc: EncryptedBlobV1): Promise<Uint8Array> 
   return out;
 }
 
+export async function deleteAssetKey(): Promise<void> {
+  try {
+    await SecureStore.deleteItemAsync(KEY_NAME);
+  } catch {
+    // ignore
+  }
+}
+

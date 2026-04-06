@@ -4,6 +4,7 @@ import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
 import { resolvePublicArtworkPath } from "@/lib/catalogImageServe";
 import { verifyMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
 import { readActorFromRequest } from "@/lib/authContext";
+import { getActiveDeviceState } from "@/lib/deviceBinding";
 
 export const runtime = "nodejs";
 
@@ -58,10 +59,19 @@ export async function GET(
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
+  const deviceId = request.headers.get("x-opus-device-id")?.trim() ?? "";
+  if (!deviceId) {
+    return NextResponse.json({ ok: false, error: "invalid_device" }, { status: 400 });
+  }
+  const deviceState = await getActiveDeviceState(actor.userId);
+  if (!deviceState.activeDeviceId || deviceState.activeDeviceId !== deviceId) {
+    return NextResponse.json({ ok: false, error: "device_revoked" }, { status: 401 });
+  }
+
   const auth = request.headers.get("authorization") || "";
   const token = auth.startsWith("Bearer ") ? auth.slice("Bearer ".length).trim() : "";
   const verified = token ? verifyMobileAssetLeaseTokenV1(token) : null;
-  if (!verified || verified.userId !== actor.userId || verified.artworkSlug !== slug) {
+  if (!verified || verified.userId !== actor.userId || verified.deviceId !== deviceId || verified.artworkSlug !== slug) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
