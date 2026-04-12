@@ -1,0 +1,10 @@
+# Run OPUS web on host port 80 (matches Terraform SG). From repo root: docker compose -f compose.web.yaml up --build -d
+services:
+  opus-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    environment:
+      NODE_ENV: production

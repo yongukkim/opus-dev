@@ -16,6 +16,7 @@ const securityHeaders = [
 const catalogImageRobotsHeaders = [{ key: "X-Robots-Tag", value: "noindex, noimageindex" }];
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
