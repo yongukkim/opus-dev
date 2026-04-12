@@ -1,0 +1,4 @@
+# Copy to terraform.tfvars (gitignored). One line, full output of: cat ~/.ssh/id_rsa.pub
+# ssh_public_key = "ssh-rsa AAAAB3... comment"
+
+ssh_public_key = "REPLACE_WITH_YOUR_PUBLIC_KEY"

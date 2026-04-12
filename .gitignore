@@ -52,3 +52,10 @@ apps/web/storage/
 
 # Coverage
 coverage
+
+# Terraform (state may contain secrets; keep local/backend out of VCS)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.*.log
+**/terraform.tfvars
