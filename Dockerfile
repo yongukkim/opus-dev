@@ -22,13 +22,21 @@ WORKDIR /app
 # Keep Node heap well under t4g.micro RAM+swap so builds don't OOM.
 ENV NODE_OPTIONS="--max-old-space-size=768"
 ENV NEXT_TELEMETRY_DISABLED=1
-# overlayfs/arm64 환경에서 pnpm 가상 스토어(.pnpm/*) 병렬 mkdir 레이스를 피하려고
-# flat node_modules(hoisted) + 낮은 동시성으로 설치한다.
+# flat node_modules (pnpm 가상 스토어 대신) → 디스크·레이어 사용량 감소, arm64 overlayfs 안정성↑
+ENV NPM_CONFIG_NODE_LINKER=hoisted
+ENV NPM_CONFIG_PREFER_FROZEN_LOCKFILE=true
+ENV NPM_CONFIG_CHILD_CONCURRENCY=1
+ENV NPM_CONFIG_NETWORK_CONCURRENCY=4
 RUN printf 'node-linker=hoisted\nprefer-frozen-lockfile=true\nchild-concurrency=1\nnetwork-concurrency=4\n' > /app/.npmrc
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-RUN pnpm install --frozen-lockfile --prefer-offline --child-concurrency=1 --network-concurrency=4
+RUN pnpm install \
+      --frozen-lockfile \
+      --prefer-offline \
+      --config.node-linker=hoisted \
+      --child-concurrency=1 \
+      --network-concurrency=4
 COPY --from=pruner /app/out/full/ .
 RUN pnpm exec turbo run build --filter=@opus/web --concurrency=1
 
