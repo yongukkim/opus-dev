@@ -1,4 +1,4 @@
-name: build-web-image
+name: build-and-deploy-web
 
 on:
   push:
@@ -11,11 +11,13 @@ on:
       - "pnpm-lock.yaml"
       - "Dockerfile"
       - ".dockerignore"
+      - "compose.web.yaml"
+      - "scripts/ec2-pull-restart.sh"
       - ".github/workflows/build-web-image.yml"
   workflow_dispatch: {}
 
 concurrency:
-  group: build-web-image-${{ github.ref }}
+  group: build-and-deploy-web-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -24,6 +26,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      image_ref: ${{ steps.meta.outputs.image_ref }}
     steps:
       - uses: actions/checkout@v4
 
@@ -50,10 +54,10 @@ jobs:
         id: meta
         run: |
           img="ghcr.io/${{ steps.owner.outputs.value }}/opus-web"
-          echo "image=$img" >> "$GITHUB_OUTPUT"
           short="${GITHUB_SHA::7}"
           ref="${GITHUB_REF_NAME//\//-}"
           echo "tags=$img:$short,$img:$ref,$img:latest" >> "$GITHUB_OUTPUT"
+          echo "image_ref=$img:$short" >> "$GITHUB_OUTPUT"
 
       - name: Build and push (linux/arm64)
         uses: docker/build-push-action@v6
@@ -65,3 +69,39 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into EC2 and redeploy container
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          OPUS_WEB_IMAGE: ${{ needs.build-and-push.outputs.image_ref }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_BRANCH: ${{ github.ref_name }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          envs: OPUS_WEB_IMAGE,GHCR_USER,GHCR_TOKEN,REPO_BRANCH
+          script_stop: true
+          script: |
+            set -euo pipefail
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            APP_DIR="$HOME/opus-dev"
+            if [ ! -d "$APP_DIR/.git" ]; then
+              git clone --depth 1 --branch "$REPO_BRANCH" https://github.com/yongukkim/opus-dev.git "$APP_DIR"
+            else
+              git -C "$APP_DIR" fetch --depth 1 origin "$REPO_BRANCH"
+              git -C "$APP_DIR" checkout "$REPO_BRANCH"
+              git -C "$APP_DIR" reset --hard "origin/$REPO_BRANCH"
+            fi
+            cd "$APP_DIR"
+            export OPUS_WEB_IMAGE
+            docker pull "$OPUS_WEB_IMAGE"
+            docker compose -f compose.web.yaml up -d
+            docker compose -f compose.web.yaml ps
