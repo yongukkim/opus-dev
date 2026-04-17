@@ -1,10 +1,21 @@
-# Run OPUS web on host port 80 (matches Terraform SG). From repo root: docker compose -f compose.web.yaml up --build -d
+# Run OPUS web on EC2 (host port 80 <- container 3000). Matches Terraform security group.
+# 로컬 빌드: docker compose -f compose.web.yaml up --build -d
+# 레지스트리 이미지 사용: OPUS_WEB_IMAGE=ghcr.io/yongukkim/opus-web:latest docker compose -f compose.web.yaml up -d
 services:
   opus-web:
+    image: ${OPUS_WEB_IMAGE:-opus-web:local}
     build:
       context: .
       dockerfile: Dockerfile
+    pull_policy: missing
     ports:
       - "80:3000"
     environment:
       NODE_ENV: production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
