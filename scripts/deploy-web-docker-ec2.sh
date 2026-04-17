@@ -13,7 +13,8 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/yongukkim/opus-dev.git}"
 BRANCH="${BRANCH:-feat/signup-sso-collector}"
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
-SWAP_SIZE_GB="${SWAP_SIZE_GB:-4}"
+# 8GB 루트에서 4G 스왑은 Docker 빌드와 충돌 → 기본 2G (환경변수로 조절)
+SWAP_SIZE_GB="${SWAP_SIZE_GB:-2}"
 SWAP_FILE="${SWAP_FILE:-/swapfile}"
 OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-}"
 
@@ -24,13 +25,18 @@ log "EC2 진단: 호스트 $(hostname), 메모리 / 디스크"
 free -h || true
 df -h / || true
 
-# ---------- 1) 스왑 자동 구성 (RAM < 2GB 이고 현재 스왑이 없을 때만) ----------
+# ---------- 1) 스왑 자동 구성 (RAM < 2GB 이고 스왑이 거의 없을 때만) ----------
 mem_mb=$(awk '/MemTotal/ {printf "%d", $2/1024}' /proc/meminfo)
 swap_mb=$(awk '/SwapTotal/ {printf "%d", $2/1024}' /proc/meminfo)
-if [[ "$mem_mb" -lt 2048 && "$swap_mb" -lt 1024 ]]; then
-  log "RAM ${mem_mb}MiB, swap ${swap_mb}MiB → ${SWAP_SIZE_GB}G 스왑 추가 (${SWAP_FILE})"
+# df 4번째 칼럼 = 사용 가능 1K 블록 수 (Ubuntu 기본)
+avail_kb=$(df / | awk 'NR==2 {print int($4)}')
+avail_gb=$((avail_kb / 1024 / 1024))
+# 루트 디스크에 스왑+Docker+pnpm 여유(약 4G) 남길 수 있을 때만 스왑 파일 생성
+need_gb=$((SWAP_SIZE_GB + 4))
+if [[ "$mem_mb" -lt 2048 && "$swap_mb" -lt 512 && "$avail_gb" -ge "$need_gb" ]]; then
+  log "RAM ${mem_mb}MiB, swap ${swap_mb}MiB, / 여유 ${avail_gb}G → ${SWAP_SIZE_GB}G 스왑 (${SWAP_FILE})"
   if [[ ! -f "$SWAP_FILE" ]]; then
-    sudo fallocate -l "${SWAP_SIZE_GB}G" "$SWAP_FILE" || sudo dd if=/dev/zero of="$SWAP_FILE" bs=1M count=$((SWAP_SIZE_GB*1024))
+    sudo fallocate -l "${SWAP_SIZE_GB}G" "$SWAP_FILE" || sudo dd if=/dev/zero of="$SWAP_FILE" bs=1M count=$((SWAP_SIZE_GB * 1024))
     sudo chmod 600 "$SWAP_FILE"
     sudo mkswap "$SWAP_FILE"
   fi
@@ -38,6 +44,8 @@ if [[ "$mem_mb" -lt 2048 && "$swap_mb" -lt 1024 ]]; then
   if ! grep -q "^${SWAP_FILE} " /etc/fstab 2>/dev/null; then
     echo "${SWAP_FILE} none swap sw 0 0" | sudo tee -a /etc/fstab >/dev/null
   fi
+elif [[ "$mem_mb" -lt 2048 && "$swap_mb" -lt 512 ]]; then
+  log "스왑 생략: / 여유 ${avail_gb}G < 필요 ${need_gb}G (EBS 루트 볼륨 확장 또는 SWAP_SIZE_GB 낮춤 권장)"
 else
   log "스왑 OK (RAM ${mem_mb}MiB, swap ${swap_mb}MiB) — 추가 생성 안 함"
 fi
@@ -87,6 +95,11 @@ fi
 log "디스크(/, Docker 데이터)"
 df -h / 2>/dev/null | head -5 || true
 df -h /var/lib/docker 2>/dev/null | head -3 || true
+if [[ "${avail_gb:-0}" -lt 5 ]]; then
+  log "여유 디스크가 부족합니다. AWS 콘솔에서 루트 EBS를 30GB 이상으로 늘린 뒤(온라인 확장), EC2에서 한 번 실행:"
+  log "  sudo apt-get install -y cloud-guest-utils && sudo growpart /dev/nvme0n1 1 && sudo resize2fs /dev/nvme0n1p1"
+  log "(디스크 이름은 lsblk 로 확인. xvda/sda 인 경우도 있음.)"
+fi
 
 # ---------- 4) 빌드 또는 pull ----------
 if [[ -n "$OPUS_WEB_IMAGE" ]]; then
@@ -95,7 +108,10 @@ if [[ -n "$OPUS_WEB_IMAGE" ]]; then
   ${SUDO_DOCKER}docker pull "$OPUS_WEB_IMAGE"
 else
   log "EC2에서 로컬 빌드 (시간 걸릴 수 있음, 로그를 지켜봐 주세요)"
-  docker builder prune -f 2>/dev/null || true
+  log "Docker 빌드 캐시·미사용 이미지 정리 (ENOSPC 방지)"
+  sudo docker builder prune -af 2>/dev/null || true
+  sudo docker image prune -af 2>/dev/null || true
+  sudo docker system prune -af 2>/dev/null || true
   DOCKER_BUILDKIT=1 ${SUDO_DOCKER}docker compose -f compose.web.yaml build
 fi
 
