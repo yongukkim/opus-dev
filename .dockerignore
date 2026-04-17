@@ -17,6 +17,9 @@
 !**/.env.example
 !**/.env.*.example
 
+# Not needed for @opus/web image (large local HTML/CSS reference tree; fills small EC2 root + Docker layers)
+Web_Template/
+
 # Not needed for @opus/web image
 apps/mobile
 infra/terraform/.terraform

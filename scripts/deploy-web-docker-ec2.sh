@@ -78,6 +78,16 @@ fi
 
 cd "$APP_DIR"
 
+# 예전 클론에만 남아 있을 수 있음(Web_Template/ 는 Git·Docker에서 제외 — 루트 디스크 절약)
+if [[ -d Web_Template ]]; then
+  log "Web_Template/ 삭제(디스크 절약, OPUS 웹 빌드에 불필요)"
+  rm -rf Web_Template
+fi
+
+log "디스크(/, Docker 데이터)"
+df -h / 2>/dev/null | head -5 || true
+df -h /var/lib/docker 2>/dev/null | head -3 || true
+
 # ---------- 4) 빌드 또는 pull ----------
 if [[ -n "$OPUS_WEB_IMAGE" ]]; then
   log "레지스트리 이미지 사용: $OPUS_WEB_IMAGE"
@@ -85,6 +95,7 @@ if [[ -n "$OPUS_WEB_IMAGE" ]]; then
   ${SUDO_DOCKER}docker pull "$OPUS_WEB_IMAGE"
 else
   log "EC2에서 로컬 빌드 (시간 걸릴 수 있음, 로그를 지켜봐 주세요)"
+  docker builder prune -f 2>/dev/null || true
   DOCKER_BUILDKIT=1 ${SUDO_DOCKER}docker compose -f compose.web.yaml build
 fi
 

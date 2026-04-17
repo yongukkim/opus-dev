@@ -1,3 +1,6 @@
+# Local-only HTML/CSS template references (not part of @opus/web runtime; keeps clones/Docker small)
+Web_Template/
+
 # Dependencies
 node_modules
 .pnp
