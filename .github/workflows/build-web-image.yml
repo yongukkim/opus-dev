@@ -77,20 +77,20 @@ jobs:
     steps:
       - name: SSH into EC2 and redeploy container
         uses: appleboy/ssh-action@v1.2.0
-        env:
-          OPUS_WEB_IMAGE: ${{ needs.build-and-push.outputs.image_ref }}
-          GHCR_USER: ${{ github.actor }}
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_BRANCH: ${{ github.ref_name }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          envs: OPUS_WEB_IMAGE,GHCR_USER,GHCR_TOKEN,REPO_BRANCH
+          command_timeout: 10m
           script_stop: true
           script: |
-            set -euo pipefail
+            set -eo pipefail
+            OPUS_WEB_IMAGE='${{ needs.build-and-push.outputs.image_ref }}'
+            REPO_BRANCH='${{ github.ref_name }}'
+            GHCR_USER='${{ github.actor }}'
+            GHCR_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            echo "[deploy] image=$OPUS_WEB_IMAGE branch=$REPO_BRANCH user=$GHCR_USER"
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             APP_DIR="$HOME/opus-dev"
             if [ ! -d "$APP_DIR/.git" ]; then
