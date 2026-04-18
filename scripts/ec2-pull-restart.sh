@@ -18,5 +18,20 @@ fi
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
 docker pull "$OPUS_WEB_IMAGE"
+
+# ISO 27001 A.12.1.2 / A.14.2.8 (§5, §8): run Prisma migrations before exposing the new container so schema
+# drift can never serve traffic. Uses the same image + /etc/opus/opus.env so DATABASE_URL is injected at runtime.
+# KO: 새 컨테이너가 트래픽을 받기 전에 마이그레이션을 적용한다.
+# JA: 新しいコンテナがトラフィックを受ける前にマイグレーションを適用する。
+# EN: Apply DB migrations before the new container accepts traffic.
+if [[ -f /etc/opus/opus.env ]]; then
+  docker run --rm \
+    --env-file /etc/opus/opus.env \
+    "$OPUS_WEB_IMAGE" \
+    node node_modules/prisma/build/index.js migrate deploy --schema=apps/web/prisma/schema.prisma
+else
+  echo "[ec2-pull-restart] WARN: /etc/opus/opus.env missing — skipping prisma migrate deploy" >&2
+fi
+
 docker compose -f compose.web.yaml up -d
 docker compose -f compose.web.yaml ps

@@ -5,6 +5,7 @@ Web_Template/
 node_modules
 .pnp
 .pnp.js
+.pnpm-store/
 
 # Build / cache
 .turbo

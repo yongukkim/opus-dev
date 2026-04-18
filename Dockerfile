@@ -38,6 +38,11 @@ RUN pnpm install \
       --child-concurrency=1 \
       --network-concurrency=4
 COPY --from=pruner /app/out/full/ .
+# ISO 27001 A.14.2.8 (§8): Prisma client must be generated before Next build so API routes can resolve the engine.
+# KO: 빌드 전에 Prisma 클라이언트를 생성해야 API 라우트가 엔진을 올바르게 로드한다.
+# JA: Next ビルド前に Prisma クライアントを生成し、API ルートがエンジンを解決できるようにする。
+# EN: Generate the Prisma client before the Next build so runtime API routes can load the engine.
+RUN pnpm --filter @opus/web exec prisma generate
 RUN pnpm exec turbo run build --filter=@opus/web --concurrency=1
 
 FROM base AS runner
@@ -49,6 +54,12 @@ RUN groupadd --system --gid 1001 nodejs \
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+# Next standalone tracing cannot reliably detect Prisma query-engine binaries and the migrate CLI;
+# carry them explicitly so the running container can query the DB and execute `prisma migrate deploy`.
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/prisma ./apps/web/prisma
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000

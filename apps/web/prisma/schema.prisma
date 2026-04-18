@@ -7,7 +7,12 @@
 // Identity tiers (SECURITY_GOVERNANCE.md §1.1): authenticate when permission is needed — no ID for all users.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // ISO 27001 A.8.2 / A.14.2.8 (§3, §8): pin query engine targets so the Docker image (arm64 Linux, OpenSSL 3) and local dev both load matching binaries.
+  // KO: Docker 이미지(ARM64 Linux, OpenSSL 3)와 로컬 개발 양쪽에서 Prisma 엔진이 정확히 로드되도록 타깃을 고정한다.
+  // JA: DockerイメージとローカルでPrismaエンジンが正しく解決されるように対象を固定する。
+  // EN: Pin engine targets so Prisma resolves the correct native binary in both Docker (arm64 linux, OpenSSL 3) and local dev.
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
