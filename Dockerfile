@@ -54,11 +54,12 @@ RUN groupadd --system --gid 1001 nodejs \
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
-# Next standalone tracing cannot reliably detect Prisma query-engine binaries and the migrate CLI;
-# carry them explicitly so the running container can query the DB and execute `prisma migrate deploy`.
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+# Prisma CLI (used by `migrate deploy` on boot) has a long transitive-dependency tail
+# (@prisma/config → effect, @prisma/internals, @prisma/engines …). Tracing which ones are
+# strictly needed is brittle, so carry the whole hoisted node_modules tree. Next standalone
+# keeps its own trimmed copy under apps/web/.next/standalone/node_modules, so this extra
+# copy only increases image size — it does not change runtime resolution for the server.
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/prisma ./apps/web/prisma
 USER nextjs
 EXPOSE 3000
