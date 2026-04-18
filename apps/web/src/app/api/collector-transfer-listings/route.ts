@@ -80,7 +80,7 @@ function optionalYear(fd: FormData): string {
  */
 export async function POST(request: NextRequest) {
   try {
-    const actor = readActorFromRequest(request);
+    const actor = await readActorFromRequest(request);
     if (!actor || (actor.role !== "collector" && actor.role !== "artist")) {
       return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }

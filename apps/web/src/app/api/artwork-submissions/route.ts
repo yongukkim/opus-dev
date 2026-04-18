@@ -73,7 +73,7 @@ function parseTags(value: string | undefined): string[] {
  */
 export async function POST(request: NextRequest) {
   try {
-    const actor = readActorFromRequest(request);
+    const actor = await readActorFromRequest(request);
     if (!actor || (actor.role !== "artist" && actor.role !== "operator")) {
       return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }

@@ -1,14 +1,17 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { SiteHeaderAuth } from "./SiteHeaderAuth";
 
 /**
  * Fixed top bar — charcoal glass, gold accents (Classic Luxury).
  * Locale control: KO / EN / JA (pattern: marketplace.aline.team).
  */
-export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
+export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
+  const session = await auth();
   const ja = locale === "ja";
   const artistSignupLabel = m.artistSignup?.title ?? m.signup.title;
   const navItemClass = ja
@@ -52,12 +55,13 @@ export function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
               {m.nav.legal}
             </Link>
           </nav>
-          <Link href={withLocale(locale, "/login")} className={authItemClass}>
-            {m.auth.signIn}
-          </Link>
-          <Link href={withLocale(locale, "/signup")} className={authItemClass}>
-            {m.signup.title}
-          </Link>
+          <SiteHeaderAuth
+            locale={locale}
+            signInLabel={m.auth.signIn}
+            signUpLabel={m.signup.title}
+            signOutLabel={m.auth.signOut}
+            userEmail={session?.user?.email}
+          />
           <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
             {artistSignupLabel}
           </Link>

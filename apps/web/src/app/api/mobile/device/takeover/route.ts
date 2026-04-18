@@ -27,7 +27,7 @@ export const runtime = "nodejs";
  */
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const actor = readActorFromRequest(request);
+    const actor = await readActorFromRequest(request);
     if (!actor || actor.role !== "collector") {
       return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }

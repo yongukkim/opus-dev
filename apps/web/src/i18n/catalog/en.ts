@@ -31,7 +31,7 @@ export const en: Messages = {
   auth: {
     signIn: "Sign in",
     title: "Sign in",
-    subtitle: "Collectors can start with Apple, Google, or LINE.",
+    subtitle: "Sign in with Google. Additional providers will follow.",
     roleLabel: "Account type",
     roleCollector: "Collector",
     roleArtist: "Artist",
@@ -39,21 +39,33 @@ export const en: Messages = {
     continueWithGoogle: "Continue with Google",
     continueWithLine: "Continue with LINE",
     hintSoon: "Soon",
+    hintActive: "Live",
     consentPreamble: "By continuing you agree to the ",
     consentBetween: " and the ",
     consentConclude: ".",
+    consentTermsPrivacyLead: "I agree to the ",
+    consentTermsPrivacyMid: " and the ",
+    consentTermsPrivacyEnd: ".",
+    consentOverseasCheckbox:
+      "I consent to the cross-border transfer of my personal information to Google LLC (United States) for account authentication, as described in the Privacy Policy.",
+    consentMarketingCheckbox:
+      "(Optional) I agree to receive product updates and messages from OPUS.",
     ageCheckbox: "I am 18 years of age or older.",
     consentRequiredAlert:
-      "Please confirm you are 18 or older and agree to the Terms of Use and Privacy Policy.",
+      "Please confirm every required item: Terms of Use, Privacy Policy, cross-border transfer consent, and that you are 18 or older.",
+    consentPrecheckFailedAlert: "We could not record your consent. Please try again.",
+    googleNotConfiguredAlert:
+      "Google sign-in is not configured on this server. Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET.",
+    signOut: "Sign out",
     ssoNotReadyAlert: "Single sign-on is not connected yet. This will be available soon.",
     emailDividerLabel: "Or with email",
     emailLabel: "Email",
     passwordLabel: "Password",
-    note: "UI only for now. OAuth wiring comes next.",
+    note: "Google OAuth is live when server credentials are configured. Apple and LINE will follow.",
   },
   signup: {
     title: "Sign up",
-    subtitle: "Sign up with Apple, Google, or LINE — the same options as Sign in.",
+    subtitle: "Create an account with Google (same consent flow as Sign in).",
     roleLabel: "Account type",
     roleCollector: "Collector",
     roleArtist: "Artist",
@@ -67,7 +79,7 @@ export const en: Messages = {
     signupNotReadyAlert: "Sign-up is not available yet. This will be available soon.",
     alreadyHaveAccount: "Already have an account?",
     signInLink: "Sign in",
-    note: "General members use SNS SSO to sign up. For now only a demo session is set; real SSO integration comes next.",
+    note: "A Google account is used for authentication. Required consents are recorded with a timestamp for audit purposes.",
   },
   artistSignup: {
     title: "Artist registration",
@@ -115,7 +127,7 @@ export const en: Messages = {
     title: "Privacy policy",
     lead: "Draft for Japan market readiness and due diligence (DD). Align with APPI before launch.",
     body:
-      "Defines categories of personal data, purposes, retention, subprocessors, cross-border transfers, data subject rights (access, correction, deletion, restriction), contact channels, and security measures. Must match production systems, logs, and encryption practices.",
+      "Categories: account data from Google OAuth (email, name, profile image), technical logs (IP, user agent, cookies), and service usage metadata tied to your account. Purposes: authentication, fraud prevention, support, and operating The Chronicle audit trail. Cross-border transfers: Google LLC in the United States processes OAuth tokens and profile attributes when you choose Google sign-in — we document this at signup and rely on your explicit consent plus Google's data processing terms. Retention: while your account is active and as required by law afterward. Rights: you may request access, correction, export, or deletion subject to legal retention exceptions — contact the privacy channel listed once operations publish it. Security: TLS in transit, encrypted storage for secrets, least-privilege access, and masked operational logs.",
   },
   legalTerms: {
     back: "← Back home",

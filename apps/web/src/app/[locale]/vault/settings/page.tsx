@@ -1,8 +1,6 @@
+import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { cookies } from "next/headers";
-import { hasDemoSessionFromCookies } from "@/lib/demoSession";
-import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { VaultAuthGate } from "@/components/vault/VaultAuthGate";
 import { AccountSettingsPanel } from "@/components/account/AccountSettingsPanel";
 
@@ -14,12 +12,12 @@ export default async function VaultSettingsPage({ params }: Props) {
   const m = getDictionary(locale);
   const v = m.vault;
 
-  const cookieStore = await cookies();
-  if (!hasDemoSessionFromCookies(cookieStore)) {
+  const session = await auth();
+  if (!session?.user) {
     return <VaultAuthGate locale={locale} m={m} returnTo={withLocale(locale, "/vault/settings")} />;
   }
 
-  const isArtist = getVaultUiRoleFromCookies(cookieStore) === "artist";
+  const isArtist = session.user.role === "artist";
 
   return (
     <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">

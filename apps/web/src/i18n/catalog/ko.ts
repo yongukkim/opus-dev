@@ -31,7 +31,7 @@ export const ko: Messages = {
   auth: {
     signIn: "로그인",
     title: "로그인",
-    subtitle: "이용자는 Apple, Google, LINE으로 바로 시작합니다.",
+    subtitle: "Google 계정으로 로그인합니다. 다른 제공자는 순차적으로 연결합니다.",
     roleLabel: "로그인 유형",
     roleCollector: "이용자",
     roleArtist: "작가",
@@ -39,21 +39,32 @@ export const ko: Messages = {
     continueWithGoogle: "Google로 계속하기",
     continueWithLine: "LINE으로 계속하기",
     hintSoon: "준비 중",
+    hintActive: "사용 가능",
     consentPreamble: "계속하기를 누르면 ",
     consentBetween: " 및 ",
     consentConclude: "에 동의하는 것으로 간주합니다.",
+    consentTermsPrivacyLead: "나는 ",
+    consentTermsPrivacyMid: " 및 ",
+    consentTermsPrivacyEnd: "에 동의합니다.",
+    consentOverseasCheckbox:
+      "Google LLC(미국)에 계정 인증을 위한 개인정보가 이전·처리될 수 있음을 개인정보처리방침에 따라 이해하고 이에 동의합니다.",
+    consentMarketingCheckbox: "(선택) OPUS로부터 제품 소식·메시지 수신에 동의합니다.",
     ageCheckbox: "나는 만 18세 이상입니다.",
     consentRequiredAlert:
-      "만 18세 이상임을 확인하고, 이용약관 및 개인정보처리방침에 동의해 주세요.",
+      "필수 항목을 모두 확인해 주세요: 이용약관, 개인정보처리방침, 국외 이전 동의, 만 18세 이상.",
+    consentPrecheckFailedAlert: "동의 기록에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    googleNotConfiguredAlert:
+      "이 서버에 Google 로그인이 설정되어 있지 않습니다. AUTH_GOOGLE_ID와 AUTH_GOOGLE_SECRET을 설정해 주세요.",
+    signOut: "로그아웃",
     ssoNotReadyAlert: "SSO 연동은 준비 중입니다. 곧 제공될 예정입니다.",
     emailDividerLabel: "또는 이메일로",
     emailLabel: "이메일",
     passwordLabel: "비밀번호",
-    note: "현재는 UI만 제공됩니다. 실제 연동은 다음 단계에서 연결합니다.",
+    note: "서버에 Google OAuth 자격증명이 있으면 로그인이 활성화됩니다. Apple·LINE은 이후 단계에서 연결합니다.",
   },
   signup: {
     title: "회원가입",
-    subtitle: "로그인과 동일하게 Apple, Google, LINE으로 가입할 수 있습니다.",
+    subtitle: "Google 계정으로 가입합니다(동의 절차는 로그인과 동일).",
     roleLabel: "등록 유형",
     roleCollector: "이용자",
     roleArtist: "작가",
@@ -67,7 +78,7 @@ export const ko: Messages = {
     signupNotReadyAlert: "회원가입 처리는 준비 중입니다. 곧 제공될 예정입니다.",
     alreadyHaveAccount: "이미 계정이 있나요?",
     signInLink: "로그인",
-    note: "일반 회원은 SNS SSO로 가입합니다. 현재는 데모 세션만 설정되며, 실제 SSO 연동은 다음 단계에서 연결합니다.",
+    note: "Google 계정으로 인증합니다. 필수 동의는 감사 목적의 타임스탬프와 함께 기록됩니다.",
   },
   artistSignup: {
     title: "작가등록",
@@ -115,7 +126,7 @@ export const ko: Messages = {
     title: "개인정보 처리방침",
     lead: "본 문서는 일본 시장·M&A 실사(DD) 및 개인정보보호법(APPI) 확장을 고려한 초안입니다. 법무 확정 후 갱신합니다.",
     body:
-      "수집 항목, 이용 목적, 보관 기간, 제3자 제공·재위탁, 국외 이전, 개인정보 주체의 권리(열람·정정·삭제·이용정지), 문의 창구, 보안 조치를 정의합니다. 실제 운영 시 개인정보를 처리하는 시스템·로그·암호화 정책과 일치하도록 반드시 업데이트하세요.",
+      "항목: Google OAuth로 제공되는 계정 정보(이메일, 표시 이름, 프로필 이미지), 기술 로그(IP, User-Agent, 쿠키), 계정과 연계된 이용 메타데이터. 목적: 본인 확인, 부정 이용 방지, 고객 지원, The Chronicle 감사 기록 운영. 국외 이전: Google 로그인 선택 시 미국 소재 Google LLC가 인증 토큰·프로필 속성을 처리할 수 있으며, 가입 화면에서 별도 동의로 고지합니다. 보유: 계정이 유효한 동안 및 법령상 필요 기간. 권리: 열람·정정·삭제·이동 요청 등(운영 연락처 공개 후 절차 확정). 보안: 전송 구간 TLS, 비밀·토큰 암호화 저장, 최소 권한 접근, 운영 로그 비식별화.",
   },
   legalTerms: {
     back: "← 홈으로",

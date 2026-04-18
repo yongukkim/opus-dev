@@ -56,16 +56,31 @@ export type Messages = {
     continueWithLine: string;
     /** Short label on SSO rows (e.g. Soon). */
     hintSoon: string;
+    /** Shown on the active Google row (opposite of Soon). */
+    hintActive: string;
     /** Login: "By continuing you agree to …" lead (before Terms link). */
     consentPreamble: string;
     /** Between Terms and Privacy links. */
     consentBetween: string;
     /** After Privacy link. */
     consentConclude: string;
+    /** Checkbox: agree to Terms + Privacy (inline links). */
+    consentTermsPrivacyLead: string;
+    consentTermsPrivacyMid: string;
+    consentTermsPrivacyEnd: string;
+    /** Required: overseas / third-country transfer for Google SSO. */
+    consentOverseasCheckbox: string;
+    /** Optional marketing opt-in. */
+    consentMarketingCheckbox: string;
     /** Required age attestation label. */
     ageCheckbox: string;
-    /** Shown when SSO is clicked without consent / age check. */
+    /** Shown when required consent checkboxes are incomplete. */
     consentRequiredAlert: string;
+    /** Server-side consent cookie failed. */
+    consentPrecheckFailedAlert: string;
+    /** OAuth client env missing. */
+    googleNotConfiguredAlert: string;
+    signOut: string;
     /** Shown when SSO is clicked after consent but OAuth is not wired. */
     ssoNotReadyAlert: string;
     /** Divider between SNS and email on unified auth page. */

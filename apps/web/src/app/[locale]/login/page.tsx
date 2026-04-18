@@ -16,6 +16,9 @@ export default async function LoginPage({
   const m = getDictionary(locale);
   const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
   const signupHref = `${withLocale(locale, "/signup")}?returnTo=${encodeURIComponent(returnTo)}`;
+  const googleOAuthConfigured = Boolean(
+    process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
+  );
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
@@ -28,7 +31,9 @@ export default async function LoginPage({
 
         <UnifiedAuthSection
           variant="login"
+          locale={locale}
           returnTo={returnTo}
+          googleOAuthConfigured={googleOAuthConfigured}
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}

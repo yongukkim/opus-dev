@@ -1,60 +1,87 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { AuthConsentBlock } from "@/components/auth/AuthConsentBlock";
 import { SsoProviderButtons } from "@/components/auth/SsoProviderButtons";
-import { EmailLoginPanel } from "@/components/auth/EmailLoginPanel";
-import { SignupPanel } from "@/components/auth/SignupPanel";
+import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
+import type { OAuthConsentFlow } from "@/lib/oauthConsentCookie";
 
 /**
- * Single-page auth: shared consent + SNS + divider + email path (no route / mode toggle).
+ * Google OAuth + mandatory APPI consent gates (other providers: UI only until wired).
  */
 export function UnifiedAuthSection({
   variant,
+  locale,
   returnTo,
+  googleOAuthConfigured,
   termsHref,
   privacyHref,
   termsLabel,
   privacyLabel,
   m,
 }: {
-  variant: "login" | "signup";
+  variant: OAuthConsentFlow;
+  locale: Locale;
   returnTo: string;
+  googleOAuthConfigured: boolean;
   termsHref: string;
   privacyHref: string;
   termsLabel: string;
   privacyLabel: string;
   m: Messages;
 }) {
+  const [termsPrivacy, setTermsPrivacy] = useState(false);
+  const [overseas, setOverseas] = useState(false);
+  const [marketing, setMarketing] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [pending, setPending] = useState(false);
-  const router = useRouter();
 
-  async function handleSsoClick() {
-    if (!ageConfirmed) {
+  const allRequired = termsPrivacy && overseas && ageConfirmed;
+  const ssoInactive = !allRequired || pending || !googleOAuthConfigured;
+
+  async function runPrecheck(): Promise<boolean> {
+    const res = await fetch("/api/auth/oauth-precheck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        flow: variant,
+        locale,
+        termsAccepted: true,
+        privacyAccepted: true,
+        overseasAccepted: true,
+        adultAccepted: true,
+        marketingAccepted: marketing,
+      }),
+    });
+    return res.ok;
+  }
+
+  async function handleGoogle() {
+    if (!googleOAuthConfigured) {
+      window.alert(m.auth.googleNotConfiguredAlert);
+      return;
+    }
+    if (!allRequired) {
       window.alert(m.auth.consentRequiredAlert);
       return;
     }
     if (pending) return;
     setPending(true);
     try {
-      const res = await fetch("/api/auth/demo-session", { method: "POST" });
-      if (!res.ok) {
-        window.alert(m.auth.ssoNotReadyAlert);
+      const ok = await runPrecheck();
+      if (!ok) {
+        window.alert(m.auth.consentPrecheckFailedAlert);
         return;
       }
-      router.push(returnTo);
-      router.refresh();
+      await signIn("google", { callbackUrl: returnTo });
     } catch {
-      window.alert(m.auth.ssoNotReadyAlert);
+      window.alert(m.auth.consentPrecheckFailedAlert);
     } finally {
       setPending(false);
     }
   }
-
-  const ssoInactive = !ageConfirmed || pending;
 
   return (
     <div className="mt-10 space-y-5">
@@ -64,13 +91,21 @@ export function UnifiedAuthSection({
         termsLabel={termsLabel}
         privacyLabel={privacyLabel}
         strings={{
-          preamble: m.auth.consentPreamble,
-          between: m.auth.consentBetween,
-          conclude: m.auth.consentConclude,
+          termsPrivacyLead: m.auth.consentTermsPrivacyLead,
+          termsPrivacyMid: m.auth.consentTermsPrivacyMid,
+          termsPrivacyEnd: m.auth.consentTermsPrivacyEnd,
+          overseasCheckbox: m.auth.consentOverseasCheckbox,
+          marketingCheckbox: m.auth.consentMarketingCheckbox,
           ageCheckbox: m.auth.ageCheckbox,
         }}
-        checked={ageConfirmed}
-        onCheckedChange={setAgeConfirmed}
+        termsPrivacy={termsPrivacy}
+        onTermsPrivacyChange={setTermsPrivacy}
+        overseas={overseas}
+        onOverseasChange={setOverseas}
+        marketing={marketing}
+        onMarketingChange={setMarketing}
+        ageConfirmed={ageConfirmed}
+        onAgeConfirmedChange={setAgeConfirmed}
       />
 
       <SsoProviderButtons
@@ -78,59 +113,16 @@ export function UnifiedAuthSection({
           continueWithApple: m.auth.continueWithApple,
           continueWithGoogle: m.auth.continueWithGoogle,
           continueWithLine: m.auth.continueWithLine,
-          hint: m.auth.hintSoon,
+          hintSoon: m.auth.hintSoon,
+          hintActive: m.auth.hintActive,
         }}
-        inactive={ssoInactive}
-        onSsoClick={handleSsoClick}
+        googleInactive={ssoInactive}
+        appleInactive
+        lineInactive
+        onGoogleClick={handleGoogle}
+        onAppleClick={() => {}}
+        onLineClick={() => {}}
       />
-
-      <div className="relative py-1">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-white/[0.08]" />
-        </div>
-        <div className="relative flex justify-center">
-          <span className="bg-opus-charcoal px-3 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/45">
-            {m.auth.emailDividerLabel}
-          </span>
-        </div>
-      </div>
-
-      {variant === "login" ? (
-        <EmailLoginPanel
-          returnTo={returnTo}
-          sharedConsent={{ ageConfirmed }}
-          strings={{
-            emailLabel: m.auth.emailLabel,
-            passwordLabel: m.auth.passwordLabel,
-            signIn: m.auth.signIn,
-            consentRequiredAlert: m.auth.consentRequiredAlert,
-            sessionNotReadyAlert: m.auth.ssoNotReadyAlert,
-          }}
-        />
-      ) : (
-        <SignupPanel
-          termsHref={termsHref}
-          privacyHref={privacyHref}
-          termsLabel={termsLabel}
-          privacyLabel={privacyLabel}
-          returnTo={returnTo}
-          sharedConsent={{ ageConfirmed }}
-          strings={{
-            displayNameLabel: m.signup.displayNameLabel,
-            emailLabel: m.signup.emailLabel,
-            passwordLabel: m.signup.passwordLabel,
-            passwordConfirmLabel: m.signup.passwordConfirmLabel,
-            passwordMismatchAlert: m.signup.passwordMismatchAlert,
-            createAccount: m.signup.createAccount,
-            consentPreamble: m.signup.consentPreamble,
-            consentBetween: m.auth.consentBetween,
-            consentConclude: m.auth.consentConclude,
-            ageCheckbox: m.auth.ageCheckbox,
-            consentRequiredAlert: m.auth.consentRequiredAlert,
-            signupNotReadyAlert: m.signup.signupNotReadyAlert,
-          }}
-        />
-      )}
     </div>
   );
 }

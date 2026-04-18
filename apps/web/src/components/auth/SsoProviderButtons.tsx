@@ -49,7 +49,10 @@ function ProviderButton({
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={() => {
+        if (inactive) return;
+        onClick();
+      }}
       aria-disabled={inactive}
       className={`flex w-full items-center justify-between rounded-xl border px-5 py-4 text-left transition ${
         inactive
@@ -61,47 +64,58 @@ function ProviderButton({
         <span className="text-opus-warm/80">{icon}</span>
         <span className="truncate font-sans text-sm text-opus-warm/85">{label}</span>
       </span>
-      <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">{hint}</span>
+      <span className="shrink-0 pl-2 text-right font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">
+        {hint}
+      </span>
     </button>
   );
 }
 
 export function SsoProviderButtons({
   strings,
-  inactive,
-  onSsoClick,
+  googleInactive,
+  appleInactive,
+  lineInactive,
+  onGoogleClick,
+  onAppleClick,
+  onLineClick,
 }: {
   strings: {
     continueWithApple: string;
     continueWithGoogle: string;
     continueWithLine: string;
-    hint: string;
+    hintSoon: string;
+    hintActive: string;
   };
-  inactive: boolean;
-  onSsoClick: () => void;
+  googleInactive: boolean;
+  appleInactive: boolean;
+  lineInactive: boolean;
+  onGoogleClick: () => void;
+  onAppleClick: () => void;
+  onLineClick: () => void;
 }) {
   return (
     <div className="space-y-3">
       <ProviderButton
         icon={<IconApple />}
         label={strings.continueWithApple}
-        hint={strings.hint}
-        inactive={inactive}
-        onClick={onSsoClick}
+        hint={strings.hintSoon}
+        inactive={appleInactive}
+        onClick={onAppleClick}
       />
       <ProviderButton
         icon={<IconGoogle />}
         label={strings.continueWithGoogle}
-        hint={strings.hint}
-        inactive={inactive}
-        onClick={onSsoClick}
+        hint={googleInactive ? strings.hintSoon : strings.hintActive}
+        inactive={googleInactive}
+        onClick={onGoogleClick}
       />
       <ProviderButton
         icon={<IconLine />}
         label={strings.continueWithLine}
-        hint={strings.hint}
-        inactive={inactive}
-        onClick={onSsoClick}
+        hint={strings.hintSoon}
+        inactive={lineInactive}
+        onClick={onLineClick}
       />
     </div>
   );

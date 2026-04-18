@@ -4,7 +4,7 @@ import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { catalogImageSrcFromFile, type CatalogImageVariant } from "@/lib/catalogImageUrl";
-import { hasDemoSessionFromCookies } from "@/lib/demoSession";
+import { auth } from "@/auth";
 import { getSubmissionByStoredFilename } from "@/lib/privateStorage";
 import {
   demoAudienceTone,
@@ -18,7 +18,6 @@ import {
 } from "@/lib/artworksCatalog";
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -32,8 +31,8 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const resolved = await resolveArtworkBySlug(slug);
   if (!resolved) notFound();
 
-  const cookieStore = await cookies();
-  const hasSession = hasDemoSessionFromCookies(cookieStore);
+  const session = await auth();
+  const hasSession = Boolean(session?.user);
   const coverVariant: CatalogImageVariant = hasSession ? "vault" : "preview";
 
   const { files } = await loadCatalogFiles();

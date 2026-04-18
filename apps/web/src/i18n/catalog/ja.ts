@@ -36,7 +36,7 @@ export const ja: Messages = {
   auth: {
     signIn: "ログイン",
     title: "ログイン",
-    subtitle: "利用者の方は、Apple / Google / LINE から開始できます。",
+    subtitle: "Google アカウントでログインします。他のプロバイダは順次対応します。",
     roleLabel: "ログイン種別",
     roleCollector: "利用者",
     roleArtist: "作家",
@@ -44,21 +44,33 @@ export const ja: Messages = {
     continueWithGoogle: "Googleで続ける",
     continueWithLine: "LINEで続ける",
     hintSoon: "準備中",
+    hintActive: "利用可",
     consentPreamble: "続行すると、",
     consentBetween: " および ",
     consentConclude: "に同意したものとみなされます。",
+    consentTermsPrivacyLead: "私は ",
+    consentTermsPrivacyMid: " および ",
+    consentTermsPrivacyEnd: " に同意します。",
+    consentOverseasCheckbox:
+      "アカウント認証のため、個人情報が米国の Google LLC に移転・処理される場合があることについて、プライバシーポリシーの説明を理解し、これに同意します。",
+    consentMarketingCheckbox:
+      "（任意）OPUS からの製品アップデートやお知らせの受信に同意します。",
     ageCheckbox: "私は18歳以上です。",
     consentRequiredAlert:
-      "18歳以上であること、および利用規約・プライバシーポリシーへの同意を確認してください。",
+      "必須項目をすべて確認してください：利用規約、プライバシーポリシー、国外移転への同意、18歳以上。",
+    consentPrecheckFailedAlert: "同意の記録に失敗しました。しばらくしてから再度お試しください。",
+    googleNotConfiguredAlert:
+      "このサーバーでは Google ログインが設定されていません。AUTH_GOOGLE_ID と AUTH_GOOGLE_SECRET を設定してください。",
+    signOut: "サインアウト",
     ssoNotReadyAlert: "SSO連携は現在準備中です。近日中に対応予定です。",
     emailDividerLabel: "またはメールで",
     emailLabel: "メールアドレス",
     passwordLabel: "パスワード",
-    note: "現在はUIのみを提供しています。実連携は次の段階で追加します。",
+    note: "サーバーに Google OAuth の資格情報がある場合、ログインが有効になります。Apple / LINE は後続で接続します。",
   },
   signup: {
     title: "会員登録",
-    subtitle: "ログインと同じく、Apple・Google・LINEで登録できます。",
+    subtitle: "Google アカウントで登録します（同意フローはログインと同じです）。",
     roleLabel: "登録種別",
     roleCollector: "利用者",
     roleArtist: "作家",
@@ -72,7 +84,7 @@ export const ja: Messages = {
     signupNotReadyAlert: "会員登録は現在準備中です。近日中に対応予定です。",
     alreadyHaveAccount: "すでにアカウントをお持ちですか？",
     signInLink: "ログイン",
-    note: "一般会員はSNSのSSOで登録します。現時点ではデモ用セッションのみ設定され、実際のSSO連携は次段階で接続します。",
+    note: "Google アカウントで認証します。必須の同意は監査のためタイムスタンプとともに記録されます。",
   },
   artistSignup: {
     title: "作家登録",
@@ -122,7 +134,7 @@ export const ja: Messages = {
     lead:
       "本ページは、日本市場・M&A実務上のデューデリジェンス（DD）および個人情報保護法（APPI）を踏まえた草案です。法務確定後に更新してください。",
     body:
-      "取得する個人情報の項目、利用目的、保管期間、第三者提供・再委託、国外移転、開示等の請求、問い合わせ窓口、安全管理措置を定めます。本番環境のシステム・ログ・暗号化方針と一致させてください。",
+      "項目: Google OAuth により提供されるアカウント情報（メール、表示名、プロフィール画像）、技術ログ（IP、User-Agent、クッキー）、アカウントに紐づく利用メタデータ。目的: 本人確認、不正利用防止、サポート、The Chronicle 監査記録の運用。国外移転: Google ログイン利用時、米国の Google LLC が認証トークンやプロフィール属性を処理する場合があり、登録画面で別途同意として明示します。保有: アカウント存続中および法令上必要な期間。権利: 開示・訂正・削除・データポータビリティ等（運用窓口公開後に手続確定）。セキュリティ: 転送区間の TLS、秘密・トークンの暗号化保存、最小権限アクセス、運用ログの非識別化。",
   },
   legalTerms: {
     back: "← トップへ",
