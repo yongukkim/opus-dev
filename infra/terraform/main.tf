@@ -68,9 +68,20 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # ISO 27001 A.13.1.3 / A.10.1.1 (CLAUDE.md §3, §6) — public HTTP(S).
+  # KO: 80은 Let's Encrypt ACME-HTTP-01 챌린지 + 443 강제 리다이렉트용으로만 유지한다.
+  # JA: 80はLet's Encrypt ACME-HTTP-01チャレンジと443への強制リダイレクトのみで保持する。
+  # EN: Port 80 is kept only for Let's Encrypt ACME HTTP-01 challenges and the redirect to 443.
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
