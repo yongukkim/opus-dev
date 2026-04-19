@@ -1,18 +1,18 @@
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
 import { prisma } from "@/lib/prisma";
 import { readOAuthConsentFromCookieJar } from "@/lib/oauthConsentCookie";
+import { authConfig } from "@/auth.config";
 
 /**
  * ISO 27001 / OPUS Security Coding Standards
- * - A.9.4.2 (§2) Authentication & session — database sessions, HttpOnly cookies via Auth.js; no client-visible secrets.
- *   KO: Google OAuth와 DB 세션을 사용하고, 세션 토큰은 프레임워크가 안전한 쿠키로만 다룬다.
- *   JA: Google OAuthとDBセッションを用い、セッショントークンはフレームワークが安全なクッキーのみで扱う。
- *   EN: Google OAuth with database sessions; the framework stores session tokens only in secure cookies.
- * - A.9.2.1 (§4) RBAC — application role is loaded from the database per session (default COLLECTOR).
+ * - A.9.4.2 (§2) Authentication & session — JWT sessions, HttpOnly cookies via Auth.js; no client-visible secrets.
+ *   KO: Google OAuth + JWT 세션을 사용하고, 토큰은 프레임워크가 안전한 쿠키로만 다룬다.
+ *   JA: Google OAuthとJWTセッションを用い、トークンはフレームワークが安全なクッキーのみで扱う。
+ *   EN: Google OAuth with JWT sessions; the framework stores tokens only in secure cookies.
+ * - A.9.2.1 (§4) RBAC — application role is loaded from the database at sign-in (default COLLECTOR).
  *   KO: 세션의 역할은 DB의 OpusRole에서만 결정되며 클라이언트 표시값을 신뢰하지 않는다.
  *   JA: セッションの権限はDBのOpusRoleのみから決まり、クライアント表示を信頼しない。
  *   EN: Session role comes only from `OpusRole` in the database — never trust client-supplied roles.
@@ -20,6 +20,9 @@ import { readOAuthConsentFromCookieJar } from "@/lib/oauthConsentCookie";
  *   KO: 신규 계정은 OAuth 직전 동의 쿠키가 없으면 가입을 거절한다.
  *   JA: 新規アカウントはOAuth直前の同意クッキーがなければ拒否する。
  *   EN: New sign-ups are rejected unless the short-lived signed consent cookie is present.
+ *
+ * NOTE: This file uses Node-only modules (Prisma, node:crypto via cookie verifier) and MUST NOT be
+ * imported from Edge contexts (middleware). Edge code must import `@/auth.config` instead.
  */
 function mapDbRoleToSession(
   role: string | undefined,
@@ -29,23 +32,9 @@ function mapDbRoleToSession(
   return "collector";
 }
 
-const useGoogle =
-  Boolean(process.env["AUTH_GOOGLE_ID"]?.trim()) &&
-  Boolean(process.env["AUTH_GOOGLE_SECRET"]?.trim());
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  trustHost: true,
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
-  // JWT keeps middleware Edge-safe (no Prisma on every request). Role is stamped at sign-in; promote artist/operator via re-login or future session update.
-  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 30 },
-  providers: useGoogle
-    ? [
-        Google({
-            clientId: process.env["AUTH_GOOGLE_ID"]!,
-            clientSecret: process.env["AUTH_GOOGLE_SECRET"]!,
-          }),
-      ]
-    : [],
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== "google") return true;

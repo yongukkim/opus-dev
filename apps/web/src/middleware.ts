@@ -1,6 +1,15 @@
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
+import { authConfig } from "@/auth.config";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
+
+/**
+ * ISO 27001 A.9.4.2 / A.13.1.3 (§2, §6) Edge-safe NextAuth instance.
+ * KO: 미들웨어는 DB·node:crypto 의존을 피하기 위해 공유 설정만 로드한다.
+ * JA: ミドルウェアはDB・node:crypto依存を避けるため共有設定のみ読み込む。
+ * EN: Middleware loads only the shared Edge-safe config (no DB / node:crypto).
+ */
+const { auth } = NextAuth(authConfig);
 
 function localeFromPath(pathname: string): Locale | null {
   const seg = pathname.split("/")[1];

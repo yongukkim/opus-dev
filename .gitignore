@@ -31,6 +31,10 @@ build
 !.env.example
 !**/.env.*.example
 
+# OAuth client secret JSON downloaded from Google Cloud Console — never commit.
+# ISO 27001 A.9.4.5 / A.10.1.2 (§3) — keep credential files outside VCS; see SECURITY_GOVERNANCE.md.
+client_secret*.json
+
 # Docker DB volumes & env (Mac Mini / local; never commit secrets)
 infrastructure/.env
 infrastructure/data/
