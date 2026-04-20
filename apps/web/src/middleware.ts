@@ -1,7 +1,12 @@
 import NextAuth from "next-auth";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { authConfig } from "@/auth.config";
-import { defaultLocale, locales, type Locale } from "@/i18n/config";
+import {
+  fallbackLocale,
+  localeCookieName,
+  locales,
+  type Locale,
+} from "@/i18n/config";
 
 /**
  * ISO 27001 A.9.4.2 / A.13.1.3 (§2, §6) Edge-safe NextAuth instance.
@@ -34,10 +39,67 @@ function needsAuthentication(pathAfterLocale: string): boolean {
 }
 
 /**
+ * ISO 27001 A.18.1.4 (§7 Privacy by Design)
+ * KO: `Accept-Language`는 브라우저가 모든 HTTP 요청에 자동 포함하는 표준 헤더이며,
+ *     APPI·PIPA 상 별도 수집·고지 대상이 아니다. IP 기반 GeoIP는 도입하지 않는다.
+ * JA: `Accept-Language` は標準ヘッダであり、APPI・PIPA上の個別収集・告知対象に
+ *     あたらない。IPベースのジオロケーションは本実装では導入しない。
+ * EN: `Accept-Language` is a standard HTTP header browsers attach automatically;
+ *     no extra APPI/PIPA notification is triggered. No IP GeoIP is used here.
+ */
+function parseAcceptLanguage(header: string): string[] {
+  return header
+    .split(",")
+    .map((part) => {
+      const [rawLang, ...params] = part.trim().split(";");
+      let q = 1;
+      for (const param of params) {
+        const [key, value] = param.split("=");
+        if (key?.trim() === "q" && value) {
+          const parsed = Number.parseFloat(value);
+          if (!Number.isNaN(parsed)) q = parsed;
+        }
+      }
+      return { lang: rawLang?.trim().toLowerCase() ?? "", q };
+    })
+    .filter(({ lang }) => lang.length > 0)
+    .sort((a, b) => b.q - a.q)
+    .map(({ lang }) => lang);
+}
+
+function matchLocaleFromLanguages(languages: string[]): Locale | null {
+  for (const lang of languages) {
+    const primary = lang.split("-")[0];
+    if (primary && (locales as readonly string[]).includes(primary)) {
+      return primary as Locale;
+    }
+  }
+  return null;
+}
+
+type LocaleSource = "cookie" | "header" | "fallback";
+
+function resolveLocale(req: NextRequest): { locale: Locale; source: LocaleSource } {
+  const cookieValue = req.cookies.get(localeCookieName)?.value;
+  if (cookieValue && (locales as readonly string[]).includes(cookieValue)) {
+    return { locale: cookieValue as Locale, source: "cookie" };
+  }
+  const header = req.headers.get("accept-language");
+  if (header) {
+    const matched = matchLocaleFromLanguages(parseAcceptLanguage(header));
+    if (matched) return { locale: matched, source: "header" };
+  }
+  return { locale: fallbackLocale, source: "fallback" };
+}
+
+/**
  * ISO 27001 A.9.4.2 / A.13.1.3 (§2, §6)
- * KO: 로케일 라우팅 후 JWT 세션으로 보호 구역(/vault, /seller)을 통제한다(Edge에서 DB 없음).
- * JA: ロケール後にJWTセッションで保護領域を制御する（EdgeでDBなし）。
- * EN: After locale routing, enforce protected prefixes via JWT session (Edge-safe, no DB).
+ * KO: ① 경로에 로케일 prefix 없음 → 쿠키→Accept-Language→fallback 순 자동 해석 후 리다이렉트.
+ *     ② 보호 구역(/vault, /seller)은 JWT 세션으로 통제한다(Edge에서 DB 없음).
+ * JA: ①ロケール前置詞が無い場合は Cookie→Accept-Language→fallback の順で自動解決、
+ *     ②保護領域はJWTセッションで制御する（EdgeでDB無し）。
+ * EN: (1) No locale prefix → resolve via Cookie→Accept-Language→fallback, then redirect.
+ *     (2) Protected prefixes are gated by JWT session (Edge-safe, no DB).
  */
 export default auth((req) => {
   const { pathname } = req.nextUrl;
@@ -52,17 +114,25 @@ export default auth((req) => {
   }
 
   if (pathname.startsWith("/seller")) {
+    const { locale, source } = resolveLocale(req);
     const url = req.nextUrl.clone();
-    url.pathname = `/${defaultLocale}${pathname}`;
-    return NextResponse.redirect(url);
+    url.pathname = `/${locale}${pathname}`;
+    const res = NextResponse.redirect(url);
+    res.headers.set("Vary", "Accept-Language, Cookie");
+    res.headers.set("x-opus-locale-source", source);
+    return res;
   }
 
   const found = localeFromPath(pathname);
   if (!found) {
+    const { locale, source } = resolveLocale(req);
     const url = req.nextUrl.clone();
     const suffix = pathname === "/" ? "" : pathname;
-    url.pathname = `/${defaultLocale}${suffix}`;
-    return NextResponse.redirect(url);
+    url.pathname = `/${locale}${suffix}`;
+    const res = NextResponse.redirect(url);
+    res.headers.set("Vary", "Accept-Language, Cookie");
+    res.headers.set("x-opus-locale-source", source);
+    return res;
   }
 
   const rest = pathAfterLocale(pathname, found);
@@ -74,6 +144,7 @@ export default auth((req) => {
 
   const res = NextResponse.next();
   res.headers.set("x-opus-locale", found);
+  res.headers.set("Vary", "Cookie");
   if (
     process.env.NODE_ENV !== "production" &&
     pathname.includes("/vault/transfer/register")
