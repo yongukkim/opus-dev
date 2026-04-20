@@ -45,14 +45,12 @@ export const en: Messages = {
     consentConclude: ".",
     consentTermsPrivacyLead: "I agree to the ",
     consentTermsPrivacyMid: " and the ",
-    consentTermsPrivacyEnd: ".",
-    consentOverseasCheckbox:
-      "I consent to the cross-border transfer of my personal information to Google LLC (United States) for account authentication, as described in the Privacy Policy.",
+    consentTermsPrivacyEnd: " (including cross-border transfer to Google LLC in the United States).",
     consentMarketingCheckbox:
       "(Optional) I agree to receive product updates and messages from OPUS.",
     ageCheckbox: "I am 18 years of age or older.",
     consentRequiredAlert:
-      "Please confirm every required item: Terms of Use, Privacy Policy, cross-border transfer consent, and that you are 18 or older.",
+      "Please confirm every required item: Terms of Use and Privacy Policy (which covers cross-border transfer), and that you are 18 or older.",
     consentPrecheckFailedAlert: "We could not record your consent. Please try again.",
     googleNotConfiguredAlert:
       "Google sign-in is not configured on this server. Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET.",

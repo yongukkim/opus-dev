@@ -64,12 +64,16 @@ export type Messages = {
     consentBetween: string;
     /** After Privacy link. */
     consentConclude: string;
-    /** Checkbox: agree to Terms + Privacy (inline links). */
+    /**
+     * Checkbox: agree to Terms + Privacy (inline links).
+     * Cross-border transfer to Google LLC (US) is rolled into `consentTermsPrivacyEnd`
+     * and further documented in the Privacy Policy, per PIPA §28-8 / APPI §28 guidance
+     * that bundled consent is acceptable when the recipient + jurisdiction are
+     * clearly identified in the consented-to policy text.
+     */
     consentTermsPrivacyLead: string;
     consentTermsPrivacyMid: string;
     consentTermsPrivacyEnd: string;
-    /** Required: overseas / third-country transfer for Google SSO. */
-    consentOverseasCheckbox: string;
     /** Optional marketing opt-in. */
     consentMarketingCheckbox: string;
     /** Required age attestation label. */

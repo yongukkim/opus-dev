@@ -8,9 +8,8 @@ export type AuthConsentStrings = {
   termsPrivacyLead: string;
   /** Between Terms and Privacy links (e.g. " and the ") */
   termsPrivacyMid: string;
-  /** After Privacy link (e.g. ".") */
+  /** After Privacy link. Must disclose the cross-border transfer recipient (Google LLC, US). */
   termsPrivacyEnd: string;
-  overseasCheckbox: string;
   /** Optional marketing opt-in */
   marketingCheckbox: string;
   ageCheckbox: string;
@@ -24,8 +23,6 @@ type Props = {
   strings: AuthConsentStrings;
   termsPrivacy: boolean;
   onTermsPrivacyChange: (next: boolean) => void;
-  overseas: boolean;
-  onOverseasChange: (next: boolean) => void;
   marketing: boolean;
   onMarketingChange: (next: boolean) => void;
   ageConfirmed: boolean;
@@ -46,7 +43,7 @@ function ConsentCheckbox({
   return (
     <label
       htmlFor={id}
-      className="group flex max-w-xl cursor-pointer items-start gap-3 text-left"
+      className="group flex w-full cursor-pointer items-start gap-3 text-left"
     >
       <span className="relative mt-0.5 inline-flex h-[1.125rem] w-[1.125rem] shrink-0">
         <input
@@ -82,10 +79,16 @@ function ConsentCheckbox({
 }
 
 /**
- * ISO 27001 A.18.1.4 (§7) Privacy by Design
- * KO: OAuth 전에 약관·개인정보·국외이전·(선택)마케팅·만 18세 이상 확인을 분리해 기록한다.
- * JA: OAuth前に規約・プライバシー・国外移転・(任意)マーケ・成年を分けて取得する。
- * EN: Capture Terms, Privacy, cross-border transfer, optional marketing, and 18+ attestation before OAuth.
+ * ISO 27001 A.18.1.4 (§7) Privacy by Design — consent capture
+ * KO: 이용약관·개인정보처리방침(Google LLC 국외 이전 포함)·만 18세 이상 필수 동의와 선택 마케팅을
+ *     OAuth 이전 단계에서 받아 DB에 시각·버전과 함께 기록한다. 국외이전 조항은 문구와
+ *     개인정보처리방침 본문 양쪽에 명시된다.
+ * JA: 利用規約・プライバシーポリシー（米国 Google LLC への移転を含む）・18歳以上の必須同意と、
+ *     任意のマーケティング同意を OAuth 前に取得し、DB に時刻とバージョンで記録する。
+ *     国外移転条項は文言とプライバシーポリシー本文の両方で明示する。
+ * EN: Capture the required consents (Terms + Privacy, the latter explicitly covering cross-border
+ *     transfer to Google LLC in the US, plus 18+ attestation) and the optional marketing opt-in
+ *     before OAuth, persisting timestamps and versions in the database.
  */
 export function AuthConsentBlock({
   termsHref,
@@ -95,8 +98,6 @@ export function AuthConsentBlock({
   strings,
   termsPrivacy,
   onTermsPrivacyChange,
-  overseas,
-  onOverseasChange,
   marketing,
   onMarketingChange,
   ageConfirmed,
@@ -106,49 +107,37 @@ export function AuthConsentBlock({
 
   return (
     <div className="space-y-4 rounded-xl border border-white/[0.08] bg-black/20 px-4 py-4">
-      <div className="flex justify-center">
-        <ConsentCheckbox
-          id={`${id}-terms`}
-          checked={termsPrivacy}
-          onChange={onTermsPrivacyChange}
-        >
-          <span className="font-medium text-opus-warm/88">
-            {strings.termsPrivacyLead}
-            <Link
-              href={termsHref}
-              className="text-opus-gold underline decoration-opus-gold/35 underline-offset-2 transition hover:text-opus-gold-light hover:decoration-opus-gold-light/50"
-            >
-              {termsLabel}
-            </Link>
-            {strings.termsPrivacyMid}
-            <Link
-              href={privacyHref}
-              className="text-opus-gold underline decoration-opus-gold/35 underline-offset-2 transition hover:text-opus-gold-light hover:decoration-opus-gold-light/50"
-            >
-              {privacyLabel}
-            </Link>
-            {strings.termsPrivacyEnd}
-          </span>
-        </ConsentCheckbox>
-      </div>
+      <ConsentCheckbox
+        id={`${id}-terms`}
+        checked={termsPrivacy}
+        onChange={onTermsPrivacyChange}
+      >
+        <span className="font-medium text-opus-warm/88">
+          {strings.termsPrivacyLead}
+          <Link
+            href={termsHref}
+            className="text-opus-gold underline decoration-opus-gold/35 underline-offset-2 transition hover:text-opus-gold-light hover:decoration-opus-gold-light/50"
+          >
+            {termsLabel}
+          </Link>
+          {strings.termsPrivacyMid}
+          <Link
+            href={privacyHref}
+            className="text-opus-gold underline decoration-opus-gold/35 underline-offset-2 transition hover:text-opus-gold-light hover:decoration-opus-gold-light/50"
+          >
+            {privacyLabel}
+          </Link>
+          {strings.termsPrivacyEnd}
+        </span>
+      </ConsentCheckbox>
 
-      <div className="flex justify-center">
-        <ConsentCheckbox id={`${id}-overseas`} checked={overseas} onChange={onOverseasChange}>
-          <span className="font-medium text-opus-warm/88">{strings.overseasCheckbox}</span>
-        </ConsentCheckbox>
-      </div>
+      <ConsentCheckbox id={`${id}-mkt`} checked={marketing} onChange={onMarketingChange}>
+        <span className="text-opus-warm/80">{strings.marketingCheckbox}</span>
+      </ConsentCheckbox>
 
-      <div className="flex justify-center">
-        <ConsentCheckbox id={`${id}-mkt`} checked={marketing} onChange={onMarketingChange}>
-          <span className="text-opus-warm/80">{strings.marketingCheckbox}</span>
-        </ConsentCheckbox>
-      </div>
-
-      <div className="flex justify-center">
-        <ConsentCheckbox id={`${id}-age`} checked={ageConfirmed} onChange={onAgeConfirmedChange}>
-          <span className="font-medium text-opus-warm/88">{strings.ageCheckbox}</span>
-        </ConsentCheckbox>
-      </div>
+      <ConsentCheckbox id={`${id}-age`} checked={ageConfirmed} onChange={onAgeConfirmedChange}>
+        <span className="font-medium text-opus-warm/88">{strings.ageCheckbox}</span>
+      </ConsentCheckbox>
     </div>
   );
 }

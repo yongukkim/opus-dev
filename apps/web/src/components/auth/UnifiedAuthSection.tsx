@@ -33,14 +33,20 @@ export function UnifiedAuthSection({
   m: Messages;
 }) {
   const [termsPrivacy, setTermsPrivacy] = useState(false);
-  const [overseas, setOverseas] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [pending, setPending] = useState(false);
 
-  const allRequired = termsPrivacy && overseas && ageConfirmed;
+  const allRequired = termsPrivacy && ageConfirmed;
   const ssoInactive = !allRequired || pending || !googleOAuthConfigured;
 
+  // ISO 27001 A.18.1.4 (§7) — PIPA §28-8 / APPI §28
+  // KO: 이용약관·개인정보처리방침 동의에 Google LLC(미국) 국외이전이 포함되므로
+  //     precheck 쿠키에도 overseasAccepted=true 를 함께 기록한다(개인정보처리방침 본문과 체크박스 문구 모두에 명시).
+  // JA: 利用規約・プライバシーポリシーへの同意に米国 Google LLC への国外移転を含めるため、
+  //     precheck クッキーにも overseasAccepted=true を合わせて記録する。
+  // EN: The Terms + Privacy consent explicitly covers cross-border transfer to Google LLC (US),
+  //     so overseasAccepted=true is recorded alongside the other flags.
   async function runPrecheck(): Promise<boolean> {
     const res = await fetch("/api/auth/oauth-precheck", {
       method: "POST",
@@ -94,14 +100,11 @@ export function UnifiedAuthSection({
           termsPrivacyLead: m.auth.consentTermsPrivacyLead,
           termsPrivacyMid: m.auth.consentTermsPrivacyMid,
           termsPrivacyEnd: m.auth.consentTermsPrivacyEnd,
-          overseasCheckbox: m.auth.consentOverseasCheckbox,
           marketingCheckbox: m.auth.consentMarketingCheckbox,
           ageCheckbox: m.auth.ageCheckbox,
         }}
         termsPrivacy={termsPrivacy}
         onTermsPrivacyChange={setTermsPrivacy}
-        overseas={overseas}
-        onOverseasChange={setOverseas}
         marketing={marketing}
         onMarketingChange={setMarketing}
         ageConfirmed={ageConfirmed}

@@ -45,13 +45,11 @@ export const ko: Messages = {
     consentConclude: "에 동의하는 것으로 간주합니다.",
     consentTermsPrivacyLead: "나는 ",
     consentTermsPrivacyMid: " 및 ",
-    consentTermsPrivacyEnd: "에 동의합니다.",
-    consentOverseasCheckbox:
-      "Google LLC(미국)에 계정 인증을 위한 개인정보가 이전·처리될 수 있음을 개인정보처리방침에 따라 이해하고 이에 동의합니다.",
+    consentTermsPrivacyEnd: "(Google LLC(미국) 이전 포함)에 동의합니다.",
     consentMarketingCheckbox: "(선택) OPUS로부터 제품 소식·메시지 수신에 동의합니다.",
     ageCheckbox: "나는 만 18세 이상입니다.",
     consentRequiredAlert:
-      "필수 항목을 모두 확인해 주세요: 이용약관, 개인정보처리방침, 국외 이전 동의, 만 18세 이상.",
+      "필수 항목을 모두 확인해 주세요: 이용약관·개인정보처리방침(국외 이전 포함) 동의, 만 18세 이상.",
     consentPrecheckFailedAlert: "동의 기록에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     googleNotConfiguredAlert:
       "이 서버에 Google 로그인이 설정되어 있지 않습니다. AUTH_GOOGLE_ID와 AUTH_GOOGLE_SECRET을 설정해 주세요.",
