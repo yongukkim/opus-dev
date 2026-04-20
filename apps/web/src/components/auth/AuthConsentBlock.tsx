@@ -131,12 +131,12 @@ export function AuthConsentBlock({
         </span>
       </ConsentCheckbox>
 
-      <ConsentCheckbox id={`${id}-mkt`} checked={marketing} onChange={onMarketingChange}>
-        <span className="text-opus-warm/80">{strings.marketingCheckbox}</span>
-      </ConsentCheckbox>
-
       <ConsentCheckbox id={`${id}-age`} checked={ageConfirmed} onChange={onAgeConfirmedChange}>
         <span className="font-medium text-opus-warm/88">{strings.ageCheckbox}</span>
+      </ConsentCheckbox>
+
+      <ConsentCheckbox id={`${id}-mkt`} checked={marketing} onChange={onMarketingChange}>
+        <span className="text-opus-warm/80">{strings.marketingCheckbox}</span>
       </ConsentCheckbox>
     </div>
   );
