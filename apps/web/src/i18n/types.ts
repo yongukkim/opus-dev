@@ -66,10 +66,18 @@ export type Messages = {
     consentConclude: string;
     /**
      * Checkbox: agree to Terms + Privacy (inline links).
-     * Cross-border transfer to Google LLC (US) is rolled into `consentTermsPrivacyEnd`
-     * and further documented in the Privacy Policy, per PIPA §28-8 / APPI §28 guidance
-     * that bundled consent is acceptable when the recipient + jurisdiction are
-     * clearly identified in the consented-to policy text.
+     *
+     * Cross-border transfer disclosure (Google LLC / United States) is kept OUT
+     * of the checkbox label itself to match common JP market practice (e.g.
+     * Mercari, note, Rakuten), and is instead disclosed in full inside the
+     * Privacy Policy that this checkbox consents to. This satisfies both
+     * APPI §28 (name + jurisdiction + safeguards in the consented-to policy)
+     * and PIPA §28-8 ②항 (all 6 statutory notification elements listed in the
+     * policy). See `apps/web/public/docs/privacy-policy.md` §6.
+     *
+     * When additional OAuth providers are activated whose data leaves Japan
+     * (e.g. Apple Inc. — US), the Privacy Policy §6 must be extended BEFORE
+     * enabling the provider. No label change is required if §6 is complete.
      */
     consentTermsPrivacyLead: string;
     consentTermsPrivacyMid: string;

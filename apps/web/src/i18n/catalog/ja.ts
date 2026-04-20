@@ -50,12 +50,12 @@ export const ja: Messages = {
     consentConclude: "に同意したものとみなされます。",
     consentTermsPrivacyLead: "私は ",
     consentTermsPrivacyMid: " および ",
-    consentTermsPrivacyEnd: "（米国 Google LLC への移転を含む）に同意します。",
+    consentTermsPrivacyEnd: "に同意します。",
     consentMarketingCheckbox:
       "（任意）OPUS からの製品アップデートやお知らせの受信に同意します。",
     ageCheckbox: "私は18歳以上です。",
     consentRequiredAlert:
-      "必須項目をすべて確認してください：利用規約・プライバシーポリシー（国外移転を含む）への同意、18歳以上。",
+      "必須項目をすべて確認してください：利用規約・プライバシーポリシーへの同意、18歳以上。",
     consentPrecheckFailedAlert: "同意の記録に失敗しました。しばらくしてから再度お試しください。",
     googleNotConfiguredAlert:
       "このサーバーでは Google ログインが設定されていません。AUTH_GOOGLE_ID と AUTH_GOOGLE_SECRET を設定してください。",
