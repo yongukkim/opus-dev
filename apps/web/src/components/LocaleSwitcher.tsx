@@ -2,8 +2,29 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { defaultLocale, locales, type Locale } from "@/i18n/config";
+import {
+  defaultLocale,
+  localeCookieName,
+  locales,
+  type Locale,
+} from "@/i18n/config";
 import { isLocale } from "@/i18n/paths";
+
+/**
+ * ISO 27001 A.18.1.4 (§7 Privacy by Design)
+ * KO: 언어 선택은 비식별 환경설정 쿠키로만 저장한다(개인정보 아님, 1년 유지).
+ * JA: 言語選択は非識別な環境設定Cookieのみに保存する（PIIではない、1年保持）。
+ * EN: Locale preference is a non-identifying preference cookie only (no PII, 1-year).
+ */
+function persistLocalePreference(locale: Locale): void {
+  if (typeof document === "undefined") return;
+  const oneYearSeconds = 60 * 60 * 24 * 365;
+  const secureFlag =
+    typeof window !== "undefined" && window.location.protocol === "https:"
+      ? "; secure"
+      : "";
+  document.cookie = `${localeCookieName}=${locale}; path=/; max-age=${oneYearSeconds}; samesite=lax${secureFlag}`;
+}
 
 /**
  * KO / EN / JA toggle (pattern: marketplace.aline.team header language control).
@@ -32,6 +53,7 @@ export function LocaleSwitcher({ ariaLabel }: { ariaLabel: string }) {
             key={loc}
             href={href}
             hrefLang={loc === "ja" ? "ja" : loc === "ko" ? "ko" : "en"}
+            onClick={() => persistLocalePreference(loc)}
             className={`rounded px-2 py-1 font-sans text-[0.65rem] font-semibold transition md:px-2.5 md:text-[0.7rem] ${
               jaPage ? "" : "uppercase tracking-[0.12em] "
             }${

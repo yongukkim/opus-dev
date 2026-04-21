@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars (gitignored).
+# ssh_public_key: one line, full output of `cat ~/.ssh/id_rsa.pub`.
+
+ssh_public_key = "REPLACE_WITH_YOUR_PUBLIC_KEY"
+
+# RDS (PostgreSQL) — 기본 off. true 로 바꾸면 private subnet·SG·인스턴스가 함께 만들어진다.
+# enable_rds           = true
+# db_name              = "opus"
+# db_username          = "opus"
+# db_instance_class    = "db.t4g.micro"
+# db_allocated_storage = 20
+# db_engine_version    = "16.4"

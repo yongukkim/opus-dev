@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { hasDemoSessionFromCookies } from "@/lib/demoSession";
+import { auth } from "@/auth";
 import { readActorFromRequest } from "@/lib/authContext";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
 import { signMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
@@ -55,14 +54,14 @@ export async function POST(
   }
   const { slug } = await ctx.params;
 
-  // Demo gate: require demo session cookie (web) or explicit mobile-demo header (local testing).
-  const cookieStore = await cookies();
+  // Web session (Auth.js) or explicit mobile-demo header (local testing).
+  const session = await auth();
   const mobileDemo = request.headers.get("x-opus-mobile-demo") === "1";
-  if (!mobileDemo && !hasDemoSessionFromCookies(cookieStore)) {
+  if (!mobileDemo && !session?.user) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
-  const actor = readActorFromRequest(request);
+  const actor = await readActorFromRequest(request);
   if (!actor || actor.role !== "collector") {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }

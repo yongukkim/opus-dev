@@ -152,3 +152,13 @@ export function pickSameArtistCatalogEntries(
 export function demoListPriceJpy(globalIndex: number): number {
   return 12_000 + ((globalIndex * 19) % 88_000);
 }
+
+export type AudienceTone = "male" | "female" | "none";
+
+/** Demo-only audience tone (gendered preference axis). */
+export function demoAudienceTone(globalIndex: number): AudienceTone {
+  const t = ((globalIndex % 3) + 3) % 3;
+  if (t === 0) return "male";
+  if (t === 1) return "female";
+  return "none";
+}

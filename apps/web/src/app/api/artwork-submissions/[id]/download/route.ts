@@ -17,7 +17,7 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> },
 ) {
-  const actor = readActorFromRequest(request);
+  const actor = await readActorFromRequest(request);
   if (!actor) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
 
   const { id } = await context.params;

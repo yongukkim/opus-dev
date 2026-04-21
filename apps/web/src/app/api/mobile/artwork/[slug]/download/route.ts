@@ -54,7 +54,7 @@ export async function GET(
     return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
   const { slug } = await ctx.params;
-  const actor = readActorFromRequest(request);
+  const actor = await readActorFromRequest(request);
   if (!actor || actor.role !== "collector") {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }

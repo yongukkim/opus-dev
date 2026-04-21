@@ -1,5 +1,4 @@
 import { readFile } from "node:fs/promises";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
   renderCatalogPublicPreviewWatermarked,
@@ -8,7 +7,7 @@ import {
   resolvePublicArtworkPath,
 } from "@/lib/catalogImageServe";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
-import { hasDemoSessionFromCookies } from "@/lib/demoSession";
+import { auth } from "@/auth";
 
 export const runtime = "nodejs";
 
@@ -21,9 +20,9 @@ const VARIANTS = new Set(["thumb", "preview", "vault"]);
  *   JA: スラッグ・variant・パスをホワイトリスト検証し、公開カタログディレクトリ外へ出ません。
  *   EN: Slug, variant, and filesystem paths are validated against an allowlist under public catalog dirs.
  * - A.9.4.2 (§2) Session / auth surface
- *   KO: `vault` 변형은 데모 세션 쿠키가 있을 때만 반환해 고해상도 파생 노출을 제한합니다.
- *   JA: `vault` はデモセッションがある場合のみ返し、高解像度派生の露出を制限します。
- *   EN: The `vault` variant is returned only when a demo session cookie is present.
+ *   KO: `vault` 변형은 로그인된(Auth.js) 세션이 있을 때만 반환해 고해상도 파생 노출을 제한합니다.
+ *   JA: `vault` はログイン済み(Auth.js)セッションがある場合のみ返し、高解像度派生の露出を制限します。
+ *   EN: The `vault` variant is returned only when an authenticated Auth.js session is present.
  * - A.13.1.3 (§6) API Security
  *   KO: 원본 파일 대신 파생 WebP만 제공합니다.
  *   JA: 原ファイルの代わりに派生WebPのみを提供します。
@@ -43,8 +42,8 @@ export async function GET(
   }
 
   if (variant === "vault") {
-    const cookieStore = await cookies();
-    if (!hasDemoSessionFromCookies(cookieStore)) {
+    const session = await auth();
+    if (!session?.user) {
       return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }
   }

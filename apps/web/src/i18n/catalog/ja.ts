@@ -36,7 +36,7 @@ export const ja: Messages = {
   auth: {
     signIn: "ログイン",
     title: "ログイン",
-    subtitle: "利用者の方は、Apple / Google / LINE から開始できます。",
+    subtitle: "Google アカウントでログインします。他のプロバイダは順次対応します。",
     roleLabel: "ログイン種別",
     roleCollector: "利用者",
     roleArtist: "作家",
@@ -44,21 +44,31 @@ export const ja: Messages = {
     continueWithGoogle: "Googleで続ける",
     continueWithLine: "LINEで続ける",
     hintSoon: "準備中",
+    hintActive: "利用可",
     consentPreamble: "続行すると、",
     consentBetween: " および ",
     consentConclude: "に同意したものとみなされます。",
+    consentTermsPrivacyLead: "私は ",
+    consentTermsPrivacyMid: " および ",
+    consentTermsPrivacyEnd: "に同意します。",
+    consentMarketingCheckbox:
+      "（任意）OPUS からの製品アップデートやお知らせの受信に同意します。",
     ageCheckbox: "私は18歳以上です。",
     consentRequiredAlert:
-      "18歳以上であること、および利用規約・プライバシーポリシーへの同意を確認してください。",
+      "必須項目をすべて確認してください：利用規約・プライバシーポリシーへの同意、18歳以上。",
+    consentPrecheckFailedAlert: "同意の記録に失敗しました。しばらくしてから再度お試しください。",
+    googleNotConfiguredAlert:
+      "このサーバーでは Google ログインが設定されていません。AUTH_GOOGLE_ID と AUTH_GOOGLE_SECRET を設定してください。",
+    signOut: "サインアウト",
     ssoNotReadyAlert: "SSO連携は現在準備中です。近日中に対応予定です。",
     emailDividerLabel: "またはメールで",
     emailLabel: "メールアドレス",
     passwordLabel: "パスワード",
-    note: "現在はUIのみを提供しています。実連携は次の段階で追加します。",
+    note: "サーバーに Google OAuth の資格情報がある場合、ログインが有効になります。Apple / LINE は後続で接続します。",
   },
   signup: {
     title: "会員登録",
-    subtitle: "ログインと同じく、Apple・Google・LINEで登録できます。",
+    subtitle: "Google アカウントで登録します（同意フローはログインと同じです）。",
     roleLabel: "登録種別",
     roleCollector: "利用者",
     roleArtist: "作家",
@@ -72,7 +82,7 @@ export const ja: Messages = {
     signupNotReadyAlert: "会員登録は現在準備中です。近日中に対応予定です。",
     alreadyHaveAccount: "すでにアカウントをお持ちですか？",
     signInLink: "ログイン",
-    note: "一般会員はSNSのSSOで登録します。現時点ではデモ用セッションのみ設定され、実際のSSO連携は次段階で接続します。",
+    note: "Google アカウントで認証します。必須の同意は監査のためタイムスタンプとともに記録されます。",
   },
   artistSignup: {
     title: "作家登録",
@@ -110,6 +120,11 @@ export const ja: Messages = {
     privacy: "プライバシーポリシー",
     terms: "利用規約",
     chronicleTrust: "The Chronicle Technology により検証されています。",
+    appRequiredTitle: "アプリのインストール",
+    appRequiredBody: "購入後の高画質鑑賞は OPUS モバイルアプリでのみ提供されます。",
+    appRequiredIos: "iPhone",
+    appRequiredAndroid: "Android",
+    appRequiredComingSoon: "準備中",
   },
   legalPrivacy: {
     back: "← トップへ",
@@ -117,7 +132,7 @@ export const ja: Messages = {
     lead:
       "本ページは、日本市場・M&A実務上のデューデリジェンス（DD）および個人情報保護法（APPI）を踏まえた草案です。法務確定後に更新してください。",
     body:
-      "取得する個人情報の項目、利用目的、保管期間、第三者提供・再委託、国外移転、開示等の請求、問い合わせ窓口、安全管理措置を定めます。本番環境のシステム・ログ・暗号化方針と一致させてください。",
+      "項目: Google OAuth により提供されるアカウント情報（メール、表示名、プロフィール画像）、技術ログ（IP、User-Agent、クッキー）、アカウントに紐づく利用メタデータ。目的: 本人確認、不正利用防止、サポート、The Chronicle 監査記録の運用。国外移転: Google ログイン利用時、米国の Google LLC が認証トークンやプロフィール属性を処理する場合があり、登録画面で別途同意として明示します。保有: アカウント存続中および法令上必要な期間。権利: 開示・訂正・削除・データポータビリティ等（運用窓口公開後に手続確定）。セキュリティ: 転送区間の TLS、秘密・トークンの暗号化保存、最小権限アクセス、運用ログの非識別化。",
   },
   legalTerms: {
     back: "← トップへ",
@@ -259,6 +274,7 @@ export const ja: Messages = {
     audienceLabel: "分類",
     audienceMale: "男性向け",
     audienceFemale: "女性向け",
+    audienceNone: "関係なし",
     audienceHint: "主な読者・鑑賞の軸を選びます。アーカイブ・審査で参照します。",
     yearLabel: "制作年",
     priceLabel: "価格（円）",
@@ -296,8 +312,13 @@ export const ja: Messages = {
     kicker: "認証された代替不可能なデジタルアート・エディション",
     line1:
       "どこにもない、あなただけのリミテッドエディション。",
+    /**
+     * `\n` 을 넣어 모바일 카드 폭에서 두 줄로 보이도록 강제 줄바꿈한다.
+     * Hero.tsx 의 line2 단락은 `whitespace-pre-line` 으로 이 개행을 보존한다.
+     * KO/EN 은 `\n` 이 없으므로 자동 워드랩으로 동작한다.
+     */
     line2:
-      "認証されたオリジナル・コレクティブルとして、あなたのコレクションに。",
+      "認証されたオリジナル・コレクティブルとして、\nあなたのコレクションに。",
     exploreArchive: "アーカイブを探求する",
     viewPremieres: "プレミアを見る",
   },
@@ -314,6 +335,12 @@ export const ja: Messages = {
     lead: "決済・案内は本サイトで行い、作品の鑑賞はモバイルアプリから行えます。",
     buyCta: "購入・決済へ進む",
     legalLink: "特定商取引法に基づく表記",
+    appRequiredTitle: "スマートフォンアプリのインストールが必要です",
+    appRequiredBody:
+      "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
+    appRequiredIos: "iPhone（App Store）",
+    appRequiredAndroid: "Android（Google Play）",
+    appRequiredComingSoon: "ストアリンク準備中",
     pillarChronicle: {
       sub: "改ざん耐性のある履歴",
       body:
@@ -370,6 +397,12 @@ export const ja: Messages = {
     detailListPrice: "表示価格",
     detailDemoNote: "カタログデモ用の金額です。実際の販売価格と異なる場合があります。",
     detailBuyCta: "購入・決済へ進む",
+    detailAppRequiredTitle: "スマートフォンアプリのインストールが必要です",
+    detailAppRequiredBody:
+      "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
+    detailAppRequiredIos: "iPhone（App Store）",
+    detailAppRequiredAndroid: "Android（Google Play）",
+    detailAppRequiredComingSoon: "ストアリンク準備中",
     openWorkCta: "詳細・購入",
     detailBackArchive: "← アーカイブへ",
     detailBreadcrumbHome: "ホーム",
@@ -380,6 +413,10 @@ export const ja: Messages = {
     detailSpecArtist: "作家",
     detailSpecEdition: "エディション",
     detailSpecFormat: "種別",
+    detailSpecAudienceTone: "傾向",
+    audienceToneMale: "男性向け",
+    audienceToneFemale: "女性向け",
+    audienceToneNone: "関係なし",
     detailFormatValue: "認証デジタルアート・エディション（デモカタログ）",
     detailAboutHeading: "作品情報",
     detailAboutBody:
@@ -415,6 +452,12 @@ export const ja: Messages = {
     summaryPrice: "金額: {price}",
     payCta: "決済する（デモ）",
     note: "Stripe / Apple Pay 連携前のフロー確認用画面です。",
+    appRequiredTitle: "スマートフォンアプリのインストールが必要です",
+    appRequiredBody:
+      "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
+    appRequiredIos: "iPhone（App Store）",
+    appRequiredAndroid: "Android（Google Play）",
+    appRequiredComingSoon: "ストアリンク準備中",
     back: "← アーカイブへ",
   },
   purchaseSuccess: {

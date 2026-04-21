@@ -1,10 +1,13 @@
 import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMiniCard";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
+import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { catalogImageSrcFromFile, type CatalogImageVariant } from "@/lib/catalogImageUrl";
-import { hasDemoSessionFromCookies } from "@/lib/demoSession";
+import { auth } from "@/auth";
+import { getSubmissionByStoredFilename } from "@/lib/privateStorage";
 import {
+  demoAudienceTone,
   demoListPriceJpy,
   loadCatalogFiles,
   parseTitleArtist,
@@ -15,7 +18,6 @@ import {
 } from "@/lib/artworksCatalog";
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -29,8 +31,8 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const resolved = await resolveArtworkBySlug(slug);
   if (!resolved) notFound();
 
-  const cookieStore = await cookies();
-  const hasSession = hasDemoSessionFromCookies(cookieStore);
+  const session = await auth();
+  const hasSession = Boolean(session?.user);
   const coverVariant: CatalogImageVariant = hasSession ? "vault" : "preview";
 
   const { files } = await loadCatalogFiles();
@@ -41,6 +43,15 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const editionLine = `${a.editionLabel} ${editionFraction}`;
   const priceJpy = demoListPriceJpy(resolved.globalIndex);
   const priceFmt = `¥${priceJpy.toLocaleString("ja-JP")}`;
+
+  const submission = await getSubmissionByStoredFilename(resolved.file);
+  const audienceTone = submission?.audienceCategory ?? demoAudienceTone(resolved.globalIndex);
+  const audienceToneLabel =
+    audienceTone === "male"
+      ? a.audienceToneMale
+      : audienceTone === "female"
+        ? a.audienceToneFemale
+        : a.audienceToneNone;
 
   const sameArtistEntries = pickSameArtistCatalogEntries(files, resolved.file, artist, 8);
   const sameFileSet = new Set(sameArtistEntries.map((e) => e.file));
@@ -131,6 +142,16 @@ export default async function ArtworkDetailPage({ params }: Props) {
               </Link>
               <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-opus-warm/35">{a.buyHint}</p>
               <p className="mt-3 text-xs leading-relaxed text-opus-warm/45">{a.detailDemoNote}</p>
+              <AppInstallCallout
+                m={m}
+                title={a.detailAppRequiredTitle}
+                body={a.detailAppRequiredBody}
+                iosLabel={a.detailAppRequiredIos}
+                androidLabel={a.detailAppRequiredAndroid}
+                comingSoonLabel={a.detailAppRequiredComingSoon}
+                className="mt-5 max-w-sm rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"
+              />
+
               <ArtworkPdpCollectActions
                 slug={slug}
                 title={title}
@@ -163,6 +184,12 @@ export default async function ArtworkDetailPage({ params }: Props) {
                     {a.detailSpecFormat}
                   </th>
                   <td className="text-opus-warm/75">{a.detailFormatValue}</td>
+                </tr>
+                <tr className={specRowClass}>
+                  <th scope="row" className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/45">
+                    {a.detailSpecAudienceTone}
+                  </th>
+                  <td className="text-opus-warm/75">{audienceToneLabel}</td>
                 </tr>
               </tbody>
             </table>

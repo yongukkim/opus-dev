@@ -34,7 +34,7 @@ export async function POST(
   }
 
   // Optional hardening for internal tooling: if actor headers exist, enforce operator role.
-  const actor = readActorFromRequest(request);
+  const actor = await readActorFromRequest(request);
   if (actor && actor.role !== "operator") {
     return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
   }

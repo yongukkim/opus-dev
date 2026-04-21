@@ -13,7 +13,7 @@ export type OperatorReviewRow = {
   nickname: string;
   artworkTitle: string;
   /** Male- / female-oriented shelf grouping when present. */
-  audienceCategory?: "male" | "female";
+  audienceCategory?: "male" | "female" | "none";
   /** List price in JPY when present on the submission record. */
   priceJpy?: number;
   reviewStatus: ReviewStatus;
@@ -28,9 +28,10 @@ function badgeClass(kind: "neutral" | "good" | "warn" | "bad"): string {
   return "bg-white/[0.06] text-opus-warm/70 border-white/[0.10]";
 }
 
-function audienceLabel(m: Messages, cat: "male" | "female" | undefined): string | null {
+function audienceLabel(m: Messages, cat: "male" | "female" | "none" | undefined): string | null {
   if (cat === "male") return m.submitArtwork.audienceMale;
   if (cat === "female") return m.submitArtwork.audienceFemale;
+  if (cat === "none") return m.submitArtwork.audienceNone;
   return null;
 }
 

@@ -84,7 +84,7 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
 
             {h.line2?.trim() ? (
               <p
-                className={`mt-4 max-w-md text-sm leading-relaxed text-opus-warm/50 ${
+                className={`mt-4 max-w-md whitespace-pre-line text-sm leading-relaxed text-opus-warm/50 ${
                   ja ? "tracking-tight break-keep" : "tracking-wide"
                 }`}
               >

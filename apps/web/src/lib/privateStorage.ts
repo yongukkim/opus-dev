@@ -16,8 +16,8 @@ export type SubmissionRecord = {
   nickname: string;
   artworkTitle: string;
   genre: string;
-  /** Discovery / shelf grouping: male-oriented vs female-oriented (optional for legacy rows). */
-  audienceCategory?: "male" | "female";
+  /** Discovery / shelf grouping (optional for legacy rows). */
+  audienceCategory?: "male" | "female" | "none";
   year?: number;
   description?: string;
   tags: string[];
@@ -101,6 +101,17 @@ export async function getSubmissionById(id: string): Promise<SubmissionRecord | 
   const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
   for (let i = records.length - 1; i >= 0; i -= 1) {
     if (records[i]?.id === id) return records[i]!;
+  }
+  return null;
+}
+
+export async function getSubmissionByStoredFilename(filename: string): Promise<SubmissionRecord | null> {
+  const f = filename.trim();
+  if (!f) return null;
+  const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
+  for (let i = records.length - 1; i >= 0; i -= 1) {
+    const r = records[i];
+    if (r?.storedFile?.filename === f) return r;
   }
   return null;
 }

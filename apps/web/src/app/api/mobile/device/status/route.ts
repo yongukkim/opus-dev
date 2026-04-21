@@ -14,7 +14,7 @@ export const runtime = "nodejs";
  *   EN: If the device is revoked, the app must wipe local assets/keys and log out immediately.
  */
 export async function GET(request: NextRequest): Promise<Response> {
-  const actor = readActorFromRequest(request);
+  const actor = await readActorFromRequest(request);
   if (!actor || actor.role !== "collector") {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }

@@ -2,9 +2,9 @@ import { CollectorTransferRegisterForm } from "@/components/collector/CollectorT
 import { VaultAuthGate } from "@/components/vault/VaultAuthGate";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { auth } from "@/auth";
 import { cookies, headers } from "next/headers";
-import { hasDemoSessionFromCookies } from "@/lib/demoSession";
-import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
+import { getVaultUiRoleFromCookies, type VaultUiRole } from "@/lib/vaultRole";
 import Link from "next/link";
 
 type Props = {
@@ -32,8 +32,14 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
     process.env.NODE_ENV !== "production" &&
     (previewFromMiddleware || previewQueryOn(sp));
 
-  const cookieStore = await cookies();
-  const hasSession = hasDemoSessionFromCookies(cookieStore);
+  const session = await auth();
+  const hasSession = Boolean(session?.user);
+
+  let vaultRole: VaultUiRole = session?.user?.role === "artist" ? "artist" : "collector";
+  if (devPreviewActive && !hasSession) {
+    const cookieStore = await cookies();
+    vaultRole = getVaultUiRoleFromCookies(cookieStore);
+  }
 
   if (!devPreviewActive && !hasSession) {
     return (
@@ -48,8 +54,6 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
       />
     );
   }
-
-  const vaultRole = getVaultUiRoleFromCookies(cookieStore);
 
   return (
     <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">

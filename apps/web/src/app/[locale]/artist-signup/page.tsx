@@ -2,7 +2,7 @@ import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
-import { SignupPanel } from "@/components/auth/SignupPanel";
+import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -17,6 +17,9 @@ export default async function ArtistSignupPage({
   const s = m.artistSignup ?? m.signup;
   const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/artist/kyc/consent"));
   const loginHref = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(returnTo)}`;
+  const googleOAuthConfigured = Boolean(
+    process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
+  );
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
@@ -27,26 +30,16 @@ export default async function ArtistSignupPage({
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{s.subtitle}</p>
 
-        <SignupPanel
+        <UnifiedAuthSection
+          variant="signup"
+          locale={locale}
+          returnTo={returnTo}
+          googleOAuthConfigured={googleOAuthConfigured}
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}
           privacyLabel={m.footer.privacy}
-          returnTo={returnTo}
-          strings={{
-            displayNameLabel: s.displayNameLabel,
-            emailLabel: s.emailLabel,
-            passwordLabel: s.passwordLabel,
-            passwordConfirmLabel: s.passwordConfirmLabel,
-            passwordMismatchAlert: s.passwordMismatchAlert,
-            createAccount: s.createAccount,
-            consentPreamble: s.consentPreamble,
-            consentBetween: m.auth.consentBetween,
-            consentConclude: m.auth.consentConclude,
-            ageCheckbox: m.auth.ageCheckbox,
-            consentRequiredAlert: m.auth.consentRequiredAlert,
-            signupNotReadyAlert: s.signupNotReadyAlert,
-          }}
+          m={m}
         />
 
         <p className="mt-6 rounded-xl border border-opus-gold/15 bg-opus-slate/30 px-5 py-4 text-xs leading-relaxed text-opus-warm/55">

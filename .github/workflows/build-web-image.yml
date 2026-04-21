@@ -1,0 +1,91 @@
+name: build-and-deploy-web
+
+on:
+  push:
+    branches:
+      - main
+      - feat/signup-sso-collector
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "compose.web.yaml"
+      - "scripts/ec2-pull-restart.sh"
+      - ".github/workflows/build-web-image.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: build-and-deploy-web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_ref: ${{ steps.meta.outputs.image_ref }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU (arm64)
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase repo owner
+        id: owner
+        run: echo "value=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Compute tags
+        id: meta
+        run: |
+          img="ghcr.io/${{ steps.owner.outputs.value }}/opus-web"
+          short="${GITHUB_SHA::7}"
+          ref="${GITHUB_REF_NAME//\//-}"
+          echo "tags=$img:$short,$img:$ref,$img:latest" >> "$GITHUB_OUTPUT"
+          echo "image_ref=$img:$short" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push (linux/arm64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      # drone-ssh (appleboy/ssh-action) 의 multiline script 가 본 환경에서
+      # docker login 직후 침묵 종료되는 이슈가 있어, 원격 스크립트는
+      # 미리 EC2 에 clone 된 scripts/ec2-pull-restart.sh 하나로 일원화한다.
+      - name: SSH into EC2 and redeploy container
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          command_timeout: 10m
+          script_stop: true
+          script: |
+            bash -lc 'set -eo pipefail; IMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy] img=$IMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then git clone --depth 1 --branch "$BR" https://github.com/yongukkim/opus-dev.git "$APP"; fi; git -C "$APP" fetch --depth 1 origin "$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$IMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'

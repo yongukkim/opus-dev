@@ -56,16 +56,43 @@ export type Messages = {
     continueWithLine: string;
     /** Short label on SSO rows (e.g. Soon). */
     hintSoon: string;
+    /** Shown on the active Google row (opposite of Soon). */
+    hintActive: string;
     /** Login: "By continuing you agree to …" lead (before Terms link). */
     consentPreamble: string;
     /** Between Terms and Privacy links. */
     consentBetween: string;
     /** After Privacy link. */
     consentConclude: string;
+    /**
+     * Checkbox: agree to Terms + Privacy (inline links).
+     *
+     * Cross-border transfer disclosure (Google LLC / United States) is kept OUT
+     * of the checkbox label itself to match common JP market practice (e.g.
+     * Mercari, note, Rakuten), and is instead disclosed in full inside the
+     * Privacy Policy that this checkbox consents to. This satisfies both
+     * APPI §28 (name + jurisdiction + safeguards in the consented-to policy)
+     * and PIPA §28-8 ②항 (all 6 statutory notification elements listed in the
+     * policy). See `apps/web/public/docs/privacy-policy.md` §6.
+     *
+     * When additional OAuth providers are activated whose data leaves Japan
+     * (e.g. Apple Inc. — US), the Privacy Policy §6 must be extended BEFORE
+     * enabling the provider. No label change is required if §6 is complete.
+     */
+    consentTermsPrivacyLead: string;
+    consentTermsPrivacyMid: string;
+    consentTermsPrivacyEnd: string;
+    /** Optional marketing opt-in. */
+    consentMarketingCheckbox: string;
     /** Required age attestation label. */
     ageCheckbox: string;
-    /** Shown when SSO is clicked without consent / age check. */
+    /** Shown when required consent checkboxes are incomplete. */
     consentRequiredAlert: string;
+    /** Server-side consent cookie failed. */
+    consentPrecheckFailedAlert: string;
+    /** OAuth client env missing. */
+    googleNotConfiguredAlert: string;
+    signOut: string;
     /** Shown when SSO is clicked after consent but OAuth is not wired. */
     ssoNotReadyAlert: string;
     /** Divider between SNS and email on unified auth page. */
@@ -87,6 +114,11 @@ export type Messages = {
     terms: string;
     /** Technical integrity line (Chronicle); KO/JA/EN per locale. */
     chronicleTrust: string;
+    appRequiredTitle: string;
+    appRequiredBody: string;
+    appRequiredIos: string;
+    appRequiredAndroid: string;
+    appRequiredComingSoon: string;
   };
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
@@ -116,6 +148,11 @@ export type Messages = {
     lead: string;
     buyCta: string;
     legalLink: string;
+    appRequiredTitle: string;
+    appRequiredBody: string;
+    appRequiredIos: string;
+    appRequiredAndroid: string;
+    appRequiredComingSoon: string;
     pillarChronicle: { sub: string; body: string };
     pillarVault: { sub: string; body: string };
     pillarPremieres: { sub: string; body: string };
@@ -155,6 +192,11 @@ export type Messages = {
     detailListPrice: string;
     detailDemoNote: string;
     detailBuyCta: string;
+    detailAppRequiredTitle: string;
+    detailAppRequiredBody: string;
+    detailAppRequiredIos: string;
+    detailAppRequiredAndroid: string;
+    detailAppRequiredComingSoon: string;
     /** CTA on grid/list to open the work detail page. */
     openWorkCta: string;
     detailBackArchive: string;
@@ -167,6 +209,10 @@ export type Messages = {
     detailSpecArtist: string;
     detailSpecEdition: string;
     detailSpecFormat: string;
+    detailSpecAudienceTone: string;
+    audienceToneMale: string;
+    audienceToneFemale: string;
+    audienceToneNone: string;
     detailFormatValue: string;
     detailAboutHeading: string;
     detailAboutBody: string;
@@ -194,6 +240,11 @@ export type Messages = {
     summaryPrice: string;
     payCta: string;
     note: string;
+    appRequiredTitle: string;
+    appRequiredBody: string;
+    appRequiredIos: string;
+    appRequiredAndroid: string;
+    appRequiredComingSoon: string;
     back: string;
   };
   purchaseSuccess: {
@@ -306,6 +357,7 @@ export type Messages = {
     audienceLabel: string;
     audienceMale: string;
     audienceFemale: string;
+    audienceNone: string;
     audienceHint: string;
     yearLabel: string;
     /** Sale list price in JPY (integer). */
