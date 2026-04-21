@@ -621,7 +621,6 @@ export const en: Messages = {
       "OPUS does not store ID image paths or card numbers; only verification outcomes are linked.",
     back: "Back",
     next: "Continue",
-    footerPrivacyMd: "Privacy (MD)",
     footerPrivacy: "Privacy policy",
     footerVault: "Vault",
     alertConsentFail: "Could not record consent. Please try again shortly.",

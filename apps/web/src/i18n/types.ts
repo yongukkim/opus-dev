@@ -73,7 +73,7 @@ export type Messages = {
      * Privacy Policy that this checkbox consents to. This satisfies both
      * APPI §28 (name + jurisdiction + safeguards in the consented-to policy)
      * and PIPA §28-8 ②항 (all 6 statutory notification elements listed in the
-     * policy). See `apps/web/public/docs/privacy-policy.md` §6.
+     * policy). See `apps/web/public/docs/privacy-policy.{ko,ja,en}.md` §6.
      *
      * When additional OAuth providers are activated whose data leaves Japan
      * (e.g. Apple Inc. — US), the Privacy Policy §6 must be extended BEFORE
@@ -514,7 +514,6 @@ export type Messages = {
     dbNote: string;
     back: string;
     next: string;
-    footerPrivacyMd: string;
     footerPrivacy: string;
     footerVault: string;
     alertConsentFail: string;

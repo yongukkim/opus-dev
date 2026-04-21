@@ -651,7 +651,6 @@ export const ja: Messages = {
       "OPUSのデータベースには身分証画像のパスやカード番号は保存せず、検証結果の参照のみを連携します。",
     back: "戻る",
     next: "本人確認を開始する",
-    footerPrivacyMd: "Privacy (MD)",
     footerPrivacy: "プライバシーポリシー",
     footerVault: "Vault",
     alertConsentFail:

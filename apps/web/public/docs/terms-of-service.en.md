@@ -168,7 +168,7 @@ The Company exercises reasonable care to:
 
 ## 17. Jurisdiction-Specific Disclosures
 
-1. **Users resident in Japan**: disclosures required by Article 11 of the **Act on Specified Commercial Transactions** are published at **[特定商取引法に基づく表記](/docs/specified-commercial.md)**.
+1. **Users resident in Japan**: disclosures required by Article 11 of the **Act on Specified Commercial Transactions** are published at **[特定商取引法に基づく表記](/en/legal/specified-commercial)**.
 2. **Users resident in Korea**: business-operator information and terms required by Article 10 of the **Electronic Commerce Act** are shown in these Terms and in the operator-information panel at the bottom of the Service.
 
 ---

@@ -259,10 +259,6 @@ export function SellerVerifyConsentForm({ locale, strings: s }: SellerVerifyCons
           </div>
 
           <p className="mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center text-[0.65rem] font-light text-[#5c5348]/95">
-            <Link href="/docs/privacy-policy.md" className="text-[#9a8f7e]/80 hover:text-[#c9a97e]">
-              {s.footerPrivacyMd}
-            </Link>
-            <span className="text-[#4a433c]">·</span>
             <Link href={withLocale(locale, "/privacy")} className="text-[#9a8f7e]/80 hover:text-[#c9a97e]">
               {s.footerPrivacy}
             </Link>
