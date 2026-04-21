@@ -27,7 +27,7 @@ export const en: Messages = {
     cta: "Call to action",
     archivePreview: "Archive preview",
   },
-  nav: { archive: "Archive", vault: "Vault", legal: "Legal", collectorTransfers: "Collection transfers" },
+  nav: { releases: "Releases", vault: "Vault", legal: "Legal", provenance: "Provenance" },
   auth: {
     signIn: "Sign in",
     title: "Sign in",
@@ -108,7 +108,8 @@ export const en: Messages = {
       "The archive of digital masterpieces — authenticated editions, collector provenance, and the vault.",
     design:
       "Design: Classic Luxury — near-black charcoal, champagne brass (gradient-lit metal), warm white type, restrained decoration. Not an investment or physical-asset product.",
-    archive: "Archive",
+    releases: "Releases",
+    provenance: "Provenance",
     vault: "Vault",
     legal: "Specified commercial disclosures (Japan)",
     privacy: "Privacy policy",
@@ -359,10 +360,10 @@ export const en: Messages = {
     openVault: "Open Vault",
   },
   artworks: {
-    kicker: "Archive",
-    title: "Artworks",
+    kicker: "Releases",
+    title: "First releases by participating artists",
     body:
-      "Browse authenticated digital art here. On each work page, check provenance and edition details.",
+      "Editions released on OPUS for the first time by participating artists. On each work page, review authentication, provenance, and edition details. OPUS offers a collector experience around non-reproducible digital art, not an investment product.",
     back: "← Back home",
     editionLabel: "Edition:",
     buyCta: "Buy",
@@ -539,9 +540,9 @@ export const en: Messages = {
     devPreviewLink: "View layout without signing in (local dev)",
     devPreviewBanner:
       "Local development preview: you are seeing the registration layout without a demo session cookie. The form matches the signed-in Vault experience; submissions still use the demo member ID from the form header.",
-    listingsTitle: "Collector transfer listings",
+    listingsTitle: "Provenance",
     listingsSubtitle:
-      "Offers from collectors seeking a next owner. Artist attribution shows the pen name only. (Demo)",
+      "Editions listed by previous custodians seeking a next owner. OPUS records each custody change on The Chronicle, and the artist attribution shows the pen name only. Designed as a line of custody for digital art, not as a profit-oriented trading venue.",
     listingsEmpty: "No listings yet.",
     listingsArtistPublic: "Artist (pen name)",
     listingsGenre: "Genre",

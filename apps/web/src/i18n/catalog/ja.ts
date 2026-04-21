@@ -28,10 +28,10 @@ export const ja: Messages = {
     archivePreview: "アーカイブプレビュー",
   },
   nav: {
-    archive: "アーカイブ",
+    releases: "新作公開",
     vault: "Vault",
     legal: "法的情報",
-    collectorTransfers: "コレクター譲渡",
+    provenance: "来歴",
   },
   auth: {
     signIn: "ログイン",
@@ -114,7 +114,8 @@ export const ja: Messages = {
       "デジタル名作のアーカイブです。認定エディション、コレクターの来歴、Vaultをご利用いただけます。",
     design:
       "デザインはClassic Luxuryです。near-blackのチャコール、シャンパン・ブラス（グラデーションの金属表現）、ウォームホワイト、抑制された装飾を用います。投資・実物資産商品ではありません。",
-    archive: "アーカイブ",
+    releases: "新作公開",
+    provenance: "来歴",
     vault: "Vault",
     legal: "特定商取引法に基づく表記",
     privacy: "プライバシーポリシー",
@@ -380,10 +381,10 @@ export const ja: Messages = {
     openVault: "Vaultを開く",
   },
   artworks: {
-    kicker: "Archive",
-    title: "Artworks",
+    kicker: "Releases · 新作公開",
+    title: "作家が最初に公開した作品",
     body:
-      "認定済みデジタルアートの一覧をここから閲覧できます。各作品ページで来歴・エディション情報をご確認ください。",
+      "参加作家が OPUS を通じて最初に公開したエディションです。各作品ページで認証・来歴・エディション情報をご確認いただけます。投資商品ではなく、複製不可能なデジタルアートの鑑賞・所蔵体験を提供します。",
     back: "← トップへ",
     editionLabel: "Edition:",
     buyCta: "購入",
@@ -563,9 +564,9 @@ export const ja: Messages = {
     devPreviewLink: "ログインせずに画面だけ見る（ローカル開発）",
     devPreviewBanner:
       "ローカル開発用プレビューです。デモログインのクッキーなしで登録画面のレイアウトを確認しています。フォームはサインイン後のVaultと同じで、送信はフォームのデモ会員IDがAPIに送られます。",
-    listingsTitle: "コレクター譲渡の公開一覧",
+    listingsTitle: "来歴 · Provenance",
     listingsSubtitle:
-      "次のコレクターを探すための登録一覧です。作家表記は公開名（ペンネーム）のみです。（デモ）",
+      "前の所蔵者が次の所蔵者を探すために登録したエディションです。OPUS は所蔵の記録を The Chronicle に残し、作家表記は公開名（ペンネーム）のみとします。収益を目的とする市場ではなく、デジタルアートの所蔵を継承する経路として設計されています。",
     listingsEmpty: "登録された項目はありません。",
     listingsArtistPublic: "表示作家名（ペンネーム）",
     listingsGenre: "ジャンル",

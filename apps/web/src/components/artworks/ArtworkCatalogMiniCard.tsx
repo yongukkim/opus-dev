@@ -15,7 +15,7 @@ export function ArtworkCatalogMiniCard({
   globalIndex: number;
 }) {
   const { title, artist } = parseTitleArtist(file, globalIndex);
-  const href = withLocale(locale, `/artworks/${encodeArtworkSlug(file)}`);
+  const href = withLocale(locale, `/releases/${encodeArtworkSlug(file)}`);
   const priceFmt = `¥${demoListPriceJpy(globalIndex).toLocaleString("ja-JP")}`;
 
   return (

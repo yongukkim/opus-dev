@@ -9,7 +9,7 @@ export function normalizeLocale(value: string): Locale {
   return isLocale(value) ? value : defaultLocale;
 }
 
-/** Prefix path with locale segment (`/ko`, `/ja/artworks`, …). */
+/** Prefix path with locale segment (`/ko`, `/ja/releases`, …). */
 export function withLocale(locale: Locale, path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   if (normalized === "/") return `/${locale}`;

@@ -4,6 +4,8 @@ This page is a mail-order business notice provided pursuant to **Article 11 of J
 
 This document is a **pre-finalization draft**. Bracketed items (**[ … ]**) — operator name, prices, contact details, etc. — will be populated once the operating entity is confirmed.
 
+> **Scope (important).** This notice applies **only to the primary "Releases" channel (`/releases`)**, in which the Company **acts as the merchant of record** and an artist publishes an Edition on OPUS for the first time. It does **not** apply to the **"Provenance" channel (`/provenance`)**, where the Company acts only as a matching facilitator and as the recorder of The Chronicle between a previous custodian and a next custodian; the Company is not itself the seller of the Edition. See Sections 7 and 17 of the [Terms of Service](/en/terms) for details.
+
 Service name: **OPUS**
 
 ---

@@ -72,7 +72,7 @@ export async function ArchivePreviewGrid({ locale, m }: { locale: Locale; m: Mes
             <p className="mt-3 max-w-lg font-sans text-sm text-opus-warm/55">{g.body}</p>
           </div>
           <Link
-            href={withLocale(locale, "/artworks")}
+            href={withLocale(locale, "/releases")}
             className="shrink-0 border border-opus-gold/42 px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-gold transition hover:border-opus-gold-light/55 hover:bg-opus-gold/10"
           >
             {g.viewAll}
@@ -83,7 +83,7 @@ export async function ArchivePreviewGrid({ locale, m }: { locale: Locale; m: Mes
           {items.map((item) => (
             <li key={item.id}>
               <Link
-                href={withLocale(locale, "/artworks")}
+                href={withLocale(locale, "/releases")}
                 className="group block overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card transition hover:border-opus-gold/38"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">

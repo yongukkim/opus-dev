@@ -39,11 +39,11 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             className="flex min-w-0 shrink items-center justify-end gap-3 overflow-x-auto py-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 md:gap-8 lg:gap-10 [&::-webkit-scrollbar]:hidden"
             aria-label={m.a11y.primaryNav}
           >
-            <Link href={withLocale(locale, "/artworks")} className={navItemClass}>
-              {m.nav.archive}
+            <Link href={withLocale(locale, "/releases")} className={navItemClass}>
+              {m.nav.releases}
             </Link>
-            <Link href={withLocale(locale, "/listings/collector-transfers")} className={navItemClass}>
-              {m.nav.collectorTransfers}
+            <Link href={withLocale(locale, "/provenance")} className={navItemClass}>
+              {m.nav.provenance}
             </Link>
             <Link href={withLocale(locale, "/vault")} className={navItemClass}>
               {m.nav.vault}

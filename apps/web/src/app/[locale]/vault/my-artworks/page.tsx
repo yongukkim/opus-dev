@@ -204,10 +204,10 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
             {aa.backHome}
           </Link>
           <Link
-            href={withLocale(locale, "/artworks")}
+            href={withLocale(locale, "/releases")}
             className="inline-block text-sm text-opus-warm/55 underline-offset-4 hover:text-opus-gold hover:underline"
           >
-            {m.footer.archive}
+            {m.footer.releases}
           </Link>
         </div>
       </div>

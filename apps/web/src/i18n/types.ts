@@ -43,7 +43,7 @@ export type Messages = {
     cta: string;
     archivePreview: string;
   };
-  nav: { archive: string; vault: string; legal: string; collectorTransfers: string };
+  nav: { releases: string; vault: string; legal: string; provenance: string };
   auth: {
     signIn: string;
     title: string;
@@ -107,7 +107,8 @@ export type Messages = {
   footer: {
     about: string;
     design: string;
-    archive: string;
+    releases: string;
+    provenance: string;
     vault: string;
     legal: string;
     privacy: string;

@@ -42,7 +42,7 @@ export default async function PurchaseSuccessPage({ params, searchParams }: Prop
               {m.purchaseSuccess.toVault}
             </Link>
             <Link
-              href={withLocale(locale, "/artworks")}
+              href={withLocale(locale, "/releases")}
               className="text-sm text-opus-gold/70 underline-offset-4 transition hover:text-opus-gold hover:underline"
             >
               {m.purchaseSuccess.backToArchive}
