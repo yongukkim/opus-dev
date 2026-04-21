@@ -112,12 +112,15 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
           <div>
             <p className={headingClass}>Legal</p>
             <nav className="mt-6 flex flex-col gap-2.5" aria-label="Legal documents">
-              <a href="/docs/privacy-policy.md" className={linkClass}>
+              <Link href={withLocale(locale, "/privacy")} className={linkClass}>
                 {m.footer.privacy}
-              </a>
-              <a href="/docs/specified-commercial.md" className={linkClass}>
+              </Link>
+              <Link
+                href={withLocale(locale, "/legal/specified-commercial")}
+                className={linkClass}
+              >
                 {m.footer.legal}
-              </a>
+              </Link>
               <Link href={withLocale(locale, "/terms")} className={linkClass}>
                 {m.footer.terms}
               </Link>

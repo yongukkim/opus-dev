@@ -619,7 +619,6 @@ export const ko: Messages = {
       "OPUS DB에는 신분증 이미지 경로·카드번호를 저장하지 않으며, 검증 결과 참조만 연동합니다.",
     back: "이전으로",
     next: "다음으로",
-    footerPrivacyMd: "Privacy (MD)",
     footerPrivacy: "개인정보 처리방침",
     footerVault: "Vault",
     alertConsentFail: "동의 기록에 실패했습니다. 잠시 후 다시 시도해 주세요.",
