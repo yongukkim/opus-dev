@@ -3,32 +3,33 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
-import {
-  encodeArtworkSlug,
-  loadCatalogFiles,
-  parseTitleArtist,
-} from "@/lib/artworksCatalog";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
-import { CURATION_SHELVES, type CurationShelf } from "@/data/curation";
+import { loadFirstShelf } from "@/lib/curationCatalog";
+
+// PR-11: shelf card now exposes both per-work PDP links AND a "Open this
+// shelf" CTA (→ /curation/<id>). Avoid nesting <Link> inside <Link> by
+// keeping the outer container a plain element and giving each artwork
+// card / the shelf-detail CTA their own anchor.
 
 /**
- * Rail D · Operator-curated shelves — PR-7 of the home redesign series.
- * Spec: docs/home-redesign-curation-rails-and-omnisearch.md §3.6 / §6.
+ * Rail D · Operator-curated shelves — PR-7 of the home redesign series,
+ * cut over to `/curation` in PR-11.
+ * Spec: docs/home-redesign-curation-rails-and-omnisearch.md §3.6 / §6 / §8.2.
  *
  * Source of truth (phase 1):
- *   1. The first entry in `CURATION_SHELVES` (ordered most-recent-first).
- *   2. Items with `kind: "artwork"` are resolved against `loadCatalogFiles()`
- *      and any ref missing from the live catalog is silently dropped, so a
- *      stale shelf can never break the home page.
- *   3. Other item kinds (`edition`, `listing`) are reserved for the phase-2
- *      operator-edit cutover (separate PR, OpusRole.OPERATOR + audit log)
- *      and ignored here.
+ *   - `loadFirstShelf(HOME_SHELF_LIMIT)` — the first entry in
+ *     `CURATION_SHELVES` (most-recent-first), capped to four cards.
+ *   - Items with `kind: "artwork"` are resolved against the live catalog
+ *     and any ref missing from the live catalog is silently dropped, so a
+ *     stale shelf can never break the home page.
+ *   - Other item kinds (`edition`, `listing`) are reserved for the phase-2
+ *     operator-edit cutover (separate PR, OpusRole.OPERATOR + audit log)
+ *     and ignored by the helper.
  *
  * Layout:
  *   - Section header carries the rail label + the localized rail body and a
- *     "Browse other shelves" link. The link targets `/releases` for now,
- *     because the dedicated `/curation` index page lands in a follow-up PR
- *     (spec §8.2). Only the href changes once that route ships.
+ *     "Browse other shelves" link that targets `/curation` (PR-11). Each
+ *     shelf card already links into `/curation/<id>`.
  *   - One shelf rendered as a 4-card grid: shelf title and description (read
  *     directly from the static catalog so we don't pollute the i18n catalog
  *     with operator-authored copy), then four artwork cards linking to each
@@ -44,37 +45,6 @@ import { CURATION_SHELVES, type CurationShelf } from "@/data/curation";
  */
 const HOME_SHELF_LIMIT = 4;
 
-type ResolvedItem = {
-  file: string;
-  slug: string;
-  title: string;
-  artist: string;
-};
-
-function resolveShelfItems(
-  shelf: CurationShelf,
-  catalogFiles: readonly string[],
-): ResolvedItem[] {
-  const indexByFile = new Map<string, number>();
-  for (let i = 0; i < catalogFiles.length; i++) indexByFile.set(catalogFiles[i]!, i);
-
-  const out: ResolvedItem[] = [];
-  for (const item of shelf.items) {
-    if (item.kind !== "artwork") continue;
-    const idx = indexByFile.get(item.ref);
-    if (idx === undefined) continue;
-    const { title, artist } = parseTitleArtist(item.ref, idx);
-    out.push({
-      file: item.ref,
-      slug: encodeArtworkSlug(item.ref),
-      title,
-      artist,
-    });
-    if (out.length >= HOME_SHELF_LIMIT) break;
-  }
-  return out;
-}
-
 export async function RailCuration({
   locale,
   m,
@@ -83,12 +53,10 @@ export async function RailCuration({
   m: Messages;
 }) {
   const r = m.home.railCuration;
-  const shelf = CURATION_SHELVES[0];
-  const { files } = await loadCatalogFiles();
-  const items = shelf ? resolveShelfItems(shelf, files) : [];
+  const shelf = await loadFirstShelf(HOME_SHELF_LIMIT);
   // Treat a shelf whose every item dropped as "no shelf available" so we fall
   // back to the empty copy instead of rendering an empty grid.
-  const shelfHasItems = items.length > 0;
+  const shelfHasItems = (shelf?.itemCount ?? 0) > 0;
 
   return (
     <section
@@ -105,12 +73,8 @@ export async function RailCuration({
               {r.body}
             </p>
           </div>
-          {/*
-            Until /curation lands (spec §8.2), this CTA points at /releases
-            so the affordance is never broken. Swap the href only.
-          */}
           <Link
-            href={withLocale(locale, "/releases")}
+            href={withLocale(locale, "/curation")}
             className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-opus-gold/85 transition hover:text-opus-gold-light"
           >
             {r.viewAll} →
@@ -123,17 +87,25 @@ export async function RailCuration({
           </p>
         ) : (
           <div className="mt-10 rounded-lg border border-white/[0.08] bg-gradient-to-b from-opus-slate/30 to-[#161616] p-6 shadow-opus-card md:p-8">
-            <div className="flex flex-col gap-1">
-              <h3 className="opus-text-metallic font-display text-lg tracking-wide md:text-xl">
-                {shelf.title[locale]}
-              </h3>
-              <p className="font-sans text-sm text-opus-warm/55">
-                {shelf.description[locale]}
-              </p>
+            <div className="flex flex-col items-start gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h3 className="opus-text-metallic font-display text-lg tracking-wide md:text-xl">
+                  {shelf.title[locale]}
+                </h3>
+                <p className="mt-1 font-sans text-sm text-opus-warm/55">
+                  {shelf.description[locale]}
+                </p>
+              </div>
+              <Link
+                href={withLocale(locale, `/curation/${shelf.id}`)}
+                className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-opus-gold/85 transition hover:text-opus-gold-light"
+              >
+                {m.curation.viewShelf} →
+              </Link>
             </div>
 
             <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-              {items.map((item) => (
+              {shelf.items.map((item) => (
                 <li key={item.file}>
                   <Link
                     href={withLocale(locale, `/releases/${item.slug}`)}
