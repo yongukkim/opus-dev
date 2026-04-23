@@ -25,6 +25,9 @@ export const ko: Messages = {
     archivePreview: "아카이브 미리보기",
   },
   nav: { releases: "신작 공개", vault: "Vault", legal: "법적 고지", provenance: "소장 계보" },
+  badge: {
+    secondary: "来歴",
+  },
   auth: {
     signIn: "로그인",
     title: "로그인",
@@ -324,7 +327,10 @@ export const ko: Messages = {
     comingSoon: "곧 공개",
     railProvenance: {
       title: "소장 계보",
-      body: "진행 중인 수탁 이전을 곧 표시합니다.",
+      body: "운영 검토를 통과한 활성 수탁 이전입니다.",
+      viewAll: "전체 보기",
+      empty: "지금은 진행 중인 수탁 이전이 없습니다.",
+      registerCta: "수탁 이전 등록",
     },
     railFeaturedArtists: {
       title: "작가 셸프",

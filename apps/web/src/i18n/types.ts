@@ -41,6 +41,17 @@ export type Messages = {
     archivePreview: string;
   };
   nav: { releases: string; vault: string; legal: string; provenance: string };
+  /**
+   * Channel badges shown on home rails and (later) the ⌘K omni-search results.
+   * Always exactly one of `primary` (新作 / Releases) or `secondary` (来歴 /
+   * Provenance) — never both. PR-4 introduces `secondary`; PR-5 will add
+   * `primary` when Rail A swaps to per-artwork links with the New release pill.
+   * See spec §3.3, §3.4 and §6.
+   */
+  badge: {
+    /** SECONDARY channel marker — 来歴 / 来歴 / Provenance. */
+    secondary: string;
+  };
   auth: {
     signIn: string;
     title: string;
@@ -161,11 +172,21 @@ export type Messages = {
     /** Shared "Coming soon" badge used on rail / chronicle placeholders below. */
     comingSoon: string;
     /**
-     * Curation rail placeholders introduced in PR-3 (home IA rebuild).
-     * Each rail's data wiring lands in its own follow-up PR (PR-4..PR-7);
-     * until then the same body string explains what the rail will become.
+     * Curation rail copy introduced in PR-3 (home IA rebuild) and progressively
+     * filled in by PR-4..PR-7. Rails that already have their data wired add the
+     * extra header / empty-state strings they need; placeholder rails keep just
+     * `title` + `body` until their data PR lands.
      */
-    railProvenance: { title: string; body: string };
+    railProvenance: {
+      title: string;
+      body: string;
+      /** Header link → /provenance full list. Wired in PR-4. */
+      viewAll: string;
+      /** Empty state when there are no open custody transfers. */
+      empty: string;
+      /** Empty-state CTA → /vault/transfer/register. */
+      registerCta: string;
+    };
     railFeaturedArtists: { title: string; body: string };
     railCuration: { title: string; body: string };
     /** The Chronicle preview placeholder (PR-9 will swap in real masked entries). */
