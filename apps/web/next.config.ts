@@ -28,6 +28,21 @@ const nextConfig: NextConfig = {
       { source: "/sample-artworks/:path*", headers: catalogImageRobotsHeaders },
     ];
   },
+  /**
+   * Permanent redirect for the retired `/tokushoho` placeholder page
+   * (superseded by the rendered `/legal/specified-commercial` route in #12).
+   * Kept as a safety net — no known external references, but guards old
+   * bookmarks / cached header links.
+   */
+  async redirects() {
+    return [
+      {
+        source: "/:locale(ko|ja|en)/tokushoho",
+        destination: "/:locale/legal/specified-commercial",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -49,7 +49,7 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
               {m.nav.vault}
             </Link>
             <Link
-              href={withLocale(locale, "/tokushoho")}
+              href={withLocale(locale, "/legal/specified-commercial")}
               className={`hidden sm:inline ${navItemClass}`}
             >
               {m.nav.legal}

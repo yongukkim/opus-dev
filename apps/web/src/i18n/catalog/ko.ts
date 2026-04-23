@@ -6,9 +6,6 @@ export const ko: Messages = {
       "OPUS — 작가 공증 디지털 아트 에디션과 The Chronicle. 수집·감상 경험을 위해 설계되었으며 투자 상품이 아닙니다.",
     ogDescription:
       "복제 불가 디지털 아트 아카이브 — 차콜, 샴페인 브라스, 출처와 Vault. 투자 상품이 아닙니다.",
-    tokushohoTitle: "특정상거래법 표시",
-    tokushohoDescription:
-      "일본 특정상거래법에 따른 표기(초안). 법무·세무 최종 확인 전 템플릿입니다.",
     privacyTitle: "개인정보 처리방침",
     privacyDescription:
       "OPUS 개인정보 처리방침(초안). 법무·일본 APPI 확장 검토 전 템플릿입니다.",
@@ -553,51 +550,6 @@ export const ko: Messages = {
       "데모: JSONL 저장. 공개 화면에는 작가 본명이 올라가지 않습니다. 연락처·민감 정보는 넣지 마세요. 운영 시 Chronicle·Vault 소유 검증과 연동합니다.",
     listingsBackHome: "← 홈으로",
     listingsRegisterCta: "등록하러 가기 (Vault)",
-  },
-  tokushoho: {
-    back: "← 홈으로",
-    h1: "특정상거래법 표시",
-    statutory: "일본 특정상거래법에 기반한 표기",
-    intro:
-      "아래 항목은 템플릿입니다. 사업자 정보를 확정한 뒤 공개 전에 반드시 갱신하세요.",
-    nftNote:
-      "본 서비스는 NFT 기술을 활용한 복제 불가 디지털 아트의 제공·소유 경험을 목적으로 하며, 실물자산이나 투자 상품으로의 권유를 목적으로 하지 않습니다.",
-    sections: {
-      sellerName: {
-        title: "판매 사업자명",
-        hint: "（정식 명칭을 기재）",
-      },
-      operator: { title: "운영 책임자", hint: "（성명을 기재）" },
-      address: {
-        title: "소재지",
-        hint: "（청구 시 지체 없이 공개할 수 있는 주소를 기재）",
-      },
-      phone: {
-        title: "전화번호",
-        hint: "（고객 연락용. 공개에 어려움이 있으면 청구 시 지체 없이 공개할 수 있음을 병기）",
-      },
-      email: { title: "이메일 주소", hint: "（문의 창구）" },
-      extraFees: {
-        title: "상품 대금 외 필요 비용",
-        hint: "（소비세, 배송비, 결제 수수료, 다운로드 통신료 등 해당 시 구체적으로 기재）",
-      },
-      payment: {
-        title: "대금 지급 시기 및 방법",
-        hint: "（신용카드, 청구서 결제 등 결제 수단명과 시기를 기재）",
-      },
-      delivery: {
-        title: "상품 인도 시기",
-        hint: "（디지털 콘텐츠 제공 방식·즉시/일시, 실물 상품이면 발송 목표）",
-      },
-      returns: {
-        title: "반품·취소·불량품",
-        hint: "디지털 상품 특성에 맞는 특약을 법령에 맞게 명시하세요.",
-      },
-      env: {
-        title: "동작 환경",
-        hint: "（권장 OS·브라우저, 모바일 앱 지원 버전 등）",
-      },
-    },
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "보안 연결 생성 중",
