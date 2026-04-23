@@ -15,6 +15,7 @@
 
 - **포지셔닝(항상 적용):** NFT는 기술 수단이며 서비스 목적은 복제 불가능한 디지털 아트의 인증·소유·감상 경험이다. 향후 모든 화면/카피/메타/기능명에서 투자·수익·자산 증식·실물자산 연상을 유도하는 표현을 사용하지 않는다.
 - **카피 체크리스트(작업마다):** 신규/수정 텍스트 작성 시 `investment`, `asset product`, `profit`, `yield`, `ROI`, `trading`, `resale`, `투자`, `수익`, `자산 증식`, `실물자산` 계열 문구를 금지하고, 필요한 경우 `collectible`, `authenticated edition`, `provenance`, `collector experience` 계열로 대체한다.
+- **1차·2차 표기 규칙(항상 적용):** 작가가 OPUS에서 최초로 공개한 에디션은 **「신작 공개 · 新作公開 · Releases」**, 소장자가 다음 수탁자를 찾는 경로는 **「소장 계보 · 来歴 · Provenance」**로만 표기한다. `재판매`, `2차 판매`, `재거래`, `再販`, `再販売`, `中古`, `resale market`, `secondary sale market` 류 표현은 UI·카피·라벨·메타에서 사용하지 않는다 — 필요 시 `custody transfer`, `line of custody`, `次の所蔵者`, `다음 수탁자` 등으로 대체한다. 경로는 `/releases`·`/provenance`로 고정한다.
 - **인프라(로컬):** 개발은 **단일 노트북(또는 동급 1대)** 에서 진행한다. 로컬 DB는 Docker/로컬 PostgreSQL 등 **같은 머신**에서 기동하거나, 환경변수로 스테이징 DB를 가리키도록 둔다.
 - **인프라(클라우드·운영):** 스테이징/프로덕션에서는 **WEB·WAS(API)·DB(PostgreSQL 등)** 를 **역할별로 분리**해 배포한다. (`SECURITY_GOVERNANCE.md` §3.1)
 - **데이터:** The Chronicle 테이블을 통해 모든 소유권 이력을 체이닝 방식으로 기록.

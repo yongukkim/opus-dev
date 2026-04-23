@@ -71,10 +71,10 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
       <CollectorTransferRegisterForm locale={locale} m={m} vaultRole={vaultRole} />
       <div className="mt-10 flex flex-wrap gap-4 text-sm">
         <Link
-          href={withLocale(locale, "/listings/collector-transfers")}
+          href={withLocale(locale, "/provenance")}
           className="text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
         >
-          {m.nav.collectorTransfers}
+          {m.nav.provenance}
         </Link>
         <Link href={withLocale(locale, "/vault")} className="text-opus-warm/45 hover:text-opus-warm/70">
           ← Vault

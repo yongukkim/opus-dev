@@ -34,7 +34,7 @@ function artworksHref(
   page: number,
   view: CatalogView,
 ): string {
-  const base = withLocale(locale, "/artworks");
+  const base = withLocale(locale, "/releases");
   const params = new URLSearchParams();
   if (page > 1) params.set("page", String(page));
   if (view === "list") params.set("view", "list");
@@ -110,7 +110,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                   const globalIdx = offset + idx;
                   const { title, artist } = parseTitleArtist(file, globalIdx);
                   const edition = `${a.editionLabel} ${globalIdx + 1}/${TOTAL_EDITIONS}`;
-                  const detailHref = withLocale(locale, `/artworks/${encodeArtworkSlug(file)}`);
+                  const detailHref = withLocale(locale, `/releases/${encodeArtworkSlug(file)}`);
                   return (
                     <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
                       <Link
@@ -161,7 +161,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                   const globalIdx = offset + idx;
                   const { title, artist } = parseTitleArtist(file, globalIdx);
                   const edition = `${a.editionLabel} ${globalIdx + 1}/${TOTAL_EDITIONS}`;
-                  const detailHref = withLocale(locale, `/artworks/${encodeArtworkSlug(file)}`);
+                  const detailHref = withLocale(locale, `/releases/${encodeArtworkSlug(file)}`);
                   return (
                     <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-5">
                       <Link

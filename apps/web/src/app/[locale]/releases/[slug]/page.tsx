@@ -64,7 +64,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
 
   const homeHref = withLocale(locale, "/");
-  const archiveHref = withLocale(locale, "/artworks");
+  const archiveHref = withLocale(locale, "/releases");
 
   const specRowClass =
     "border-b border-white/[0.06] align-top [&_th]:py-3 [&_th]:pr-4 [&_th]:text-left [&_td]:py-3";

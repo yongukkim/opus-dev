@@ -62,7 +62,7 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
 
         <div className="mt-10 text-center">
           <Link
-            href={withLocale(locale, "/artworks")}
+            href={withLocale(locale, "/releases")}
             className="text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
             {m.checkout.back}

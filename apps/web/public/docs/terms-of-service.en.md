@@ -62,8 +62,12 @@ These Terms set out the rights, obligations, and responsibilities between the **
 
 1. An Edition is an individually authenticated instance of a non-reproducible digital artwork. Purchasing an Edition grants **personal rights to view, hold, and transfer** that specific Edition, but **does not transfer copyright** or any commercial-use rights (see Section 9).
 2. The **uniqueness, edition count, and ownership history** of an Edition are evidenced by The Chronicle and any associated distributed-ledger records.
-3. The Company makes **no representation or warranty** with respect to the **investment value, market price movement, or resale value** of any Edition. The Service is **not operated for the purpose of investment or financial-instrument trading**.
+3. The Company makes **no representation or warranty** with respect to the **price movement, potential gain, or future transferability** of any Edition. The Service is **not operated for the purpose of investment or financial-instrument trading**.
 4. Minors and persons with limited contractual capacity must comply with procedures required by applicable law (such as obtaining guardian consent) when purchasing an Edition.
+5. **Distribution channels and the Company's role.** Editions are distributed through two distinct channels, in which **the Company's legal position, scope of responsibility, and disclosure obligations differ.**
+   - **Primary — Releases:** The channel in which an artist **publishes an Edition for the first time** through OPUS. In this channel, **the Company acts as the merchant of record** and sells Editions directly to users; the Company is the party responsible for applicable disclosures (including the Specified Commercial Transactions Act notice referenced in Section 17).
+   - **Secondary — Provenance:** The channel in which a **previous custodian seeks a next custodian** for an Edition they hold. In this channel, **the Company acts as a matching facilitator and the recorder of The Chronicle**; the **contracting parties are the previous custodian and the next custodian**. The Company provides identity verification, Vault eligibility checks, fee settlement, and recording of the transfer, and **is not itself the seller of the Edition**.
+6. The Company separates the two channels by **name, URL, and screen design** (Releases at `/releases`; Provenance at `/provenance`) so that users do not confuse the two.
 
 ---
 
@@ -135,7 +139,7 @@ The Company exercises reasonable care to:
 ## 13. Disclaimer and Limitation of Liability
 
 1. The Company is not liable for suspension or delay of the Service caused by **force majeure, communications failure, or user fault** — or any event beyond the Company's reasonable control.
-2. The Company is not liable for any **expected profit, price-differential gain, or resale value** of Editions. Consistent with Section 7.3, the Service is **not an investment product**.
+2. The Company is not liable for any **expected profit, price-differential gain, or future transfer price** of Editions. Consistent with Section 7.3, the Service is **not an investment product**.
 3. In disputes between Users, the Company's involvement is limited to what is **reasonable for a platform operator**.
 4. The limitations in this Section 13 do **not** apply to damages caused by the Company's **intentional misconduct or gross negligence**, or to any liability that **applicable law prohibits from being limited** (e.g., Japan Consumer Contract Act Art. 8; Korea Act on the Regulation of Terms and Conditions Art. 7).
 
@@ -168,7 +172,7 @@ The Company exercises reasonable care to:
 
 ## 17. Jurisdiction-Specific Disclosures
 
-1. **Users resident in Japan**: disclosures required by Article 11 of the **Act on Specified Commercial Transactions** are published at **[特定商取引法に基づく表記](/en/legal/specified-commercial)**.
+1. **Users resident in Japan**: disclosures required by Article 11 of the **Act on Specified Commercial Transactions** are published at **[特定商取引法に基づく表記](/en/legal/specified-commercial)**. **That notice applies only to the primary "Releases" channel described in Section 7(5)(i), in which the Company acts as the merchant of record**, and does **not** apply to transactions in the **"Provenance" channel described in Section 7(5)(ii)**. The Company's role in the Provenance channel (matching, recording to The Chronicle, fee settlement) is governed by Section 7 and any separate notice made available in the Service.
 2. **Users resident in Korea**: business-operator information and terms required by Article 10 of the **Electronic Commerce Act** are shown in these Terms and in the operator-information panel at the bottom of the Service.
 
 ---

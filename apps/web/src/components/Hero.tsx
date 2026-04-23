@@ -97,11 +97,11 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
             </p>
 
             <div className="mt-10 flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link href={withLocale(locale, "/artworks")} className={ctaPrimary}>
+              <Link href={withLocale(locale, "/releases")} className={ctaPrimary}>
                 <span className="relative z-[1]">{h.exploreArchive}</span>
               </Link>
               <Link
-                href={withLocale(locale, "/artworks")}
+                href={withLocale(locale, "/releases")}
                 className={
                   ja
                     ? "opus-text-metallic-soft text-[0.7rem] font-semibold tracking-tight break-keep underline-offset-4 transition hover:opacity-100 hover:underline"

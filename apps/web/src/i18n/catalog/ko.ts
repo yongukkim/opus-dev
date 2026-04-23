@@ -27,7 +27,7 @@ export const ko: Messages = {
     cta: "행동 유도",
     archivePreview: "아카이브 미리보기",
   },
-  nav: { archive: "아카이브", vault: "Vault", legal: "법적 고지", collectorTransfers: "소장 이전" },
+  nav: { releases: "신작 공개", vault: "Vault", legal: "법적 고지", provenance: "소장 계보" },
   auth: {
     signIn: "로그인",
     title: "로그인",
@@ -107,7 +107,8 @@ export const ko: Messages = {
       "디지털 원작의 아카이브 — 인증 에디션, 컬렉터 출처, Vault.",
     design:
       "디자인: Classic Luxury — near-black 차콜, 샴페인 브라스(그라데이션 금속), 웜 화이트, 절제된 장식. 투자·실물자산 상품이 아닙니다.",
-    archive: "아카이브",
+    releases: "신작 공개",
+    provenance: "소장 계보",
     vault: "Vault",
     legal: "특정상거래법 표시",
     privacy: "개인정보 처리방침",
@@ -357,10 +358,10 @@ export const ko: Messages = {
     openVault: "Vault 열기",
   },
   artworks: {
-    kicker: "Archive",
-    title: "Artworks",
+    kicker: "Releases · 신작 공개",
+    title: "작가가 처음 공개한 작품",
     body:
-      "인증된 디지털 아트 목록을 여기서 열람할 수 있습니다. 각 작품 페이지에서 출처·에디션 정보를 확인하세요.",
+      "참여 작가가 OPUS를 통해 최초로 공개한 에디션입니다. 각 작품 페이지에서 인증·출처·에디션 정보를 확인하세요. 투자 상품이 아닌, 복제 불가능한 디지털 아트의 감상·소장 경험을 제공합니다.",
     back: "← 홈으로",
     editionLabel: "Edition:",
     buyCta: "구매",
@@ -538,9 +539,9 @@ export const ko: Messages = {
     devPreviewLink: "로그인 없이 화면만 보기 (로컬 개발)",
     devPreviewBanner:
       "로컬 개발 미리보기입니다. 데모 로그인 쿠키 없이 등록 화면 레이아웃만 확인합니다. 실제 Vault 게이트와 동일한 폼이며, 제출은 헤더의 데모 회원 ID로 API에 전달됩니다.",
-    listingsTitle: "소장 이전 희망 목록",
+    listingsTitle: "소장 계보 · Provenance",
     listingsSubtitle:
-      "컬렉터가 다음 소장자를 찾기 위해 등록한 항목입니다. 작가 표시는 필명만 공개됩니다. (데모)",
+      "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장 계보를 잇는 경로로 설계되었습니다.",
     listingsEmpty: "등록된 항목이 없습니다.",
     listingsArtistPublic: "표시 작가명 (필명)",
     listingsGenre: "장르",

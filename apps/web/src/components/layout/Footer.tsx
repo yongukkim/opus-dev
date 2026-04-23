@@ -91,8 +91,11 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
               <Link href={withLocale(locale, "/")} className={linkClass}>
                 Home
               </Link>
-              <Link href={withLocale(locale, "/artworks")} className={linkClass}>
-                {m.footer.archive}
+              <Link href={withLocale(locale, "/releases")} className={linkClass}>
+                {m.footer.releases}
+              </Link>
+              <Link href={withLocale(locale, "/provenance")} className={linkClass}>
+                {m.footer.provenance}
               </Link>
               <Link href={withLocale(locale, "/vault")} className={linkClass}>
                 {m.footer.vault}

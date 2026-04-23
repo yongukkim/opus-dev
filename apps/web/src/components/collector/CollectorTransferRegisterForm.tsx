@@ -259,7 +259,7 @@ export function CollectorTransferRegisterForm({
     }
   }
 
-  const listingsHref = withLocale(locale, "/listings/collector-transfers");
+  const listingsHref = withLocale(locale, "/provenance");
 
   return (
     <div className="mt-10 grid gap-6 lg:grid-cols-[1.25fr,0.75fr]">
