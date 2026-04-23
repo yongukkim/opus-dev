@@ -38,7 +38,6 @@ export type Messages = {
     hero: string;
     stats: string;
     cta: string;
-    archivePreview: string;
   };
   nav: { releases: string; vault: string; legal: string; provenance: string };
   /**
@@ -49,6 +48,8 @@ export type Messages = {
    * See spec §3.3, §3.4 and §6.
    */
   badge: {
+    /** PRIMARY channel marker — 新作 / 新作 / New release. */
+    primary: string;
     /** SECONDARY channel marker — 来歴 / 来歴 / Provenance. */
     secondary: string;
   };
@@ -177,6 +178,12 @@ export type Messages = {
      * extra header / empty-state strings they need; placeholder rails keep just
      * `title` + `body` until their data PR lands.
      */
+    railReleases: {
+      title: string;
+      body: string;
+      /** Header link → /releases full list. */
+      viewAll: string;
+    };
     railProvenance: {
       title: string;
       body: string;
@@ -197,13 +204,6 @@ export type Messages = {
     monthBest: string;
     yearBest: string;
     caption: string;
-  };
-  archiveGrid: {
-    kicker: string;
-    heading: string;
-    body: string;
-    viewAll: string;
-    artwork: string;
   };
   marketing: { title: string; body: string; buy: string; openVault: string };
   artworks: {

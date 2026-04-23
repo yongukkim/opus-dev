@@ -22,7 +22,6 @@ export const ja: Messages = {
     hero: "OPUSヒーロー",
     stats: "信頼指標",
     cta: "行動喚起",
-    archivePreview: "アーカイブプレビュー",
   },
   nav: {
     releases: "新作公開",
@@ -31,6 +30,7 @@ export const ja: Messages = {
     provenance: "来歴",
   },
   badge: {
+    primary: "新作",
     secondary: "来歴",
   },
   auth: {
@@ -344,6 +344,11 @@ export const ja: Messages = {
     appRequiredAndroid: "Android（Google Play）",
     appRequiredComingSoon: "ストアリンク準備中",
     comingSoon: "近日公開",
+    railReleases: {
+      title: "新作公開・最新の一次エディション",
+      body: "認証された作家の限定エディションです。",
+      viewAll: "すべて見る",
+    },
     railProvenance: {
       title: "来歴",
       body: "運営審査を通過した稼働中の所蔵者移転です。",
@@ -370,14 +375,6 @@ export const ja: Messages = {
     yearBest: "今年のベスト",
     caption:
       "選定基準は運営ポリシーにより変更される場合があります。",
-  },
-  archiveGrid: {
-    kicker: "Archive preview",
-    heading: "From the vault",
-    body:
-      "作家公式の認定版から、注目エディションを先行表示します。各カードで来歴と版情報を確認できます。",
-    viewAll: "すべて表示する",
-    artwork: "Artwork",
   },
   marketing: {
     title: "コレクションを、公式の記録とともに。",
