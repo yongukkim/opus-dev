@@ -73,20 +73,28 @@ model User {
 
   // --- R-18 content purchase / view: credit-card–based age verification (common first-line adult check in Japan) ---
   /// True only after a successful card-based age verification flow (or equivalent approved vendor signal).
-  isAdult Boolean @default(false) @map("is_adult")
+  isAdult                   Boolean   @default(false) @map("is_adult")
   /// Timestamp of successful CC age check for R-18 gates.
-  creditCardAgeVerifiedAt DateTime? @map("credit_card_age_verified_at")
+  creditCardAgeVerifiedAt   DateTime? @map("credit_card_age_verified_at")
   /// Opaque id from payment/age-verification vendor only. Never store PAN, CVV, or ID scans here.
-  creditCardVerificationRef String? @map("credit_card_verification_ref") @db.VarChar(191)
+  creditCardVerificationRef String?   @map("credit_card_verification_ref") @db.VarChar(191)
 
   // --- Seller: full eKYC via external specialist (ID + face); vendor holds images; OPUS stores result ref only ---
-  sellerEkycStatus SellerEkycStatus? @map("seller_ekyc_status")
+  sellerEkycStatus      SellerEkycStatus? @map("seller_ekyc_status")
   /// Correlation / session id from eKYC vendor after verification attempt. No file paths to ID images.
-  sellerEkycExternalRef String? @map("seller_ekyc_external_ref") @db.VarChar(191)
+  sellerEkycExternalRef String?           @map("seller_ekyc_external_ref") @db.VarChar(191)
 
   // --- Auth.js relations ---
   accounts Account[]
   sessions Session[]
+
+  // --- OPUS catalog relations (PR B: schema only — JSONL writers still authoritative until cutover) ---
+  artworksAsArtist        Artwork[]        @relation("ArtistArtworks")
+  ownedEditions           Edition[]        @relation("CurrentEditionOwner")
+  listings                Listing[]        @relation("SellerListings")
+  chronicleSentEvents     ChronicleEntry[] @relation("ChronicleFrom")
+  chronicleReceivedEvents ChronicleEntry[] @relation("ChronicleTo")
+  reviewedArtworks        Artwork[]        @relation("ArtworkReviewer")
 
   @@map("users")
 }
@@ -140,4 +148,252 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+// =============================================================================
+// OPUS catalog domain — Artwork / Edition / Listing / ChronicleEntry
+// -----------------------------------------------------------------------------
+// PR B scope: schema + migration ONLY. The legacy JSONL stores
+// (storage/submissions.jsonl, storage/ownership-events.jsonl,
+//  storage/collector-transfer-listings.jsonl) remain the single source of
+// truth for runtime APIs. A subsequent PR will introduce dual-write and then
+// cut over reads. Do NOT bind UI/API code to these models in this PR.
+// =============================================================================
+
+/// Marketplace channel a Listing belongs to (CLAUDE.md / .cursorrules).
+/// PRIMARY  = artist's first public release through OPUS (`/releases`); OPUS is the merchant of record.
+/// SECONDARY = previous custodian seeking the next custodian (`/provenance`); OPUS is facilitator/recorder only.
+/// ISO 27001 A.5.1.1 (§7) — Terms of Service §7 distinguishes legal roles per channel; the schema mirrors that boundary.
+/// KO: 1차(Releases)·2차(Provenance) 채널 구분으로 회사의 법적 지위(직접 판매 vs 매개)를 데이터 레이어에서 강제한다.
+/// JA: PRIMARY/SECONDARY を明確に分離し、当社の法的立場（直接販売／媒介）をデータ層から区別する。
+/// EN: PRIMARY vs SECONDARY enforces OPUS's legal role separation (direct seller vs facilitator) at the data layer.
+enum ListingMarket {
+  PRIMARY
+  SECONDARY
+}
+
+enum ListingStatus {
+  OPEN
+  CLOSED_SOLD
+  CLOSED_WITHDRAWN
+}
+
+/// The Chronicle event taxonomy (CLAUDE.md §5).
+/// ISSUED       — artist publishes/mints (Edition becomes isIssued=true).
+/// PURCHASED    — primary sale (Releases) closes; ownership moves artist → buyer.
+/// TRANSFERRED  — secondary custody change (Provenance); previous custodian → next custodian.
+/// WITHDRAWN    — listing pulled without sale (informational, no ownership change).
+/// CORRECTED    — operator-issued correction; references a prior entry via prevEntryId (audit-only).
+enum ChronicleEventType {
+  ISSUED
+  PURCHASED
+  TRANSFERRED
+  WITHDRAWN
+  CORRECTED
+}
+
+/// Submission lifecycle status — mirrors `SubmissionRecord.reviewStatus` in storage/submissions.jsonl.
+enum ArtworkReviewStatus {
+  PENDING_REVIEW
+  APPROVED
+  CHANGES_REQUESTED
+  REJECTED
+}
+
+/// Discovery shelf grouping (mirrors `SubmissionRecord.audienceCategory`).
+enum AudienceCategory {
+  MALE
+  FEMALE
+  NONE
+}
+
+/// Content rating gate (CLAUDE.md §1, age-verification flow).
+/// ISO 27001 A.18.1.4 (§7) — `EXPLICIT` is rejected by policy; `MATURE` is age-gated; `GENERAL` is open.
+enum ContentRating {
+  GENERAL
+  MATURE
+  EXPLICIT
+}
+
+/// Artist-submitted work + edition policy (absorbs `SubmissionRecord` from storage/submissions.jsonl).
+/// ISO 27001 A.18.1.4 / A.7.2.2 (§7) — Pen name only is exposed publicly. Legal name lives on `User`,
+/// is never duplicated here, and is never returned by public catalog APIs.
+/// KO: 작가 제출 작품의 메타·심의·에디션 정책을 보관하며, 본명은 절대 복제하지 않는다(공개 API는 펜네임만).
+/// JA: 作家提出作品のメタ／審査／エディション方針のみを保持し、本名は複製しない（公開APIはペンネームのみ）。
+/// EN: Stores artist-submitted artwork meta, review state, and edition policy. Legal names are never copied here.
+model Artwork {
+  id           String @id @default(cuid())
+  artistUserId String @map("artist_user_id")
+
+  title            String            @db.VarChar(256)
+  genre            String?           @db.VarChar(64)
+  year             Int?
+  description      String?           @db.Text
+  audienceCategory AudienceCategory? @map("audience_category")
+  contentRating    ContentRating?    @map("content_rating")
+
+  // --- Edition policy (snapshot at submission; runtime issuance lives on Edition rows) ---
+  /// "unique" (1/1) or "limited" (1..editionTotal).
+  editionMode     String  @map("edition_mode") @db.VarChar(16)
+  editionTotal    Int     @map("edition_total")
+  /// "auto" or "manual" — how editionNumber is assigned during issuance.
+  numberingPolicy String  @map("numbering_policy") @db.VarChar(16)
+  /// Once locked, editionTotal cannot be increased (preserves scarcity guarantee).
+  lockEdition     Boolean @default(false) @map("lock_edition")
+
+  // --- Pricing (yen, integer; APPI / consumer transparency requires explicit display currency) ---
+  initialPriceJpy Int? @map("initial_price_jpy")
+
+  // --- Review pipeline (operator moderation) ---
+  reviewStatus     ArtworkReviewStatus? @map("review_status")
+  reviewNote       String?              @map("review_note") @db.Text
+  reviewedAt       DateTime?            @map("reviewed_at")
+  reviewedByUserId String?              @map("reviewed_by_user_id")
+
+  // --- Stored-file metadata ---
+  // ISO 27001 A.8.2.3 / A.13.2.1 (§3, §6) — only the relative ref into private storage; no public URL,
+  // no signed URL, no original PII embedded here.
+  // KO: 사적 저장소 상대 경로·메타만 저장(공개 URL/서명 URL/원본 PII 금지).
+  // JA: プライベートストレージへの相対パス／メタのみ保存（公開URLや原本PII禁止）。
+  // EN: Only relative path + meta into private storage; never public/signed URLs or raw PII here.
+  storedFileRef   String? @map("stored_file_ref") @db.VarChar(512)
+  storedFileMime  String? @map("stored_file_mime") @db.VarChar(128)
+  storedFileBytes Int?    @map("stored_file_bytes")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  artist   User         @relation("ArtistArtworks", fields: [artistUserId], references: [id])
+  reviewer User?        @relation("ArtworkReviewer", fields: [reviewedByUserId], references: [id])
+  editions Edition[]
+  tags     ArtworkTag[]
+
+  @@index([artistUserId])
+  @@index([reviewStatus])
+  @@map("artworks")
+}
+
+/// Eager edition rows (1..editionTotal). `isIssued=false` rows act as reservations
+/// for limited works that have not yet minted; `isIssued=true` rows have been released
+/// to the catalog. `currentOwnerUserId` is a denormalized convenience pointer kept
+/// in sync with the latest ChronicleEntry — the authoritative ownership ledger is
+/// `ChronicleEntry`, not this column. (CLAUDE.md §5)
+/// ISO 27001 A.12.4.1 (§5) — auditors must be able to reproduce ownership state from
+/// the Chronicle alone; `currentOwnerUserId` is a cache, not a record of truth.
+/// KO: Edition.currentOwnerUserId는 캐시 컬럼이며 진실 원장은 ChronicleEntry이다.
+/// JA: Edition.currentOwnerUserId はキャッシュであり、真の原簿は ChronicleEntry。
+/// EN: Edition.currentOwnerUserId is a cached pointer; the source of truth is ChronicleEntry.
+model Edition {
+  id            String    @id @default(cuid())
+  artworkId     String    @map("artwork_id")
+  /// 1..editionTotal — stable across the artwork's lifetime once written.
+  editionNumber Int       @map("edition_number")
+  /// Snapshot of the artwork's editionTotal at the time this row was created.
+  editionTotal  Int       @map("edition_total")
+  /// True once the artist has formally issued/minted this number (placeholder rows are false).
+  isIssued      Boolean   @default(false) @map("is_issued")
+  mintedAt      DateTime? @map("minted_at")
+
+  /// Denormalized cache; rebuild from ChronicleEntry if it ever drifts.
+  currentOwnerUserId String? @map("current_owner_user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  artwork      Artwork          @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  currentOwner User?            @relation("CurrentEditionOwner", fields: [currentOwnerUserId], references: [id])
+  listings     Listing[]
+  chronicle    ChronicleEntry[]
+
+  @@unique([artworkId, editionNumber])
+  @@index([currentOwnerUserId])
+  @@index([isIssued])
+  @@map("editions")
+}
+
+/// A marketplace listing — primary (artist → first buyer) or secondary (custodian → next custodian).
+/// SERVICE-LAYER INVARIANT (not enforced at DB CHECK level for migration simplicity):
+///   when market = PRIMARY, sellerUserId MUST equal Edition.artwork.artistUserId.
+///   when market = SECONDARY, sellerUserId MUST equal Edition.currentOwnerUserId at listing creation time.
+/// ISO 27001 A.5.1.1 / A.18.1.4 (§4, §7) — guard this invariant in API handlers and audit-log violations.
+/// KO: PRIMARY는 작가 본인만 게시 가능. SECONDARY는 현재 소장자만 게시 가능. 서비스 레이어에서 강제.
+/// JA: PRIMARY は作家本人のみ、SECONDARY は現所蔵者のみが出品可。サービス層で強制し、違反は監査ログへ。
+/// EN: PRIMARY listings only by the artist; SECONDARY listings only by the current custodian. Enforced in service layer.
+model Listing {
+  id           String        @id @default(cuid())
+  editionId    String        @map("edition_id")
+  market       ListingMarket
+  status       ListingStatus @default(OPEN)
+  sellerUserId String        @map("seller_user_id")
+
+  priceJpy      Int     @map("price_jpy")
+  /// Snapshot of the artist's pen name at listing creation — we never resolve to legal name here.
+  artistPenName String  @map("artist_pen_name") @db.VarChar(128)
+  description   String? @db.Text
+  note          String? @db.Text
+  /// Free-form CSV display tags; queryable tag taxonomy lives on ArtworkTag.
+  tagsCsv       String? @map("tags_csv") @db.VarChar(512)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  closedAt  DateTime? @map("closed_at")
+
+  edition       Edition          @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  seller        User             @relation("SellerListings", fields: [sellerUserId], references: [id])
+  chronicleRefs ChronicleEntry[]
+
+  @@index([market, status])
+  @@index([editionId])
+  @@index([sellerUserId])
+  @@map("listings")
+}
+
+/// The Chronicle — append-only provenance ledger per Edition with hash-chain tamper detection.
+/// ISO 27001 A.12.4.1 / A.18.1.4 (§5, §7) — every entry references the previous one in its chain
+/// via `prevEntryId`, and `contentHash` is sha256(prevHash || eventType || from || to || occurredAt || listingId).
+/// Operators MUST NOT delete or update entries; corrections are appended as CORRECTED rows referencing
+/// the prior entry. The Chronicle is the source of truth for ownership history.
+/// KO: 모든 엔트리는 직전 엔트리 해시를 포함하는 sha256 체이닝으로 무결성을 보증한다(수정/삭제 금지, CORRECTED로 보정).
+/// JA: 各エントリは直前エントリのハッシュを含む sha256 チェーンで完全性を担保（修正・削除禁止、CORRECTED で補正）。
+/// EN: Each entry is sha256-chained to the prior one for tamper detection; never mutate, append CORRECTED instead.
+model ChronicleEntry {
+  id        String @id @default(cuid())
+  editionId String @map("edition_id")
+
+  occurredAt DateTime           @default(now()) @map("occurred_at")
+  eventType  ChronicleEventType @map("event_type")
+
+  fromUserId String? @map("from_user_id")
+  toUserId   String? @map("to_user_id")
+  listingId  String? @map("listing_id")
+  /// Free-form provenance note (e.g., "private gift", "exhibition transfer", correction reason).
+  note       String? @db.Text
+
+  /// Hash chain: the id of the previous ChronicleEntry within the same edition (null only for ISSUED genesis).
+  prevEntryId String? @map("prev_entry_id")
+  /// sha256 hex of (prevHash || eventType || fromUserId || toUserId || listingId || occurredAt).
+  contentHash String  @map("content_hash") @db.VarChar(64)
+
+  edition     Edition          @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  fromUser    User?            @relation("ChronicleFrom", fields: [fromUserId], references: [id])
+  toUser      User?            @relation("ChronicleTo", fields: [toUserId], references: [id])
+  listing     Listing?         @relation(fields: [listingId], references: [id])
+  prevEntry   ChronicleEntry?  @relation("ChronicleChain", fields: [prevEntryId], references: [id])
+  nextEntries ChronicleEntry[] @relation("ChronicleChain")
+
+  @@index([editionId, occurredAt])
+  @@index([eventType])
+  @@map("chronicle_entries")
+}
+
+/// Per-artwork tag taxonomy — extracted from `SubmissionRecord.tags[]` for queryable discovery.
+model ArtworkTag {
+  id        String @id @default(cuid())
+  artworkId String @map("artwork_id")
+  tag       String @db.VarChar(64)
+
+  artwork Artwork @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@unique([artworkId, tag])
+  @@index([tag])
+  @@map("artwork_tags")
 }
