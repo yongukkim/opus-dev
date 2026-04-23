@@ -341,7 +341,10 @@ export const en: Messages = {
     },
     railFeaturedArtists: {
       title: "Featured artists",
-      body: "Per-artist curation arrives soon.",
+      body: "Artists actively releasing new work.",
+      viewWorks: "View works by this artist",
+      worksCount: "{n} works",
+      empty: "Featured artists arriving soon.",
     },
     railCuration: {
       title: "Curation",

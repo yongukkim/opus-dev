@@ -194,7 +194,16 @@ export type Messages = {
       /** Empty-state CTA → /vault/transfer/register. */
       registerCta: string;
     };
-    railFeaturedArtists: { title: string; body: string };
+    railFeaturedArtists: {
+      title: string;
+      body: string;
+      /** CTA on each artist card → that artist's work (PR-6 links to first PDP). */
+      viewWorks: string;
+      /** Works-count chip; uses `{n}` token (e.g. "{n} works"). */
+      worksCount: string;
+      /** Shown when neither grouping nor static picks yield any artists. */
+      empty: string;
+    };
     railCuration: { title: string; body: string };
     /** The Chronicle preview placeholder (PR-9 will swap in real masked entries). */
     chroniclePreview: { title: string; body: string };

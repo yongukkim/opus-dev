@@ -339,7 +339,10 @@ export const ko: Messages = {
     },
     railFeaturedArtists: {
       title: "작가 셸프",
-      body: "작가별 큐레이션을 곧 공개합니다.",
+      body: "활발하게 작품을 공개하는 작가들입니다.",
+      viewWorks: "이 작가의 작품 보기",
+      worksCount: "작품 {n}점",
+      empty: "곧 작가 셸프를 공개합니다.",
     },
     railCuration: {
       title: "큐레이션",

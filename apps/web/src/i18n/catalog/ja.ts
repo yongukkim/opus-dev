@@ -358,7 +358,10 @@ export const ja: Messages = {
     },
     railFeaturedArtists: {
       title: "作家のシェルフ",
-      body: "作家別キュレーションを近日公開。",
+      body: "活発に作品を公開している作家です。",
+      viewWorks: "この作家の作品を見る",
+      worksCount: "作品 {n}点",
+      empty: "近日、作家のシェルフを公開します。",
     },
     railCuration: {
       title: "キュレーション",
