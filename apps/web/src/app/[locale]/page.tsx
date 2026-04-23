@@ -2,6 +2,7 @@ import { DesignPhilosophyBand } from "@/components/DesignPhilosophyBand";
 import { Hero } from "@/components/Hero";
 import { ChroniclePreview } from "@/components/home/ChroniclePreview";
 import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
+import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailPlaceholder } from "@/components/home/RailPlaceholder";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
@@ -23,8 +24,10 @@ type Props = { params: Promise<{ locale: string }> };
  * - Rail A (Releases) is per-artwork as of PR-5 (spec §3.3 / §7.2);
  *   ArchivePreviewGrid was deleted in the same PR.
  * - Rail B (Provenance) is data-driven as of PR-4 (spec §3.4).
- * - Rails C/D and the Chronicle preview are still placeholders; their data
- *   wires land in PR-6, PR-7 and PR-9 respectively (spec §8).
+ * - Rail C (Featured artists) is data-driven as of PR-6 (spec §3.5):
+ *   filename grouping (≥2 works) + operator picks fallback.
+ * - Rail D and the Chronicle preview are still placeholders; their data
+ *   wires land in PR-7 and PR-9 respectively (spec §8).
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -75,13 +78,14 @@ export default async function HomePage({ params }: Props) {
         */}
         <RailProvenance locale={locale} m={m} />
 
-        {/* Rail C · Featured artists. Real data lands in PR-6 (spec §3.5). */}
-        <RailPlaceholder
-          title={m.home.railFeaturedArtists.title}
-          body={m.home.railFeaturedArtists.body}
-          comingSoonLabel={m.home.comingSoon}
-          ariaLabel={m.home.railFeaturedArtists.title}
-        />
+        {/*
+          Rail C · Featured artists. Wired in PR-6 (spec §3.5):
+          filename grouping (≥2 works) + operator picks fallback from
+          data/featured-artists.ts. Pen-name-only by ISO 27001 A.18.1.4.
+          The card CTA temporarily targets each artist's first PDP until
+          /artist/[slug] ships in a follow-up PR.
+        */}
+        <RailFeaturedArtists locale={locale} m={m} />
 
         {/* Rail D · Operator-curated shelves. Real data lands in PR-7 (spec §3.6). */}
         <RailPlaceholder
