@@ -25,6 +25,9 @@ export const en: Messages = {
     archivePreview: "Archive preview",
   },
   nav: { releases: "Releases", vault: "Vault", legal: "Legal", provenance: "Provenance" },
+  badge: {
+    secondary: "Provenance",
+  },
   auth: {
     signIn: "Sign in",
     title: "Sign in",
@@ -326,7 +329,10 @@ export const en: Messages = {
     comingSoon: "Coming soon",
     railProvenance: {
       title: "Provenance",
-      body: "Open custody transfers will appear here.",
+      body: "Open custody transfers cleared by operator review.",
+      viewAll: "View all",
+      empty: "No open custody transfers right now.",
+      registerCta: "Register a transfer",
     },
     railFeaturedArtists: {
       title: "Featured artists",

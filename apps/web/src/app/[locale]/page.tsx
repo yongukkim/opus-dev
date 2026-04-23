@@ -4,6 +4,7 @@ import { ArchivePreviewGrid } from "@/components/home/ArchivePreviewGrid";
 import { ChroniclePreview } from "@/components/home/ChroniclePreview";
 import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
 import { RailPlaceholder } from "@/components/home/RailPlaceholder";
+import { RailProvenance } from "@/components/home/RailProvenance";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -66,13 +67,12 @@ export default async function HomePage({ params }: Props) {
         */}
         <ArchivePreviewGrid locale={locale} m={m} />
 
-        {/* Rail B · Provenance (2차 / 来歴). Real data lands in PR-4 (spec §3.4). */}
-        <RailPlaceholder
-          title={m.home.railProvenance.title}
-          body={m.home.railProvenance.body}
-          comingSoonLabel={m.home.comingSoon}
-          ariaLabel={m.home.railProvenance.title}
-        />
+        {/*
+          Rail B · Provenance (2차 / 来歴). Real data wired in PR-4 from JSONL
+          via listOpenCollectorTransferListings(). Placeholder swap-in per
+          spec §3.4 / §8 — no IA shift; same slot the placeholder occupied.
+        */}
+        <RailProvenance locale={locale} m={m} />
 
         {/* Rail C · Featured artists. Real data lands in PR-6 (spec §3.5). */}
         <RailPlaceholder

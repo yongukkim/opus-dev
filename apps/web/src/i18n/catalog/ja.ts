@@ -30,6 +30,9 @@ export const ja: Messages = {
     legal: "法的情報",
     provenance: "来歴",
   },
+  badge: {
+    secondary: "来歴",
+  },
   auth: {
     signIn: "ログイン",
     title: "ログイン",
@@ -343,7 +346,10 @@ export const ja: Messages = {
     comingSoon: "近日公開",
     railProvenance: {
       title: "来歴",
-      body: "進行中の所蔵者移転を近日表示します。",
+      body: "運営審査を通過した稼働中の所蔵者移転です。",
+      viewAll: "すべて見る",
+      empty: "現在進行中の所蔵者移転はありません。",
+      registerCta: "所蔵者移転を登録",
     },
     railFeaturedArtists: {
       title: "作家のシェルフ",
