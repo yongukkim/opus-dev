@@ -55,6 +55,17 @@ export const ja: Messages = {
     hintClose: "esc で閉じる",
     results: "{n}件",
   },
+  featuredArtists: {
+    kicker: "作家",
+    breadcrumbHome: "ホーム",
+    breadcrumbIndex: "作家のシェルフ",
+    indexHeading: "作家のシェルフ",
+    indexLead: "活発に作品を公開している作家の一覧です。",
+    indexEmpty: "現在公開中の作家はいません。",
+    worksCount: "作品 {n}点",
+    viewProfile: "作家ページを開く",
+    operatorPickBadge: "ピックアップ",
+  },
   curation: {
     kicker: "キュレーション",
     breadcrumbHome: "ホーム",
@@ -414,6 +425,7 @@ export const ja: Messages = {
       viewWorks: "この作家の作品を見る",
       worksCount: "作品 {n}点",
       empty: "近日、作家のシェルフを公開します。",
+      viewAll: "作家を全て見る",
     },
     railCuration: {
       title: "キュレーション",

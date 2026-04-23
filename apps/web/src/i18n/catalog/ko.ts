@@ -50,6 +50,17 @@ export const ko: Messages = {
     hintClose: "esc 닫기",
     results: "{n}건",
   },
+  featuredArtists: {
+    kicker: "작가",
+    breadcrumbHome: "홈",
+    breadcrumbIndex: "작가 셸프",
+    indexHeading: "작가 셸프",
+    indexLead: "활발하게 작품을 공개하는 작가들의 전체 목록입니다.",
+    indexEmpty: "지금은 공개된 작가가 없습니다.",
+    worksCount: "작품 {n}점",
+    viewProfile: "작가 페이지 열기",
+    operatorPickBadge: "추천",
+  },
   curation: {
     kicker: "큐레이션",
     breadcrumbHome: "홈",
@@ -395,6 +406,7 @@ export const ko: Messages = {
       viewWorks: "이 작가의 작품 보기",
       worksCount: "작품 {n}점",
       empty: "곧 작가 셸프를 공개합니다.",
+      viewAll: "작가 전체 보기",
     },
     railCuration: {
       title: "큐레이션",

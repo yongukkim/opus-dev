@@ -93,6 +93,33 @@ export type Messages = {
     results: string;
   };
   /**
+   * `/[locale]/featured-artists` index — PR-12 of the home redesign series,
+   * follow-up to PR-10. Lists every eligible artist (the same selection
+   * rule the home Rail C uses: ≥ 2 catalog works OR an operator pick) on
+   * a dedicated surface. Each card links into the existing
+   * `/[locale]/artist/[slug]` PDP-like page from PR-10. All copy here
+   * stays pen-name-shaped (ISO 27001 A.18.1.4) and avoids investment /
+   * yield vocabulary (.cursorrules §2).
+   */
+  featuredArtists: {
+    /** Tiny eyebrow above the index heading. */
+    kicker: string;
+    /** Breadcrumb labels. */
+    breadcrumbHome: string;
+    breadcrumbIndex: string;
+    /** Index page heading + sublead. */
+    indexHeading: string;
+    indexLead: string;
+    /** Index empty state when no artist passes the selection rule. */
+    indexEmpty: string;
+    /** Per-card meta — uses `{n}` token. */
+    worksCount: string;
+    /** Per-card CTA → /artist/<slug>. */
+    viewProfile: string;
+    /** Tiny chip on cards that are operator-picked (visual cue only). */
+    operatorPickBadge: string;
+  };
+  /**
    * `/[locale]/curation` (index) and `/[locale]/curation/[id]` (detail)
    * pages — PR-11 of the home redesign series, follow-up to PR-7. The
    * `/curation` index lists every operator-curated shelf and the detail
@@ -305,6 +332,11 @@ export type Messages = {
       worksCount: string;
       /** Shown when neither grouping nor static picks yield any artists. */
       empty: string;
+      /**
+       * Header CTA → /featured-artists index page (PR-12). Mirrors the
+       * `viewAll` field on the other rails so the home IA stays uniform.
+       */
+      viewAll: string;
     };
     railCuration: {
       title: string;
