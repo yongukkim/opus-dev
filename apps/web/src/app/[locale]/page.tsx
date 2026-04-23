@@ -28,8 +28,10 @@ type Props = { params: Promise<{ locale: string }> };
  *   filename grouping (≥2 works) + operator picks fallback.
  * - Rail D (Curated shelves) is data-driven as of PR-7 (spec §3.6) from
  *   the static `data/curation.ts` catalog.
- * - The Chronicle preview is still a placeholder; the data wire lands in
- *   PR-9 once the Chronicle write cutover is in place (spec §8).
+ * - The Chronicle preview is finalized as an empty-state card in PR-9
+ *   (spec §3.7). Phase-2 wires real `ChronicleEntry` rows once the
+ *   Chronicle write cutover is in place; only the card body changes,
+ *   the masking contract is already committed in copy.
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -98,15 +100,12 @@ export default async function HomePage({ params }: Props) {
         <RailCuration locale={locale} m={m} />
 
         {/*
-          The Chronicle preview placeholder. Real masked custody events land
-          in PR-9 once the Chronicle write cutover is in place (spec §3.7).
+          The Chronicle preview — empty-state card finalized in PR-9
+          (spec §3.7). Visually commits to the phase-2 event vocabulary
+          and the `col-•••` masking format. Real `ChronicleEntry` rows
+          land in a follow-up PR after the Chronicle write cutover.
         */}
-        <ChroniclePreview
-          title={m.home.chroniclePreview.title}
-          body={m.home.chroniclePreview.body}
-          comingSoonLabel={m.home.comingSoon}
-          ariaLabel={m.home.chroniclePreview.title}
-        />
+        <ChroniclePreview locale={locale} m={m} />
 
         <StatsTrustRow m={m} />
         <MarketingCtaBand locale={locale} m={m} />

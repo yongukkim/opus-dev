@@ -213,7 +213,16 @@ export type Messages = {
       empty: string;
     };
     /** The Chronicle preview placeholder (PR-9 will swap in real masked entries). */
-    chroniclePreview: { title: string; body: string };
+    chroniclePreview: {
+      title: string;
+      body: string;
+      /** Event-type chip labels — visual commitment to phase-2 vocabulary. */
+      eventPrimary: string;
+      eventSecondary: string;
+      eventVaultNote: string;
+      /** Legend explaining the masking format for from/to identifiers. */
+      maskLegend: string;
+    };
   };
   stats: {
     weekBest: string;
