@@ -23,7 +23,14 @@ export const en: Messages = {
     stats: "Trust metrics",
     cta: "Call to action",
   },
-  nav: { releases: "Releases", vault: "Vault", legal: "Legal", provenance: "Provenance" },
+  nav: {
+    releases: "Releases",
+    vault: "Vault",
+    legal: "Legal",
+    provenance: "Provenance",
+    curation: "Curation",
+    artists: "Artists",
+  },
   badge: {
     primary: "New release",
     secondary: "Provenance",

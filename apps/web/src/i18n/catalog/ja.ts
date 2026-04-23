@@ -28,6 +28,8 @@ export const ja: Messages = {
     vault: "Vault",
     legal: "法的情報",
     provenance: "来歴",
+    curation: "キュレーション",
+    artists: "作家",
   },
   badge: {
     primary: "新作",

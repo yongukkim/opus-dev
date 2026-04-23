@@ -39,7 +39,16 @@ export type Messages = {
     stats: string;
     cta: string;
   };
-  nav: { releases: string; vault: string; legal: string; provenance: string };
+  nav: {
+    releases: string;
+    vault: string;
+    legal: string;
+    provenance: string;
+    /** Operator-curated shelves index (PR-11). Single word per locale. */
+    curation: string;
+    /** Featured artists index (PR-12). Single word per locale. */
+    artists: string;
+  };
   /**
    * Channel badges shown on home rails and (later) the ⌘K omni-search results.
    * Always exactly one of `primary` (新作 / Releases) or `secondary` (来歴 /
