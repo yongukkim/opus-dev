@@ -92,6 +92,34 @@ export type Messages = {
     hintClose: string;
     results: string;
   };
+  /**
+   * `/[locale]/artist/[slug]` page (PR-10 of the home redesign series —
+   * follow-up to PR-6 / PR-8). The page surfaces an artist's pen name +
+   * works grid; before this PR, Rail C and the omni-search artist rows
+   * temporarily linked into the first work's PDP. All copy here must
+   * stay pen-name-shaped (ISO 27001 A.18.1.4) and avoid investment /
+   * yield vocabulary (.cursorrules §2).
+   */
+  artist: {
+    /** Tiny eyebrow above the heading. */
+    kicker: string;
+    /** Breadcrumb labels. */
+    breadcrumbHome: string;
+    breadcrumbReleases: string;
+    /** Works section heading + sublead. */
+    worksHeading: string;
+    worksLead: string;
+    /** Per-card meta — uses `{n}` token. */
+    worksCount: string;
+    /** Empty-state when an operator pick has no resolvable files. */
+    empty: string;
+    /** Footer return links. */
+    backToReleases: string;
+    /** Not-found page copy. */
+    notFoundTitle: string;
+    notFoundBody: string;
+    notFoundCta: string;
+  };
   auth: {
     signIn: string;
     title: string;

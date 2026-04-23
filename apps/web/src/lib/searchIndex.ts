@@ -7,10 +7,7 @@ import {
   listOpenCollectorTransferListings,
   maskSellerId,
 } from "@/lib/collectorTransferListings";
-import {
-  FEATURED_ARTIST_PICKS,
-  type FeaturedArtistPick,
-} from "@/data/featured-artists";
+import { loadArtists } from "@/lib/artistsCatalog";
 import type {
   SearchArtist,
   SearchArtwork,
@@ -60,69 +57,6 @@ function localelessHref(p: string): string {
   return p.startsWith("/") ? p : `/${p}`;
 }
 
-/**
- * Mirrors the Rail C (Featured Artists) selection rule: keep an artist
- * only when they have ≥ 2 catalog works OR they are an operator pick.
- * This filters out filename-derived noise (numeric pinterest-style ids
- * that `parseTitleArtist` happens to split as the "artist" segment).
- */
-const MIN_WORKS_FOR_GROUPED_ARTIST = 2;
-
-function buildArtists(
-  files: readonly string[],
-  picks: readonly FeaturedArtistPick[],
-): SearchArtist[] {
-  const groups = new Map<
-    string,
-    { penName: string; firstFile: string; count: number; isPick: boolean }
-  >();
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]!;
-    const { artist } = parseTitleArtist(file, i);
-    if (!artist || artist === "Unknown") continue;
-    const key = artist.toLowerCase();
-    const prev = groups.get(key);
-    if (prev) {
-      prev.count += 1;
-    } else {
-      groups.set(key, { penName: artist, firstFile: file, count: 1, isPick: false });
-    }
-  }
-
-  const indexByFile = new Map<string, number>();
-  for (let i = 0; i < files.length; i++) indexByFile.set(files[i]!, i);
-
-  for (const pick of picks) {
-    const key = pick.penName.toLowerCase();
-    const validFiles = pick.artworkFiles.filter((f) => indexByFile.has(f));
-    if (validFiles.length === 0) continue;
-    const existing = groups.get(key);
-    if (existing) {
-      existing.isPick = true;
-    } else {
-      groups.set(key, {
-        penName: pick.penName,
-        firstFile: validFiles[0]!,
-        count: validFiles.length,
-        isPick: true,
-      });
-    }
-  }
-
-  const out: SearchArtist[] = [];
-  for (const [key, g] of groups) {
-    if (!g.isPick && g.count < MIN_WORKS_FOR_GROUPED_ARTIST) continue;
-    out.push({
-      id: key,
-      penName: g.penName,
-      worksCount: g.count,
-      href: localelessHref(`/releases/${encodeArtworkSlug(g.firstFile)}`),
-    });
-  }
-  out.sort((a, b) => b.worksCount - a.worksCount || a.penName.localeCompare(b.penName));
-  return out;
-}
-
 function buildArtworks(files: readonly string[]): SearchArtwork[] {
   const out: SearchArtwork[] = [];
   for (let i = 0; i < files.length; i++) {
@@ -141,10 +75,22 @@ function buildArtworks(files: readonly string[]): SearchArtwork[] {
 
 export async function buildSearchIndex(): Promise<SearchIndex> {
   const { files } = await loadCatalogFiles();
-  const rawListings = await listOpenCollectorTransferListings();
+  const [rawListings, artistEntries] = await Promise.all([
+    listOpenCollectorTransferListings(),
+    loadArtists(),
+  ]);
 
   const artworks = buildArtworks(files);
-  const artists = buildArtists(files, FEATURED_ARTIST_PICKS);
+  // Artist results now point at the real `/artist/<slug>` page (PR-10
+  // cutover). The selection rule + slug encoding live in
+  // `lib/artistsCatalog` so Rail C, the artist page, and the omni-search
+  // index all agree on the same artist set.
+  const artists: SearchArtist[] = artistEntries.map((a) => ({
+    id: a.key,
+    penName: a.penName,
+    worksCount: a.works.length,
+    href: localelessHref(`/artist/${a.slug}`),
+  }));
   const listings: SearchListing[] = rawListings.map((r) => ({
     id: r.id,
     artworkTitle: r.artworkTitle,
