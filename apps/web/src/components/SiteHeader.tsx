@@ -40,8 +40,24 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             className="flex min-w-0 shrink items-center justify-end gap-3 overflow-x-auto py-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 md:gap-8 lg:gap-10 [&::-webkit-scrollbar]:hidden"
             aria-label={m.a11y.primaryNav}
           >
+            {/*
+              Primary nav order mirrors the home IA after PR-11 / PR-12:
+              Releases → Curation → Artists → Provenance → Vault → Legal.
+              Curation / Artists land between the two channels (Releases =
+              PRIMARY, Provenance = SECONDARY) so the IA reads as
+              "what's new → operator-curated views → custody history".
+            */}
             <Link href={withLocale(locale, "/releases")} className={navItemClass}>
               {m.nav.releases}
+            </Link>
+            <Link href={withLocale(locale, "/curation")} className={navItemClass}>
+              {m.nav.curation}
+            </Link>
+            <Link
+              href={withLocale(locale, "/featured-artists")}
+              className={navItemClass}
+            >
+              {m.nav.artists}
             </Link>
             <Link href={withLocale(locale, "/provenance")} className={navItemClass}>
               {m.nav.provenance}

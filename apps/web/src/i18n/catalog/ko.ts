@@ -23,7 +23,14 @@ export const ko: Messages = {
     stats: "신뢰 지표",
     cta: "행동 유도",
   },
-  nav: { releases: "신작 공개", vault: "Vault", legal: "법적 고지", provenance: "소장 계보" },
+  nav: {
+    releases: "신작 공개",
+    vault: "Vault",
+    legal: "법적 고지",
+    provenance: "소장 계보",
+    curation: "큐레이션",
+    artists: "작가",
+  },
   badge: {
     primary: "新作",
     secondary: "来歴",
