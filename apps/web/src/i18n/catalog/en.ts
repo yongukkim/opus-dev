@@ -22,10 +22,10 @@ export const en: Messages = {
     hero: "OPUS hero",
     stats: "Trust metrics",
     cta: "Call to action",
-    archivePreview: "Archive preview",
   },
   nav: { releases: "Releases", vault: "Vault", legal: "Legal", provenance: "Provenance" },
   badge: {
+    primary: "New release",
     secondary: "Provenance",
   },
   auth: {
@@ -327,6 +327,11 @@ export const en: Messages = {
     appRequiredAndroid: "Android (Google Play)",
     appRequiredComingSoon: "Store links coming soon",
     comingSoon: "Coming soon",
+    railReleases: {
+      title: "Releases — latest primary editions",
+      body: "Limited editions from verified artists.",
+      viewAll: "View all",
+    },
     railProvenance: {
       title: "Provenance",
       body: "Open custody transfers cleared by operator review.",
@@ -352,14 +357,6 @@ export const en: Messages = {
     monthBest: "Best this month",
     yearBest: "Best of the year",
     caption: "Selection criteria may change per editorial policy.",
-  },
-  archiveGrid: {
-    kicker: "Archive preview",
-    heading: "From the vault",
-    body:
-      "Preview standout editions from artist-official releases. Each card links to provenance and edition details.",
-    viewAll: "View all",
-    artwork: "Artwork",
   },
   marketing: {
     title: "Your collection, with the official record",

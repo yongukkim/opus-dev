@@ -22,10 +22,10 @@ export const ko: Messages = {
     hero: "OPUS 히어로",
     stats: "신뢰 지표",
     cta: "행동 유도",
-    archivePreview: "아카이브 미리보기",
   },
   nav: { releases: "신작 공개", vault: "Vault", legal: "법적 고지", provenance: "소장 계보" },
   badge: {
+    primary: "新作",
     secondary: "来歴",
   },
   auth: {
@@ -325,6 +325,11 @@ export const ko: Messages = {
     appRequiredAndroid: "Android (Google Play)",
     appRequiredComingSoon: "스토어 링크 준비 중",
     comingSoon: "곧 공개",
+    railReleases: {
+      title: "新作 공개 · 최신 1차 에디션",
+      body: "검증된 작가의 한정 에디션입니다.",
+      viewAll: "전체 보기",
+    },
     railProvenance: {
       title: "소장 계보",
       body: "운영 검토를 통과한 활성 수탁 이전입니다.",
@@ -350,14 +355,6 @@ export const ko: Messages = {
     monthBest: "이번달 베스트",
     yearBest: "올해의 베스트",
     caption: "선정 기준은 운영 정책에 따라 달라질 수 있습니다.",
-  },
-  archiveGrid: {
-    kicker: "Archive preview",
-    heading: "From the vault",
-    body:
-      "작가 공식 인증 에디션 중 주목할 만한 한정판을 먼저 보여 줍니다. 각 카드에서 출처와 판 정보를 확인할 수 있습니다.",
-    viewAll: "전체 보기",
-    artwork: "Artwork",
   },
   marketing: {
     title: "컬렉션을 공식 기록과 함께",

@@ -1,10 +1,10 @@
 import { DesignPhilosophyBand } from "@/components/DesignPhilosophyBand";
 import { Hero } from "@/components/Hero";
-import { ArchivePreviewGrid } from "@/components/home/ArchivePreviewGrid";
 import { ChroniclePreview } from "@/components/home/ChroniclePreview";
 import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
 import { RailPlaceholder } from "@/components/home/RailPlaceholder";
 import { RailProvenance } from "@/components/home/RailProvenance";
+import { RailReleases } from "@/components/home/RailReleases";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -17,13 +17,14 @@ type Props = { params: Promise<{ locale: string }> };
  * Home page IA — PR-3 of the home redesign series.
  * Spec: docs/home-redesign-curation-rails-and-omnisearch.md §2 (AFTER) and §3.
  *
- * - The 3-pillar text grid (Chronicle / Vault / Premieres) was retired here:
- *   Rails B–D and the Chronicle preview below cover the same ground without
- *   duplicating it (spec §2).
- * - ArchivePreviewGrid still serves Rail A (Releases) for now; PR-5 swaps it
- *   for a per-artwork-linked RailReleases (spec §3.3, §7.2).
- * - Rails B–D and Chronicle preview are placeholders; their data wires land
- *   in PR-4..PR-7 and PR-9 respectively (spec §8).
+ * - The 3-pillar text grid (Chronicle / Vault / Premieres) was retired in
+ *   PR-3: Rails B–D and the Chronicle preview below cover the same ground
+ *   without duplicating it (spec §2).
+ * - Rail A (Releases) is per-artwork as of PR-5 (spec §3.3 / §7.2);
+ *   ArchivePreviewGrid was deleted in the same PR.
+ * - Rail B (Provenance) is data-driven as of PR-4 (spec §3.4).
+ * - Rails C/D and the Chronicle preview are still placeholders; their data
+ *   wires land in PR-6, PR-7 and PR-9 respectively (spec §8).
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -60,12 +61,12 @@ export default async function HomePage({ params }: Props) {
         </div>
 
         {/*
-          Rail A · Releases (1차 / 新作公開). Currently fed by the file-system
-          catalog via ArchivePreviewGrid. PR-5 replaces this with RailReleases
-          which links each card to its individual /releases/[slug] page and
-          renders a PRIMARY badge per spec §3.3.
+          Rail A · Releases (1차 / 新作公開). Per-artwork links + PRIMARY pill
+          as of PR-5 (spec §3.3). Data source is still the file-system catalog
+          via loadCatalogFiles(); cutover to Edition + Listing(market=PRIMARY)
+          is tracked separately in spec §5.
         */}
-        <ArchivePreviewGrid locale={locale} m={m} />
+        <RailReleases locale={locale} m={m} />
 
         {/*
           Rail B · Provenance (2차 / 来歴). Real data wired in PR-4 from JSONL
