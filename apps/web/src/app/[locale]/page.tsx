@@ -2,8 +2,8 @@ import { DesignPhilosophyBand } from "@/components/DesignPhilosophyBand";
 import { Hero } from "@/components/Hero";
 import { ChroniclePreview } from "@/components/home/ChroniclePreview";
 import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
+import { RailCuration } from "@/components/home/RailCuration";
 import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
-import { RailPlaceholder } from "@/components/home/RailPlaceholder";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
@@ -26,8 +26,10 @@ type Props = { params: Promise<{ locale: string }> };
  * - Rail B (Provenance) is data-driven as of PR-4 (spec §3.4).
  * - Rail C (Featured artists) is data-driven as of PR-6 (spec §3.5):
  *   filename grouping (≥2 works) + operator picks fallback.
- * - Rail D and the Chronicle preview are still placeholders; their data
- *   wires land in PR-7 and PR-9 respectively (spec §8).
+ * - Rail D (Curated shelves) is data-driven as of PR-7 (spec §3.6) from
+ *   the static `data/curation.ts` catalog.
+ * - The Chronicle preview is still a placeholder; the data wire lands in
+ *   PR-9 once the Chronicle write cutover is in place (spec §8).
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -87,13 +89,13 @@ export default async function HomePage({ params }: Props) {
         */}
         <RailFeaturedArtists locale={locale} m={m} />
 
-        {/* Rail D · Operator-curated shelves. Real data lands in PR-7 (spec §3.6). */}
-        <RailPlaceholder
-          title={m.home.railCuration.title}
-          body={m.home.railCuration.body}
-          comingSoonLabel={m.home.comingSoon}
-          ariaLabel={m.home.railCuration.title}
-        />
+        {/*
+          Rail D · Operator-curated shelves. Wired in PR-7 (spec §3.6) from
+          the static data/curation.ts catalog. The "Browse other shelves"
+          CTA temporarily targets /releases until the dedicated /curation
+          index page ships in a follow-up PR (spec §8.2).
+        */}
+        <RailCuration locale={locale} m={m} />
 
         {/*
           The Chronicle preview placeholder. Real masked custody events land

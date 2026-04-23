@@ -346,7 +346,9 @@ export const ko: Messages = {
     },
     railCuration: {
       title: "큐레이션",
-      body: "운영자 큐레이션 셸프를 곧 공개합니다.",
+      body: "운영팀이 큐레이션한 컬렉션입니다.",
+      viewAll: "다른 셸프 보기",
+      empty: "곧 첫 큐레이션 셸프를 공개합니다.",
     },
     chroniclePreview: {
       title: "The Chronicle 최근 기록",
