@@ -323,17 +323,22 @@ export const en: Messages = {
     appRequiredIos: "iPhone (App Store)",
     appRequiredAndroid: "Android (Google Play)",
     appRequiredComingSoon: "Store links coming soon",
-    pillarChronicle: {
-      sub: "Tamper-resistant record",
-      body: "Chain ownership and editions in one record. Keep appraisal and edition facts clear.",
+    comingSoon: "Coming soon",
+    railProvenance: {
+      title: "Provenance",
+      body: "Open custody transfers will appear here.",
     },
-    pillarVault: {
-      sub: "Private custody",
-      body: "Control where collections live and who accesses them — least privilege by role.",
+    railFeaturedArtists: {
+      title: "Featured artists",
+      body: "Per-artist curation arrives soon.",
     },
-    pillarPremieres: {
-      sub: "Officially certified works",
-      body: "Artist-official certification and limited editions. View on mobile; steps and payment on the web.",
+    railCuration: {
+      title: "Curation",
+      body: "Operator-curated shelves arrive soon.",
+    },
+    chroniclePreview: {
+      title: "The Chronicle — recent entries",
+      body: "Masked recent custody events will appear here.",
     },
   },
   stats: {

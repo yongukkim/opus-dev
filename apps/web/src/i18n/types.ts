@@ -158,9 +158,18 @@ export type Messages = {
     appRequiredIos: string;
     appRequiredAndroid: string;
     appRequiredComingSoon: string;
-    pillarChronicle: { sub: string; body: string };
-    pillarVault: { sub: string; body: string };
-    pillarPremieres: { sub: string; body: string };
+    /** Shared "Coming soon" badge used on rail / chronicle placeholders below. */
+    comingSoon: string;
+    /**
+     * Curation rail placeholders introduced in PR-3 (home IA rebuild).
+     * Each rail's data wiring lands in its own follow-up PR (PR-4..PR-7);
+     * until then the same body string explains what the rail will become.
+     */
+    railProvenance: { title: string; body: string };
+    railFeaturedArtists: { title: string; body: string };
+    railCuration: { title: string; body: string };
+    /** The Chronicle preview placeholder (PR-9 will swap in real masked entries). */
+    chroniclePreview: { title: string; body: string };
   };
   stats: {
     weekBest: string;

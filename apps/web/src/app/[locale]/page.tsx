@@ -1,7 +1,9 @@
 import { DesignPhilosophyBand } from "@/components/DesignPhilosophyBand";
 import { Hero } from "@/components/Hero";
 import { ArchivePreviewGrid } from "@/components/home/ArchivePreviewGrid";
+import { ChroniclePreview } from "@/components/home/ChroniclePreview";
 import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
+import { RailPlaceholder } from "@/components/home/RailPlaceholder";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -10,16 +12,22 @@ import Link from "next/link";
 
 type Props = { params: Promise<{ locale: string }> };
 
+/**
+ * Home page IA — PR-3 of the home redesign series.
+ * Spec: docs/home-redesign-curation-rails-and-omnisearch.md §2 (AFTER) and §3.
+ *
+ * - The 3-pillar text grid (Chronicle / Vault / Premieres) was retired here:
+ *   Rails B–D and the Chronicle preview below cover the same ground without
+ *   duplicating it (spec §2).
+ * - ArchivePreviewGrid still serves Rail A (Releases) for now; PR-5 swaps it
+ *   for a per-artwork-linked RailReleases (spec §3.3, §7.2).
+ * - Rails B–D and Chronicle preview are placeholders; their data wires land
+ *   in PR-4..PR-7 and PR-9 respectively (spec §8).
+ */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
-
-  const pillars = [
-    { title: "The Chronicle" as const, ...m.home.pillarChronicle },
-    { title: "The Vault" as const, ...m.home.pillarVault },
-    { title: "Premieres" as const, ...m.home.pillarPremieres },
-  ];
 
   return (
     <>
@@ -48,36 +56,52 @@ export default async function HomePage({ params }: Props) {
               </Link>
             </div>
           </div>
-
-          <ul className="mt-20 grid gap-6 md:mt-24 md:grid-cols-3 md:gap-8">
-            {pillars.map((item) => (
-              <li
-                key={item.title}
-                className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/40 p-8 shadow-opus-card transition duration-500 hover:border-opus-gold/30 hover:bg-opus-slate/55"
-              >
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(197, 160, 40, 0.09), transparent 55%)",
-                  }}
-                />
-                <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em] opacity-90">
-                  {item.sub}
-                </p>
-                <h2 className="opus-text-metallic mt-4 font-display text-xl font-semibold tracking-[0.08em] md:text-2xl">
-                  {item.title}
-                </h2>
-                <p className="mt-4 font-sans text-sm leading-relaxed text-opus-warm/60">{item.body}</p>
-              </li>
-            ))}
-          </ul>
         </div>
 
-        <StatsTrustRow m={m} />
-
+        {/*
+          Rail A · Releases (1차 / 新作公開). Currently fed by the file-system
+          catalog via ArchivePreviewGrid. PR-5 replaces this with RailReleases
+          which links each card to its individual /releases/[slug] page and
+          renders a PRIMARY badge per spec §3.3.
+        */}
         <ArchivePreviewGrid locale={locale} m={m} />
 
+        {/* Rail B · Provenance (2차 / 来歴). Real data lands in PR-4 (spec §3.4). */}
+        <RailPlaceholder
+          title={m.home.railProvenance.title}
+          body={m.home.railProvenance.body}
+          comingSoonLabel={m.home.comingSoon}
+          ariaLabel={m.home.railProvenance.title}
+        />
+
+        {/* Rail C · Featured artists. Real data lands in PR-6 (spec §3.5). */}
+        <RailPlaceholder
+          title={m.home.railFeaturedArtists.title}
+          body={m.home.railFeaturedArtists.body}
+          comingSoonLabel={m.home.comingSoon}
+          ariaLabel={m.home.railFeaturedArtists.title}
+        />
+
+        {/* Rail D · Operator-curated shelves. Real data lands in PR-7 (spec §3.6). */}
+        <RailPlaceholder
+          title={m.home.railCuration.title}
+          body={m.home.railCuration.body}
+          comingSoonLabel={m.home.comingSoon}
+          ariaLabel={m.home.railCuration.title}
+        />
+
+        {/*
+          The Chronicle preview placeholder. Real masked custody events land
+          in PR-9 once the Chronicle write cutover is in place (spec §3.7).
+        */}
+        <ChroniclePreview
+          title={m.home.chroniclePreview.title}
+          body={m.home.chroniclePreview.body}
+          comingSoonLabel={m.home.comingSoon}
+          ariaLabel={m.home.chroniclePreview.title}
+        />
+
+        <StatsTrustRow m={m} />
         <MarketingCtaBand locale={locale} m={m} />
       </main>
     </>

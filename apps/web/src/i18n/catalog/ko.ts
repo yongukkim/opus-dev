@@ -321,17 +321,22 @@ export const ko: Messages = {
     appRequiredIos: "iPhone (App Store)",
     appRequiredAndroid: "Android (Google Play)",
     appRequiredComingSoon: "스토어 링크 준비 중",
-    pillarChronicle: {
-      sub: "변조에 강한 기록",
-      body: "소유와 에디션의 연쇄를 하나의 기록으로 남깁니다. 감정과 한정판 정보를 분명히 보존합니다.",
+    comingSoon: "곧 공개",
+    railProvenance: {
+      title: "소장 계보",
+      body: "진행 중인 수탁 이전을 곧 표시합니다.",
     },
-    pillarVault: {
-      sub: "프라이빗 보관",
-      body: "컬렉션의 위치와 접근을 역할에 따라 최소 권한으로 통제합니다.",
+    railFeaturedArtists: {
+      title: "작가 셸프",
+      body: "작가별 큐레이션을 곧 공개합니다.",
     },
-    pillarPremieres: {
-      sub: "공식 인증 작품",
-      body: "작가 공식 인증과 한정 에디션. 감상은 모바일에서, 절차와 결제는 웹에서 진행합니다.",
+    railCuration: {
+      title: "큐레이션",
+      body: "운영자 큐레이션 셸프를 곧 공개합니다.",
+    },
+    chroniclePreview: {
+      title: "The Chronicle 최근 기록",
+      body: "마스킹된 최근 소장 이력을 곧 표시합니다.",
     },
   },
   stats: {
