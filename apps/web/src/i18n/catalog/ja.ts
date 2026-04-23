@@ -317,8 +317,9 @@ export const ja: Messages = {
      */
     line2:
       "認証されたオリジナル・コレクティブルとして、\nあなたのコレクションに。",
-    exploreArchive: "アーカイブを探求する",
-    viewPremieres: "プレミアを見る",
+    openReleases: "新作公開",
+    openProvenance: "来歴",
+    searchHint: "⌘K で探索",
   },
   design: {
     title: "Classic Luxury",

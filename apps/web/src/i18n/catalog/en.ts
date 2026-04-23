@@ -300,8 +300,9 @@ export const en: Messages = {
       "Your own limited edition — found nowhere else.",
     line2:
       "An authenticated original for your collection.",
-    exploreArchive: "Explore the Archive",
-    viewPremieres: "View premieres",
+    openReleases: "Releases",
+    openProvenance: "Provenance",
+    searchHint: "⌘K to search",
   },
   design: {
     title: "Classic Luxury",

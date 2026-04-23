@@ -29,9 +29,18 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
   const cjkKicker = ja
     ? "opus-text-metallic-soft text-[0.65rem] font-semibold tracking-tight break-keep md:text-xs"
     : "opus-text-metallic-soft text-[0.65rem] font-medium uppercase tracking-[0.45em] md:text-xs";
-  const ctaPrimary = ja
-    ? "opus-surface-metallic inline-flex min-w-[14rem] items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold tracking-tight break-keep text-black transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm"
-    : "opus-surface-metallic inline-flex min-w-[14rem] items-center justify-center rounded-full px-10 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] text-black transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm";
+  // Primary (filled metallic) and Secondary (outlined) hero CTAs share the same
+  // dimensions so the primary / secondary channel split (PR #13) is presented
+  // with equal visual weight per spec §3.1 of
+  // docs/home-redesign-curation-rails-and-omnisearch.md.
+  const ctaShared = ja
+    ? "inline-flex min-w-[14rem] items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold tracking-tight break-keep transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm"
+    : "inline-flex min-w-[14rem] items-center justify-center rounded-full px-10 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm";
+  const ctaPrimary = `opus-surface-metallic text-black ${ctaShared}`;
+  const ctaSecondary = `opus-text-metallic border border-opus-gold/45 bg-transparent hover:border-opus-gold-light/70 hover:bg-opus-gold/8 ${ctaShared}`;
+  const searchHintClass = ja
+    ? "opus-text-metallic-soft mt-6 font-mono text-[0.65rem] tracking-tight break-keep opacity-80"
+    : "opus-text-metallic-soft mt-6 font-mono text-[0.65rem] uppercase tracking-[0.32em] opacity-80";
 
   return (
     <section
@@ -96,21 +105,27 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
               Edition · The Log · Vault
             </p>
 
+            {/*
+              Dual CTAs of equal visual weight — Releases (primary market) and
+              Provenance (secondary market) — making the channel split landed in
+              PR #13 visible above the fold. See spec §3.1.
+            */}
             <div className="mt-10 flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link href={withLocale(locale, "/releases")} className={ctaPrimary}>
-                <span className="relative z-[1]">{h.exploreArchive}</span>
+                <span className="relative z-[1]">{h.openReleases}</span>
               </Link>
-              <Link
-                href={withLocale(locale, "/releases")}
-                className={
-                  ja
-                    ? "opus-text-metallic-soft text-[0.7rem] font-semibold tracking-tight break-keep underline-offset-4 transition hover:opacity-100 hover:underline"
-                    : "opus-text-metallic-soft text-[0.7rem] font-medium uppercase tracking-[0.28em] underline-offset-4 transition hover:opacity-100 hover:underline"
-                }
-              >
-                {h.viewPremieres}
+              <Link href={withLocale(locale, "/provenance")} className={ctaSecondary}>
+                <span className="relative z-[1]">{h.openProvenance}</span>
               </Link>
             </div>
+            {/*
+              Hint for the ⌘K omni-search modal. The modal is introduced in a
+              later PR; this PR only surfaces the affordance so users learn the
+              shortcut exists. Static text — no interaction yet.
+            */}
+            <p className={searchHintClass} aria-hidden>
+              {h.searchHint}
+            </p>
           </div>
         </div>
       </div>

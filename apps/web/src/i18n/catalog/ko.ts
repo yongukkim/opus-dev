@@ -298,8 +298,9 @@ export const ko: Messages = {
       "어디에도 없는 나만의 리미티드 에디션",
     line2:
       "",
-    exploreArchive: "아카이브 둘러보기",
-    viewPremieres: "프리미어 보기",
+    openReleases: "신작 공개",
+    openProvenance: "소장 계보",
+    searchHint: "⌘K로 탐색",
   },
   design: {
     title: "Classic Luxury",

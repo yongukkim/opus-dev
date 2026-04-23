@@ -136,8 +136,15 @@ export type Messages = {
     kicker: string;
     line1: string;
     line2: string;
-    exploreArchive: string;
-    viewPremieres: string;
+    /** Primary CTA — primary market: artist's first public release (`/releases`). */
+    openReleases: string;
+    /** Secondary CTA — previous custodian seeks the next custodian (`/provenance`). */
+    openProvenance: string;
+    /**
+     * Small helper line under the CTAs hinting at the ⌘K omni-search modal.
+     * The modal itself is introduced in a later PR; this PR only displays the hint.
+     */
+    searchHint: string;
   };
   design: { title: string; body: string; note: string };
   home: {
