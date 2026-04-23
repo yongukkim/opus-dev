@@ -340,20 +340,22 @@ export const ja: Messages = {
     appRequiredIos: "iPhone（App Store）",
     appRequiredAndroid: "Android（Google Play）",
     appRequiredComingSoon: "ストアリンク準備中",
-    pillarChronicle: {
-      sub: "改ざん耐性のある履歴",
-      body:
-        "所有と版の連鎖を一つの記録にまとめ、鑑定とエディションを明確に残します。",
+    comingSoon: "近日公開",
+    railProvenance: {
+      title: "来歴",
+      body: "進行中の所蔵者移転を近日表示します。",
     },
-    pillarVault: {
-      sub: "プライベート保管",
-      body:
-        "コレクションの所在とアクセスを、役割に応じて最小権限で制御します。",
+    railFeaturedArtists: {
+      title: "作家のシェルフ",
+      body: "作家別キュレーションを近日公開。",
     },
-    pillarPremieres: {
-      sub: "公式認定の作品",
-      body:
-        "作家公式の認定と限定版を提供します。モバイルで鑑賞し、ウェブで手続きと決済を行えます。",
+    railCuration: {
+      title: "キュレーション",
+      body: "運営キュレーションを近日公開。",
+    },
+    chroniclePreview: {
+      title: "The Chronicle 最近の記録",
+      body: "マスク済みの最近の所蔵履歴を近日表示します。",
     },
   },
   stats: {
