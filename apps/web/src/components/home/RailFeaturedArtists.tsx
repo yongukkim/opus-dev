@@ -8,17 +8,16 @@ import { loadArtists } from "@/lib/artistsCatalog";
 
 /**
  * Rail C · Featured Artists — PR-6 of the home redesign series, with
- * the PR-10 link cutover applied.
+ * PR-10 (per-card cutover to `/artist/<slug>`) and PR-12 (header
+ * "Browse all artists" → `/featured-artists`) applied.
  * Spec: docs/home-redesign-curation-rails-and-omnisearch.md §3.5 / §6.
  *
  * The grouping + operator-pick merge logic lives in `lib/artistsCatalog`
- * so the artist page (PR-10) and this rail share a single source of
- * truth (and the omni-search index reuses the same selection rule).
+ * so the rail, the artist page, the artist index, and the omni-search
+ * index all share a single source of truth (same selection rule).
  *
  * PII (ISO 27001 A.18.1.4): pen names only — see `artistsCatalog.ts`
- * JSDoc for the full contract. Each card's CTA now points at
- * `/artist/<slug>` (the real artist surface, replacing the temporary
- * first-PDP link from PR-6).
+ * JSDoc for the full contract.
  */
 const HOME_RAIL_LIMIT = 4;
 const THUMBS_PER_CARD = 3;
@@ -49,6 +48,12 @@ export async function RailFeaturedArtists({
               {r.body}
             </p>
           </div>
+          <Link
+            href={withLocale(locale, "/featured-artists")}
+            className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-opus-gold/85 transition hover:text-opus-gold-light"
+          >
+            {r.viewAll} →
+          </Link>
         </div>
 
         {items.length === 0 ? (

@@ -50,6 +50,17 @@ export const en: Messages = {
     hintClose: "esc close",
     results: "{n} results",
   },
+  featuredArtists: {
+    kicker: "Artists",
+    breadcrumbHome: "Home",
+    breadcrumbIndex: "Featured artists",
+    indexHeading: "Featured artists",
+    indexLead: "Every artist actively releasing new work, on a single page.",
+    indexEmpty: "No featured artists are surfaced right now.",
+    worksCount: "{n} works",
+    viewProfile: "Open artist page",
+    operatorPickBadge: "Editor's pick",
+  },
   curation: {
     kicker: "Curation",
     breadcrumbHome: "Home",
@@ -397,6 +408,7 @@ export const en: Messages = {
       viewWorks: "View works by this artist",
       worksCount: "{n} works",
       empty: "Featured artists arriving soon.",
+      viewAll: "Browse all artists",
     },
     railCuration: {
       title: "Curation",
