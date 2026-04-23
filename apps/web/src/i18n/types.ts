@@ -93,6 +93,41 @@ export type Messages = {
     results: string;
   };
   /**
+   * `/[locale]/curation` (index) and `/[locale]/curation/[id]` (detail)
+   * pages — PR-11 of the home redesign series, follow-up to PR-7. The
+   * `/curation` index lists every operator-curated shelf and the detail
+   * page expands a single shelf to its full work grid. All copy here is
+   * UI chrome only; shelf titles + descriptions remain in `data/curation.ts`
+   * (operator-authored, vocabulary-guarded by `.cursorrules`).
+   */
+  curation: {
+    /** Tiny eyebrow above the index heading. */
+    kicker: string;
+    /** Breadcrumb labels reused by both pages. */
+    breadcrumbHome: string;
+    breadcrumbIndex: string;
+    /** Index page heading + sublead. */
+    indexHeading: string;
+    indexLead: string;
+    /** Index empty state (no shelves at all in the catalog). */
+    indexEmpty: string;
+    /** CTA on each shelf card → /curation/<id>. */
+    viewShelf: string;
+    /** Per-card meta — uses `{n}` token. */
+    itemsCount: string;
+    /** Detail page works heading + sublead. */
+    worksHeading: string;
+    worksLead: string;
+    /** Detail empty state (every item dropped from this shelf). */
+    detailEmpty: string;
+    /** Footer return link on the detail page. */
+    backToIndex: string;
+    /** Not-found page copy. */
+    notFoundTitle: string;
+    notFoundBody: string;
+    notFoundCta: string;
+  };
+  /**
    * `/[locale]/artist/[slug]` page (PR-10 of the home redesign series —
    * follow-up to PR-6 / PR-8). The page surfaces an artist's pen name +
    * works grid; before this PR, Rail C and the omni-search artist rows
