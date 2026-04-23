@@ -352,7 +352,11 @@ export const ko: Messages = {
     },
     chroniclePreview: {
       title: "The Chronicle 최근 기록",
-      body: "마스킹된 최근 소장 이력을 곧 표시합니다.",
+      body: "1차 발행과 2차 이전이 마스킹된 형태로 흐를 자리입니다.",
+      eventPrimary: "1차 발행",
+      eventSecondary: "2차 이전",
+      eventVaultNote: "보관소 메모",
+      maskLegend: "식별자는 col-••• 형식으로 마스킹됩니다.",
     },
   },
   stats: {

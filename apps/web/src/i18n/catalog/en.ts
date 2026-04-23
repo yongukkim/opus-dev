@@ -354,7 +354,11 @@ export const en: Messages = {
     },
     chroniclePreview: {
       title: "The Chronicle — recent entries",
-      body: "Masked recent custody events will appear here.",
+      body: "A timeline of primary issuance and secondary transfers, shown masked.",
+      eventPrimary: "Primary issuance",
+      eventSecondary: "Secondary transfer",
+      eventVaultNote: "Vault memo",
+      maskLegend: "Identifiers appear masked as col-•••.",
     },
   },
   stats: {

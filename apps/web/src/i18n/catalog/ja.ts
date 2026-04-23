@@ -371,7 +371,11 @@ export const ja: Messages = {
     },
     chroniclePreview: {
       title: "The Chronicle 最近の記録",
-      body: "マスク済みの最近の所蔵履歴を近日表示します。",
+      body: "一次発行と二次移転がマスクされて流れる場所です。",
+      eventPrimary: "一次発行",
+      eventSecondary: "二次移転",
+      eventVaultNote: "保管庫メモ",
+      maskLegend: "識別子は col-••• 形式でマスクされます。",
     },
   },
   stats: {
