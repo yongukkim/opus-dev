@@ -4,6 +4,7 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { OmniSearchTrigger } from "./search/OmniSearchTrigger";
 import { SiteHeaderAuth } from "./SiteHeaderAuth";
 
 /**
@@ -55,6 +56,9 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
               {m.nav.legal}
             </Link>
           </nav>
+          {/* PR-8: ⌘K omni-search trigger (spec §4.1). Hidden < sm to keep
+              the mobile bar uncluttered; the keyboard shortcut still works. */}
+          <OmniSearchTrigger label={m.search.triggerLabel} />
           <SiteHeaderAuth
             locale={locale}
             signInLabel={m.auth.signIn}

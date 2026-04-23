@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/layout/Footer";
+import { OmniSearchModal } from "@/components/search/OmniSearchModal";
+import { OmniSearchProvider } from "@/components/search/OmniSearchProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TrustStrip } from "@/components/TrustStrip";
 import { ogLocale } from "@/i18n/config";
@@ -32,11 +34,20 @@ export default async function LocaleLayout({ children, params }: Props) {
   const m = getDictionary(locale);
 
   return (
-    <div className="opus-app-root flex min-h-screen flex-col bg-opus-charcoal">
-      <SiteHeader locale={locale} m={m} />
-      <TrustStrip locale={locale} m={m} />
-      <div className="flex-1">{children}</div>
-      <Footer locale={locale} m={m} />
-    </div>
+    <OmniSearchProvider>
+      <div className="opus-app-root flex min-h-screen flex-col bg-opus-charcoal">
+        <SiteHeader locale={locale} m={m} />
+        <TrustStrip locale={locale} m={m} />
+        <div className="flex-1">{children}</div>
+        <Footer locale={locale} m={m} />
+      </div>
+      {/*
+        PR-8 ⌘K omni-search modal (spec §4). Mounted at the bottom so it
+        portals over every page in this locale. Receives `locale`, the
+        `search.*` strings, and the `badge.*` channel labels — keeps it
+        purely presentation; data fetch + state live in the provider.
+      */}
+      <OmniSearchModal locale={locale} t={m.search} badge={m.badge} />
+    </OmniSearchProvider>
   );
 }

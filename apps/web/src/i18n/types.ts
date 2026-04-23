@@ -53,6 +53,45 @@ export type Messages = {
     /** SECONDARY channel marker — 来歴 / 来歴 / Provenance. */
     secondary: string;
   };
+  /**
+   * ⌘K omni-search MVP. PR-8 of the home redesign series — see spec §4
+   * (`docs/home-redesign-curation-rails-and-omnisearch.md`). The MVP renders
+   * a `cmdk` modal that fetches a build-time index and matches client-side.
+   * All identifiers in the index are pen names / masked seller ids only
+   * (ISO 27001 A.18.1.4, .cursorrules §2 vocabulary guard).
+   */
+  search: {
+    /** Header trigger button label, also acts as aria-label. */
+    triggerLabel: string;
+    /** Modal title (visually hidden, used for aria-labelledby). */
+    modalTitle: string;
+    /** Input placeholder. */
+    placeholder: string;
+    /** Aria-label for the scope tab list. */
+    scopeAria: string;
+    scopeAll: string;
+    scopeArtwork: string;
+    scopeArtist: string;
+    scopeListing: string;
+    /** Result group headers. */
+    groupArtworks: string;
+    groupArtists: string;
+    groupListings: string;
+    /** Per-row meta strings. `worksCount` uses `{n}` token. */
+    worksCount: string;
+    /** Empty state when query has no matches. */
+    empty: string;
+    /** Empty state CTAs (links into Releases / Provenance). */
+    viewAllReleases: string;
+    viewAllProvenance: string;
+    /** While index.json is being fetched. */
+    loading: string;
+    /** Footer hint chips. `results` uses `{n}` token. */
+    hintSelect: string;
+    hintMove: string;
+    hintClose: string;
+    results: string;
+  };
   auth: {
     signIn: string;
     title: string;
