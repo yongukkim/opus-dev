@@ -348,7 +348,9 @@ export const en: Messages = {
     },
     railCuration: {
       title: "Curation",
-      body: "Operator-curated shelves arrive soon.",
+      body: "Collections curated by the operator team.",
+      viewAll: "Browse other shelves",
+      empty: "The first curated shelf arrives soon.",
     },
     chroniclePreview: {
       title: "The Chronicle — recent entries",

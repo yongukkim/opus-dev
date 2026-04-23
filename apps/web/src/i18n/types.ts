@@ -204,7 +204,14 @@ export type Messages = {
       /** Shown when neither grouping nor static picks yield any artists. */
       empty: string;
     };
-    railCuration: { title: string; body: string };
+    railCuration: {
+      title: string;
+      body: string;
+      /** Header CTA → /curation index page (lands in a follow-up PR). */
+      viewAll: string;
+      /** Shown when the static catalog is empty. */
+      empty: string;
+    };
     /** The Chronicle preview placeholder (PR-9 will swap in real masked entries). */
     chroniclePreview: { title: string; body: string };
   };

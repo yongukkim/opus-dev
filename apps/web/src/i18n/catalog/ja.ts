@@ -365,7 +365,9 @@ export const ja: Messages = {
     },
     railCuration: {
       title: "キュレーション",
-      body: "運営キュレーションを近日公開。",
+      body: "運営チームがキュレーションしたコレクションです。",
+      viewAll: "他のシェルフを見る",
+      empty: "近日、最初のキュレーション・シェルフを公開します。",
     },
     chroniclePreview: {
       title: "The Chronicle 最近の記録",
