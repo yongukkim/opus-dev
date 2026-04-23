@@ -6,9 +6,6 @@ export const en: Messages = {
       "OPUS — authenticated non-fungible digital art editions and The Chronicle. Crafted for collecting and appreciation, not investment positioning.",
     ogDescription:
       "Premium digital art archive — near-black charcoal, champagne brass, provenance and the vault. Not an investment product.",
-    tokushohoTitle: "Specified commercial disclosures",
-    tokushohoDescription:
-      "Draft disclosures under Japan’s Specified Commercial Transaction Act. Update after legal and tax review.",
     privacyTitle: "Privacy policy",
     privacyDescription:
       "Draft OPUS privacy policy. Update after legal review and Japan APPI alignment.",
@@ -554,51 +551,6 @@ export const en: Messages = {
       "Demo: JSONL on the server. Legal names are not published on the public page. Do not enter contact details or other sensitive info.",
     listingsBackHome: "← Back home",
     listingsRegisterCta: "Create a listing (Vault)",
-  },
-  tokushoho: {
-    back: "← Back home",
-    h1: "Specified commercial disclosures",
-    statutory: "Based on Japan’s Act on Specified Commercial Transactions",
-    intro:
-      "The items below are a template. Finalize business details and update before publication.",
-    nftNote:
-      "This service uses NFT technology for non-fungible digital art experiences and is not intended to solicit physical assets or investment products.",
-    sections: {
-      sellerName: {
-        title: "Seller name",
-        hint: "(Enter the legal business name)",
-      },
-      operator: { title: "Responsible operator", hint: "(Enter the name)" },
-      address: {
-        title: "Address",
-        hint: "(Address you can disclose without delay upon request)",
-      },
-      phone: {
-        title: "Phone",
-        hint: "(Customer contact; note if disclosed on request only)",
-      },
-      email: { title: "Email", hint: "(Contact address)" },
-      extraFees: {
-        title: "Fees other than product price",
-        hint: "(Tax, shipping, payment fees, data charges if applicable)",
-      },
-      payment: {
-        title: "Payment timing and method",
-        hint: "(Card, invoice, provider names and timing)",
-      },
-      delivery: {
-        title: "Delivery timing",
-        hint: "(Digital delivery method/timing; shipping estimate if physical)",
-      },
-      returns: {
-        title: "Returns, cancellation, defects",
-        hint: "State digital-specific terms in line with applicable law.",
-      },
-      env: {
-        title: "System requirements",
-        hint: "(Recommended OS/browsers and supported app versions)",
-      },
-    },
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "Establishing secure connection",

@@ -1,4 +1,3 @@
-export type LegalSection = { title: string; hint: string };
 type SignupMessages = {
   title: string;
   subtitle: string;
@@ -25,8 +24,6 @@ export type Messages = {
   meta: {
     siteDescription: string;
     ogDescription: string;
-    tokushohoTitle: string;
-    tokushohoDescription: string;
     privacyTitle: string;
     privacyDescription: string;
     termsTitle: string;
@@ -478,25 +475,6 @@ export type Messages = {
     listingsDemoNote: string;
     listingsBackHome: string;
     listingsRegisterCta: string;
-  };
-  tokushoho: {
-    back: string;
-    h1: string;
-    statutory: string;
-    intro: string;
-    nftNote: string;
-    sections: {
-      sellerName: LegalSection;
-      operator: LegalSection;
-      address: LegalSection;
-      phone: LegalSection;
-      email: LegalSection;
-      extraFees: LegalSection;
-      payment: LegalSection;
-      delivery: LegalSection;
-      returns: LegalSection;
-      env: LegalSection;
-    };
   };
   /** Seller eKYC consent (one UI language per locale; no KO/JA mix on one screen). */
   sellerVerifyConsent: {

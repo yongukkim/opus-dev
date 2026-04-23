@@ -41,7 +41,7 @@ export default async function HomePage({ params }: Props) {
             <div className="mt-10 flex flex-wrap items-center gap-5">
               <OpusButton variant="primary">{m.home.buyCta}</OpusButton>
               <Link
-                href={withLocale(locale, "/tokushoho")}
+                href={withLocale(locale, "/legal/specified-commercial")}
                 className="text-sm text-opus-warm/55 underline-offset-[5px] transition hover:text-opus-gold hover:underline"
               >
                 {m.home.legalLink}
