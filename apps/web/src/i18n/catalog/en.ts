@@ -473,6 +473,7 @@ export const en: Messages = {
       "Browse the archive, manage the Vault, and pay on the web — view on the app. We offer non-fungible digital art experiences, not physical-asset or financial products.",
     buy: "Purchase & pay",
     openVault: "Open Vault",
+    openProvenance: "Open Provenance",
   },
   artworks: {
     kicker: "Releases",
