@@ -3,13 +3,10 @@
 import { useOmniSearch } from "./OmniSearchProvider";
 
 /**
- * Header omni-search trigger button (spec §4.1). Renders a small `⌘K` chip
- * that opens the modal. The hint glyph is fixed to `⌘ K` to match the
- * spec mockup; the underlying provider listens for both `Cmd+K` and
- * `Ctrl+K` so Windows / Linux users still get the same keybinding even
- * though the chip shows the mac glyph.
+ * Header search trigger (spec §4.1). Visible chip uses human copy (`chip`),
+ * e.g. KO「검색」— not ⌘K. Cmd/Ctrl+K still work via OmniSearchProvider.
  */
-export function OmniSearchTrigger({ label }: { label: string }) {
+export function OmniSearchTrigger({ label, chip }: { label: string; chip: string }) {
   const { open } = useOmniSearch();
   return (
     <button
@@ -17,10 +14,12 @@ export function OmniSearchTrigger({ label }: { label: string }) {
       onClick={open}
       aria-label={label}
       title={label}
-      className="hidden shrink-0 items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.02] px-3 py-1 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-opus-warm/65 transition hover:border-opus-gold/45 hover:text-opus-gold-light sm:inline-flex"
+      className="hidden shrink-0 items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.02] px-3 py-1 text-[0.7rem] text-opus-warm/70 transition hover:border-opus-gold/45 hover:text-opus-gold-light sm:inline-flex"
     >
       <span aria-hidden>🔍</span>
-      <span aria-hidden>⌘ K</span>
+      <span aria-hidden className="font-sans">
+        {chip}
+      </span>
     </button>
   );
 }

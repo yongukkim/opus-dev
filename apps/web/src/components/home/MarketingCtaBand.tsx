@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { OpusButton } from "@opus/ui";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
@@ -28,12 +27,14 @@ export function MarketingCtaBand({ locale, m }: { locale: Locale; m: Messages })
         </h2>
         <p className={`mx-auto mt-4 max-w-md font-sans text-sm text-opus-warm/55 ${tight}`}>{c.body}</p>
         <div className="mt-10 flex w-full max-w-md flex-col items-center gap-6 sm:max-w-none">
-          <OpusButton
-            variant="primary"
-            className={ja ? "tracking-tight break-keep font-semibold" : undefined}
+          <Link
+            href={withLocale(locale, "/releases")}
+            className={`inline-flex items-center justify-center rounded-sm px-5 py-2.5 text-sm font-medium text-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/60 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal opus-surface-metallic ${
+              ja ? "tracking-tight break-keep font-semibold" : ""
+            }`.trim()}
           >
             {c.buy}
-          </OpusButton>
+          </Link>
           <div className="flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-3">
             <Link href={withLocale(locale, "/vault")} className={secondaryLinkClass}>
               {c.openVault}

@@ -1,7 +1,4 @@
-import { DesignPhilosophyBand } from "@/components/DesignPhilosophyBand";
 import { Hero } from "@/components/Hero";
-import { ChroniclePreview } from "@/components/home/ChroniclePreview";
-import { MarketingCtaBand } from "@/components/home/MarketingCtaBand";
 import { RailCuration } from "@/components/home/RailCuration";
 import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailProvenance } from "@/components/home/RailProvenance";
@@ -9,9 +6,7 @@ import { RailReleases } from "@/components/home/RailReleases";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
 import { OmniSearchHintCard } from "@/components/search/OmniSearchHintCard";
 import { getDictionary } from "@/i18n/catalog";
-import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { OpusButton } from "@opus/ui";
-import Link from "next/link";
+import { normalizeLocale } from "@/i18n/paths";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -52,33 +47,13 @@ export default async function HomePage({ params }: Props) {
       <OmniSearchHintCard
         prompt={m.search.hintCardPrompt}
         ariaLabel={m.search.hintCardAriaLabel}
+        chip={m.search.triggerChip}
         ja={locale === "ja"}
       />
       <main
         id="main-content"
         className="border-t border-opus-gold/10 bg-gradient-to-b from-opus-charcoal via-[#141414] to-opus-charcoal"
       >
-        <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-28">
-          <div className="max-w-2xl">
-            <p className="opus-text-metallic-soft text-xs font-medium uppercase tracking-[0.4em]">
-              {m.home.kicker}
-            </p>
-            <h1 className="mt-5 font-display text-3xl font-normal leading-tight tracking-wide text-opus-warm md:text-4xl lg:text-[2.65rem]">
-              {m.home.title}
-            </h1>
-            <p className="mt-6 font-sans text-base leading-relaxed text-opus-warm/72 md:text-lg">{m.home.lead}</p>
-            <div className="mt-10 flex flex-wrap items-center gap-5">
-              <OpusButton variant="primary">{m.home.buyCta}</OpusButton>
-              <Link
-                href={withLocale(locale, "/legal/specified-commercial")}
-                className="text-sm text-opus-warm/55 underline-offset-[5px] transition hover:text-opus-gold hover:underline"
-              >
-                {m.home.legalLink}
-              </Link>
-            </div>
-          </div>
-        </div>
-
         {/*
           Rail A · Releases (1차 / 新作公開). Per-artwork links + PRIMARY pill
           as of PR-5 (spec §3.3). Data source is still the file-system catalog
@@ -111,18 +86,7 @@ export default async function HomePage({ params }: Props) {
         */}
         <RailCuration locale={locale} m={m} />
 
-        {/*
-          The Chronicle preview — empty-state card finalized in PR-9
-          (spec §3.7). Visually commits to the phase-2 event vocabulary
-          and the `col-•••` masking format. Real `ChronicleEntry` rows
-          land in a follow-up PR after the Chronicle write cutover.
-        */}
-        <ChroniclePreview locale={locale} m={m} />
-
-        <DesignPhilosophyBand m={m} />
-
         <StatsTrustRow m={m} />
-        <MarketingCtaBand locale={locale} m={m} />
       </main>
     </>
   );
