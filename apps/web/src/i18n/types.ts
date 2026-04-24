@@ -739,6 +739,12 @@ export type Messages = {
     /** Uses `{title}` token. Root template appends ` | OPUS`. */
     listingsDetailMetaTitleTpl: string;
     listingsDetailMetaDescriptionTpl: string;
+    /**
+     * PR-20: aria-label for the `/artist/[slug]` cross-link on the
+     * provenance detail page. Rendered only when the listing's pen
+     * name resolves via `findArtistByPenName`. Uses `{name}` token.
+     */
+    listingsDetailViewArtistAria: string;
   };
   /** Seller eKYC consent (one UI language per locale; no KO/JA mix on one screen). */
   sellerVerifyConsent: {

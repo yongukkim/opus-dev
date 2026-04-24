@@ -696,6 +696,7 @@ export const ja: Messages = {
     listingsDetailMetaTitleTpl: "{title} — 来歴出品",
     listingsDetailMetaDescriptionTpl:
       "{title}の所蔵者移転（来歴）出品の詳細。作家本名・連絡先は公開されず、出品者識別子はマスキング表示されます。",
+    listingsDetailViewArtistAria: "{name}の作家紹介を開く",
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "セキュア接続を確立しています",
