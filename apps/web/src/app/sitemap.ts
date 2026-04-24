@@ -19,7 +19,7 @@ import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
  * correctly. The set of public routes is the union of:
  *
  *   Static:    /, /releases, /provenance, /curation, /featured-artists,
- *              /terms, /privacy, /legal/specified-commercial
+ *              /terms, /privacy, /legal/copyright, /legal/specified-commercial
  *   Dynamic:   /releases/[slug]       ← loadCatalogFiles
  *              /artist/[slug]         ← loadArtists (same selection rule
  *                                        used by Rail C, /featured-artists,
@@ -118,6 +118,11 @@ const STATIC_ROUTES: readonly RouteSpec[] = [
   { path: "/featured-artists", changeFrequency: "weekly", priority: 0.8 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
+  {
+    path: "/legal/copyright",
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
   {
     path: "/legal/specified-commercial",
     changeFrequency: "yearly",

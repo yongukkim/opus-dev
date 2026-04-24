@@ -12,6 +12,9 @@ export const ko: Messages = {
     termsTitle: "이용약관",
     termsDescription:
       "OPUS 서비스 이용약관(초안). 법무 최종 확정 전 템플릿입니다.",
+    copyrightTitle: "저작권·이용 안내",
+    copyrightDescription:
+      "OPUS에 게시·발매되는 인증 에디션의 저작권 귀속과 이용 범위에 대한 안내입니다. 법무 확정 전 일반 안내 초안입니다.",
     curationIndexTitle: "큐레이션 셸프",
     curationIndexDescription:
       "운영팀이 주제별로 엮은 큐레이션 셸프 모음입니다. OPUS의 작품을 새로운 시선으로 만나보세요.",
@@ -213,6 +216,7 @@ export const ko: Messages = {
     legal: "특정상거래법 표시",
     privacy: "개인정보 처리방침",
     terms: "이용약관",
+    copyright: "저작권·이용 안내",
     chronicleTrust: "The Chronicle 기술을 통한 기록 무결성 검증",
     appRequiredTitle: "앱 설치",
     appRequiredBody: "구매 후 고해상도 감상은 OPUS 앱에서만 제공됩니다.",
@@ -233,6 +237,13 @@ export const ko: Messages = {
     lead: "디지털 아트 에디션의 인증·소유·감상 경험을 규정합니다. 투자·금융 상품으로의 해석을 목적으로 하지 않습니다.",
     body:
       "서비스 범위, 계정·역할(작가·이용자·운영), 저작권·라이선스, The Chronicle 기록, 금지 행위, 책임 제한, 준거법·분쟁 해결 절차를 명시합니다. NFT는 기술 수단이며, 복제 불가능한 디지털 아트의 출처·에디션 표시를 위한 것입니다.",
+  },
+  legalCopyright: {
+    back: "← 홈으로",
+    title: "저작권·이용 안내",
+    lead: "각 작품의 저작권은 작가에게 귀속됩니다. 본 페이지는 마크다운 원고를 불러올 수 없을 때 표시되는 요약입니다.",
+    body:
+      "OPUS에 표시되는 복제 불가능한 디지털 아트는 작가가 부여한 범위 내에서 개인적 감상·소장 목적의 이용을 전제로 합니다. 무단 복제·배포·상업적 이용은 금지됩니다. 에디션별 세부 조건은 작품 상세 및 이용약관을 함께 확인하십시오. 법적 확정은 법무 검토 후 갱신됩니다.",
   },
   vaultNav: {
     overview: "개요",

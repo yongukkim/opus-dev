@@ -12,6 +12,9 @@ export const ja: Messages = {
     termsTitle: "利用規約",
     termsDescription:
       "OPUSの利用規約（案）です。法務で最終確定のうえ、公開してください。",
+    copyrightTitle: "著作権・利用について",
+    copyrightDescription:
+      "OPUSに掲載・提供される認定エディションの著作権帰属と利用範囲の案内です。法務確定前の一般案内です。",
     curationIndexTitle: "キュレーションシェルフ",
     curationIndexDescription:
       "運営チームがテーマ別にまとめたキュレーションシェルフの一覧です。OPUSの作品を新しい切り口で。",
@@ -215,6 +218,7 @@ export const ja: Messages = {
     legal: "特定商取引法に基づく表記",
     privacy: "プライバシーポリシー",
     terms: "利用規約",
+    copyright: "著作権・利用について",
     chronicleTrust: "The Chronicle Technology により検証されています。",
     appRequiredTitle: "アプリのインストール",
     appRequiredBody: "購入後の高画質鑑賞は OPUS モバイルアプリでのみ提供されます。",
@@ -237,6 +241,13 @@ export const ja: Messages = {
       "認証されたデジタルアート・エディションの体験を規定します。投資・金融商品としての位置づけを目的とはしません。",
     body:
       "サービス範囲、アカウントと役割（作家・利用者・運営）、著作権・ライセンス、The Chronicleの記録、禁止事項、責任制限、準拠法・紛争解決を定めます。NFTは技術的手段であり、複製不可デジタルアートの真正性・エディション表示のために用います。",
+  },
+  legalCopyright: {
+    back: "← トップへ",
+    title: "著作権・利用について",
+    lead: "各作品の著作権は作家に帰属します。Markdown原稿を読み込めない場合に表示される要約です。",
+    body:
+      "OPUSで表示される複製不可のデジタルアートは、作家が付与した範囲内での個人的鑑賞・所蔵を前提とします。無断複製・頒布・商用利用は禁止されます。エディションごとの条件は作品詳細および利用規約もあわせてご確認ください。法務確定後に更新します。",
   },
   vaultNav: {
     overview: "概要",

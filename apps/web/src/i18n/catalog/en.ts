@@ -12,6 +12,9 @@ export const en: Messages = {
     termsTitle: "Terms of use",
     termsDescription:
       "Draft OPUS terms of use. Update after legal sign-off.",
+    copyrightTitle: "Copyright & permitted use",
+    copyrightDescription:
+      "How rights in authenticated editions listed on OPUS are held and what personal use covers. General notice draft pending legal review.",
     curationIndexTitle: "Curated shelves",
     curationIndexDescription:
       "Operator-curated shelves grouping OPUS works by theme. A second reading of the archive.",
@@ -214,6 +217,7 @@ export const en: Messages = {
     legal: "Specified commercial disclosures (Japan)",
     privacy: "Privacy policy",
     terms: "Terms of use",
+    copyright: "Copyright & permitted use",
     chronicleTrust: "Verified by The Chronicle Technology",
     appRequiredTitle: "App required",
     appRequiredBody: "High-fidelity viewing after purchase is provided only in the OPUS mobile app.",
@@ -234,6 +238,13 @@ export const en: Messages = {
     lead: "Governs authenticated digital art editions and collector experience — not investment or financial products.",
     body:
       "Covers service scope, roles (artist, collector, operator), copyright and licensing, The Chronicle records, prohibited conduct, limitations of liability, and governing law / dispute resolution. NFT technology is a means to evidence provenance and edition authenticity for non-fungible digital art.",
+  },
+  legalCopyright: {
+    back: "← Back home",
+    title: "Copyright & permitted use",
+    lead: "Copyright in each work remains with the artist. This summary appears when the markdown source cannot be loaded.",
+    body:
+      "Non-fungible digital art shown on OPUS is offered for personal appreciation and custody within the scope the artist grants. Copying, redistribution, or commercial exploitation without permission is prohibited. Check each edition’s detail page together with the terms of use. This notice will be updated after legal review.",
   },
   vaultNav: {
     overview: "Overview",

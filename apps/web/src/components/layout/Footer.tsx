@@ -79,8 +79,13 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
-          <div>
+        {/*
+          At lg, use zero grid gap + symmetric column padding + vertical dividers
+          so the space between readable blocks feels even (short nav in col 1 no
+          longer leaves a huge empty band before col 2).
+        */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-0 lg:gap-y-0 lg:divide-x lg:divide-white/[0.08]">
+          <div className="lg:min-w-0 lg:pr-8">
             <p className={headingClass}>Service</p>
             <p
               className={`opus-text-metallic-soft mt-4 font-display text-xs ${ja ? "font-semibold tracking-tight" : "tracking-[0.2em]"}`}
@@ -103,7 +108,7 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
             </nav>
           </div>
 
-          <div>
+          <div className="lg:min-w-0 lg:px-8">
             <p className={headingClass}>The Chronicle</p>
             <p
               className={`mt-6 text-sm leading-relaxed text-opus-gold/42 ${ja ? "tracking-tight break-keep font-medium" : ""}`}
@@ -112,7 +117,7 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
             </p>
           </div>
 
-          <div>
+          <div className="lg:min-w-0 lg:px-8">
             <p className={headingClass}>Legal</p>
             <nav className="mt-6 flex flex-col gap-2.5" aria-label="Legal documents">
               <Link href={withLocale(locale, "/privacy")} className={linkClass}>
@@ -127,10 +132,13 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
               <Link href={withLocale(locale, "/terms")} className={linkClass}>
                 {m.footer.terms}
               </Link>
+              <Link href={withLocale(locale, "/legal/copyright")} className={linkClass}>
+                {m.footer.copyright}
+              </Link>
             </nav>
           </div>
 
-          <div>
+          <div className="lg:min-w-0 lg:pl-8">
             <p className={headingClass}>Contact</p>
             <p className="mt-6 text-sm leading-relaxed text-opus-gold/42">
               Placeholder — replace before launch.

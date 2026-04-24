@@ -28,6 +28,8 @@ export type Messages = {
     privacyDescription: string;
     termsTitle: string;
     termsDescription: string;
+    copyrightTitle: string;
+    copyrightDescription: string;
     /** PR-16: public-route metadata. Titles are appended with ` | OPUS`
      *  by the root `title.template`, so these are the leading phrase. */
     curationIndexTitle: string;
@@ -313,6 +315,8 @@ export type Messages = {
     legal: string;
     privacy: string;
     terms: string;
+    /** Footer link to copyright & permitted-use notice for listed editions. */
+    copyright: string;
     /** Technical integrity line (Chronicle); KO/JA/EN per locale. */
     chronicleTrust: string;
     appRequiredTitle: string;
@@ -323,6 +327,7 @@ export type Messages = {
   };
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
+  legalCopyright: { back: string; title: string; lead: string; body: string };
   vaultNav: {
     overview: string;
     collection: string;
