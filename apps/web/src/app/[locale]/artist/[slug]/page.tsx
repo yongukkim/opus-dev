@@ -4,10 +4,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { resolveArtistBySlug } from "@/lib/artistsCatalog";
 import { encodeArtworkSlug, parseTitleArtist } from "@/lib/artworksCatalog";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
-import { resolveArtistBySlug } from "@/lib/artistsCatalog";
 import { loadShelvesForArtistKey } from "@/lib/curationCatalog";
+import { buildArtistJsonLd } from "@/lib/jsonLdPdp";
 
 /**
  * `/[locale]/artist/[slug]` — PR-10 cutover for the home redesign series.
@@ -75,8 +77,18 @@ export default async function ArtistPage({ params }: Props) {
   // catalog won't render here either.
   const relatedShelves = await loadShelvesForArtistKey(artist.key);
   const ts = t.shelves;
+  const firstWorkFile = artist.works[0]?.file;
 
   return (
+    <>
+      <JsonLd
+        data={buildArtistJsonLd({
+          locale,
+          slug,
+          penName: artist.penName,
+          firstWorkFile,
+        })}
+      />
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-5xl">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/40">
@@ -218,5 +230,6 @@ export default async function ArtistPage({ params }: Props) {
         </div>
       </div>
     </main>
+    </>
   );
 }
