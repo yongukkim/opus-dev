@@ -35,9 +35,26 @@ export type SearchListing = {
   badge: "secondary";
 };
 
+/**
+ * Operator-curated shelf entry (PR-14). The index carries one row per
+ * shelf with a preview-free, translation-aware payload: the modal picks
+ * the active locale's title/description at render time. `itemCount` is
+ * the post-resolution count (catalog hits only), which means shelves
+ * whose refs all drop in resolution land as `itemCount === 0` and
+ * should be filtered out of the index at build time.
+ */
+export type SearchShelf = {
+  id: string;
+  title: { ko: string; ja: string; en: string };
+  description: { ko: string; ja: string; en: string };
+  itemCount: number;
+  href: string;
+};
+
 export type SearchIndex = {
   generatedAt: string;
   artworks: SearchArtwork[];
   artists: SearchArtist[];
   listings: SearchListing[];
+  shelves: SearchShelf[];
 };

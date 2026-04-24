@@ -11,6 +11,7 @@ import type {
   SearchArtist,
   SearchArtwork,
   SearchListing,
+  SearchShelf,
 } from "@/lib/searchIndex.types";
 import { useOmniSearch } from "./OmniSearchProvider";
 
@@ -40,7 +41,7 @@ import { useOmniSearch } from "./OmniSearchProvider";
  *     introduces investment / yield language.
  */
 
-type Scope = "all" | "artwork" | "artist" | "listing";
+type Scope = "all" | "artwork" | "artist" | "listing" | "shelf";
 const PER_GROUP_LIMIT = 8;
 
 const jpyFormatter = new Intl.NumberFormat("ja-JP");
@@ -103,11 +104,13 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
       artworks: [] as SearchArtwork[],
       artists: [] as SearchArtist[],
       listings: [] as SearchListing[],
+      shelves: [] as SearchShelf[],
     };
     if (!index) return empty;
     const wantArtworks = scope === "all" || scope === "artwork";
     const wantArtists = scope === "all" || scope === "artist";
     const wantListings = scope === "all" || scope === "listing";
+    const wantShelves = scope === "all" || scope === "shelf";
 
     const artworks = wantArtworks
       ? index.artworks.filter((a) =>
@@ -122,12 +125,25 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
           matches(`${l.artworkTitle} ${l.artistPenName}`, tokens),
         )
       : [];
+    // Shelves search the active-locale title + description (plus id so a
+    // query like "highlights" still lands on an id-shaped shelf).
+    const shelves = wantShelves
+      ? (index.shelves ?? []).filter((s) =>
+          matches(
+            `${s.title[locale]} ${s.description[locale]} ${s.id}`,
+            tokens,
+          ),
+        )
+      : [];
 
-    return { artworks, artists, listings };
-  }, [index, scope, tokens]);
+    return { artworks, artists, listings, shelves };
+  }, [index, scope, tokens, locale]);
 
   const totalCount =
-    filtered.artworks.length + filtered.artists.length + filtered.listings.length;
+    filtered.artworks.length +
+    filtered.artists.length +
+    filtered.listings.length +
+    filtered.shelves.length;
 
   const navigateAndClose = (href: string) => {
     router.push(withLocale(locale, href));
@@ -138,6 +154,7 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
     { id: "all", label: t.scopeAll },
     { id: "artwork", label: t.scopeArtwork },
     { id: "artist", label: t.scopeArtist },
+    { id: "shelf", label: t.scopeShelf },
     { id: "listing", label: t.scopeListing },
   ];
 
@@ -269,6 +286,31 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
                       </span>
                       <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/55">
                         {t.worksCount.replace("{n}", String(a.worksCount))}
+                      </span>
+                    </Command.Item>
+                  ))}
+                </Command.Group>
+              )}
+
+              {filtered.shelves.length > 0 && (
+                <Command.Group heading={t.groupShelves} className="px-1 py-2">
+                  {filtered.shelves.slice(0, PER_GROUP_LIMIT).map((s) => (
+                    <Command.Item
+                      key={`sh-${s.id}`}
+                      value={`sh-${s.id}`}
+                      onSelect={() => navigateAndClose(s.href)}
+                      className="flex cursor-pointer items-start justify-between gap-3 rounded px-3 py-2 text-sm text-opus-warm/85 aria-selected:bg-white/[0.05] aria-selected:text-opus-warm"
+                    >
+                      <span className="min-w-0">
+                        <span className="opus-text-metallic block truncate font-display tracking-wide">
+                          {s.title[locale]}
+                        </span>
+                        <span className="mt-0.5 line-clamp-2 block font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/45">
+                          {s.description[locale]}
+                        </span>
+                      </span>
+                      <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/55">
+                        {t.itemsCount.replace("{n}", String(s.itemCount))}
                       </span>
                     </Command.Item>
                   ))}

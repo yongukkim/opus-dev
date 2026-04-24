@@ -82,12 +82,18 @@ export type Messages = {
     scopeArtwork: string;
     scopeArtist: string;
     scopeListing: string;
+    /** PR-14: operator-curated shelves scope. */
+    scopeShelf: string;
     /** Result group headers. */
     groupArtworks: string;
     groupArtists: string;
     groupListings: string;
+    /** PR-14: shelf group header. */
+    groupShelves: string;
     /** Per-row meta strings. `worksCount` uses `{n}` token. */
     worksCount: string;
+    /** PR-14: shelf row meta — total items on the shelf; uses `{n}`. */
+    itemsCount: string;
     /** Empty state when query has no matches. */
     empty: string;
     /** Empty state CTAs (links into Releases / Provenance). */
