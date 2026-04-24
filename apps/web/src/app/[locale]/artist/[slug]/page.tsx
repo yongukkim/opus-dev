@@ -6,6 +6,7 @@ import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { encodeArtworkSlug, parseTitleArtist } from "@/lib/artworksCatalog";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { resolveArtistBySlug } from "@/lib/artistsCatalog";
+import { loadShelvesForArtistKey } from "@/lib/curationCatalog";
 
 /**
  * `/[locale]/artist/[slug]` — PR-10 cutover for the home redesign series.
@@ -45,6 +46,13 @@ export default async function ArtistPage({ params }: Props) {
     const { title } = parseTitleArtist(w.file, w.globalIndex);
     return { file: w.file, slug: encodeArtworkSlug(w.file), title };
   });
+
+  // PR-15: surface operator-curated shelves that include this artist.
+  // `loadShelvesForArtistKey` runs the same resolution as Rail D and
+  // `/curation`, so a shelf whose refs have all dropped from the live
+  // catalog won't render here either.
+  const relatedShelves = await loadShelvesForArtistKey(artist.key);
+  const ts = t.shelves;
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
@@ -134,6 +142,49 @@ export default async function ArtistPage({ params }: Props) {
             </ul>
           )}
         </section>
+
+        {relatedShelves.length > 0 && (
+          <section
+            className="mt-16 border-t border-white/[0.06] pt-10"
+            aria-labelledby="artist-shelves-heading"
+          >
+            <h2
+              id="artist-shelves-heading"
+              className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45"
+            >
+              {ts.heading}
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-opus-warm/55">{ts.lead}</p>
+
+            <ul className="mt-8 grid gap-4 md:grid-cols-2">
+              {relatedShelves.map((s) => (
+                <li key={s.id}>
+                  <Link
+                    href={withLocale(locale, `/curation/${encodeURIComponent(s.id)}`)}
+                    className="group flex h-full flex-col justify-between gap-4 rounded-lg border border-white/[0.08] bg-opus-slate/30 px-5 py-5 shadow-opus-card transition hover:border-opus-gold/38"
+                  >
+                    <div className="min-w-0">
+                      <p className="opus-text-metallic font-display text-lg tracking-wide">
+                        {s.title[locale]}
+                      </p>
+                      <p className="mt-2 line-clamp-3 text-sm text-opus-warm/60">
+                        {s.description[locale]}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="rounded-full border border-white/[0.12] px-3 py-1 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-opus-warm/65">
+                        {ts.itemsCount.replace("{n}", String(s.itemCount))}
+                      </span>
+                      <span className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-opus-gold/75 transition group-hover:text-opus-gold-light">
+                        {ts.viewShelf} →
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <div className="mt-16 border-t border-white/[0.06] pt-8">
           <Link

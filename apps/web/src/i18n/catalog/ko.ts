@@ -100,6 +100,12 @@ export const ko: Messages = {
     notFoundTitle: "작가를 찾을 수 없습니다",
     notFoundBody: "요청하신 작가는 더 이상 공개되지 않았거나 주소가 변경되었습니다.",
     notFoundCta: "작가 셸프 다시 보기",
+    shelves: {
+      heading: "등장 셸프",
+      lead: "운영팀이 이 작가의 작품을 함께 엮어둔 셸프입니다.",
+      itemsCount: "작품 {n}점",
+      viewShelf: "셸프 열기",
+    },
   },
   auth: {
     signIn: "로그인",

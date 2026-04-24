@@ -100,6 +100,12 @@ export const en: Messages = {
     notFoundTitle: "Artist not found",
     notFoundBody: "This artist may have been retired from public surfaces, or the URL has changed.",
     notFoundCta: "Browse featured artists",
+    shelves: {
+      heading: "Appears on these shelves",
+      lead: "Operator-curated shelves that include this artist's work.",
+      itemsCount: "{n} works",
+      viewShelf: "Open shelf",
+    },
   },
   auth: {
     signIn: "Sign in",
