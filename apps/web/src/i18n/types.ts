@@ -326,6 +326,8 @@ export type Messages = {
     appRequiredIos: string;
     appRequiredAndroid: string;
     appRequiredComingSoon: string;
+    /** Strapline under the enclosure mark in the site footer. */
+    securedByLine: string;
   };
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };

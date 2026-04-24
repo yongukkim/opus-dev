@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useId, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
@@ -51,7 +51,7 @@ function hintClass(): string {
 
 function sectionRule(title: string) {
   return (
-    <div className="mt-8 border-t border-white/[0.08] pt-6 first:mt-0 first:border-t-0 first:pt-0">
+    <div className="mt-8 border-t border-white/[0.08] pt-6">
       <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.24em]">{title}</p>
     </div>
   );
@@ -68,6 +68,7 @@ export function CollectorTransferRegisterForm({
 }) {
   const t = m.collectorTransfer;
   const apiRole = vaultRole === "artist" ? "artist" : "collector";
+  const saleModeRadioName = useId();
 
   const [saleMode, setSaleMode] = useState<"fixed" | "auction">("fixed");
 
@@ -310,6 +311,68 @@ export function CollectorTransferRegisterForm({
           </div>
         </div>
 
+        {sectionRule(t.sectionSaleMode)}
+        <div className="mt-4" role="radiogroup" aria-label={t.sectionSaleMode}>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <label
+              className={`grid w-full min-w-0 cursor-pointer grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1.5 rounded-lg border p-4 text-left font-sans transition ${
+                saleMode === "fixed"
+                  ? "border-opus-gold/50 bg-opus-gold/[0.12]"
+                  : "border-white/[0.14] bg-opus-slate/25 hover:border-opus-gold/30"
+              }`}
+            >
+              <input
+                type="radio"
+                name={saleModeRadioName}
+                value="fixed"
+                checked={saleMode === "fixed"}
+                onChange={() => setSaleMode("fixed")}
+                className="row-span-2 mt-1 h-4 w-4 shrink-0 self-start border-white/[0.35] bg-opus-charcoal accent-opus-gold focus:ring-1 focus:ring-opus-gold/40"
+              />
+              <span
+                className="min-w-0 text-sm font-semibold leading-snug tracking-tight text-[#f6f4f0]"
+                style={{ color: "#f6f4f0", WebkitTextFillColor: "#f6f4f0" }}
+              >
+                {t.saleModeFixedLabel}
+              </span>
+              <span
+                className="min-w-0 text-xs leading-relaxed text-[#c9c3b8]"
+                style={{ color: "#c9c3b8", WebkitTextFillColor: "#c9c3b8" }}
+              >
+                {t.saleModeFixedDescription}
+              </span>
+            </label>
+            <label
+              className={`grid w-full min-w-0 cursor-pointer grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1.5 rounded-lg border p-4 text-left font-sans transition ${
+                saleMode === "auction"
+                  ? "border-opus-gold/50 bg-opus-gold/[0.12]"
+                  : "border-white/[0.14] bg-opus-slate/25 hover:border-opus-gold/30"
+              }`}
+            >
+              <input
+                type="radio"
+                name={saleModeRadioName}
+                value="auction"
+                checked={saleMode === "auction"}
+                onChange={() => setSaleMode("auction")}
+                className="row-span-2 mt-1 h-4 w-4 shrink-0 self-start border-white/[0.35] bg-opus-charcoal accent-opus-gold focus:ring-1 focus:ring-opus-gold/40"
+              />
+              <span
+                className="min-w-0 text-sm font-semibold leading-snug tracking-tight text-[#f6f4f0]"
+                style={{ color: "#f6f4f0", WebkitTextFillColor: "#f6f4f0" }}
+              >
+                {t.saleModeAuctionLabel}
+              </span>
+              <span
+                className="min-w-0 text-xs leading-relaxed text-[#c9c3b8]"
+                style={{ color: "#c9c3b8", WebkitTextFillColor: "#c9c3b8" }}
+              >
+                {t.saleModeAuctionDescription}
+              </span>
+            </label>
+          </div>
+        </div>
+
         {sectionRule(t.sectionArtist)}
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <div>
@@ -428,56 +491,6 @@ export function CollectorTransferRegisterForm({
         </div>
 
         {sectionRule(t.sectionOffer)}
-        <fieldset className="mt-4">
-          <legend className={labelClass()}>{t.sectionSaleMode}</legend>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            <label
-              className={`flex cursor-pointer gap-3 rounded-lg border p-4 transition ${
-                saleMode === "fixed"
-                  ? "border-opus-gold/45 bg-opus-gold/[0.07]"
-                  : "border-white/[0.1] bg-black/10 hover:border-white/[0.16]"
-              }`}
-            >
-              <input
-                type="radio"
-                name="opusTransferSaleMode"
-                value="fixed"
-                checked={saleMode === "fixed"}
-                onChange={() => setSaleMode("fixed")}
-                className="mt-1 h-4 w-4 shrink-0 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
-              />
-              <span>
-                <span className="block text-sm font-medium text-opus-warm">{t.saleModeFixedLabel}</span>
-                <span className="mt-1 block text-xs leading-relaxed text-opus-warm/50">
-                  {t.saleModeFixedDescription}
-                </span>
-              </span>
-            </label>
-            <label
-              className={`flex cursor-pointer gap-3 rounded-lg border p-4 transition ${
-                saleMode === "auction"
-                  ? "border-opus-gold/45 bg-opus-gold/[0.07]"
-                  : "border-white/[0.1] bg-black/10 hover:border-white/[0.16]"
-              }`}
-            >
-              <input
-                type="radio"
-                name="opusTransferSaleMode"
-                value="auction"
-                checked={saleMode === "auction"}
-                onChange={() => setSaleMode("auction")}
-                className="mt-1 h-4 w-4 shrink-0 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
-              />
-              <span>
-                <span className="block text-sm font-medium text-opus-warm">{t.saleModeAuctionLabel}</span>
-                <span className="mt-1 block text-xs leading-relaxed text-opus-warm/50">
-                  {t.saleModeAuctionDescription}
-                </span>
-              </span>
-            </label>
-          </div>
-        </fieldset>
-
         <div className="mt-6 max-w-md">
           <p className={labelClass()}>
             {saleMode === "auction" ? t.priceLabelAuction : t.priceLabelFixed}

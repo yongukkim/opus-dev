@@ -21,7 +21,9 @@ export function VaultAuthGate({
 
   return (
     <main className="p-6 md:p-10">
-      <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">Vault</p>
+      <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
+        {m.vault.overviewKicker}
+      </p>
       <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{s.authGateTitle}</h1>
       <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">{s.authGateBody}</p>
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">

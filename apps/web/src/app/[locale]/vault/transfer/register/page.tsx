@@ -1,4 +1,4 @@
-import { CollectorTransferRegisterForm } from "@/components/collector/CollectorTransferRegisterForm";
+import { CollectorTransferRegisterFormClient } from "@/components/collector/CollectorTransferRegisterFormClient";
 import { VaultAuthGate } from "@/components/vault/VaultAuthGate";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { cookies, headers } from "next/headers";
 import { getVaultUiRoleFromCookies, type VaultUiRole } from "@/lib/vaultRole";
 import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -20,6 +21,7 @@ function previewQueryOn(sp: { preview?: string | string[] }): boolean {
 }
 
 export default async function VaultTransferRegisterPage({ params, searchParams }: Props) {
+  noStore();
   const { locale: raw } = await params;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
@@ -68,7 +70,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
       <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">{t.registerKicker}</p>
       <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{t.registerTitle}</h1>
       <p className="mt-4 max-w-2xl text-sm leading-relaxed text-opus-warm/55">{t.registerSubtitle}</p>
-      <CollectorTransferRegisterForm locale={locale} m={m} vaultRole={vaultRole} />
+      <CollectorTransferRegisterFormClient locale={locale} m={m} vaultRole={vaultRole} />
       <div className="mt-10 flex flex-wrap gap-4 text-sm">
         <Link
           href={withLocale(locale, "/provenance")}
@@ -77,7 +79,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
           {m.nav.provenance}
         </Link>
         <Link href={withLocale(locale, "/vault")} className="text-opus-warm/45 hover:text-opus-warm/70">
-          ← Vault
+          ← {m.nav.vault}
         </Link>
       </div>
     </main>

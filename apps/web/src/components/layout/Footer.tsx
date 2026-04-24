@@ -163,7 +163,7 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
             <VaultEnclosureIcon className="h-11 w-11" />
           </div>
           <p className="mt-4 font-mono text-[0.65rem] uppercase tracking-[0.32em] text-opus-gold/45">
-            Secured by The Vault
+            {m.footer.securedByLine}
           </p>
         </div>
 

@@ -28,7 +28,9 @@ export default async function VaultPayoutsPage({ params }: Props) {
   return (
     <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
       <div className="mx-auto max-w-3xl">
-        <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">Vault</p>
+        <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
+          {m.vault.overviewKicker}
+        </p>
         <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{m.payouts.title}</h1>
         <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">{m.payouts.subtitle}</p>
 

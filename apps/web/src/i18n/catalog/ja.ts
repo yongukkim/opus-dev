@@ -5,7 +5,7 @@ export const ja: Messages = {
     siteDescription:
       "OPUSは、認証された代替不可能なデジタルアート・エディションとThe Chronicleを提供します。収集・鑑賞の体験のために設計されており、投資商品ではありません。",
     ogDescription:
-      "プレミアム・デジタルアート・アーカイブです。チャコール、シャンパン・ブラス、来歴とVaultを備え、投資商品ではありません。",
+      "プレミアム・デジタルアート・アーカイブです。チャコール、シャンパン・ブラス、来歴とマイページを備え、投資商品ではありません。",
     privacyTitle: "プライバシーポリシー",
     privacyDescription:
       "OPUSのプライバシーポリシー（案）です。法務確認およびAPPI整合のうえ、公開してください。",
@@ -210,7 +210,7 @@ export const ja: Messages = {
   },
   footer: {
     about:
-      "デジタル名作のアーカイブです。認定エディション、コレクターの来歴、Vaultをご利用いただけます。",
+      "デジタル名作のアーカイブです。認定エディション、コレクターの来歴、マイページをご利用いただけます。",
     design:
       "デザインはClassic Luxuryです。near-blackのチャコール、シャンパン・ブラス（グラデーションの金属表現）、ウォームホワイト、抑制された装飾を用います。投資・実物資産商品ではありません。",
     releases: "新作公開",
@@ -226,6 +226,7 @@ export const ja: Messages = {
     appRequiredIos: "iPhone",
     appRequiredAndroid: "Android",
     appRequiredComingSoon: "準備中",
+    securedByLine: "OPUSで保護されています",
   },
   legalPrivacy: {
     back: "← トップへ",
@@ -279,7 +280,7 @@ export const ja: Messages = {
     startPending: "処理中…",
     startNote: "本画面はデモです。本番は提供者連携とセッション管理に移行します。",
     startNotReadyAlert: "本人確認連携は準備中です。（デモ）しばらくしてから再度お試しください。",
-    backToVault: "← Vaultへ",
+    backToVault: "← マイページへ",
   },
   payouts: {
     title: "精算/口座登録",
@@ -300,7 +301,7 @@ export const ja: Messages = {
   },
   artistProfile: {
     title: "作家プロフィール",
-    subtitle: "Vaultおよびアーカイブに表示される作家情報を設定します。（デモUI）",
+    subtitle: "マイページおよびアーカイブに表示される作家情報を設定します。（デモUI）",
     heading: "プロフィール設定",
     body:
       "表示名と紹介文を管理します。現在はフロー確認用のデモであり、保存/審査ロジックは次の段階で連携します。",
@@ -317,7 +318,7 @@ export const ja: Messages = {
     title: "提出完了",
     body: "作品の提出が完了しました。「自分の作品」で提出履歴とプレビューを確認できます。",
     toMyArtworks: "自分の作品へ",
-    toVault: "Vaultへ",
+    toVault: "マイページへ",
   },
   accountSettings: {
     title: "会員情報",
@@ -482,7 +483,7 @@ export const ja: Messages = {
       body: "一次発行と二次移転がマスクされて流れる場所です。",
       eventPrimary: "一次発行",
       eventSecondary: "二次移転",
-      eventVaultNote: "保管庫メモ",
+      eventVaultNote: "マイページメモ",
       maskLegend: "識別子は col-••• 形式でマスクされます。",
     },
   },
@@ -496,7 +497,7 @@ export const ja: Messages = {
   marketing: {
     title: "コレクションを、公式の記録とともに。",
     body:
-      "アーカイブの閲覧、Vaultの管理、決済はウェブから行えます。鑑賞はアプリで行えます。実物資産や金融商品ではなく、複製不可デジタルアートの体験を提供します。",
+      "アーカイブの閲覧、マイページの管理、決済はウェブから行えます。鑑賞はアプリで行えます。実物資産や金融商品ではなく、複製不可デジタルアートの体験を提供します。",
     buy: "購入・決済へ進む",
     openVault: "My Pageを開く",
     openProvenance: "来歴を見る",
@@ -553,7 +554,7 @@ export const ja: Messages = {
     detailPrecautionBullets: [
       "デジタルエディションは複製不可・認証記録とともに提供されます。購入確定後の返金・キャンセルが制限される場合があります（デモ案内）。",
       "鑑賞環境・アプリのバージョンにより表示が異なる場合があります。購入前に推奨環境をご確認ください。",
-      "ウェブ表示は解像度を抑えたサムネイル・プレビューです。詳細画面でも未ログイン時は低解像・ウォーターマークのみで、デモログイン（Vaultセッション）後は同じ枠でより鮮明な（ウォーターマーク付き）プレビューに切り替わります。原寸マスターファイルではありません。",
+      "ウェブ表示は解像度を抑えたサムネイル・プレビューです。詳細画面でも未ログイン時は低解像・ウォーターマークのみで、デモでマイページにサインインした後は同じ枠でより鮮明な（ウォーターマーク付き）プレビューに切り替わります。原寸マスターファイルではありません。",
       "本画面の価格・在庫はデモ用であり、実際の販売は作家・運営ポリシーに従います。",
       "決済・税・領収表示は実装時に確定し、現状はフロー確認用です。",
     ],
@@ -583,12 +584,12 @@ export const ja: Messages = {
     back: "← アーカイブへ",
   },
   purchaseSuccess: {
-    kicker: "The Vault",
+    kicker: "マイページ",
     title: "購入完了",
     subtitle: "所有体験のはじまりです。",
-    body: "購入が完了しました。Vaultで保管情報と来歴（プロビナンス）をご確認いただけます。",
-    bodyWithArtwork: "購入が完了しました: {artwork}。Vaultで保管情報と来歴（プロビナンス）をご確認いただけます。",
-    toVault: "Vaultへ移動",
+    body: "購入が完了しました。マイページで保管情報と来歴（プロビナンス）をご確認いただけます。",
+    bodyWithArtwork: "購入が完了しました: {artwork}。マイページで保管情報と来歴（プロビナンス）をご確認いただけます。",
+    toVault: "マイページへ移動",
     backToArchive: "← アーカイブへ戻る",
   },
   artistArtworks: {
@@ -599,11 +600,11 @@ export const ja: Messages = {
       "表示する登録作品がありません。登録が完了しているか、以下の作家IDが正しいかご確認ください。",
     devHint:
       "開発用：URLに ?artist=作家ID を付けると、そのIDで登録された作品を読み込みます（作品登録フォームの Actor userId など）。",
-    backVault: "← Vaultへ",
+    backVault: "← マイページへ",
     backHome: "← トップへ",
   },
   vault: {
-    overviewKicker: "Vault",
+    overviewKicker: "マイページ",
     overviewTitle: "概要",
     overviewBody:
       "プライベート保管中のコレクション状態、通知、Chronicleの更新履歴を、この画面で確認できます。",
@@ -617,15 +618,15 @@ export const ja: Messages = {
     settingsBody: "アカウント・通知・セキュリティのプレースホルダです。",
     artistGateTitle: "出品者向けの機能",
     artistGateSubmitBody:
-      "作品登録は作家（出品者）アカウントのみが利用できます。一般会員の方はVaultのコレクション・アクティビティ等をご利用ください。本番ではサインイン時の役割に応じて自動的に切り替わります。",
+      "作品登録は作家（出品者）アカウントのみが利用できます。一般会員の方はマイページのコレクション・アクティビティ等をご利用ください。本番ではサインイン時の役割に応じて自動的に切り替わります。",
     artistGateMyArtworksBody:
-      "登録作品の管理は作家アカウントのみが利用できます。一般会員のVaultには表示されません。",
+      "登録作品の管理は作家アカウントのみが利用できます。一般会員のマイページには表示されません。",
     artistGatePayoutsBody:
       "精算/口座登録は作家アカウントのみが利用できます。本番ではサインイン時の役割と権限に応じて自動的に切り替わります。",
     artistGateProfileBody:
       "作家プロフィール/設定は作家アカウントのみが利用できます。本番ではサインイン時の役割と権限に応じて自動的に切り替わります。",
     artistGateSignupCta: "作家として登録する",
-    artistGateBackVault: "← Vault概要へ",
+    artistGateBackVault: "← マイページ概要へ",
     artistKycGateBody:
       "作家機能を利用するには本人確認（デモ）の完了が必要です。本番ではeKYC提供者連携とセッション認可に移行します。",
     artistKycGateCta: "本人確認を続ける",
@@ -670,7 +671,7 @@ export const ja: Messages = {
     tagsLabel: "タグ",
     tagsHint: "カンマ区切り（任意）",
     editionRefLabel: "エディション・記録参照",
-    editionRefHint: "例：Edition 3/50、Chronicle参照、Vault表示名など（任意）",
+    editionRefHint: "例：Edition 3/50、Chronicle参照、マイページ表示名など（任意）",
     priceLabelFixed: "提示額（円）",
     priceHintFixed:
       "作家による定価ではなく、所有権を移転する現在の保有者が提示する表示金額です。次の所蔵者との合意・決済は別フローです。（デモ）",
@@ -681,7 +682,7 @@ export const ja: Messages = {
     noteHint: "鑑賞環境・受け渡し条件など（任意）",
     rightsConfirmLabel: "権利・保有の確認",
     rightsConfirmHint:
-      "当該エディションをVault基準で保有し、譲渡できる権限があることを確認します。虚偽の登録は禁止です。",
+      "当該エディションをマイページ上の所蔵として保有し、譲渡できる権限があることを確認します。虚偽の登録は禁止です。",
     saveDraft: "下書き保存（ローカル）",
     submitCta: "譲渡希望を登録する",
     successBanner: "登録しました。公開一覧に反映されます。（デモ）",
@@ -690,10 +691,10 @@ export const ja: Messages = {
     previewTitle: "公開プレビュー",
     previewPublicOnly: "一覧にはペンネームと作品情報のみが掲載されます。",
     previewLegalHidden: "本名はこのプレビューと公開一覧には表示されません。",
-    previewFooter: "デモ用の保存です。本番ではVault保有検証とChronicle連携を追加します。",
+    previewFooter: "デモ用の保存です。本番ではマイページ上の所蔵検証とChronicle連携を追加します。",
     devPreviewLink: "ログインせずに画面だけ見る（ローカル開発）",
     devPreviewBanner:
-      "ローカル開発用プレビューです。デモログインのクッキーなしで登録画面のレイアウトを確認しています。フォームはサインイン後のVaultと同じで、送信はフォームのデモ会員IDがAPIに送られます。",
+      "ローカル開発用プレビューです。デモログインのクッキーなしで登録画面のレイアウトを確認しています。フォームはサインイン後のマイページと同じで、送信はフォームのデモ会員IDがAPIに送られます。",
     listingsTitle: "来歴 · Provenance",
     listingsSubtitle:
       "前の所蔵者が次の所蔵者を探すために登録したエディションです。OPUS は所蔵の記録を The Chronicle に残し、作家表記は公開名（ペンネーム）のみとします。収益を目的とする市場ではなく、デジタルアートの所蔵を継承する経路として設計されています。",
@@ -709,7 +710,7 @@ export const ja: Messages = {
     listingsDemoNote:
       "デモ：JSONLに保存。公開画面には作家本名は掲載されません。連絡先などの機微情報は入力しないでください。",
     listingsBackHome: "← トップへ",
-    listingsRegisterCta: "登録する（Vault）",
+    listingsRegisterCta: "登録する（マイページ）",
     listingsDetailKicker: "来歴",
     listingsDetailBreadcrumbHome: "ホーム",
     listingsDetailDescriptionHeading: "作品説明",
@@ -728,8 +729,7 @@ export const ja: Messages = {
   sellerVerifyConsent: {
     overlayAriaLabel: "セキュア接続を確立しています",
     overlayLine1: "セキュア接続を確立しています…",
-    overlayLine2:
-      "The Vault — 本人確認のための暗号化セッションを準備しています。",
+    overlayLine2: "OPUS — 本人確認のための暗号化セッションを準備しています。",
     kicker: "OPUS · Seller",
     title: "出品者向け本人確認",
     subtitle: "本人確認",
@@ -747,7 +747,7 @@ export const ja: Messages = {
     back: "戻る",
     next: "本人確認を開始する",
     footerPrivacy: "プライバシーポリシー",
-    footerVault: "Vault",
+    footerVault: "マイページ",
     alertConsentFail:
       "同意の記録に失敗しました。しばらくしてから再度お試しください。",
     alertNetwork:
@@ -758,6 +758,6 @@ export const ja: Messages = {
     body:
       "この画面は、eKYC事業者との連携前のプレースホルダです。安全なリダイレクトまたは埋め込みフローが、まもなく接続されます。",
     backToConsent: "同意画面へ戻る",
-    vaultLink: "Vault",
+    vaultLink: "マイページ",
   },
 };

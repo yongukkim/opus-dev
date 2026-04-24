@@ -28,7 +28,7 @@ export function VaultArtistGate({
   return (
     <main className="p-6 md:p-10">
       <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
-        Vault
+        {vault.overviewKicker}
       </p>
       <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">
         {vault.artistGateTitle}

@@ -5,7 +5,7 @@ export const en: Messages = {
     siteDescription:
       "OPUS — authenticated non-fungible digital art editions and The Chronicle. Crafted for collecting and appreciation, not investment positioning.",
     ogDescription:
-      "Premium digital art archive — near-black charcoal, champagne brass, provenance and the vault. Not an investment product.",
+      "Premium digital art archive — near-black charcoal, champagne brass, provenance and My Page. Not an investment product.",
     privacyTitle: "Privacy policy",
     privacyDescription:
       "Draft OPUS privacy policy. Update after legal review and Japan APPI alignment.",
@@ -209,7 +209,7 @@ export const en: Messages = {
   },
   footer: {
     about:
-      "The archive of digital masterpieces — authenticated editions, collector provenance, and the vault.",
+      "The archive of digital masterpieces — authenticated editions, collector provenance, and My Page.",
     design:
       "Design: Classic Luxury — near-black charcoal, champagne brass (gradient-lit metal), warm white type, restrained decoration. Not an investment or physical-asset product.",
     releases: "Releases",
@@ -225,6 +225,7 @@ export const en: Messages = {
     appRequiredIos: "iPhone",
     appRequiredAndroid: "Android",
     appRequiredComingSoon: "Coming soon",
+    securedByLine: "Secured by OPUS",
   },
   legalPrivacy: {
     back: "← Back home",
@@ -276,7 +277,7 @@ export const en: Messages = {
     startPending: "Processing…",
     startNote: "Demo only. Production will move to provider integration and session-based state.",
     startNotReadyAlert: "Verification is not wired yet. Please try again shortly (demo).",
-    backToVault: "← Back to Vault",
+    backToVault: "← Back to My Page",
   },
   payouts: {
     title: "Payouts",
@@ -297,7 +298,7 @@ export const en: Messages = {
   },
   artistProfile: {
     title: "Artist profile",
-    subtitle: "Set the artist information shown in the Vault and Archive. (Demo UI)",
+    subtitle: "Set the artist information shown in My Page and the Archive. (Demo UI)",
     heading: "Profile settings",
     body:
       "Manage your display name and bio. This is a demo flow; persistence and moderation will be wired next.",
@@ -314,7 +315,7 @@ export const en: Messages = {
     title: "Submitted",
     body: "Submission is complete. Review your registered works in My artworks.",
     toMyArtworks: "Go to My artworks",
-    toVault: "Back to Vault",
+    toVault: "Back to My Page",
   },
   accountSettings: {
     title: "Account settings",
@@ -470,7 +471,7 @@ export const en: Messages = {
       body: "A timeline of primary issuance and secondary transfers, shown masked.",
       eventPrimary: "Primary issuance",
       eventSecondary: "Secondary transfer",
-      eventVaultNote: "Vault memo",
+      eventVaultNote: "My Page note",
       maskLegend: "Identifiers appear masked as col-•••.",
     },
   },
@@ -483,7 +484,7 @@ export const en: Messages = {
   marketing: {
     title: "Your collection, with the official record",
     body:
-      "Browse the archive, manage the Vault, and pay on the web — view on the app. We offer non-fungible digital art experiences, not physical-asset or financial products.",
+      "Browse the archive, manage My Page, and pay on the web — view on the app. We offer non-fungible digital art experiences, not physical-asset or financial products.",
     buy: "Purchase & pay",
     openVault: "Open My Page",
     openProvenance: "Open Provenance",
@@ -540,7 +541,7 @@ export const en: Messages = {
     detailPrecautionBullets: [
       "Digital editions are offered with authentication records; refunds or cancellations may be limited after purchase is confirmed (demo notice).",
       "Viewing may vary by device or app version. Please check recommended environments before purchasing.",
-      "Images on the web are reduced-quality thumbnails and previews. On the detail page, signed-out visitors see a lower-res, watermarked image; after demo sign-in (Vault session), the same slot loads a sharper (still watermarked) preview. This is still not the full-resolution master file.",
+      "Images on the web are reduced-quality thumbnails and previews. On the detail page, signed-out visitors see a lower-res, watermarked image; after demo sign-in to My Page, the same slot loads a sharper (still watermarked) preview. This is still not the full-resolution master file.",
       "Prices and availability on this screen are for demo; live sales follow artist and operator policy.",
       "Taxes and receipts will be finalized when payments are integrated; this flow is for review only.",
     ],
@@ -570,12 +571,12 @@ export const en: Messages = {
     back: "← Back to Archive",
   },
   purchaseSuccess: {
-    kicker: "The Vault",
+    kicker: "My Page",
     title: "Purchase complete",
     subtitle: "A new collector relationship begins here.",
-    body: "Your purchase is complete. Open the Vault to review custody and provenance.",
-    bodyWithArtwork: "Purchase complete: {artwork}. Open the Vault to review custody and provenance.",
-    toVault: "Go to Vault",
+    body: "Your purchase is complete. Open My Page to review custody and provenance.",
+    bodyWithArtwork: "Purchase complete: {artwork}. Open My Page to review custody and provenance.",
+    toVault: "Go to My Page",
     backToArchive: "← Back to Archive",
   },
   artistArtworks: {
@@ -583,11 +584,11 @@ export const en: Messages = {
     body: "Works you have registered. Thumbnails are served only for pieces you still own.",
     empty: "No registered works to show. Confirm submission completed and the artist ID below.",
     devHint: 'Dev: append ?artist=ARTIST_ID to load works for that ID (e.g. Actor userId from the submit form).',
-    backVault: "← Back to Vault",
+    backVault: "← Back to My Page",
     backHome: "← Back home",
   },
   vault: {
-    overviewKicker: "Vault",
+    overviewKicker: "My Page",
     overviewTitle: "Overview",
     overviewBody:
       "Check private collection status, notifications, and Chronicle updates on this screen.",
@@ -601,15 +602,15 @@ export const en: Messages = {
     settingsBody: "Placeholder for account, notifications, and security.",
     artistGateTitle: "Artist-only area",
     artistGateSubmitBody:
-      "Artwork registration is available to artist accounts only. As a member (collector), use Collection, Activity, and other Vault areas. In production, access follows your signed-in role.",
+      "Artwork registration is available to artist accounts only. As a member (collector), use Collection, Activity, and other My Page areas. In production, access follows your signed-in role.",
     artistGateMyArtworksBody:
-      "Managing registered works is available to artist accounts only. It is hidden from the standard member Vault.",
+      "Managing registered works is available to artist accounts only. It is hidden from the standard member My Page.",
     artistGatePayoutsBody:
       "Payout setup is available to artist accounts only. In production, access follows your signed-in role and permissions.",
     artistGateProfileBody:
       "Artist profile and settings are available to artist accounts only. In production, access follows your signed-in role and permissions.",
     artistGateSignupCta: "Register as an artist",
-    artistGateBackVault: "← Back to Vault overview",
+    artistGateBackVault: "← Back to My Page overview",
     artistKycGateBody:
       "To use artist features, complete artist verification (demo). In production, this will move to eKYC provider integration and session-based authorization.",
     artistKycGateCta: "Continue verification",
@@ -654,7 +655,7 @@ export const en: Messages = {
     tagsLabel: "Tags",
     tagsHint: "Comma-separated (optional)",
     editionRefLabel: "Edition / record reference",
-    editionRefHint: "e.g. Edition 3/50, Chronicle ref, Vault label (optional)",
+    editionRefHint: "e.g. Edition 3/50, Chronicle ref, My Page label (optional)",
     priceLabelFixed: "Listed amount (JPY)",
     priceHintFixed:
       "Set by the current holder who is transferring ownership—not by the artist as a list price. Agreement with the next custodian happens in a separate flow. (Demo)",
@@ -665,7 +666,7 @@ export const en: Messages = {
     noteHint: "Viewing requirements, handoff notes, etc. (optional)",
     rightsConfirmLabel: "Ownership confirmation",
     rightsConfirmHint:
-      "I confirm I hold transfer authority for this edition under Vault / Chronicle rules. False listings are prohibited.",
+      "I confirm I hold transfer authority for this edition under My Page / Chronicle rules. False listings are prohibited.",
     saveDraft: "Save draft (local)",
     submitCta: "Submit listing",
     successBanner: "Saved. It will appear on the public list. (Demo)",
@@ -674,10 +675,10 @@ export const en: Messages = {
     previewTitle: "Public preview",
     previewPublicOnly: "Only the pen name and work details appear on the list.",
     previewLegalHidden: "Legal name is not shown here or on the public listing.",
-    previewFooter: "Demo storage only. Production will add Vault ownership checks and Chronicle linkage.",
+    previewFooter: "Demo storage only. Production will add My Page ownership checks and Chronicle linkage.",
     devPreviewLink: "View layout without signing in (local dev)",
     devPreviewBanner:
-      "Local development preview: you are seeing the registration layout without a demo session cookie. The form matches the signed-in Vault experience; submissions still use the demo member ID from the form header.",
+      "Local development preview: you are seeing the registration layout without a demo session cookie. The form matches the signed-in My Page experience; submissions still use the demo member ID from the form header.",
     listingsTitle: "Provenance",
     listingsSubtitle:
       "Editions listed by previous custodians seeking a next owner. OPUS records each custody change on The Chronicle, and the artist attribution shows the pen name only. Designed as a line of custody for digital art, not as a profit-oriented trading venue.",
@@ -693,7 +694,7 @@ export const en: Messages = {
     listingsDemoNote:
       "Demo: JSONL on the server. Legal names are not published on the public page. Do not enter contact details or other sensitive info.",
     listingsBackHome: "← Back home",
-    listingsRegisterCta: "Create a listing (Vault)",
+    listingsRegisterCta: "Create a listing (My Page)",
     listingsDetailKicker: "Provenance",
     listingsDetailBreadcrumbHome: "Home",
     listingsDetailDescriptionHeading: "About this work",
@@ -712,8 +713,7 @@ export const en: Messages = {
   sellerVerifyConsent: {
     overlayAriaLabel: "Establishing secure connection",
     overlayLine1: "Establishing a secure connection…",
-    overlayLine2:
-      "The Vault — preparing an encrypted session for your verification.",
+    overlayLine2: "OPUS — preparing an encrypted session for your verification.",
     kicker: "OPUS · Seller",
     title: "Identity verification for seller privileges",
     subtitle: "Identity Verification",
@@ -732,7 +732,7 @@ export const en: Messages = {
     back: "Back",
     next: "Continue",
     footerPrivacy: "Privacy policy",
-    footerVault: "Vault",
+    footerVault: "My Page",
     alertConsentFail: "Could not record consent. Please try again shortly.",
     alertNetwork: "Network error. Check your connection and try again.",
   },
@@ -740,6 +740,6 @@ export const en: Messages = {
     title: "Verification session",
     body: "This screen is a placeholder before eKYC provider integration. A secure redirect or embedded flow will connect here soon.",
     backToConsent: "Back to consent",
-    vaultLink: "Vault",
+    vaultLink: "My Page",
   },
 };

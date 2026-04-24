@@ -5,7 +5,7 @@ export const ko: Messages = {
     siteDescription:
       "OPUS — 작가 공증 디지털 아트 에디션과 The Chronicle. 수집·감상 경험을 위해 설계되었으며 투자 상품이 아닙니다.",
     ogDescription:
-      "복제 불가 디지털 아트 아카이브 — 차콜, 샴페인 브라스, 출처와 Vault. 투자 상품이 아닙니다.",
+      "복제 불가 디지털 아트 아카이브 — 차콜, 샴페인 브라스, 출처와 마이페이지. 투자 상품이 아닙니다.",
     privacyTitle: "개인정보 처리방침",
     privacyDescription:
       "OPUS 개인정보 처리방침(초안). 법무·일본 APPI 확장 검토 전 템플릿입니다.",
@@ -38,7 +38,7 @@ export const ko: Messages = {
     primaryNav: "주요 메뉴",
     utilityNav: "보조 링크",
     language: "언어",
-    vaultNav: "My Page 메뉴",
+    vaultNav: "마이페이지 메뉴",
     designPhilosophy: "디자인 철학",
     hero: "OPUS 히어로",
     stats: "신뢰 지표",
@@ -46,7 +46,7 @@ export const ko: Messages = {
   },
   nav: {
     releases: "신작 공개",
-    vault: "My Page",
+    vault: "마이페이지",
     legal: "법적 고지",
     provenance: "소장 계보",
     curation: "큐레이션",
@@ -204,16 +204,16 @@ export const ko: Messages = {
     line: "인증 에디션",
     tokushoho: "특정상거래법 표시",
     chronicle: "The Chronicle",
-    vaultShort: "My Page",
+    vaultShort: "마이페이지",
   },
   footer: {
     about:
-      "디지털 원작의 아카이브 — 인증 에디션, 컬렉터 출처, Vault.",
+      "디지털 원작의 아카이브 — 인증 에디션, 컬렉터 출처, 마이페이지.",
     design:
       "디자인: Classic Luxury — near-black 차콜, 샴페인 브라스(그라데이션 금속), 웜 화이트, 절제된 장식. 투자·실물자산 상품이 아닙니다.",
     releases: "신작 공개",
     provenance: "소장 계보",
-    vault: "My Page",
+    vault: "마이페이지",
     legal: "특정상거래법 표시",
     privacy: "개인정보 처리방침",
     terms: "이용약관",
@@ -224,6 +224,7 @@ export const ko: Messages = {
     appRequiredIos: "iPhone",
     appRequiredAndroid: "Android",
     appRequiredComingSoon: "준비 중",
+    securedByLine: "OPUS로 보호됩니다",
   },
   legalPrivacy: {
     back: "← 홈으로",
@@ -275,7 +276,7 @@ export const ko: Messages = {
     startPending: "처리 중…",
     startNote: "본 화면은 데모입니다. 실제 운영은 제공자 연동 및 세션 기반으로 전환합니다.",
     startNotReadyAlert: "본인 확인 연동은 준비 중입니다. (데모) 잠시 후 다시 시도해 주세요.",
-    backToVault: "← Vault로",
+    backToVault: "← 마이페이지로",
   },
   payouts: {
     title: "정산/계좌 등록",
@@ -296,7 +297,7 @@ export const ko: Messages = {
   },
   artistProfile: {
     title: "작가 프로필",
-    subtitle: "Vault 및 아카이브에서 표시될 작가 정보를 설정합니다. (데모 UI)",
+    subtitle: "마이페이지 및 아카이브에서 표시될 작가 정보를 설정합니다. (데모 UI)",
     heading: "프로필 설정",
     body:
       "표시 이름과 소개 문구를 관리합니다. 현재는 UI 플로우 확인용이며, 실제 저장/검수 로직은 다음 단계에서 연결합니다.",
@@ -313,7 +314,7 @@ export const ko: Messages = {
     title: "제출 완료",
     body: "작품 제출이 완료되었습니다. 내 작품에서 제출 내역과 미리보기를 확인할 수 있습니다.",
     toMyArtworks: "내 작품 보기",
-    toVault: "Vault로",
+    toVault: "마이페이지로",
   },
   accountSettings: {
     title: "회원정보",
@@ -468,7 +469,7 @@ export const ko: Messages = {
       body: "1차 발행과 2차 이전이 마스킹된 형태로 흐를 자리입니다.",
       eventPrimary: "1차 발행",
       eventSecondary: "2차 이전",
-      eventVaultNote: "보관소 메모",
+      eventVaultNote: "마이페이지 메모",
       maskLegend: "식별자는 col-••• 형식으로 마스킹됩니다.",
     },
   },
@@ -481,9 +482,9 @@ export const ko: Messages = {
   marketing: {
     title: "컬렉션을 공식 기록과 함께",
     body:
-      "아카이브 열람, Vault 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
+      "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
-    openVault: "My Page 열기",
+    openVault: "마이페이지 열기",
     openProvenance: "소장 계보 둘러보기",
   },
   artworks: {
@@ -538,7 +539,7 @@ export const ko: Messages = {
     detailPrecautionBullets: [
       "디지털 에디션은 복제 불가·인증 기록과 함께 제공됩니다. 구매 확정 후 환불·취소가 제한될 수 있습니다. (데모 안내)",
       "감상 환경·앱 버전에 따라 표시가 달라질 수 있습니다. 구매 전 권장 환경을 확인해 주세요.",
-      "웹에 보이는 이미지는 해상도가 낮춰진 썸네일·미리보기이며, 상세 화면에도 비로그인 시에는 더 낮은 해상도와 OPUS 워터마크만 제공됩니다. 데모 로그인(Vault 세션) 후에는 같은 화면에서 더 선명한(여전히 워터마크) 미리보기로 바뀝니다. 원본 마스터 파일과는 다릅니다.",
+      "웹에 보이는 이미지는 해상도가 낮춰진 썸네일·미리보기이며, 상세 화면에도 비로그인 시에는 더 낮은 해상도와 OPUS 워터마크만 제공됩니다. 마이페이지에 데모 로그인한 뒤에는 같은 화면에서 더 선명한(여전히 워터마크) 미리보기로 바뀝니다. 원본 마스터 파일과는 다릅니다.",
       "본 화면의 가격·재고는 데모용이며, 실제 판매 시 작가·운영 정책에 따릅니다.",
       "결제·세금·영수 표기는 실제 연동 시 확정되며, 현재는 플로우 확인용입니다.",
     ],
@@ -567,12 +568,12 @@ export const ko: Messages = {
     back: "← 아카이브로",
   },
   purchaseSuccess: {
-    kicker: "The Vault",
+    kicker: "마이페이지",
     title: "구매 완료",
     subtitle: "소유 경험의 시작입니다.",
-    body: "구매가 완료되었습니다. Vault에서 소장 정보와 출처 기록을 확인할 수 있습니다.",
-    bodyWithArtwork: "구매가 완료되었습니다: {artwork}. Vault에서 소장 정보와 출처 기록을 확인할 수 있습니다.",
-    toVault: "Vault로 이동",
+    body: "구매가 완료되었습니다. 마이페이지에서 소장 정보와 출처 기록을 확인할 수 있습니다.",
+    bodyWithArtwork: "구매가 완료되었습니다: {artwork}. 마이페이지에서 소장 정보와 출처 기록을 확인할 수 있습니다.",
+    toVault: "마이페이지로 이동",
     backToArchive: "← 아카이브로 돌아가기",
   },
   artistArtworks: {
@@ -581,11 +582,11 @@ export const ko: Messages = {
     empty: "표시할 등록 작품이 없습니다. 작품 등록을 완료했는지, 아래 안내의 작가 ID가 맞는지 확인하세요.",
     devHint:
       "개발용: URL에 ?artist=작가ID 를 붙이면 해당 ID로 등록된 작품을 불러옵니다. (예: 작품 등록 폼의 Actor userId)",
-    backVault: "← Vault로",
+    backVault: "← 마이페이지로",
     backHome: "← 홈으로",
   },
   vault: {
-    overviewKicker: "Vault",
+    overviewKicker: "마이페이지",
     overviewTitle: "개요",
     overviewBody:
       "프라이빗 보관 중인 컬렉션 상태, 알림, Chronicle 갱신 이력을 이 화면에서 확인합니다.",
@@ -599,7 +600,7 @@ export const ko: Messages = {
     settingsBody: "계정·알림·보안 영역 플레이스홀더입니다.",
     artistGateTitle: "작가 전용 기능",
     artistGateSubmitBody:
-      "작품 등록은 작가 계정에서만 이용할 수 있습니다. 일반 회원은 Vault에서 컬렉션·활동 등을 이용해 주세요. 실제 서비스에서는 로그인 역할에 따라 자동으로 구분됩니다.",
+      "작품 등록은 작가 계정에서만 이용할 수 있습니다. 일반 회원은 마이페이지에서 컬렉션·활동 등을 이용해 주세요. 실제 서비스에서는 로그인 역할에 따라 자동으로 구분됩니다.",
     artistGateMyArtworksBody:
       "등록 작품 관리는 작가 계정에서만 이용할 수 있습니다. 일반 회원 화면에서는 표시되지 않습니다.",
     artistGatePayoutsBody:
@@ -607,7 +608,7 @@ export const ko: Messages = {
     artistGateProfileBody:
       "작가 프로필/설정은 작가 계정에서만 이용할 수 있습니다. 실제 서비스에서는 로그인 역할과 권한에 따라 자동으로 구분됩니다.",
     artistGateSignupCta: "작가로 등록하기",
-    artistGateBackVault: "← Vault 개요로",
+    artistGateBackVault: "← 마이페이지 개요로",
     artistKycGateBody:
       "작가 기능을 사용하려면 본인 확인(데모)을 완료해야 합니다. 실제 운영에서는 eKYC 제공자 연동과 세션 기반 권한으로 전환됩니다.",
     artistKycGateCta: "본인 확인 진행하기",
@@ -652,7 +653,7 @@ export const ko: Messages = {
     tagsLabel: "태그",
     tagsHint: "쉼표로 구분 (선택)",
     editionRefLabel: "에디션·기록 참조",
-    editionRefHint: "예: Edition 3/50, Chronicle ref, Vault 항목명 등 (선택)",
+    editionRefHint: "예: Edition 3/50, Chronicle ref, 마이페이지 항목명 등 (선택)",
     priceLabelFixed: "제시 금액 (엔)",
     priceHintFixed:
       "작가가 아니라, 소유권을 이전하는 현재 소장자가 정한 표시 금액입니다. 다음 수탁자와의 합의·결제는 별도 절차입니다. (데모)",
@@ -663,7 +664,7 @@ export const ko: Messages = {
     noteHint: "감상 환경·인수 조건 등 짧게 적어 주세요. (선택)",
     rightsConfirmLabel: "권리·소장 확인",
     rightsConfirmHint:
-      "본인이 해당 에디션을 Vault 기준으로 소장·이전할 권한이 있음을 확인합니다. 허위 등록은 금지됩니다.",
+      "본인이 해당 에디션을 마이페이지 기준으로 소장·이전할 권한이 있음을 확인합니다. 허위 등록은 금지됩니다.",
     saveDraft: "임시 저장 (로컬)",
     submitCta: "이전 희망 등록하기",
     successBanner: "등록되었습니다. 공개 목록에서 확인할 수 있습니다. (데모)",
@@ -673,10 +674,10 @@ export const ko: Messages = {
     previewPublicOnly: "목록에는 필명·작품 정보만 노출됩니다.",
     previewLegalHidden: "본명은 이 미리보기와 공개 목록에 표시되지 않습니다.",
     previewFooter:
-      "데모 저장소입니다. 운영 시 Vault 소유 검증·Chronicle 연동이 추가됩니다.",
+      "데모 저장소입니다. 운영 시 마이페이지 소유 검증·Chronicle 연동이 추가됩니다.",
     devPreviewLink: "로그인 없이 화면만 보기 (로컬 개발)",
     devPreviewBanner:
-      "로컬 개발 미리보기입니다. 데모 로그인 쿠키 없이 등록 화면 레이아웃만 확인합니다. 실제 Vault 게이트와 동일한 폼이며, 제출은 헤더의 데모 회원 ID로 API에 전달됩니다.",
+      "로컬 개발 미리보기입니다. 데모 로그인 쿠키 없이 등록 화면 레이아웃만 확인합니다. 실제 마이페이지 게이트와 동일한 폼이며, 제출은 헤더의 데모 회원 ID로 API에 전달됩니다.",
     listingsTitle: "소장 계보 · Provenance",
     listingsSubtitle:
       "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장 계보를 잇는 경로로 설계되었습니다.",
@@ -690,9 +691,9 @@ export const ko: Messages = {
     listingsSaleModeAuction: "경매",
     listingsListedAt: "등록일",
     listingsDemoNote:
-      "데모: JSONL 저장. 공개 화면에는 작가 본명이 올라가지 않습니다. 연락처·민감 정보는 넣지 마세요. 운영 시 Chronicle·Vault 소유 검증과 연동합니다.",
+      "데모: JSONL 저장. 공개 화면에는 작가 본명이 올라가지 않습니다. 연락처·민감 정보는 넣지 마세요. 운영 시 Chronicle·마이페이지 소유 검증과 연동합니다.",
     listingsBackHome: "← 홈으로",
-    listingsRegisterCta: "등록하러 가기 (Vault)",
+    listingsRegisterCta: "등록하러 가기 (마이페이지)",
     listingsDetailKicker: "来歴",
     listingsDetailBreadcrumbHome: "홈",
     listingsDetailDescriptionHeading: "작품 설명",
@@ -711,8 +712,7 @@ export const ko: Messages = {
   sellerVerifyConsent: {
     overlayAriaLabel: "보안 연결 생성 중",
     overlayLine1: "보안 연결을 생성 중입니다…",
-    overlayLine2:
-      "The Vault — 본인 확인을 위해 암호화된 세션을 준비하고 있습니다.",
+    overlayLine2: "OPUS — 본인 확인을 위해 암호화된 세션을 준비하고 있습니다.",
     kicker: "OPUS · Seller",
     title: "판매자 권한 획득을 위한 본인 확인",
     subtitle: "본인 확인",
@@ -730,7 +730,7 @@ export const ko: Messages = {
     back: "이전으로",
     next: "다음으로",
     footerPrivacy: "개인정보 처리방침",
-    footerVault: "Vault",
+    footerVault: "마이페이지",
     alertConsentFail: "동의 기록에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     alertNetwork: "네트워크 오류입니다. 연결을 확인한 뒤 다시 시도해 주세요.",
   },
@@ -738,6 +738,6 @@ export const ko: Messages = {
     title: "본인 확인 세션",
     body: "이 화면은 eKYC 전문 기관 연동 전 플레이스홀더입니다. 곧 안전한 리다이렉트 또는 임베드 플로우가 연결됩니다.",
     backToConsent: "동의 화면으로",
-    vaultLink: "Vault",
+    vaultLink: "마이페이지",
   },
 };
