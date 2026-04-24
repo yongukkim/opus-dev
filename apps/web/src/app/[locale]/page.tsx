@@ -32,6 +32,10 @@ type Props = { params: Promise<{ locale: string }> };
  *   (spec §3.7). Phase-2 wires real `ChronicleEntry` rows once the
  *   Chronicle write cutover is in place; only the card body changes,
  *   the masking contract is already committed in copy.
+ * - `DesignPhilosophyBand` sits **after** Chronicle and **before**
+ *   StatsTrustRow so the vertical IA matches spec §2 (AFTER): rails A–D
+ *   and Chronicle stay above the philosophy strip; it is not a second
+ *   hero band under `Hero`.
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -41,7 +45,6 @@ export default async function HomePage({ params }: Props) {
   return (
     <>
       <Hero locale={locale} m={m} />
-      <DesignPhilosophyBand m={m} />
       <main
         id="main-content"
         className="border-t border-opus-gold/10 bg-gradient-to-b from-opus-charcoal via-[#141414] to-opus-charcoal"
@@ -106,6 +109,8 @@ export default async function HomePage({ params }: Props) {
           land in a follow-up PR after the Chronicle write cutover.
         */}
         <ChroniclePreview locale={locale} m={m} />
+
+        <DesignPhilosophyBand m={m} />
 
         <StatsTrustRow m={m} />
         <MarketingCtaBand locale={locale} m={m} />
