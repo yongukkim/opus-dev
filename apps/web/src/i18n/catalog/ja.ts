@@ -674,6 +674,19 @@ export const ja: Messages = {
       "デモ：JSONLに保存。公開画面には作家本名は掲載されません。連絡先などの機微情報は入力しないでください。",
     listingsBackHome: "← トップへ",
     listingsRegisterCta: "登録する（Vault）",
+    listingsDetailKicker: "来歴",
+    listingsDetailBreadcrumbHome: "ホーム",
+    listingsDetailDescriptionHeading: "作品説明",
+    listingsDetailNotesHeading: "出品者メモ",
+    listingsDetailTagsHeading: "タグ",
+    listingsDetailBackToIndex: "← 来歴一覧に戻る",
+    listingsDetailNotFoundTitle: "出品が見つかりません",
+    listingsDetailNotFoundBody:
+      "ご指定の来歴出品は取引を終了したか、URLが変更された可能性があります。",
+    listingsDetailNotFoundCta: "来歴一覧を見る",
+    listingsDetailMetaTitleTpl: "{title} — 来歴出品",
+    listingsDetailMetaDescriptionTpl:
+      "{title}の所蔵者移転（来歴）出品の詳細。作家本名・連絡先は公開されず、出品者識別子はマスキング表示されます。",
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "セキュア接続を確立しています",

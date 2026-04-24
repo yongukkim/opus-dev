@@ -708,6 +708,24 @@ export type Messages = {
     listingsDemoNote: string;
     listingsBackHome: string;
     listingsRegisterCta: string;
+    /**
+     * PR-18: `/provenance/[id]` detail page. Reuses the `listings*`
+     * labels above for field captions (artist, price, seller, etc.);
+     * these keys only cover the chrome (eyebrow / breadcrumbs /
+     * section headings / detail-only CTAs / 404 copy / metadata).
+     */
+    listingsDetailKicker: string;
+    listingsDetailBreadcrumbHome: string;
+    listingsDetailDescriptionHeading: string;
+    listingsDetailNotesHeading: string;
+    listingsDetailTagsHeading: string;
+    listingsDetailBackToIndex: string;
+    listingsDetailNotFoundTitle: string;
+    listingsDetailNotFoundBody: string;
+    listingsDetailNotFoundCta: string;
+    /** Uses `{title}` token. Root template appends ` | OPUS`. */
+    listingsDetailMetaTitleTpl: string;
+    listingsDetailMetaDescriptionTpl: string;
   };
   /** Seller eKYC consent (one UI language per locale; no KO/JA mix on one screen). */
   sellerVerifyConsent: {

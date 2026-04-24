@@ -657,6 +657,19 @@ export const ko: Messages = {
       "데모: JSONL 저장. 공개 화면에는 작가 본명이 올라가지 않습니다. 연락처·민감 정보는 넣지 마세요. 운영 시 Chronicle·Vault 소유 검증과 연동합니다.",
     listingsBackHome: "← 홈으로",
     listingsRegisterCta: "등록하러 가기 (Vault)",
+    listingsDetailKicker: "来歴",
+    listingsDetailBreadcrumbHome: "홈",
+    listingsDetailDescriptionHeading: "작품 설명",
+    listingsDetailNotesHeading: "판매자 메모",
+    listingsDetailTagsHeading: "태그",
+    listingsDetailBackToIndex: "← 来歴 목록으로",
+    listingsDetailNotFoundTitle: "리스팅을 찾을 수 없습니다",
+    listingsDetailNotFoundBody:
+      "요청하신 来歴 리스팅은 거래가 종료되었거나 URL이 변경되었을 수 있습니다.",
+    listingsDetailNotFoundCta: "来歴 목록 다시 보기",
+    listingsDetailMetaTitleTpl: "{title} — 来歴 리스팅",
+    listingsDetailMetaDescriptionTpl:
+      "{title}의 수탁 이전(来歴) 리스팅 상세. 작가 본명·연락처는 공개되지 않으며 판매자 식별자는 마스킹되어 표시됩니다.",
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "보안 연결 생성 중",

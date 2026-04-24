@@ -104,7 +104,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     artistPenName: r.artistPenName,
     priceJpy: r.priceJpy,
     sellerMasked: maskSellerId(r.sellerId),
-    href: localelessHref(`/provenance#${encodeURIComponent(r.id)}`),
+    href: localelessHref(`/provenance/${encodeURIComponent(r.id)}`),
     badge: "secondary",
   }));
   // Drop shelves whose refs all fell out of catalog resolution — an

@@ -52,11 +52,12 @@ export default async function CollectorTransferListingsPage({ params }: Props) {
                 .filter(Boolean)
                 .slice(0, 12);
               return (
-                <li
-                  key={r.id}
-                  className="rounded-xl border border-white/[0.08] bg-opus-slate/20 px-5 py-4 shadow-opus-card"
-                >
-                  <p className="font-display text-lg text-opus-warm">{r.artworkTitle}</p>
+                <li key={r.id}>
+                  <Link
+                    href={withLocale(locale, `/provenance/${encodeURIComponent(r.id)}`)}
+                    className="group block rounded-xl border border-white/[0.08] bg-opus-slate/20 px-5 py-4 shadow-opus-card transition hover:border-opus-gold/38"
+                  >
+                  <p className="font-display text-lg text-opus-warm transition group-hover:text-opus-gold-light">{r.artworkTitle}</p>
                   <p className="mt-1 text-sm text-opus-gold/90">
                     <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/35">
                       {t.listingsArtistPublic}
@@ -118,6 +119,7 @@ export default async function CollectorTransferListingsPage({ params }: Props) {
                     </div>
                   ) : null}
                   {r.note ? <p className="mt-3 text-sm leading-relaxed text-opus-warm/50">{r.note}</p> : null}
+                  </Link>
                 </li>
               );
             })}
