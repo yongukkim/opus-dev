@@ -680,6 +680,7 @@ export const en: Messages = {
     listingsDetailMetaTitleTpl: "{title} — Provenance listing",
     listingsDetailMetaDescriptionTpl:
       "Detail view for the custody-transfer (provenance) listing of {title}. Legal name and contact details are never published; the seller identifier is surfaced masked.",
+    listingsDetailViewArtistAria: "Open {name}'s artist page",
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "Establishing secure connection",

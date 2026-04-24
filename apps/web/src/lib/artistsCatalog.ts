@@ -153,3 +153,24 @@ export async function resolveArtistBySlug(slug: string): Promise<ArtistEntry | n
   const artists = await loadArtists();
   return artists.find((a) => a.key === decoded) ?? null;
 }
+
+/**
+ * Reverse lookup: pen name (as it appears on public surfaces) → entry,
+ * or null if the name doesn't match any `loadArtists()` result (e.g.
+ * a listing whose pen name doesn't coincide with a catalog artist).
+ *
+ * Used by `/provenance/[id]` (PR-20) to decide whether the artist
+ * field should render as a deep link into `/artist/[slug]` or stay
+ * as plain text. Comparison uses the same lowercased `key` the
+ * selection rules (group-by ≥2 works, operator picks) already emit,
+ * so the surface set in omni-search / Rail C / featured-artists /
+ * artist-page cross-links stays consistent.
+ */
+export async function findArtistByPenName(
+  penName: string,
+): Promise<ArtistEntry | null> {
+  const key = penName.trim().toLowerCase();
+  if (!key) return null;
+  const artists = await loadArtists();
+  return artists.find((a) => a.key === key) ?? null;
+}

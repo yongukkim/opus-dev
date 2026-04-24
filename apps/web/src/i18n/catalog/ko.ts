@@ -679,6 +679,7 @@ export const ko: Messages = {
     listingsDetailMetaTitleTpl: "{title} — 来歴 리스팅",
     listingsDetailMetaDescriptionTpl:
       "{title}의 수탁 이전(来歴) 리스팅 상세. 작가 본명·연락처는 공개되지 않으며 판매자 식별자는 마스킹되어 표시됩니다.",
+    listingsDetailViewArtistAria: "{name} 작가 소개 열기",
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "보안 연결 생성 중",

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/catalog";
 import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { findArtistByPenName } from "@/lib/artistsCatalog";
 import {
   findOpenCollectorTransferListing,
   maskSellerId,
@@ -38,9 +39,13 @@ import {
  * Scope discipline (explicitly out of scope for this cut):
  *   - No purchase / checkout affordance.
  *   - No operator edit controls.
- *   - No `/artist/<slug>` cross-link from the artist pen name
- *     (pen names aren't guaranteed to match a `loadArtists()` entry).
- *     Tracked as a follow-up once selection rules converge.
+ *
+ * PR-20 follow-up: the artist pen name now resolves to
+ * `/artist/<slug>` via `findArtistByPenName` when the name matches a
+ * `loadArtists()` entry (same selection rule Rail C / ⌘K / the
+ * artist page already share — ≥ 2 works grouped or operator pick).
+ * Listings whose pen name doesn't match any catalog artist render
+ * as plain text, so dead-end links never ship.
  */
 
 type Props = { params: Promise<{ locale: string; id: string }> };
@@ -100,8 +105,19 @@ export default async function ProvenanceDetailPage({ params }: Props) {
   const listing = await findOpenCollectorTransferListing(id);
   if (!listing) notFound();
 
+  // Reverse-lookup the pen name against the featured-artist set. If
+  // it matches, we wrap the artist field in a link into the artist
+  // page. If not, we render plain text — listings can carry pen
+  // names that aren't part of `loadArtists()` (e.g. single-work
+  // artists without an operator pick), and surfacing a 404-bound
+  // link would be a worse UX than no link.
+  const artistEntry = await findArtistByPenName(listing.artistPenName);
+
   const homeHref = withLocale(locale, "/");
   const indexHref = withLocale(locale, "/provenance");
+  const artistHref = artistEntry
+    ? withLocale(locale, `/artist/${artistEntry.slug}`)
+    : null;
 
   const tagList = (listing.tags ?? "")
     .split(",")
@@ -152,7 +168,20 @@ export default async function ProvenanceDetailPage({ params }: Props) {
               <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/40">
                 {t.listingsArtistPublic}
               </span>{" "}
-              <span className="text-opus-gold-light">{listing.artistPenName}</span>
+              {artistHref ? (
+                <Link
+                  href={artistHref}
+                  aria-label={t.listingsDetailViewArtistAria.replace(
+                    "{name}",
+                    listing.artistPenName,
+                  )}
+                  className="text-opus-gold-light underline-offset-4 transition hover:text-opus-gold hover:underline"
+                >
+                  {listing.artistPenName}
+                </Link>
+              ) : (
+                <span className="text-opus-gold-light">{listing.artistPenName}</span>
+              )}
             </p>
             {listing.editionRef ? (
               <p className="mt-2 font-mono text-[0.7rem] tracking-[0.06em] text-opus-warm/45">
