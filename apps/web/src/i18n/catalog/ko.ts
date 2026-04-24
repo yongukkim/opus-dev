@@ -72,6 +72,8 @@ export const ko: Messages = {
     empty: "일치하는 결과가 없습니다",
     viewAllReleases: "신작 공개 전체 보기",
     viewAllProvenance: "소장 계보 전체 보기",
+    hintCardPrompt: "작품·작가·에디션을 찾아보세요",
+    hintCardAriaLabel: "검색 열기. 작품·작가·리스팅·셸프를 키워드로 찾을 수 있습니다",
     loading: "검색 인덱스를 불러오는 중…",
     hintSelect: "⏎ 선택",
     hintMove: "↑↓ 이동",
