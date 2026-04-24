@@ -658,6 +658,19 @@ export const en: Messages = {
       "Demo: JSONL on the server. Legal names are not published on the public page. Do not enter contact details or other sensitive info.",
     listingsBackHome: "← Back home",
     listingsRegisterCta: "Create a listing (Vault)",
+    listingsDetailKicker: "Provenance",
+    listingsDetailBreadcrumbHome: "Home",
+    listingsDetailDescriptionHeading: "About this work",
+    listingsDetailNotesHeading: "Seller notes",
+    listingsDetailTagsHeading: "Tags",
+    listingsDetailBackToIndex: "← Back to provenance",
+    listingsDetailNotFoundTitle: "Listing not found",
+    listingsDetailNotFoundBody:
+      "This custody-transfer listing may have been closed, or the URL has changed.",
+    listingsDetailNotFoundCta: "Browse provenance listings",
+    listingsDetailMetaTitleTpl: "{title} — Provenance listing",
+    listingsDetailMetaDescriptionTpl:
+      "Detail view for the custody-transfer (provenance) listing of {title}. Legal name and contact details are never published; the seller identifier is surfaced masked.",
   },
   sellerVerifyConsent: {
     overlayAriaLabel: "Establishing secure connection",

@@ -22,8 +22,10 @@ import {
  * Chronicle preview will follow when it lands real data in PR-9 (spec §3.7).
  *
  * The cutover to `Listing.where(market=SECONDARY, status=OPEN)` is tracked
- * separately (spec §5, "Rail B Provenance"). Card link goes to `/provenance`
- * for now; per-listing detail pages are explicitly out of scope of this PR.
+ * separately (spec §5, "Rail B Provenance"). As of PR-18, card links now
+ * resolve to `/provenance/[id]` (the dedicated detail surface) — Rail B,
+ * ⌘K, the sitemap, and the `/provenance` index all share the same deep
+ * link.
  */
 export async function RailProvenance({
   locale,
@@ -76,7 +78,7 @@ export async function RailProvenance({
             {items.map((listing) => (
               <li key={listing.id}>
                 <Link
-                  href={withLocale(locale, "/provenance")}
+                  href={withLocale(locale, `/provenance/${encodeURIComponent(listing.id)}`)}
                   className="group flex h-full flex-col gap-4 overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-opus-slate/30 to-[#161616] p-5 shadow-opus-card transition hover:border-opus-gold/38"
                 >
                   <div className="flex items-start justify-between gap-3">

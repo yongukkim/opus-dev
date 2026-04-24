@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { locales, type Locale } from "@/i18n/config";
 import { loadArtists } from "@/lib/artistsCatalog";
 import { encodeArtworkSlug, loadCatalogFiles } from "@/lib/artworksCatalog";
+import { listOpenCollectorTransferListings } from "@/lib/collectorTransferListings";
 import { loadShelves } from "@/lib/curationCatalog";
 
 /**
@@ -21,6 +22,11 @@ import { loadShelves } from "@/lib/curationCatalog";
  *                                        `itemCount > 0` so a dead shelf
  *                                        never lands in the sitemap
  *                                        (same contract as ⌘K shelves).
+ *              /provenance/[id]       ← listOpenCollectorTransferListings
+ *                                        (PR-18 detail cutover). Only
+ *                                        open listings are indexed —
+ *                                        closed/withdrawn ids drop out
+ *                                        naturally, same as ⌘K.
  *
  * Intentionally excluded (auth-gated, transactional, or operator-only):
  *   /vault/*, /login, /signup, /artist-signup, /checkout/*, /purchase/*,
@@ -84,13 +90,15 @@ function buildEntries(spec: RouteSpec, lastModified: Date): MetadataRoute.Sitema
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Resolve public data in parallel. All three helpers are server-only
+  // Resolve public data in parallel. All four helpers are server-only
   // and already used elsewhere; they guarantee a pen-name-shaped
-  // public surface.
-  const [{ files }, artists, shelves] = await Promise.all([
+  // public surface (legal name stripped at the lib boundary — PII
+  // never reaches the sitemap).
+  const [{ files }, artists, shelves, listings] = await Promise.all([
     loadCatalogFiles(),
     loadArtists(),
     loadShelves(),
+    listOpenCollectorTransferListings(),
   ]);
 
   const now = new Date();
@@ -136,5 +144,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ),
     );
 
-  return [...staticEntries, ...releaseEntries, ...artistEntries, ...shelfEntries];
+  const listingEntries: MetadataRoute.Sitemap = listings.flatMap((r) =>
+    buildEntries(
+      {
+        path: `/provenance/${encodeURIComponent(r.id)}`,
+        changeFrequency: "daily",
+        priority: 0.5,
+      },
+      now,
+    ),
+  );
+
+  return [
+    ...staticEntries,
+    ...releaseEntries,
+    ...artistEntries,
+    ...shelfEntries,
+    ...listingEntries,
+  ];
 }

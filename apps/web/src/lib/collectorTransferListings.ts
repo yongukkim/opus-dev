@@ -93,6 +93,24 @@ export async function listOpenCollectorTransferListings(): Promise<CollectorTran
   return out;
 }
 
+/**
+ * Single open listing by id, or `null` if the id is unknown or the listing
+ * is no longer open. Backs `/provenance/[id]` (PR-18) + the ⌘K deep-link
+ * cutover. Returned shape is the PII-safe public projection — legal name
+ * is stripped — so a detail page never has to re-mask.
+ */
+export async function findOpenCollectorTransferListing(
+  id: string,
+): Promise<CollectorTransferListingPublic | null> {
+  if (!id) return null;
+  const records = await readAllLines();
+  let latest: CollectorTransferListing | null = null;
+  for (const r of records) {
+    if (r?.id === id && r.status === "open") latest = r;
+  }
+  return latest ? toPublicListing(latest) : null;
+}
+
 export function maskSellerId(userId: string): string {
   const t = userId.trim();
   if (t.length <= 4) return "····";
