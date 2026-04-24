@@ -1,8 +1,13 @@
+import { stat } from "node:fs/promises";
+import path from "node:path";
 import type { MetadataRoute } from "next";
 import { locales, type Locale } from "@/i18n/config";
 import { loadArtists } from "@/lib/artistsCatalog";
 import { encodeArtworkSlug, loadCatalogFiles } from "@/lib/artworksCatalog";
-import { listOpenCollectorTransferListings } from "@/lib/collectorTransferListings";
+import {
+  COLLECTOR_TRANSFER_LISTINGS_FILE,
+  listOpenCollectorTransferListings,
+} from "@/lib/collectorTransferListings";
 import { loadShelves } from "@/lib/curationCatalog";
 
 /**
@@ -40,11 +45,64 @@ import { loadShelves } from "@/lib/curationCatalog";
  * Compliance: the sitemap touches only pen-name-derived and catalog-file
  * identifiers (same set already rendered on public pages); no PII (legal
  * names, emails, sellerIds, walletAddresses) reaches this module.
+ *
+ * lastModified (PR-22): dynamic URLs use catalog image `mtime` (per file)
+ * where the route is backed by a physical file under
+ * `public/local-artworks` or `public/sample-artworks` (see
+ * `loadCatalogFiles`).
+ * `/artist/[slug]` uses the max mtime across that artist's work files.
+ * `/curation/[id]` uses the max of resolved item file mtimes plus
+ * `src/data/curation.ts` (shelf copy + membership can change without an
+ * image touch). `/provenance/[id]` uses the listing's `createdAt` ISO
+ * (per-row truth in JSONL), falling back to the JSONL file mtime if the
+ * timestamp is invalid. Static routes share a single lastModified =
+ * max(all catalog file mtimes, `curation.ts`, `featured-artists.ts`) so
+ * IA / operator data edits bump the aggregate "static" freshness without
+ * fabricating per-path file stats for every marketing page.
  */
 
 const SITE_URL = (
   process.env["NEXT_PUBLIC_SITE_URL"] ?? "http://localhost:3000"
 ).replace(/\/$/, "");
+
+async function fileMtime(absPath: string): Promise<Date | null> {
+  try {
+    const s = await stat(absPath);
+    return s.mtime;
+  } catch {
+    return null;
+  }
+}
+
+function maxDate(dates: readonly (Date | null | undefined)[]): Date {
+  const valid = dates.filter((d): d is Date => d != null && !Number.isNaN(d.getTime()));
+  if (valid.length === 0) return new Date();
+  return new Date(Math.max(...valid.map((d) => d.getTime())));
+}
+
+function catalogAbsPath(file: string, useLocal: boolean): string {
+  return path.join(
+    process.cwd(),
+    "public",
+    useLocal ? "local-artworks" : "sample-artworks",
+    file,
+  );
+}
+
+/** One `stat` per catalog filename — reused for releases, artists, shelves. */
+async function buildCatalogMtimeMap(
+  files: readonly string[],
+  useLocal: boolean,
+): Promise<Map<string, Date>> {
+  const map = new Map<string, Date>();
+  await Promise.all(
+    files.map(async (f) => {
+      const m = await fileMtime(catalogAbsPath(f, useLocal));
+      if (m) map.set(f, m);
+    }),
+  );
+  return map;
+}
 
 type RouteSpec = {
   /** Locale-less path beginning with `/`. The root home is `/`. */
@@ -94,66 +152,92 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // and already used elsewhere; they guarantee a pen-name-shaped
   // public surface (legal name stripped at the lib boundary — PII
   // never reaches the sitemap).
-  const [{ files }, artists, shelves, listings] = await Promise.all([
+  const [{ files, useLocal }, artists, shelves, listings] = await Promise.all([
     loadCatalogFiles(),
     loadArtists(),
     loadShelves(),
     listOpenCollectorTransferListings(),
   ]);
 
+  const [
+    catalogMtimes,
+    curationDataMtime,
+    featuredDataMtime,
+    jsonlMtime,
+  ] = await Promise.all([
+    buildCatalogMtimeMap(files, useLocal),
+    fileMtime(path.join(process.cwd(), "src", "data", "curation.ts")),
+    fileMtime(path.join(process.cwd(), "src", "data", "featured-artists.ts")),
+    fileMtime(COLLECTOR_TRANSFER_LISTINGS_FILE),
+  ]);
+
   const now = new Date();
+  const maxCatalogMtime = maxDate([...catalogMtimes.values()]);
+  const staticLastMod = maxDate([maxCatalogMtime, curationDataMtime, featuredDataMtime]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.flatMap((s) =>
-    buildEntries(s, now),
+    buildEntries(s, staticLastMod),
   );
 
-  const releaseEntries: MetadataRoute.Sitemap = files.flatMap((file) =>
-    buildEntries(
+  const releaseEntries: MetadataRoute.Sitemap = files.flatMap((file) => {
+    const lastModified = catalogMtimes.get(file) ?? now;
+    return buildEntries(
       {
         path: `/releases/${encodeArtworkSlug(file)}`,
         changeFrequency: "monthly",
         priority: 0.6,
       },
-      now,
-    ),
-  );
+      lastModified,
+    );
+  });
 
-  const artistEntries: MetadataRoute.Sitemap = artists.flatMap((a) =>
-    buildEntries(
+  const artistEntries: MetadataRoute.Sitemap = artists.flatMap((a) => {
+    const lastModified = maxDate(
+      a.works.map((w) => catalogMtimes.get(w.file)),
+    );
+    return buildEntries(
       {
         path: `/artist/${a.slug}`,
         changeFrequency: "monthly",
         priority: 0.6,
       },
-      now,
-    ),
-  );
+      lastModified,
+    );
+  });
 
   // Mirror the omni-search contract (PR-14): shelves with zero
   // resolved items are excluded — an empty shelf is a dead-end.
   const shelfEntries: MetadataRoute.Sitemap = shelves
     .filter((s) => s.itemCount > 0)
-    .flatMap((s) =>
-      buildEntries(
+    .flatMap((s) => {
+      const lastModified = maxDate([
+        ...s.items.map((i) => catalogMtimes.get(i.file)),
+        curationDataMtime,
+      ]);
+      return buildEntries(
         {
           path: `/curation/${encodeURIComponent(s.id)}`,
           changeFrequency: "monthly",
           priority: 0.6,
         },
-        now,
-      ),
-    );
+        lastModified,
+      );
+    });
 
-  const listingEntries: MetadataRoute.Sitemap = listings.flatMap((r) =>
-    buildEntries(
+  const listingEntries: MetadataRoute.Sitemap = listings.flatMap((r) => {
+    const fromIso = new Date(r.createdAt);
+    const lastModified = Number.isNaN(fromIso.getTime())
+      ? (jsonlMtime ?? now)
+      : fromIso;
+    return buildEntries(
       {
         path: `/provenance/${encodeURIComponent(r.id)}`,
         changeFrequency: "daily",
         priority: 0.5,
       },
-      now,
-    ),
-  );
+      lastModified,
+    );
+  });
 
   return [
     ...staticEntries,
