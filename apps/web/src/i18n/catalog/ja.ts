@@ -100,6 +100,12 @@ export const ja: Messages = {
     notFoundTitle: "作家が見つかりません",
     notFoundBody: "ご指定の作家は公開を終了したか、URL が変更された可能性があります。",
     notFoundCta: "作家のシェルフを見る",
+    shelves: {
+      heading: "登場シェルフ",
+      lead: "運営チームがこの作家の作品をまとめたシェルフです。",
+      itemsCount: "作品 {n}点",
+      viewShelf: "シェルフを開く",
+    },
   },
   auth: {
     signIn: "ログイン",

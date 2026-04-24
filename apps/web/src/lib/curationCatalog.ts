@@ -123,3 +123,32 @@ export async function loadFirstShelf(limit: number): Promise<ResolvedShelf | nul
   const indexByFile = buildIndexByFile(files);
   return resolveShelf(shelf, files, indexByFile, limit);
 }
+
+/**
+ * Resolve every shelf and return only those that contain at least one
+ * artwork attributed to `artistKey` (the lowercased pen name used by
+ * `lib/artistsCatalog`). Shelves keep their original `CURATION_SHELVES`
+ * order, which doubles as the operator-intent priority.
+ *
+ * Used by the artist PDP (`/artist/[slug]`) to surface "shelves this
+ * artist appears on". Items here are filename-derived (public catalog)
+ * so no PII is introduced; a shelf with zero matches is simply omitted.
+ * Each returned shelf carries its full resolved item list (no preview
+ * cap) so the caller can pick any representation it wants.
+ */
+export async function loadShelvesForArtistKey(
+  artistKey: string,
+): Promise<ResolvedShelf[]> {
+  if (!artistKey) return [];
+  const { files } = await loadCatalogFiles();
+  const indexByFile = buildIndexByFile(files);
+  const out: ResolvedShelf[] = [];
+  for (const shelf of CURATION_SHELVES) {
+    const resolved = resolveShelf(shelf, files, indexByFile);
+    const hasArtist = resolved.items.some(
+      (i) => i.artist.toLowerCase() === artistKey,
+    );
+    if (hasArtist) out.push(resolved);
+  }
+  return out;
+}

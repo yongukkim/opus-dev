@@ -196,6 +196,19 @@ export type Messages = {
     notFoundTitle: string;
     notFoundBody: string;
     notFoundCta: string;
+    /**
+     * PR-15: "Shelves this artist appears on" section. Only rendered when
+     * the artist has at least one resolved shelf, so empty-state copy is
+     * deliberately absent (the entire section hides instead).
+     */
+    shelves: {
+      heading: string;
+      lead: string;
+      /** Per-card chip — uses `{n}` token for the shelf's total item count. */
+      itemsCount: string;
+      /** Per-card CTA → `/curation/<id>`. */
+      viewShelf: string;
+    };
   };
   auth: {
     signIn: string;
