@@ -8,11 +8,13 @@ import {
   maskSellerId,
 } from "@/lib/collectorTransferListings";
 import { loadArtists } from "@/lib/artistsCatalog";
+import { loadShelves } from "@/lib/curationCatalog";
 import type {
   SearchArtist,
   SearchArtwork,
   SearchIndex,
   SearchListing,
+  SearchShelf,
 } from "./searchIndex.types";
 
 export type {
@@ -20,6 +22,7 @@ export type {
   SearchArtwork,
   SearchIndex,
   SearchListing,
+  SearchShelf,
 } from "./searchIndex.types";
 export { SEARCH_INDEX_PATH } from "./searchIndex.types";
 
@@ -75,9 +78,13 @@ function buildArtworks(files: readonly string[]): SearchArtwork[] {
 
 export async function buildSearchIndex(): Promise<SearchIndex> {
   const { files } = await loadCatalogFiles();
-  const [rawListings, artistEntries] = await Promise.all([
+  const [rawListings, artistEntries, resolvedShelves] = await Promise.all([
     listOpenCollectorTransferListings(),
     loadArtists(),
+    // No preview cap: we only need the shelf-level fields (title,
+    // description, itemCount). Resolved items themselves aren't carried
+    // into the search index — the modal links straight to `/curation/[id]`.
+    loadShelves(),
   ]);
 
   const artworks = buildArtworks(files);
@@ -100,11 +107,26 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     href: localelessHref(`/provenance#${encodeURIComponent(r.id)}`),
     badge: "secondary",
   }));
+  // Drop shelves whose refs all fell out of catalog resolution — an
+  // empty shelf in ⌘K is a dead-end and the detail page would just show
+  // the empty-state copy. Keep the full translation payload so the
+  // modal can render the active-locale title/description without a
+  // second network hop.
+  const shelves: SearchShelf[] = resolvedShelves
+    .filter((s) => s.itemCount > 0)
+    .map((s) => ({
+      id: s.id,
+      title: s.title,
+      description: s.description,
+      itemCount: s.itemCount,
+      href: localelessHref(`/curation/${encodeURIComponent(s.id)}`),
+    }));
 
   return {
     generatedAt: new Date().toISOString(),
     artworks,
     artists,
     listings,
+    shelves,
   };
 }
