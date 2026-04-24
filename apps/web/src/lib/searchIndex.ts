@@ -102,6 +102,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     id: r.id,
     artworkTitle: r.artworkTitle,
     artistPenName: r.artistPenName,
+    saleMode: r.saleMode ?? "fixed",
     priceJpy: r.priceJpy,
     sellerMasked: maskSellerId(r.sellerId),
     href: localelessHref(`/provenance/${encodeURIComponent(r.id)}`),

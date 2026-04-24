@@ -28,6 +28,8 @@ export type SearchListing = {
   id: string;
   artworkTitle: string;
   artistPenName: string;
+  /** Omitted in stale cached indexes → treat as fixed in UI. */
+  saleMode?: "fixed" | "auction";
   priceJpy: number;
   /** Already masked at index build time via `maskSellerId`. */
   sellerMasked: string;

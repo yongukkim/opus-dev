@@ -142,6 +142,8 @@ export type Messages = {
     hintMove: string;
     hintClose: string;
     results: string;
+    /** Shown on provenance listing hits in ⌘K when `saleMode` is auction. */
+    listingAuctionPill: string;
   };
   /**
    * `/[locale]/featured-artists` index — PR-12 of the home redesign series,
@@ -690,6 +692,12 @@ export type Messages = {
     sectionArtist: string;
     sectionWork: string;
     sectionOffer: string;
+    /** How the holder lists the edition: fixed amount vs auction (opening bid stored as JPY). */
+    sectionSaleMode: string;
+    saleModeFixedLabel: string;
+    saleModeFixedDescription: string;
+    saleModeAuctionLabel: string;
+    saleModeAuctionDescription: string;
     userIdDevLabel: string;
     userIdDevHint: string;
     artistLegalNameLabel: string;
@@ -714,8 +722,10 @@ export type Messages = {
     tagsHint: string;
     editionRefLabel: string;
     editionRefHint: string;
-    priceLabel: string;
-    priceHint: string;
+    priceLabelFixed: string;
+    priceHintFixed: string;
+    priceLabelAuction: string;
+    priceHintAuction: string;
     noteLabel: string;
     noteHint: string;
     rightsConfirmLabel: string;
@@ -741,6 +751,10 @@ export type Messages = {
     listingsYear: string;
     listingsSellerRef: string;
     listingsPrice: string;
+    /** Short chip on index/detail when saleMode is fixed. */
+    listingsSaleModeFixed: string;
+    /** Short chip when saleMode is auction. */
+    listingsSaleModeAuction: string;
     listingsListedAt: string;
     listingsDemoNote: string;
     listingsBackHome: string;

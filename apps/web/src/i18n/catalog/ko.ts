@@ -83,6 +83,7 @@ export const ko: Messages = {
     hintMove: "위·아래로",
     hintClose: "닫기",
     results: "{n}건",
+    listingAuctionPill: "경매",
   },
   featuredArtists: {
     kicker: "작가",
@@ -621,6 +622,12 @@ export const ko: Messages = {
     sectionArtist: "작가 표기",
     sectionWork: "작품 정보",
     sectionOffer: "이전 조건",
+    sectionSaleMode: "판매 방식",
+    saleModeFixedLabel: "일반판매",
+    saleModeFixedDescription: "소장자가 원하는 금액을 정해 등록합니다.",
+    saleModeAuctionLabel: "경매",
+    saleModeAuctionDescription:
+      "입찰로 다음 수탁자를 정합니다. 아래 금액은 시작가(예약가)로 제출됩니다. (데모)",
     userIdDevLabel: "회원 ID (데모)",
     userIdDevHint: "API 헤더와 맞출 식별자입니다. 설정에서 쓰는 데모 ID와 동일하게 맞추세요.",
     artistLegalNameLabel: "작가 본명 (비공개)",
@@ -646,9 +653,12 @@ export const ko: Messages = {
     tagsHint: "쉼표로 구분 (선택)",
     editionRefLabel: "에디션·기록 참조",
     editionRefHint: "예: Edition 3/50, Chronicle ref, Vault 항목명 등 (선택)",
-    priceLabel: "제시 금액 (엔)",
-    priceHint:
-      "작가가 아니라, 소유권을 이전하는 현재 소장자가 정한 표시 금액입니다. 다음 소장자와의 합의·결제는 별도 절차입니다. (데모)",
+    priceLabelFixed: "제시 금액 (엔)",
+    priceHintFixed:
+      "작가가 아니라, 소유권을 이전하는 현재 소장자가 정한 표시 금액입니다. 다음 수탁자와의 합의·결제는 별도 절차입니다. (데모)",
+    priceLabelAuction: "시작가·예약가 (엔)",
+    priceHintAuction:
+      "경매 등록 시 입찰의 기준이 되는 최저 금액입니다. 낙찰·수탁 확정은 별도 절차입니다. (데모)",
     noteLabel: "비고",
     noteHint: "감상 환경·인수 조건 등 짧게 적어 주세요. (선택)",
     rightsConfirmLabel: "권리·소장 확인",
@@ -675,7 +685,9 @@ export const ko: Messages = {
     listingsGenre: "장르",
     listingsYear: "연도",
     listingsSellerRef: "등록자",
-    listingsPrice: "제시 금액",
+    listingsPrice: "금액",
+    listingsSaleModeFixed: "일반",
+    listingsSaleModeAuction: "경매",
     listingsListedAt: "등록일",
     listingsDemoNote:
       "데모: JSONL 저장. 공개 화면에는 작가 본명이 올라가지 않습니다. 연락처·민감 정보는 넣지 마세요. 운영 시 Chronicle·Vault 소유 검증과 연동합니다.",

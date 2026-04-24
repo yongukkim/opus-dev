@@ -335,8 +335,15 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
                         </span>
                       </span>
                       <span className="flex shrink-0 flex-col items-end gap-1">
-                        <span className="font-mono text-xs text-opus-warm/85">
-                          {formatJpy(l.priceJpy)}
+                        <span className="flex flex-wrap items-center justify-end gap-1.5">
+                          <span className="font-mono text-xs text-opus-warm/85">
+                            {formatJpy(l.priceJpy)}
+                          </span>
+                          {l.saleMode === "auction" ? (
+                            <span className="rounded border border-opus-gold/28 bg-opus-gold/10 px-1.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-opus-gold-light">
+                              {t.listingAuctionPill}
+                            </span>
+                          ) : null}
                         </span>
                         <span className="rounded-full border border-white/[0.18] bg-white/[0.04] px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.2em] text-opus-warm/75">
                           {badge.secondary}

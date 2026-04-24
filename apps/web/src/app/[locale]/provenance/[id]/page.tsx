@@ -127,7 +127,9 @@ export default async function ProvenanceDetailPage({ params }: Props) {
     .filter(Boolean)
     .slice(0, 24);
 
-  const priceLabel = `¥${listing.priceJpy.toLocaleString("ja-JP")}`;
+  const priceAmount = `¥${listing.priceJpy.toLocaleString("ja-JP")}`;
+  const saleModeShort =
+    listing.saleMode === "auction" ? t.listingsSaleModeAuction : t.listingsSaleModeFixed;
   const sellerLabel = `${maskSellerId(listing.sellerId)} · ${listing.sellerRole}`;
 
   return (
@@ -202,10 +204,13 @@ export default async function ProvenanceDetailPage({ params }: Props) {
             ) : null}
           </div>
           <span
-            className="shrink-0 self-start rounded-full border border-opus-gold/45 bg-opus-gold/10 px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-opus-gold-light md:self-end"
-            aria-label={t.listingsPrice}
+            className="flex shrink-0 flex-col items-end gap-1 self-start rounded-full border border-opus-gold/45 bg-opus-gold/10 px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-opus-gold-light md:self-end"
+            aria-label={`${t.listingsPrice}: ${priceAmount} (${saleModeShort})`}
           >
-            {priceLabel}
+            <span className="text-[0.68rem] tracking-normal">{priceAmount}</span>
+            <span className="text-[0.55rem] font-normal normal-case tracking-[0.12em] text-opus-warm/55">
+              {saleModeShort}
+            </span>
           </span>
         </header>
 

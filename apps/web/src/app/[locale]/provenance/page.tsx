@@ -106,6 +106,10 @@ export default async function CollectorTransferListingsPage({ params }: Props) {
                         {t.listingsPrice}
                       </span>{" "}
                       <span className="text-opus-gold-light">¥{r.priceJpy.toLocaleString("ja-JP")}</span>
+                      <span className="ml-1.5 font-mono text-[0.62rem] tracking-[0.06em] text-opus-warm/40">
+                        ·{" "}
+                        {r.saleMode === "auction" ? t.listingsSaleModeAuction : t.listingsSaleModeFixed}
+                      </span>
                     </span>
                     <span className="text-opus-warm/50">
                       <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/35">

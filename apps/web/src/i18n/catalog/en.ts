@@ -83,6 +83,7 @@ export const en: Messages = {
     hintMove: "Up and down",
     hintClose: "Close",
     results: "{n} results",
+    listingAuctionPill: "Auction",
   },
   featuredArtists: {
     kicker: "Artists",
@@ -623,6 +624,12 @@ export const en: Messages = {
     sectionArtist: "Artist attribution",
     sectionWork: "Work details",
     sectionOffer: "Transfer terms",
+    sectionSaleMode: "How you are listing",
+    saleModeFixedLabel: "Fixed price",
+    saleModeFixedDescription: "You set the amount you want for the edition.",
+    saleModeAuctionLabel: "Auction",
+    saleModeAuctionDescription:
+      "Bidders compete for the next custodian. The amount below is submitted as the opening / reserve (JPY). (Demo)",
     userIdDevLabel: "Member ID (demo)",
     userIdDevHint: "Must match the demo user id sent to the API. Use the same value as in your local demo setup.",
     artistLegalNameLabel: "Artist legal name (private)",
@@ -648,9 +655,12 @@ export const en: Messages = {
     tagsHint: "Comma-separated (optional)",
     editionRefLabel: "Edition / record reference",
     editionRefHint: "e.g. Edition 3/50, Chronicle ref, Vault label (optional)",
-    priceLabel: "Listed amount (JPY)",
-    priceHint:
-      "Set by the current holder who is transferring ownership—not by the artist as a list price. Agreement and settlement with the next collector happen in a separate flow. (Demo)",
+    priceLabelFixed: "Listed amount (JPY)",
+    priceHintFixed:
+      "Set by the current holder who is transferring ownership—not by the artist as a list price. Agreement with the next custodian happens in a separate flow. (Demo)",
+    priceLabelAuction: "Opening / reserve (JPY)",
+    priceHintAuction:
+      "Minimum basis for bids when listing as an auction. Winning bid and custody handoff are handled separately. (Demo)",
     noteLabel: "Notes",
     noteHint: "Viewing requirements, handoff notes, etc. (optional)",
     rightsConfirmLabel: "Ownership confirmation",
@@ -676,7 +686,9 @@ export const en: Messages = {
     listingsGenre: "Genre",
     listingsYear: "Year",
     listingsSellerRef: "Listed by",
-    listingsPrice: "Listed amount",
+    listingsPrice: "Amount",
+    listingsSaleModeFixed: "Fixed",
+    listingsSaleModeAuction: "Auction",
     listingsListedAt: "Listed at",
     listingsDemoNote:
       "Demo: JSONL on the server. Legal names are not published on the public page. Do not enter contact details or other sensitive info.",

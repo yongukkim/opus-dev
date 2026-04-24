@@ -21,6 +21,8 @@ export type CollectorTransferListing = {
   description?: string;
   tags?: string;
   editionRef: string;
+  /** `fixed` = holder-set asking amount; `auction` = same field stored as opening/reserve (JPY). */
+  saleMode: "fixed" | "auction";
   priceJpy: number;
   note?: string;
   status: "open";
@@ -36,6 +38,7 @@ function parseListingLine(line: string): CollectorTransferListing | null {
     if (typeof raw.sellerId !== "string" || typeof raw.artworkTitle !== "string") return null;
     const priceJpy = typeof raw.priceJpy === "number" ? raw.priceJpy : Number.NaN;
     if (!Number.isFinite(priceJpy) || priceJpy < 1) return null;
+    const saleMode = raw.saleMode === "auction" ? "auction" : "fixed";
     return {
       id: raw.id,
       createdAt: typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString(),
@@ -49,6 +52,7 @@ function parseListingLine(line: string): CollectorTransferListing | null {
       description: typeof raw.description === "string" && raw.description.trim() ? raw.description.trim() : undefined,
       tags: typeof raw.tags === "string" && raw.tags.trim() ? raw.tags.trim() : undefined,
       editionRef: typeof raw.editionRef === "string" ? raw.editionRef.trim() : "",
+      saleMode,
       priceJpy,
       note: typeof raw.note === "string" && raw.note.trim() ? raw.note.trim() : undefined,
       status: "open",

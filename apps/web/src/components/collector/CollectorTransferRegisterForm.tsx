@@ -69,6 +69,8 @@ export function CollectorTransferRegisterForm({
   const t = m.collectorTransfer;
   const apiRole = vaultRole === "artist" ? "artist" : "collector";
 
+  const [saleMode, setSaleMode] = useState<"fixed" | "auction">("fixed");
+
   const [draft, setDraft] = useState<Draft>({
     userId: "collector-demo-001",
     artistLegalName: "",
@@ -159,6 +161,8 @@ export function CollectorTransferRegisterForm({
     const priceJpyDisplay = draft.priceJpy.trim()
       ? `¥${Number(draft.priceJpy).toLocaleString("ja-JP")}`
       : "—";
+    const saleModeLabel =
+      saleMode === "auction" ? t.listingsSaleModeAuction : t.listingsSaleModeFixed;
     const tagList = draft.tags
       .split(",")
       .map((x) => x.trim())
@@ -171,10 +175,11 @@ export function CollectorTransferRegisterForm({
       year: draft.year.trim() || "—",
       editionRef: draft.editionRef.trim() || "—",
       priceJpyDisplay,
+      saleModeLabel,
       tags: tagList,
       description: draft.description.trim(),
     };
-  }, [draft, t]);
+  }, [draft, saleMode, t]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -224,6 +229,7 @@ export function CollectorTransferRegisterForm({
       fd.set("tags", draft.tags.trim());
       fd.set("editionRef", draft.editionRef.trim());
       fd.set("priceJpy", String(price));
+      fd.set("saleMode", saleMode);
       fd.set("note", draft.note.trim());
       fd.set("rightsConfirmed", "true");
 
@@ -237,6 +243,7 @@ export function CollectorTransferRegisterForm({
       });
       if (!res.ok) throw new Error("bad");
       setBanner("ok");
+      setSaleMode("fixed");
       setDraft((d) => ({
         ...d,
         artistLegalName: "",
@@ -421,8 +428,60 @@ export function CollectorTransferRegisterForm({
         </div>
 
         {sectionRule(t.sectionOffer)}
-        <div className="mt-4 max-w-md">
-          <p className={labelClass()}>{t.priceLabel}</p>
+        <fieldset className="mt-4">
+          <legend className={labelClass()}>{t.sectionSaleMode}</legend>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <label
+              className={`flex cursor-pointer gap-3 rounded-lg border p-4 transition ${
+                saleMode === "fixed"
+                  ? "border-opus-gold/45 bg-opus-gold/[0.07]"
+                  : "border-white/[0.1] bg-black/10 hover:border-white/[0.16]"
+              }`}
+            >
+              <input
+                type="radio"
+                name="opusTransferSaleMode"
+                value="fixed"
+                checked={saleMode === "fixed"}
+                onChange={() => setSaleMode("fixed")}
+                className="mt-1 h-4 w-4 shrink-0 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+              />
+              <span>
+                <span className="block text-sm font-medium text-opus-warm">{t.saleModeFixedLabel}</span>
+                <span className="mt-1 block text-xs leading-relaxed text-opus-warm/50">
+                  {t.saleModeFixedDescription}
+                </span>
+              </span>
+            </label>
+            <label
+              className={`flex cursor-pointer gap-3 rounded-lg border p-4 transition ${
+                saleMode === "auction"
+                  ? "border-opus-gold/45 bg-opus-gold/[0.07]"
+                  : "border-white/[0.1] bg-black/10 hover:border-white/[0.16]"
+              }`}
+            >
+              <input
+                type="radio"
+                name="opusTransferSaleMode"
+                value="auction"
+                checked={saleMode === "auction"}
+                onChange={() => setSaleMode("auction")}
+                className="mt-1 h-4 w-4 shrink-0 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+              />
+              <span>
+                <span className="block text-sm font-medium text-opus-warm">{t.saleModeAuctionLabel}</span>
+                <span className="mt-1 block text-xs leading-relaxed text-opus-warm/50">
+                  {t.saleModeAuctionDescription}
+                </span>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div className="mt-6 max-w-md">
+          <p className={labelClass()}>
+            {saleMode === "auction" ? t.priceLabelAuction : t.priceLabelFixed}
+          </p>
           <input
             name="priceJpy"
             value={draft.priceJpy}
@@ -433,7 +492,9 @@ export function CollectorTransferRegisterForm({
             autoComplete="off"
             placeholder="10000"
           />
-          <p className={hintClass()}>{t.priceHint}</p>
+          <p className={hintClass()}>
+            {saleMode === "auction" ? t.priceHintAuction : t.priceHintFixed}
+          </p>
           {invalid("priceJpy") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
         </div>
 
@@ -497,6 +558,9 @@ export function CollectorTransferRegisterForm({
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-opus-warm/55">
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.genreLabel}</span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.year}</span>
+              <span className="rounded border border-opus-gold/25 bg-opus-gold/10 px-2 py-1 text-opus-gold-light">
+                {preview.saleModeLabel}
+              </span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.priceJpyDisplay}</span>
               <span className="rounded border border-white/[0.08] bg-black/10 px-2 py-1">{preview.editionRef}</span>
             </div>

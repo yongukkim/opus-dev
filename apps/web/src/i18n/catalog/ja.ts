@@ -83,6 +83,7 @@ export const ja: Messages = {
     hintMove: "上下",
     hintClose: "閉じる",
     results: "{n}件",
+    listingAuctionPill: "オークション",
   },
   featuredArtists: {
     kicker: "作家",
@@ -639,6 +640,12 @@ export const ja: Messages = {
     sectionArtist: "作家表記",
     sectionWork: "作品情報",
     sectionOffer: "譲渡条件",
+    sectionSaleMode: "販売方式",
+    saleModeFixedLabel: "定額",
+    saleModeFixedDescription: "保有者が希望する金額を指定して登録します。",
+    saleModeAuctionLabel: "オークション",
+    saleModeAuctionDescription:
+      "入札で次の所蔵者を決めます。下記の金額は開始・予約価格として送信されます。（デモ）",
     userIdDevLabel: "会員ID（デモ）",
     userIdDevHint: "APIヘッダーと一致させる識別子です。ローカルデモで使うIDと揃えてください。",
     artistLegalNameLabel: "作家本名（非公開）",
@@ -664,9 +671,12 @@ export const ja: Messages = {
     tagsHint: "カンマ区切り（任意）",
     editionRefLabel: "エディション・記録参照",
     editionRefHint: "例：Edition 3/50、Chronicle参照、Vault表示名など（任意）",
-    priceLabel: "提示額（円）",
-    priceHint:
-      "作家による定価ではなく、所有権を移転する現在の保有者が提示する表示金額です。次のコレクターとの合意・決済は別フローです。（デモ）",
+    priceLabelFixed: "提示額（円）",
+    priceHintFixed:
+      "作家による定価ではなく、所有権を移転する現在の保有者が提示する表示金額です。次の所蔵者との合意・決済は別フローです。（デモ）",
+    priceLabelAuction: "開始・予約価格（円）",
+    priceHintAuction:
+      "オークション登録時の入札基準となる最低金額です。落札・所蔵確定は別フローです。（デモ）",
     noteLabel: "備考",
     noteHint: "鑑賞環境・受け渡し条件など（任意）",
     rightsConfirmLabel: "権利・保有の確認",
@@ -692,7 +702,9 @@ export const ja: Messages = {
     listingsGenre: "ジャンル",
     listingsYear: "年",
     listingsSellerRef: "登録者",
-    listingsPrice: "提示額",
+    listingsPrice: "金額",
+    listingsSaleModeFixed: "定額",
+    listingsSaleModeAuction: "オークション",
     listingsListedAt: "登録日時",
     listingsDemoNote:
       "デモ：JSONLに保存。公開画面には作家本名は掲載されません。連絡先などの機微情報は入力しないでください。",

@@ -102,9 +102,16 @@ export async function RailProvenance({
                   ) : null}
 
                   <div className="mt-auto flex items-end justify-between gap-3 pt-2">
-                    <p className="font-display text-lg text-opus-gold-light">
-                      ¥{listing.priceJpy.toLocaleString("ja-JP")}
-                    </p>
+                    <div>
+                      <p className="font-display text-lg text-opus-gold-light">
+                        ¥{listing.priceJpy.toLocaleString("ja-JP")}
+                      </p>
+                      {listing.saleMode === "auction" ? (
+                        <p className="mt-0.5 font-mono text-[0.55rem] uppercase tracking-[0.14em] text-opus-gold/75">
+                          {m.collectorTransfer.listingsSaleModeAuction}
+                        </p>
+                      ) : null}
+                    </div>
                     {/*
                       Seller ref is the masked internal id (ISO 27001 A.18.1.4).
                       Never the raw sellerId; never the artist legal name.

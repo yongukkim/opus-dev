@@ -54,6 +54,13 @@ function requireGenre(fd: FormData): string {
   return g;
 }
 
+function requireSaleMode(fd: FormData): "fixed" | "auction" {
+  const v = fd.get("saleMode");
+  if (typeof v !== "string") throw new Error("invalid:saleMode");
+  if (v !== "fixed" && v !== "auction") throw new Error("invalid:saleMode");
+  return v;
+}
+
 function optionalYear(fd: FormData): string {
   const raw = optionalString(fd, "year", 8);
   if (!raw) return "";
@@ -98,6 +105,7 @@ export async function POST(request: NextRequest) {
     const tags = tagsRaw || undefined;
     const editionRef = optionalString(fd, "editionRef", 160);
     const priceJpy = requireInt(fd, "priceJpy", 1, 99_999_999);
+    const saleMode = requireSaleMode(fd);
     const noteRaw = optionalString(fd, "note", 800);
     const note = noteRaw || undefined;
     const rightsConfirmed = requireBool(fd, "rightsConfirmed");
@@ -117,6 +125,7 @@ export async function POST(request: NextRequest) {
       description,
       tags,
       editionRef,
+      saleMode,
       priceJpy,
       note,
       status: "open",
