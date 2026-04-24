@@ -471,6 +471,7 @@ export const ko: Messages = {
       "아카이브 열람, Vault 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
     openVault: "Vault 열기",
+    openProvenance: "소장 계보 둘러보기",
   },
   artworks: {
     kicker: "Releases · 신작 공개",

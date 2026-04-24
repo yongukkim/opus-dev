@@ -486,6 +486,7 @@ export const ja: Messages = {
       "アーカイブの閲覧、Vaultの管理、決済はウェブから行えます。鑑賞はアプリで行えます。実物資産や金融商品ではなく、複製不可デジタルアートの体験を提供します。",
     buy: "購入・決済へ進む",
     openVault: "Vaultを開く",
+    openProvenance: "来歴を見る",
   },
   artworks: {
     kicker: "Releases · 新作公開",

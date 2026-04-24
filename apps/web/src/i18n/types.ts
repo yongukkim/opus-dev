@@ -421,7 +421,14 @@ export type Messages = {
     yearBest: string;
     caption: string;
   };
-  marketing: { title: string; body: string; buy: string; openVault: string };
+  marketing: {
+    title: string;
+    body: string;
+    buy: string;
+    openVault: string;
+    /** Spec §3.8 — secondary channel; links to `/provenance` (1차 Buy remains primary CTA). */
+    openProvenance: string;
+  };
   artworks: {
     kicker: string;
     title: string;

@@ -8,6 +8,9 @@ export function MarketingCtaBand({ locale, m }: { locale: Locale; m: Messages })
   const c = m.marketing;
   const ja = locale === "ja";
   const tight = ja ? "tracking-tight break-keep" : "";
+  const secondaryLinkClass = ja
+    ? "opus-text-metallic-soft font-mono text-[0.7rem] font-semibold tracking-tight break-keep underline-offset-4 transition hover:underline"
+    : "opus-text-metallic-soft font-mono text-[0.7rem] uppercase tracking-[0.2em] underline-offset-4 transition hover:underline";
 
   return (
     <section
@@ -24,23 +27,21 @@ export function MarketingCtaBand({ locale, m }: { locale: Locale; m: Messages })
           {c.title}
         </h2>
         <p className={`mx-auto mt-4 max-w-md font-sans text-sm text-opus-warm/55 ${tight}`}>{c.body}</p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+        <div className="mt-10 flex w-full max-w-md flex-col items-center gap-6 sm:max-w-none">
           <OpusButton
             variant="primary"
             className={ja ? "tracking-tight break-keep font-semibold" : undefined}
           >
             {c.buy}
           </OpusButton>
-          <Link
-            href={withLocale(locale, "/vault")}
-            className={
-              ja
-                ? "opus-text-metallic-soft font-mono text-[0.7rem] font-semibold tracking-tight break-keep underline-offset-4 transition hover:underline"
-                : "opus-text-metallic-soft font-mono text-[0.7rem] uppercase tracking-[0.2em] underline-offset-4 transition hover:underline"
-            }
-          >
-            {c.openVault}
-          </Link>
+          <div className="flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-3">
+            <Link href={withLocale(locale, "/vault")} className={secondaryLinkClass}>
+              {c.openVault}
+            </Link>
+            <Link href={withLocale(locale, "/provenance")} className={secondaryLinkClass}>
+              {c.openProvenance}
+            </Link>
+          </div>
         </div>
       </div>
     </section>
