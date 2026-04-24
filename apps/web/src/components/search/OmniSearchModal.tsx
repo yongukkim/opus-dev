@@ -190,9 +190,9 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
             type="button"
             onClick={close}
             aria-label={t.hintClose}
-            className="rounded border border-white/[0.1] px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/55 hover:text-opus-gold-light"
+            className="rounded border border-white/[0.1] px-2.5 py-0.5 font-sans text-[0.65rem] text-opus-warm/65 hover:text-opus-gold-light"
           >
-            esc
+            {t.hintClose}
           </button>
         </div>
 
@@ -350,7 +350,7 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
           )}
         </Command.List>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.08] px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/55">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.08] px-4 py-2 font-sans text-[0.65rem] leading-snug text-opus-warm/55">
           <span className="flex items-center gap-3">
             <span>{t.hintSelect}</span>
             <span>{t.hintMove}</span>

@@ -37,14 +37,11 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
     ? "inline-flex min-w-[14rem] items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold tracking-tight break-keep transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm"
     : "inline-flex min-w-[14rem] items-center justify-center rounded-full px-10 py-3.5 text-xs font-semibold uppercase tracking-[0.22em] transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opus-gold-light/55 focus-visible:ring-offset-2 focus-visible:ring-offset-opus-charcoal md:min-w-[15rem] md:text-sm";
   const ctaPrimary = `opus-surface-metallic text-black ${ctaShared}`;
-  const ctaSecondary = `opus-text-metallic border border-opus-gold/45 bg-transparent hover:border-opus-gold-light/70 hover:bg-opus-gold/8 ${ctaShared}`;
-  const searchHintClass = ja
-    ? "opus-text-metallic-soft mt-6 font-mono text-[0.65rem] tracking-tight break-keep opacity-80"
-    : "opus-text-metallic-soft mt-6 font-mono text-[0.65rem] uppercase tracking-[0.32em] opacity-80";
+  const ctaSecondary = `border border-opus-gold/45 bg-transparent text-opus-warm/90 hover:border-opus-gold-light/70 hover:bg-opus-gold/8 ${ctaShared}`;
 
   return (
     <section
-      className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-opus-charcoal px-6 pb-28 pt-[calc(6.5rem+3rem)] md:pb-36 md:pt-[calc(6.5rem+4rem)]"
+      className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-opus-charcoal px-6 pb-4 pt-[calc(6.5rem+3rem)] md:pb-8 md:pt-[calc(6.5rem+4rem)]"
       aria-label={m.a11y.hero}
     >
       <div
@@ -102,7 +99,7 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
             ) : null}
 
             <p className="opus-text-metallic-soft mt-3 font-mono text-[0.65rem] uppercase tracking-[0.35em] opacity-90">
-              Edition · The Log · Vault
+              Edition · The Log · My Page
             </p>
 
             {/*
@@ -115,17 +112,9 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
                 <span className="relative z-[1]">{h.openReleases}</span>
               </Link>
               <Link href={withLocale(locale, "/provenance")} className={ctaSecondary}>
-                <span className="relative z-[1]">{h.openProvenance}</span>
+                <span className="relative z-[1]">{h.openProvenance?.trim() || m.nav.provenance}</span>
               </Link>
             </div>
-            {/*
-              Hint for the ⌘K omni-search modal. The modal is introduced in a
-              later PR; this PR only surfaces the affordance so users learn the
-              shortcut exists. Static text — no interaction yet.
-            */}
-            <p className={searchHintClass} aria-hidden>
-              {h.searchHint}
-            </p>
           </div>
         </div>
       </div>

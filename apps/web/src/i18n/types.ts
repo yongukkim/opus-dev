@@ -94,6 +94,11 @@ export type Messages = {
   search: {
     /** Header trigger button label, also acts as aria-label. */
     triggerLabel: string;
+    /**
+     * Short visible label on search chips (e.g. KO「검색」) — not keyboard
+     * symbols like ⌘K; those remain available via keybindings in code only.
+     */
+    triggerChip: string;
     /** Modal title (visually hidden, used for aria-labelledby). */
     modalTitle: string;
     /** Input placeholder. */

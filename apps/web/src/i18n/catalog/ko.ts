@@ -35,7 +35,7 @@ export const ko: Messages = {
     primaryNav: "주요 메뉴",
     utilityNav: "보조 링크",
     language: "언어",
-    vaultNav: "Vault 메뉴",
+    vaultNav: "My Page 메뉴",
     designPhilosophy: "디자인 철학",
     hero: "OPUS 히어로",
     stats: "신뢰 지표",
@@ -43,18 +43,19 @@ export const ko: Messages = {
   },
   nav: {
     releases: "신작 공개",
-    vault: "Vault",
+    vault: "My Page",
     legal: "법적 고지",
     provenance: "소장 계보",
     curation: "큐레이션",
     artists: "작가",
   },
   badge: {
-    primary: "新作",
+    primary: "신작",
     secondary: "来歴",
   },
   search: {
     triggerLabel: "검색 열기",
+    triggerChip: "검색",
     modalTitle: "통합 검색",
     placeholder: "작품·작가를 입력…",
     scopeAria: "검색 범위",
@@ -75,9 +76,9 @@ export const ko: Messages = {
     hintCardPrompt: "작품·작가·에디션을 찾아보세요",
     hintCardAriaLabel: "검색 열기. 작품·작가·리스팅·셸프를 키워드로 찾을 수 있습니다",
     loading: "검색 인덱스를 불러오는 중…",
-    hintSelect: "⏎ 선택",
-    hintMove: "↑↓ 이동",
-    hintClose: "esc 닫기",
+    hintSelect: "이 항목 열기",
+    hintMove: "위·아래로",
+    hintClose: "닫기",
     results: "{n}건",
   },
   featuredArtists: {
@@ -199,7 +200,7 @@ export const ko: Messages = {
     line: "인증 에디션",
     tokushoho: "특정상거래법 표시",
     chronicle: "The Chronicle",
-    vaultShort: "Vault",
+    vaultShort: "My Page",
   },
   footer: {
     about:
@@ -208,7 +209,7 @@ export const ko: Messages = {
       "디자인: Classic Luxury — near-black 차콜, 샴페인 브라스(그라데이션 금속), 웜 화이트, 절제된 장식. 투자·실물자산 상품이 아닙니다.",
     releases: "신작 공개",
     provenance: "소장 계보",
-    vault: "Vault",
+    vault: "My Page",
     legal: "특정상거래법 표시",
     privacy: "개인정보 처리방침",
     terms: "이용약관",
@@ -402,7 +403,7 @@ export const ko: Messages = {
       "",
     openReleases: "신작 공개",
     openProvenance: "소장 계보",
-    searchHint: "⌘K로 탐색",
+    searchHint: "검색",
   },
   design: {
     title: "Classic Luxury",
@@ -425,7 +426,7 @@ export const ko: Messages = {
     appRequiredComingSoon: "스토어 링크 준비 중",
     comingSoon: "곧 공개",
     railReleases: {
-      title: "新作 공개 · 최신 1차 에디션",
+      title: "신작 공개 · 최신 1차 에디션",
       body: "검증된 작가의 한정 에디션입니다.",
       viewAll: "전체 보기",
     },
@@ -470,7 +471,7 @@ export const ko: Messages = {
     body:
       "아카이브 열람, Vault 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
-    openVault: "Vault 열기",
+    openVault: "My Page 열기",
     openProvenance: "소장 계보 둘러보기",
   },
   artworks: {

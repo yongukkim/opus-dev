@@ -5,11 +5,12 @@ import { useOmniSearch } from "./OmniSearchProvider";
 type Props = {
   /** `m.search.hintCardPrompt` — spec §3.2 home hint copy. */
   prompt: string;
-  /** `m.search.hintCardAriaLabel` — full SR label (opens same modal as ⌘K). */
+  /** `m.search.hintCardAriaLabel` — full SR label. */
   ariaLabel: string;
-  /** Optional line under the control (e.g. `m.hero.searchHint` for the ⌘K / Ctrl+K affordance). */
+  /** `m.search.triggerChip` — short human label on the right (e.g. KO「검색」). */
+  chip: string;
+  /** Optional line under the control. */
   shortcutNote?: string;
-  /** Whether to hide the `shortcutNote` on very narrow viewports. */
   ja?: boolean;
 };
 
@@ -18,14 +19,14 @@ type Props = {
  * omni-search modal (same as the header trigger + global shortcuts).
  * Sits on the first screen between `Hero` and `<main>`.
  */
-export function OmniSearchHintCard({ prompt, ariaLabel, shortcutNote, ja }: Props) {
+export function OmniSearchHintCard({ prompt, ariaLabel, chip, shortcutNote, ja }: Props) {
   const { open } = useOmniSearch();
   const noteClass = ja
     ? "mt-3 text-center font-mono text-[0.62rem] tracking-tight break-keep text-opus-warm/40"
     : "mt-3 text-center font-mono text-[0.62rem] uppercase tracking-[0.24em] text-opus-warm/40";
 
   return (
-    <section className="border-b border-opus-gold/10 bg-opus-charcoal px-6 pb-10 pt-6 md:pb-12 md:pt-8">
+    <section className="border-b border-opus-gold/10 bg-opus-charcoal px-6 pb-10 pt-0 md:pb-12 md:pt-1">
       <div className="mx-auto w-full max-w-2xl">
         <button
           type="button"
@@ -47,10 +48,14 @@ export function OmniSearchHintCard({ prompt, ariaLabel, shortcutNote, ja }: Prop
               {prompt}
             </span>
             <span
-              className="shrink-0 rounded-md border border-white/[0.1] bg-black/30 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45"
+              className={
+                ja
+                  ? "shrink-0 rounded-md border border-white/[0.1] bg-black/30 px-2.5 py-1 font-sans text-[0.7rem] tracking-tight break-keep text-opus-warm/50"
+                  : "shrink-0 rounded-md border border-white/[0.1] bg-black/30 px-2.5 py-1 font-sans text-[0.7rem] text-opus-warm/50"
+              }
               aria-hidden
             >
-              ⌘ K
+              {chip}
             </span>
           </div>
         </button>

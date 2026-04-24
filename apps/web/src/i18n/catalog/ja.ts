@@ -35,7 +35,7 @@ export const ja: Messages = {
     primaryNav: "主要ナビゲーション",
     utilityNav: "ユーティリティ",
     language: "言語",
-    vaultNav: "Vaultナビゲーション",
+    vaultNav: "My Pageナビゲーション",
     designPhilosophy: "デザイン哲学",
     hero: "OPUSヒーロー",
     stats: "信頼指標",
@@ -43,7 +43,7 @@ export const ja: Messages = {
   },
   nav: {
     releases: "新作公開",
-    vault: "Vault",
+    vault: "My Page",
     legal: "法的情報",
     provenance: "来歴",
     curation: "キュレーション",
@@ -55,6 +55,7 @@ export const ja: Messages = {
   },
   search: {
     triggerLabel: "検索を開く",
+    triggerChip: "検索",
     modalTitle: "統合検索",
     placeholder: "作品・作家を入力…",
     scopeAria: "検索範囲",
@@ -75,9 +76,9 @@ export const ja: Messages = {
     hintCardPrompt: "作品・作家・エディションを検索",
     hintCardAriaLabel: "検索を開く。作品・作家・出品・シェルフをキーワードで探せます",
     loading: "検索インデックスを読み込み中…",
-    hintSelect: "⏎ 選択",
-    hintMove: "↑↓ 移動",
-    hintClose: "esc で閉じる",
+    hintSelect: "この候補を開く",
+    hintMove: "上下",
+    hintClose: "閉じる",
     results: "{n}件",
   },
   featuredArtists: {
@@ -201,7 +202,7 @@ export const ja: Messages = {
     line: "認定版",
     tokushoho: "特定商取引法に基づく表記",
     chronicle: "The Chronicle",
-    vaultShort: "Vault",
+    vaultShort: "My Page",
   },
   footer: {
     about:
@@ -210,7 +211,7 @@ export const ja: Messages = {
       "デザインはClassic Luxuryです。near-blackのチャコール、シャンパン・ブラス（グラデーションの金属表現）、ウォームホワイト、抑制された装飾を用います。投資・実物資産商品ではありません。",
     releases: "新作公開",
     provenance: "来歴",
-    vault: "Vault",
+    vault: "My Page",
     legal: "特定商取引法に基づく表記",
     privacy: "プライバシーポリシー",
     terms: "利用規約",
@@ -416,7 +417,7 @@ export const ja: Messages = {
       "認証されたオリジナル・コレクティブルとして、\nあなたのコレクションに。",
     openReleases: "新作公開",
     openProvenance: "来歴",
-    searchHint: "⌘K で探索",
+    searchHint: "検索",
   },
   design: {
     title: "Classic Luxury",
@@ -485,7 +486,7 @@ export const ja: Messages = {
     body:
       "アーカイブの閲覧、Vaultの管理、決済はウェブから行えます。鑑賞はアプリで行えます。実物資産や金融商品ではなく、複製不可デジタルアートの体験を提供します。",
     buy: "購入・決済へ進む",
-    openVault: "Vaultを開く",
+    openVault: "My Pageを開く",
     openProvenance: "来歴を見る",
   },
   artworks: {

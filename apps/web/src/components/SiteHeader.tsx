@@ -4,7 +4,6 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import { LocaleSwitcher } from "./LocaleSwitcher";
-import { OmniSearchTrigger } from "./search/OmniSearchTrigger";
 import { SiteHeaderAuth } from "./SiteHeaderAuth";
 
 /**
@@ -42,7 +41,7 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
           >
             {/*
               Primary nav order mirrors the home IA after PR-11 / PR-12:
-              Releases → Curation → Artists → Provenance → Vault → Legal.
+              Releases → Curation → Artists → Provenance.
               Curation / Artists land between the two channels (Releases =
               PRIMARY, Provenance = SECONDARY) so the IA reads as
               "what's new → operator-curated views → custody history".
@@ -62,19 +61,7 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             <Link href={withLocale(locale, "/provenance")} className={navItemClass}>
               {m.nav.provenance}
             </Link>
-            <Link href={withLocale(locale, "/vault")} className={navItemClass}>
-              {m.nav.vault}
-            </Link>
-            <Link
-              href={withLocale(locale, "/legal/specified-commercial")}
-              className={`hidden sm:inline ${navItemClass}`}
-            >
-              {m.nav.legal}
-            </Link>
           </nav>
-          {/* PR-8: ⌘K omni-search trigger (spec §4.1). Hidden < sm to keep
-              the mobile bar uncluttered; the keyboard shortcut still works. */}
-          <OmniSearchTrigger label={m.search.triggerLabel} />
           <SiteHeaderAuth
             locale={locale}
             signInLabel={m.auth.signIn}

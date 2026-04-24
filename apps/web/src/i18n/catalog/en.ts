@@ -35,7 +35,7 @@ export const en: Messages = {
     primaryNav: "Primary",
     utilityNav: "Utility",
     language: "Language",
-    vaultNav: "Vault navigation",
+    vaultNav: "My Page navigation",
     designPhilosophy: "Design philosophy",
     hero: "OPUS hero",
     stats: "Trust metrics",
@@ -43,7 +43,7 @@ export const en: Messages = {
   },
   nav: {
     releases: "Releases",
-    vault: "Vault",
+    vault: "My Page",
     legal: "Legal",
     provenance: "Provenance",
     curation: "Curation",
@@ -55,6 +55,7 @@ export const en: Messages = {
   },
   search: {
     triggerLabel: "Open search",
+    triggerChip: "Search",
     modalTitle: "Omni-search",
     placeholder: "Search artworks, artists…",
     scopeAria: "Search scope",
@@ -75,9 +76,9 @@ export const en: Messages = {
     hintCardPrompt: "Search artworks, artists, and editions",
     hintCardAriaLabel: "Open search—find artworks, artists, listings, and shelves by keyword",
     loading: "Loading search index…",
-    hintSelect: "⏎ select",
-    hintMove: "↑↓ move",
-    hintClose: "esc close",
+    hintSelect: "Open",
+    hintMove: "Up and down",
+    hintClose: "Close",
     results: "{n} results",
   },
   featuredArtists: {
@@ -200,7 +201,7 @@ export const en: Messages = {
     line: "Authenticated editions",
     tokushoho: "Commercial disclosures (Japan)",
     chronicle: "The Chronicle",
-    vaultShort: "Vault",
+    vaultShort: "My Page",
   },
   footer: {
     about:
@@ -209,7 +210,7 @@ export const en: Messages = {
       "Design: Classic Luxury — near-black charcoal, champagne brass (gradient-lit metal), warm white type, restrained decoration. Not an investment or physical-asset product.",
     releases: "Releases",
     provenance: "Provenance",
-    vault: "Vault",
+    vault: "My Page",
     legal: "Specified commercial disclosures (Japan)",
     privacy: "Privacy policy",
     terms: "Terms of use",
@@ -404,7 +405,7 @@ export const en: Messages = {
       "An authenticated original for your collection.",
     openReleases: "Releases",
     openProvenance: "Provenance",
-    searchHint: "⌘K to search",
+    searchHint: "Search",
   },
   design: {
     title: "Classic Luxury",
@@ -472,7 +473,7 @@ export const en: Messages = {
     body:
       "Browse the archive, manage the Vault, and pay on the web — view on the app. We offer non-fungible digital art experiences, not physical-asset or financial products.",
     buy: "Purchase & pay",
-    openVault: "Open Vault",
+    openVault: "Open My Page",
     openProvenance: "Open Provenance",
   },
   artworks: {
