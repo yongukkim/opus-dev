@@ -12,6 +12,15 @@ export const ko: Messages = {
     termsTitle: "이용약관",
     termsDescription:
       "OPUS 서비스 이용약관(초안). 법무 최종 확정 전 템플릿입니다.",
+    curationIndexTitle: "큐레이션 셸프",
+    curationIndexDescription:
+      "운영팀이 주제별로 엮은 큐레이션 셸프 모음입니다. OPUS의 작품을 새로운 시선으로 만나보세요.",
+    featuredArtistsTitle: "작가 셸프",
+    featuredArtistsDescription:
+      "OPUS 아카이브에서 활동 중인 작가들을 한 곳에서 확인합니다.",
+    artistTitleTpl: "{name} — 작가 소개",
+    artistDescriptionTpl:
+      "{name}의 작품을 OPUS에서 확인합니다. 운영팀이 엮은 셸프와 함께 보여지는 1차 에디션 모음입니다.",
   },
   a11y: {
     primaryNav: "주요 메뉴",

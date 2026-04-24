@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getDictionary } from "@/i18n/catalog";
@@ -31,6 +32,16 @@ const SHELF_GRID = "mt-12 grid gap-8 lg:grid-cols-2";
 const PREVIEW_GRID = "mt-6 grid gap-3 grid-cols-2 sm:grid-cols-4";
 
 type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  return {
+    title: d.meta.curationIndexTitle,
+    description: d.meta.curationIndexDescription,
+  };
+}
 
 export default async function CurationIndexPage({ params }: Props) {
   const { locale: raw } = await params;

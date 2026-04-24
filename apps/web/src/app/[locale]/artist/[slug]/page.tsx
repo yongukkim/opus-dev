@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -28,6 +29,27 @@ import { loadShelvesForArtistKey } from "@/lib/curationCatalog";
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 const WORK_GRID = "mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw, slug } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  // If the slug resolves, lead with the pen name via the `{name}` token.
+  // If not, fall back to the featured-artists index metadata so the 404
+  // render (notFound in the page) still has sensible copy while Next.js
+  // negotiates the error boundary.
+  const artist = await resolveArtistBySlug(slug);
+  if (!artist) {
+    return {
+      title: d.meta.featuredArtistsTitle,
+      description: d.meta.featuredArtistsDescription,
+    };
+  }
+  return {
+    title: d.meta.artistTitleTpl.replace("{name}", artist.penName),
+    description: d.meta.artistDescriptionTpl.replace("{name}", artist.penName),
+  };
+}
 
 export default async function ArtistPage({ params }: Props) {
   const { locale: raw, slug } = await params;

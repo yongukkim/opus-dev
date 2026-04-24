@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -23,6 +24,26 @@ import { loadShelfById } from "@/lib/curationCatalog";
 type Props = { params: Promise<{ locale: string; id: string }> };
 
 const WORK_GRID = "mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw, id } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  // If the shelf resolves, lead with its per-locale title/description.
+  // If not, fall back to the index metadata — the page itself will call
+  // `notFound()` and Next.js will swap the generated title/description.
+  const shelf = await loadShelfById(id);
+  if (!shelf) {
+    return {
+      title: d.meta.curationIndexTitle,
+      description: d.meta.curationIndexDescription,
+    };
+  }
+  return {
+    title: shelf.title[locale],
+    description: shelf.description[locale],
+  };
+}
 
 export default async function CurationDetailPage({ params }: Props) {
   const { locale: raw, id } = await params;
