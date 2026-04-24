@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/catalog";
 import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -9,6 +10,7 @@ import {
   findOpenCollectorTransferListing,
   maskSellerId,
 } from "@/lib/collectorTransferListings";
+import { buildProvenanceListingJsonLd } from "@/lib/jsonLdPdp";
 
 /**
  * `/[locale]/provenance/[id]` — PR-18 of the home-redesign series.
@@ -129,6 +131,16 @@ export default async function ProvenanceDetailPage({ params }: Props) {
   const sellerLabel = `${maskSellerId(listing.sellerId)} · ${listing.sellerRole}`;
 
   return (
+    <>
+      <JsonLd
+        data={buildProvenanceListingJsonLd({
+          locale,
+          id: listing.id,
+          artworkTitle: listing.artworkTitle,
+          artistPenName: listing.artistPenName,
+          priceJpy: listing.priceJpy,
+        })}
+      />
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-3xl">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/40">
@@ -318,5 +330,6 @@ export default async function ProvenanceDetailPage({ params }: Props) {
         </div>
       </div>
     </main>
+    </>
   );
 }

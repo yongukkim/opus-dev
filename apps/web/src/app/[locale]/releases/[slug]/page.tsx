@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMiniCard";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
 import { AppInstallCallout } from "@/components/AppInstallCallout";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { catalogImageSrcFromFile, type CatalogImageVariant } from "@/lib/catalogImageUrl";
@@ -17,6 +18,7 @@ import {
   resolveArtworkBySlug,
   TOTAL_EDITIONS,
 } from "@/lib/artworksCatalog";
+import { buildReleaseJsonLd } from "@/lib/jsonLdPdp";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -107,6 +109,17 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const railClass = "-mx-6 overflow-x-auto overflow-y-hidden px-6 pb-1 md:mx-0 md:px-0 [scrollbar-width:thin]";
 
   return (
+    <>
+      <JsonLd
+        data={buildReleaseJsonLd({
+          locale,
+          slug,
+          title,
+          artist,
+          priceJpy,
+          catalogFile: resolved.file,
+        })}
+      />
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-4xl">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/40">{a.kicker}</p>
@@ -307,5 +320,6 @@ export default async function ArtworkDetailPage({ params }: Props) {
         </div>
       </div>
     </main>
+    </>
   );
 }

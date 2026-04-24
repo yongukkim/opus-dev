@@ -4,8 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { loadShelfById } from "@/lib/curationCatalog";
+import { buildCurationShelfJsonLd } from "@/lib/jsonLdPdp";
 
 /**
  * `/[locale]/curation/[id]` — operator-curated shelf detail (PR-11).
@@ -58,7 +60,22 @@ export default async function CurationDetailPage({ params }: Props) {
   const indexHref = withLocale(locale, "/curation");
   const itemsLabel = t.itemsCount.replace("{n}", String(shelf.itemCount));
 
+  const jsonLdItems = shelf.items.map((item) => ({
+    name: item.title,
+    pagePath: `/releases/${item.slug}`,
+  }));
+
   return (
+    <>
+      <JsonLd
+        data={buildCurationShelfJsonLd({
+          locale,
+          id: shelf.id,
+          name: shelf.title[locale],
+          description: shelf.description[locale],
+          items: jsonLdItems,
+        })}
+      />
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-5xl">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/40">
@@ -163,5 +180,6 @@ export default async function CurationDetailPage({ params }: Props) {
         </div>
       </div>
     </main>
+    </>
   );
 }

@@ -9,6 +9,7 @@ import {
   listOpenCollectorTransferListings,
 } from "@/lib/collectorTransferListings";
 import { loadShelves } from "@/lib/curationCatalog";
+import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
 
 /**
  * Next.js native sitemap (PR-17 of the home-redesign series).
@@ -61,9 +62,7 @@ import { loadShelves } from "@/lib/curationCatalog";
  * fabricating per-path file stats for every marketing page.
  */
 
-const SITE_URL = (
-  process.env["NEXT_PUBLIC_SITE_URL"] ?? "http://localhost:3000"
-).replace(/\/$/, "");
+const SITE_URL = getPublicSiteUrl();
 
 async function fileMtime(absPath: string): Promise<Date | null> {
   try {
