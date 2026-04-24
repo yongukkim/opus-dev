@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getDictionary } from "@/i18n/catalog";
 import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -5,6 +6,22 @@ import { listOpenCollectorTransferListings, maskSellerId } from "@/lib/collector
 import Link from "next/link";
 
 type Props = { params: Promise<{ locale: string }> };
+
+/**
+ * PR-19 — fills the metadata gap PR-16 left for `/provenance`. Static
+ * copy; the detail page (`/provenance/[id]`, PR-18) already owns per-
+ * listing titles/descriptions. Vocabulary follows the provenance /
+ * 来歴 / 소장 계보 contract in `.cursorrules` §2.
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  return {
+    title: d.meta.provenanceIndexTitle,
+    description: d.meta.provenanceIndexDescription,
+  };
+}
 
 function dateLabel(iso: string, locale: string): string {
   const d = new Date(iso);

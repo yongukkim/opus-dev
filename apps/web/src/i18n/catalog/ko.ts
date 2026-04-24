@@ -21,6 +21,15 @@ export const ko: Messages = {
     artistTitleTpl: "{name} — 작가 소개",
     artistDescriptionTpl:
       "{name}의 작품을 OPUS에서 확인합니다. 운영팀이 엮은 셸프와 함께 보여지는 1차 에디션 모음입니다.",
+    releasesIndexTitle: "신작 공개",
+    releasesIndexDescription:
+      "OPUS 작가들이 최초로 공개하는 1차 에디션 아카이브입니다. 복제 불가 디지털 아트의 인증·소장·감상 경험을 위한 신작 목록을 확인하세요.",
+    provenanceIndexTitle: "소장 계보",
+    provenanceIndexDescription:
+      "소장자가 다음 수탁자를 찾는 来歴 리스팅 모음입니다. 작가 본명·연락처는 공개되지 않으며 판매자 식별자는 마스킹되어 표시됩니다.",
+    releaseTitleTpl: "{title} — {artist}",
+    releaseDescriptionTpl:
+      "{artist}의 1차 에디션 {title}. OPUS가 인증한 복제 불가 디지털 아트 작품 상세입니다.",
   },
   a11y: {
     primaryNav: "주요 메뉴",

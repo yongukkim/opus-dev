@@ -37,6 +37,19 @@ export type Messages = {
     /** Templated — uses `{name}` token (artist pen name). */
     artistTitleTpl: string;
     artistDescriptionTpl: string;
+    /** PR-19: fills the metadata gap PR-16 left for `/releases` +
+     *  `/provenance` index. Static strings (no token) — the index
+     *  pages don't depend on a per-slug resolve. */
+    releasesIndexTitle: string;
+    releasesIndexDescription: string;
+    provenanceIndexTitle: string;
+    provenanceIndexDescription: string;
+    /** PR-19: `/releases/[slug]` detail. Templated with `{title}`
+     *  (artwork title) and `{artist}` (pen name). Falls back to the
+     *  releases index copy when the slug doesn't resolve, same
+     *  pattern PR-16 uses for `/artist/[slug]`. */
+    releaseTitleTpl: string;
+    releaseDescriptionTpl: string;
   };
   a11y: {
     primaryNav: string;

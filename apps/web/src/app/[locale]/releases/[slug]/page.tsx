@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMiniCard";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
 import { AppInstallCallout } from "@/components/AppInstallCallout";
@@ -24,6 +25,40 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 
 /** Cover column width ≈ 2/3 of previous max-w-md (28rem). */
 const COVER_MAX = "max-w-[18.75rem]";
+
+/**
+ * PR-19 — fills the metadata gap PR-16 left for `/releases/[slug]`.
+ * Resolves the slug server-side and populates `<title>` + description
+ * with the `{title}` / `{artist}` tokens. When the slug doesn't
+ * resolve, falls back to the releases index copy so Next.js still has
+ * sensible head metadata while it negotiates the 404 boundary (same
+ * pattern PR-16 established for `/artist/[slug]`).
+ *
+ * PII: `parseTitleArtist` only returns the pen name (the artwork
+ * catalog file is already pen-name-derived); legal names never
+ * reach this module.
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw, slug } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  const resolved = await resolveArtworkBySlug(slug);
+  if (!resolved) {
+    return {
+      title: d.meta.releasesIndexTitle,
+      description: d.meta.releasesIndexDescription,
+    };
+  }
+  const { title, artist } = parseTitleArtist(resolved.file, resolved.globalIndex);
+  return {
+    title: d.meta.releaseTitleTpl
+      .replace("{title}", title)
+      .replace("{artist}", artist),
+    description: d.meta.releaseDescriptionTpl
+      .replace("{title}", title)
+      .replace("{artist}", artist),
+  };
+}
 
 export default async function ArtworkDetailPage({ params }: Props) {
   const { locale: raw, slug } = await params;

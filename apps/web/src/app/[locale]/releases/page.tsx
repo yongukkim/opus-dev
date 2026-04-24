@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
@@ -40,6 +41,21 @@ function artworksHref(
   if (view === "list") params.set("view", "list");
   const q = params.toString();
   return q ? `${base}?${q}` : base;
+}
+
+/**
+ * PR-19 — fills the metadata gap PR-16 left for `/releases`. Static
+ * copy (no per-page token); pagination / view-mode query params do
+ * not rewrite the `<title>` since the index is logically one surface.
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  return {
+    title: d.meta.releasesIndexTitle,
+    description: d.meta.releasesIndexDescription,
+  };
 }
 
 export default async function ArtworksPage({ params, searchParams }: Props) {

@@ -21,6 +21,15 @@ export const ja: Messages = {
     artistTitleTpl: "{name} — 作家紹介",
     artistDescriptionTpl:
       "{name}の作品をOPUSでご覧ください。運営チームのシェルフとともに並ぶ一次エディションの一覧です。",
+    releasesIndexTitle: "新作公開",
+    releasesIndexDescription:
+      "OPUSの作家が初公開する一次エディションのアーカイブです。複製不可のデジタルアートを認証・所蔵・鑑賞するための新作一覧をご覧ください。",
+    provenanceIndexTitle: "来歴",
+    provenanceIndexDescription:
+      "所蔵者が次の所蔵者を探す来歴出品の一覧です。作家本名・連絡先は公開されず、出品者識別子はマスキング表示されます。",
+    releaseTitleTpl: "{title} — {artist}",
+    releaseDescriptionTpl:
+      "{artist}の一次エディション『{title}』。OPUSが認証する複製不可デジタルアート作品の詳細ページです。",
   },
   a11y: {
     primaryNav: "主要ナビゲーション",
