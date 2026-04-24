@@ -72,6 +72,8 @@ export const ja: Messages = {
     empty: "該当する結果がありません",
     viewAllReleases: "新作公開をすべて見る",
     viewAllProvenance: "来歴をすべて見る",
+    hintCardPrompt: "作品・作家・エディションを検索",
+    hintCardAriaLabel: "検索を開く。作品・作家・出品・シェルフをキーワードで探せます",
     loading: "検索インデックスを読み込み中…",
     hintSelect: "⏎ 選択",
     hintMove: "↑↓ 移動",

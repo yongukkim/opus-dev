@@ -121,6 +121,13 @@ export type Messages = {
     /** Empty state CTAs (links into Releases / Provenance). */
     viewAllReleases: string;
     viewAllProvenance: string;
+    /**
+     * Home §3.2 — fake "search field" on the first screen (between Hero and
+     * `<main>`). Opens the same modal as ⌘K / the header trigger.
+     * Visible prompt; `hintCardAriaLabel` is the full control label for SRs.
+     */
+    hintCardPrompt: string;
+    hintCardAriaLabel: string;
     /** While index.json is being fetched. */
     loading: string;
     /** Footer hint chips. `results` uses `{n}` token. */

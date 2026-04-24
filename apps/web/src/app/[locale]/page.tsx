@@ -7,6 +7,7 @@ import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
 import { StatsTrustRow } from "@/components/home/StatsTrustRow";
+import { OmniSearchHintCard } from "@/components/search/OmniSearchHintCard";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { OpusButton } from "@opus/ui";
@@ -36,6 +37,9 @@ type Props = { params: Promise<{ locale: string }> };
  *   StatsTrustRow so the vertical IA matches spec §2 (AFTER): rails A–D
  *   and Chronicle stay above the philosophy strip; it is not a second
  *   hero band under `Hero`.
+ * - §3.2 `OmniSearchHintCard` between `Hero` and `<main>`: search-bar
+ *   affordance that calls the same `open()` as ⌘K / the header trigger
+ *   (`OmniSearchProvider` in `[locale]/layout.tsx`).
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -45,6 +49,11 @@ export default async function HomePage({ params }: Props) {
   return (
     <>
       <Hero locale={locale} m={m} />
+      <OmniSearchHintCard
+        prompt={m.search.hintCardPrompt}
+        ariaLabel={m.search.hintCardAriaLabel}
+        ja={locale === "ja"}
+      />
       <main
         id="main-content"
         className="border-t border-opus-gold/10 bg-gradient-to-b from-opus-charcoal via-[#141414] to-opus-charcoal"

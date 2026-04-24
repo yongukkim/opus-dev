@@ -72,6 +72,8 @@ export const en: Messages = {
     empty: "No results match your query",
     viewAllReleases: "Browse all releases",
     viewAllProvenance: "Browse all provenance",
+    hintCardPrompt: "Search artworks, artists, and editions",
+    hintCardAriaLabel: "Open search—find artworks, artists, listings, and shelves by keyword",
     loading: "Loading search index…",
     hintSelect: "⏎ select",
     hintMove: "↑↓ move",
