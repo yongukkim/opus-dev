@@ -21,6 +21,15 @@ export const en: Messages = {
     artistTitleTpl: "{name} — Featured artist",
     artistDescriptionTpl:
       "Primary editions by {name} on OPUS, presented alongside the operator-curated shelves that include their work.",
+    releasesIndexTitle: "Releases",
+    releasesIndexDescription:
+      "Archive of primary editions first released on OPUS — an authenticated, non-reproducible digital-art catalog to browse and collect from.",
+    provenanceIndexTitle: "Provenance",
+    provenanceIndexDescription:
+      "Custody-transfer (provenance) listings — collectors searching for the next custodian of a work. Legal names and contact details are never published; seller identifiers are surfaced masked.",
+    releaseTitleTpl: "{title} — {artist}",
+    releaseDescriptionTpl:
+      "Primary edition \u201C{title}\u201D by {artist}. An authenticated, non-reproducible digital-art work on OPUS.",
   },
   a11y: {
     primaryNav: "Primary",
