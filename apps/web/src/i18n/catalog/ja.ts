@@ -12,6 +12,15 @@ export const ja: Messages = {
     termsTitle: "利用規約",
     termsDescription:
       "OPUSの利用規約（案）です。法務で最終確定のうえ、公開してください。",
+    curationIndexTitle: "キュレーションシェルフ",
+    curationIndexDescription:
+      "運営チームがテーマ別にまとめたキュレーションシェルフの一覧です。OPUSの作品を新しい切り口で。",
+    featuredArtistsTitle: "作家シェルフ",
+    featuredArtistsDescription:
+      "OPUSアーカイブで活動中の作家をまとめて確認できます。",
+    artistTitleTpl: "{name} — 作家紹介",
+    artistDescriptionTpl:
+      "{name}の作品をOPUSでご覧ください。運営チームのシェルフとともに並ぶ一次エディションの一覧です。",
   },
   a11y: {
     primaryNav: "主要ナビゲーション",

@@ -12,6 +12,15 @@ export const en: Messages = {
     termsTitle: "Terms of use",
     termsDescription:
       "Draft OPUS terms of use. Update after legal sign-off.",
+    curationIndexTitle: "Curated shelves",
+    curationIndexDescription:
+      "Operator-curated shelves grouping OPUS works by theme. A second reading of the archive.",
+    featuredArtistsTitle: "Featured artists",
+    featuredArtistsDescription:
+      "Artists currently active in the OPUS archive, collected in one surface.",
+    artistTitleTpl: "{name} — Featured artist",
+    artistDescriptionTpl:
+      "Primary editions by {name} on OPUS, presented alongside the operator-curated shelves that include their work.",
   },
   a11y: {
     primaryNav: "Primary",

@@ -28,6 +28,15 @@ export type Messages = {
     privacyDescription: string;
     termsTitle: string;
     termsDescription: string;
+    /** PR-16: public-route metadata. Titles are appended with ` | OPUS`
+     *  by the root `title.template`, so these are the leading phrase. */
+    curationIndexTitle: string;
+    curationIndexDescription: string;
+    featuredArtistsTitle: string;
+    featuredArtistsDescription: string;
+    /** Templated — uses `{name}` token (artist pen name). */
+    artistTitleTpl: string;
+    artistDescriptionTpl: string;
   };
   a11y: {
     primaryNav: string;

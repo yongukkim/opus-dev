@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getDictionary } from "@/i18n/catalog";
@@ -24,6 +25,16 @@ const THUMBS_PER_CARD = 3;
 const ARTIST_GRID = "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6";
 
 type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = normalizeLocale(raw);
+  const d = getDictionary(locale);
+  return {
+    title: d.meta.featuredArtistsTitle,
+    description: d.meta.featuredArtistsDescription,
+  };
+}
 
 export default async function FeaturedArtistsIndexPage({ params }: Props) {
   const { locale: raw } = await params;
