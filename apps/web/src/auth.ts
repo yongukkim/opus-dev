@@ -83,9 +83,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (!consent || !user.id) return;
 
       const acceptedAt = new Date(consent.recordedAt);
+      const role = consent.flow === "artist-signup" ? "ARTIST" : "COLLECTOR";
       await prisma.user.update({
         where: { id: user.id },
         data: {
+          role,
           tosAcceptedAt: acceptedAt,
           tosVersionAccepted: consent.tosVersion,
           privacyAcceptedAt: acceptedAt,

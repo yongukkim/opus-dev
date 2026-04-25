@@ -31,7 +31,7 @@ export default async function ArtistSignupPage({
         <p className="mt-3 text-center text-sm text-opus-warm/55">{s.subtitle}</p>
 
         <UnifiedAuthSection
-          variant="signup"
+          variant="artist-signup"
           locale={locale}
           returnTo={returnTo}
           googleOAuthConfigured={googleOAuthConfigured}

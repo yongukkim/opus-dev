@@ -25,7 +25,10 @@ export async function POST(req: Request): Promise<Response> {
       marketingAccepted?: boolean;
     };
 
-    const flow = body.flow === "login" || body.flow === "signup" ? body.flow : null;
+    const flow =
+      body.flow === "login" || body.flow === "signup" || body.flow === "artist-signup"
+        ? body.flow
+        : null;
     if (!flow) {
       return NextResponse.json({ ok: false, error: "invalid_flow" }, { status: 400 });
     }

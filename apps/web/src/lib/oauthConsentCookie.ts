@@ -8,7 +8,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
  */
 export const OPUS_OAUTH_CONSENT_COOKIE = "opus_oauth_consent";
 
-export type OAuthConsentFlow = "login" | "signup";
+export type OAuthConsentFlow = "login" | "signup" | "artist-signup";
 
 export type OAuthConsentPayloadV1 = {
   v: 1;
@@ -53,7 +53,12 @@ export function verifyOAuthConsentToken(token: string): OAuthConsentPayloadV1 | 
     const b = Buffer.from(expected, "utf8");
     if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
     const parsed = JSON.parse(Buffer.from(body, "base64url").toString("utf8")) as OAuthConsentPayloadV1;
-    if (parsed.v !== 1 || (parsed.flow !== "login" && parsed.flow !== "signup")) return null;
+    if (
+      parsed.v !== 1 ||
+      (parsed.flow !== "login" && parsed.flow !== "signup" && parsed.flow !== "artist-signup")
+    ) {
+      return null;
+    }
     if (typeof parsed.locale !== "string" || parsed.locale.length > 8) return null;
     if (typeof parsed.recordedAt !== "string") return null;
     if (typeof parsed.tosVersion !== "string" || typeof parsed.privacyVersion !== "string") return null;

@@ -9,13 +9,29 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function LoginPage({
   params,
   searchParams,
-}: Props & { searchParams: Promise<{ returnTo?: string }> }) {
+}: Props & { searchParams: Promise<{ returnTo?: string; role?: string }> }) {
   const { locale: raw } = await params;
-  const { returnTo: returnToParam } = await searchParams;
+  const { returnTo: returnToParam, role: roleParam } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
-  const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
-  const signupHref = `${withLocale(locale, "/signup")}?returnTo=${encodeURIComponent(returnTo)}`;
+  const loginRole = roleParam === "artist" ? "artist" : "collector";
+  const fallbackReturnTo =
+    loginRole === "artist" ? withLocale(locale, "/vault/submit") : withLocale(locale, "/vault");
+  const returnTo = sanitizeReturnTo(returnToParam, fallbackReturnTo);
+
+  const collectorLoginHref = `${withLocale(locale, "/login")}?${new URLSearchParams({
+    role: "collector",
+    returnTo,
+  }).toString()}`;
+  const artistLoginHref = `${withLocale(locale, "/login")}?${new URLSearchParams({
+    role: "artist",
+    returnTo,
+  }).toString()}`;
+  const signupHref =
+    loginRole === "artist"
+      ? `${withLocale(locale, "/artist-signup")}?returnTo=${encodeURIComponent(returnTo)}`
+      : `${withLocale(locale, "/signup")}?returnTo=${encodeURIComponent(returnTo)}`;
+  const signupLabel = loginRole === "artist" ? m.artistSignup.title : m.signup.title;
   const googleOAuthConfigured = Boolean(
     process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
   );
@@ -28,6 +44,31 @@ export default async function LoginPage({
           {m.auth.title}
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{m.auth.subtitle}</p>
+        <div className="mt-6 rounded-xl border border-white/[0.08] bg-opus-slate/25 p-2">
+          <p className="px-2 pb-2 text-[0.7rem] text-opus-warm/45">{m.auth.roleLabel}</p>
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href={collectorLoginHref}
+              className={`rounded-lg px-3 py-2 text-center text-sm transition ${
+                loginRole === "collector"
+                  ? "bg-opus-gold/15 text-opus-gold"
+                  : "text-opus-warm/65 hover:bg-white/[0.04] hover:text-opus-warm"
+              }`}
+            >
+              {m.auth.roleCollector}
+            </Link>
+            <Link
+              href={artistLoginHref}
+              className={`rounded-lg px-3 py-2 text-center text-sm transition ${
+                loginRole === "artist"
+                  ? "bg-opus-gold/15 text-opus-gold"
+                  : "text-opus-warm/65 hover:bg-white/[0.04] hover:text-opus-warm"
+              }`}
+            >
+              {m.auth.roleArtist}
+            </Link>
+          </div>
+        </div>
 
         <UnifiedAuthSection
           variant="login"
@@ -50,7 +91,7 @@ export default async function LoginPage({
             href={signupHref}
             className="text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
-            {m.signup.title}
+            {signupLabel}
           </Link>
         </div>
 
