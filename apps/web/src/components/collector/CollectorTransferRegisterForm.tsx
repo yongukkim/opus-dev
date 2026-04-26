@@ -4,6 +4,7 @@ import { useId, useMemo, useState, type ChangeEvent, type FormEvent } from "reac
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
+import type { TransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 import Link from "next/link";
 import { withLocale } from "@/i18n/paths";
 
@@ -33,6 +34,43 @@ type Draft = {
   rightsConfirmed: boolean;
 };
 
+function initialDraft(
+  locked: TransferRegisterLockedWork | null | undefined,
+  sessionUserId: string | undefined,
+): Draft {
+  const uid = sessionUserId?.trim() || "collector-demo-001";
+  if (!locked) {
+    return {
+      userId: uid,
+      artistLegalName: "",
+      artistPenName: "",
+      artworkTitle: "",
+      genre: "",
+      year: "",
+      description: "",
+      tags: "",
+      editionRef: "",
+      priceJpy: "",
+      note: "",
+      rightsConfirmed: false,
+    };
+  }
+  return {
+    userId: uid,
+    artistLegalName: locked.artistLegalNameRedacted ? "" : locked.artistLegalName,
+    artistPenName: locked.artistPenName,
+    artworkTitle: locked.artworkTitle,
+    genre: (locked.genre || "other") as Genre,
+    year: locked.year,
+    description: locked.description,
+    tags: locked.tags,
+    editionRef: locked.editionRef,
+    priceJpy: "",
+    note: "",
+    rightsConfirmed: false,
+  };
+}
+
 function inputClass(invalid: boolean): string {
   return `w-full rounded-md border bg-black/20 px-3 py-2 font-sans text-sm text-opus-warm/85 outline-none transition ${
     invalid
@@ -61,31 +99,23 @@ export function CollectorTransferRegisterForm({
   locale,
   m,
   vaultRole,
+  lockedWork = null,
+  sessionUserId,
 }: {
   locale: Locale;
   m: Messages;
   vaultRole: VaultUiRole;
+  lockedWork?: TransferRegisterLockedWork | null;
+  sessionUserId?: string;
 }) {
   const t = m.collectorTransfer;
   const apiRole = vaultRole === "artist" ? "artist" : "collector";
   const saleModeRadioName = useId();
+  const artworkLocked = Boolean(lockedWork);
 
   const [saleMode, setSaleMode] = useState<"fixed" | "auction">("fixed");
 
-  const [draft, setDraft] = useState<Draft>({
-    userId: "collector-demo-001",
-    artistLegalName: "",
-    artistPenName: "",
-    artworkTitle: "",
-    genre: "",
-    year: "",
-    description: "",
-    tags: "",
-    editionRef: "",
-    priceJpy: "",
-    note: "",
-    rightsConfirmed: false,
-  });
+  const [draft, setDraft] = useState<Draft>(() => initialDraft(lockedWork, sessionUserId));
 
   const [touched, setTouched] = useState<Partial<Record<keyof Draft, boolean>>>({});
   const [banner, setBanner] = useState<"ok" | "err" | string | null>(null);
@@ -93,14 +123,16 @@ export function CollectorTransferRegisterForm({
 
   const errors = useMemo(() => {
     const e: Partial<Record<keyof Draft, string>> = {};
-    if (!draft.artistPenName.trim()) e.artistPenName = "Required";
-    if (!draft.artworkTitle.trim()) e.artworkTitle = "Required";
-    if (!draft.genre) e.genre = "Required";
+    if (!artworkLocked) {
+      if (!draft.artistPenName.trim()) e.artistPenName = "Required";
+      if (!draft.artworkTitle.trim()) e.artworkTitle = "Required";
+      if (!draft.genre) e.genre = "Required";
 
-    if (draft.year.trim()) {
-      const y = Number.parseInt(draft.year, 10);
-      const current = new Date().getFullYear();
-      if (!Number.isFinite(y) || y < 1900 || y > current + 1) e.year = "Invalid";
+      if (draft.year.trim()) {
+        const y = Number.parseInt(draft.year, 10);
+        const current = new Date().getFullYear();
+        if (!Number.isFinite(y) || y < 1900 || y > current + 1) e.year = "Invalid";
+      }
     }
 
     const priceParsed = Number.parseInt(draft.priceJpy, 10);
@@ -111,7 +143,7 @@ export function CollectorTransferRegisterForm({
     if (!draft.rightsConfirmed) e.rightsConfirmed = "Confirm required";
 
     return e;
-  }, [draft]);
+  }, [draft, artworkLocked]);
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -121,6 +153,7 @@ export function CollectorTransferRegisterForm({
 
   function onText(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
+    if (artworkLocked && name !== "priceJpy" && name !== "note") return;
     if (name === "priceJpy") {
       setDraft((d) => ({ ...d, priceJpy: value.replace(/\D/g, "").slice(0, 8) }));
       return;
@@ -191,20 +224,24 @@ export function CollectorTransferRegisterForm({
      * JA: クライアントは便宜上の検証のみとし、最終検証はAPIで行います。
      * EN: Client checks are advisory; the API performs authoritative validation.
      */
-    setTouched({
-      userId: true,
-      artistLegalName: true,
-      artistPenName: true,
-      artworkTitle: true,
-      genre: true,
-      year: true,
-      description: true,
-      tags: true,
-      editionRef: true,
-      priceJpy: true,
-      note: true,
-      rightsConfirmed: true,
-    });
+    setTouched(
+      artworkLocked
+        ? { priceJpy: true, note: true, rightsConfirmed: true }
+        : {
+            userId: true,
+            artistLegalName: true,
+            artistPenName: true,
+            artworkTitle: true,
+            genre: true,
+            year: true,
+            description: true,
+            tags: true,
+            editionRef: true,
+            priceJpy: true,
+            note: true,
+            rightsConfirmed: true,
+          },
+    );
 
     if (!draft.rightsConfirmed) {
       window.alert(t.consentRequiredAlert);
@@ -221,14 +258,18 @@ export function CollectorTransferRegisterForm({
     setBanner(null);
     try {
       const fd = new FormData();
-      fd.set("artistLegalName", draft.artistLegalName.trim());
-      fd.set("artistPenName", draft.artistPenName.trim());
-      fd.set("artworkTitle", draft.artworkTitle.trim());
-      fd.set("genre", draft.genre);
-      fd.set("year", draft.year.trim());
-      fd.set("description", draft.description.trim());
-      fd.set("tags", draft.tags.trim());
-      fd.set("editionRef", draft.editionRef.trim());
+      if (lockedWork) {
+        fd.set("submissionId", lockedWork.submissionId);
+      } else {
+        fd.set("artistLegalName", draft.artistLegalName.trim());
+        fd.set("artistPenName", draft.artistPenName.trim());
+        fd.set("artworkTitle", draft.artworkTitle.trim());
+        fd.set("genre", draft.genre);
+        fd.set("year", draft.year.trim());
+        fd.set("description", draft.description.trim());
+        fd.set("tags", draft.tags.trim());
+        fd.set("editionRef", draft.editionRef.trim());
+      }
       fd.set("priceJpy", String(price));
       fd.set("saleMode", saleMode);
       fd.set("note", draft.note.trim());
@@ -242,23 +283,38 @@ export function CollectorTransferRegisterForm({
           "x-opus-role": apiRole,
         },
       });
-      if (!res.ok) throw new Error("bad");
+      const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok) {
+        if (body.error === "submission_required") setBanner(t.transferRegisterApiSubmissionRequired);
+        else if (body.error === "forbidden_submission") setBanner(t.transferRegisterApiForbiddenSubmission);
+        else setBanner("err");
+        return;
+      }
       setBanner("ok");
       setSaleMode("fixed");
-      setDraft((d) => ({
-        ...d,
-        artistLegalName: "",
-        artistPenName: "",
-        artworkTitle: "",
-        genre: "",
-        year: "",
-        description: "",
-        tags: "",
-        editionRef: "",
-        priceJpy: "",
-        note: "",
-        rightsConfirmed: false,
-      }));
+      setDraft((d) =>
+        lockedWork
+          ? {
+              ...d,
+              priceJpy: "",
+              note: "",
+              rightsConfirmed: false,
+            }
+          : {
+              ...d,
+              artistLegalName: "",
+              artistPenName: "",
+              artworkTitle: "",
+              genre: "",
+              year: "",
+              description: "",
+              tags: "",
+              editionRef: "",
+              priceJpy: "",
+              note: "",
+              rightsConfirmed: false,
+            },
+      );
       setTouched({});
     } catch {
       setBanner("err");
@@ -297,19 +353,21 @@ export function CollectorTransferRegisterForm({
           </div>
         ) : null}
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="md:col-span-2">
-            <p className={labelClass()}>{t.userIdDevLabel}</p>
-            <input
-              name="userId"
-              value={draft.userId}
-              onChange={onText}
-              className={`${inputClass(false)} mt-2`}
-              autoComplete="off"
-            />
-            <p className={hintClass()}>{t.userIdDevHint}</p>
+        {!artworkLocked ? (
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="md:col-span-2">
+              <p className={labelClass()}>{t.userIdDevLabel}</p>
+              <input
+                name="userId"
+                value={draft.userId}
+                onChange={onText}
+                className={`${inputClass(false)} mt-2`}
+                autoComplete="off"
+              />
+              <p className={hintClass()}>{t.userIdDevHint}</p>
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {sectionRule(t.sectionSaleMode)}
         <div className="mt-4" role="radiogroup" aria-label={t.sectionSaleMode}>
@@ -374,17 +432,29 @@ export function CollectorTransferRegisterForm({
         </div>
 
         {sectionRule(t.sectionArtist)}
+        {artworkLocked ? (
+          <p className="mt-4 rounded-lg border border-opus-gold/18 bg-opus-gold/[0.06] px-4 py-3 text-xs leading-relaxed text-opus-warm/70">
+            {t.transferRegisterWorkLockedHint}
+          </p>
+        ) : null}
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <div>
             <p className={labelClass()}>{t.artistLegalNameLabel}</p>
-            <input
-              name="artistLegalName"
-              value={draft.artistLegalName}
-              onChange={onText}
-              onBlur={() => markTouched("artistLegalName")}
-              className={`${inputClass(false)} mt-2`}
-              autoComplete="off"
-            />
+            {artworkLocked && lockedWork?.artistLegalNameRedacted ? (
+              <p className="mt-2 rounded-md border border-white/[0.12] bg-black/20 px-3 py-2 text-sm text-opus-warm/45">
+                {t.artistLegalNameRedactedHint}
+              </p>
+            ) : (
+              <input
+                name="artistLegalName"
+                value={draft.artistLegalName}
+                onChange={onText}
+                onBlur={() => markTouched("artistLegalName")}
+                readOnly={artworkLocked}
+                className={`${inputClass(false)} mt-2`}
+                autoComplete="off"
+              />
+            )}
             <p className={hintClass()}>{t.artistLegalNameHint}</p>
           </div>
           <div>
@@ -394,6 +464,7 @@ export function CollectorTransferRegisterForm({
               value={draft.artistPenName}
               onChange={onText}
               onBlur={() => markTouched("artistPenName")}
+              readOnly={artworkLocked}
               className={`${inputClass(invalid("artistPenName"))} mt-2`}
               autoComplete="off"
             />
@@ -411,6 +482,7 @@ export function CollectorTransferRegisterForm({
               value={draft.artworkTitle}
               onChange={onText}
               onBlur={() => markTouched("artworkTitle")}
+              readOnly={artworkLocked}
               className={`${inputClass(invalid("artworkTitle"))} mt-2`}
             />
             {invalid("artworkTitle") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
@@ -423,6 +495,7 @@ export function CollectorTransferRegisterForm({
               value={draft.genre}
               onChange={onText}
               onBlur={() => markTouched("genre")}
+              disabled={artworkLocked}
               className={`${inputClass(invalid("genre"))} mt-2`}
             >
               <option value="">{t.genrePlaceholder}</option>
@@ -445,6 +518,7 @@ export function CollectorTransferRegisterForm({
               value={draft.year}
               onChange={onText}
               onBlur={() => markTouched("year")}
+              readOnly={artworkLocked}
               className={`${inputClass(invalid("year"))} mt-2`}
               inputMode="numeric"
               placeholder="2026"
@@ -460,6 +534,7 @@ export function CollectorTransferRegisterForm({
               value={draft.description}
               onChange={onText}
               onBlur={() => markTouched("description")}
+              readOnly={artworkLocked}
               className={`${inputClass(false)} mt-2 min-h-28 resize-y`}
             />
           </div>
@@ -471,6 +546,7 @@ export function CollectorTransferRegisterForm({
               value={draft.tags}
               onChange={onText}
               onBlur={() => markTouched("tags")}
+              readOnly={artworkLocked}
               className={`${inputClass(false)} mt-2`}
               placeholder="abstract, monochrome"
             />
@@ -484,6 +560,7 @@ export function CollectorTransferRegisterForm({
               value={draft.editionRef}
               onChange={onText}
               onBlur={() => markTouched("editionRef")}
+              readOnly={artworkLocked}
               className={`${inputClass(false)} mt-2`}
             />
             <p className={hintClass()}>{t.editionRefHint}</p>

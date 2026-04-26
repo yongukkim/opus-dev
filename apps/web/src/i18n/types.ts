@@ -716,6 +716,16 @@ export type Messages = {
     registerKicker: string;
     registerTitle: string;
     registerSubtitle: string;
+    /** Collector must open this page with `?submissionId=` of an owned approved work. */
+    transferRegisterMissingSubmission: string;
+    transferRegisterMissingSubmissionHint: string;
+    transferRegisterInvalidSubmission: string;
+    /** Shown above read-only artist/work fields when bound to a submission. */
+    transferRegisterWorkLockedHint: string;
+    /** Placeholder when artist legal name was private on the original registration. */
+    artistLegalNameRedactedHint: string;
+    transferRegisterApiSubmissionRequired: string;
+    transferRegisterApiForbiddenSubmission: string;
     sectionArtist: string;
     sectionWork: string;
     sectionOffer: string;

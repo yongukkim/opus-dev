@@ -1,23 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   appendCollectorTransferListing,
+  COLLECTOR_TRANSFER_GENRES,
   type CollectorTransferListing,
 } from "@/lib/collectorTransferListings";
 import { readActorFromRequest } from "@/lib/authContext";
+import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 
 export const runtime = "nodejs";
-
-/** Must match artwork submission genre keys (ArtworkSubmissionForm). */
-const TRANSFER_GENRES = new Set([
-  "digital-painting",
-  "photography",
-  "3d",
-  "generative",
-  "illustration",
-  "video",
-  "mixed-media",
-  "other",
-]);
 
 function requireString(fd: FormData, key: string, maxLen: number): string {
   const v = fd.get(key);
@@ -50,7 +40,7 @@ function requireBool(fd: FormData, key: string): boolean {
 
 function requireGenre(fd: FormData): string {
   const g = requireString(fd, "genre", 40);
-  if (!TRANSFER_GENRES.has(g)) throw new Error("invalid:genre");
+  if (!COLLECTOR_TRANSFER_GENRES.has(g)) throw new Error("invalid:genre");
   return g;
 }
 
@@ -63,6 +53,14 @@ function requireSaleMode(fd: FormData): "fixed" | "auction" {
 
 function optionalYear(fd: FormData): string {
   const raw = optionalString(fd, "year", 8);
+  if (!raw) return "";
+  const y = Number.parseInt(raw, 10);
+  const current = new Date().getFullYear();
+  if (!Number.isFinite(y) || y < 1900 || y > current + 1) throw new Error("invalid:year");
+  return raw;
+}
+
+function validateYearString(raw: string): string {
   if (!raw) return "";
   const y = Number.parseInt(raw, 10);
   const current = new Date().getFullYear();
@@ -84,6 +82,8 @@ function optionalYear(fd: FormData): string {
  *   KO: 작가 본명은 저장될 수 있으나 공개 목록 조회 경로에서는 필드가 제거되어 노출되지 않습니다.
  *   JA: 作家の本名は保存され得ますが、公開一覧の取得経路では当該フィールドを除去し表示しません。
  *   EN: Artist legal names may be stored at rest but are stripped before public listing responses/UI.
+ * - When `submissionId` is present, artwork fields are taken only from the approved submission after
+ *   ownership re-check (`resolveTransferRegisterLockedWork`); collectors must supply `submissionId`.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -93,17 +93,18 @@ export async function POST(request: NextRequest) {
     }
 
     const fd = await request.formData();
-    const artistLegalRaw = optionalString(fd, "artistLegalName", 120);
-    const artistLegalName = artistLegalRaw || undefined;
-    const artistPenName = requireString(fd, "artistPenName", 120);
-    const artworkTitle = requireString(fd, "artworkTitle", 200);
-    const genre = requireGenre(fd);
-    const year = optionalYear(fd);
-    const descriptionRaw = optionalString(fd, "description", 4000);
-    const description = descriptionRaw || undefined;
-    const tagsRaw = optionalString(fd, "tags", 400);
-    const tags = tagsRaw || undefined;
-    const editionRef = optionalString(fd, "editionRef", 160);
+    const submissionIdRaw = optionalString(fd, "submissionId", 120);
+    const locked =
+      submissionIdRaw.length > 0
+        ? await resolveTransferRegisterLockedWork(submissionIdRaw, actor.userId)
+        : null;
+    if (submissionIdRaw && !locked) {
+      return NextResponse.json({ ok: false, error: "forbidden_submission" }, { status: 403 });
+    }
+    if (actor.role === "collector" && !locked) {
+      return NextResponse.json({ ok: false, error: "submission_required" }, { status: 400 });
+    }
+
     const priceJpy = requireInt(fd, "priceJpy", 1, 99_999_999);
     const saleMode = requireSaleMode(fd);
     const noteRaw = optionalString(fd, "note", 800);
@@ -111,10 +112,47 @@ export async function POST(request: NextRequest) {
     const rightsConfirmed = requireBool(fd, "rightsConfirmed");
     if (!rightsConfirmed) throw new Error("invalid:rightsConfirmed");
 
+    let artistPenName: string;
+    let artworkTitle: string;
+    let genre: string;
+    let year: string;
+    let description: string | undefined;
+    let tags: string | undefined;
+    let editionRef: string;
+    let artistLegalName: string | undefined;
+    let sourceSubmissionId: string | undefined;
+
+    if (locked) {
+      artistPenName = locked.artistPenName.slice(0, 120);
+      artworkTitle = locked.artworkTitle.slice(0, 200);
+      genre = locked.genre;
+      year = validateYearString(locked.year);
+      description = locked.description ? locked.description.slice(0, 4000) : undefined;
+      tags = locked.tags ? locked.tags.slice(0, 400) : undefined;
+      editionRef = locked.editionRef.slice(0, 160);
+      artistLegalName = locked.artistLegalNameRedacted
+        ? undefined
+        : locked.artistLegalName.trim().slice(0, 120) || undefined;
+      sourceSubmissionId = locked.submissionId;
+    } else {
+      const artistLegalRaw = optionalString(fd, "artistLegalName", 120);
+      artistLegalName = artistLegalRaw || undefined;
+      artistPenName = requireString(fd, "artistPenName", 120);
+      artworkTitle = requireString(fd, "artworkTitle", 200);
+      genre = requireGenre(fd);
+      year = optionalYear(fd);
+      const descriptionRaw = optionalString(fd, "description", 4000);
+      description = descriptionRaw || undefined;
+      const tagsRaw = optionalString(fd, "tags", 400);
+      tags = tagsRaw || undefined;
+      editionRef = optionalString(fd, "editionRef", 160);
+    }
+
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
     const rec: CollectorTransferListing = {
       id,
       createdAt: new Date().toISOString(),
+      ...(sourceSubmissionId ? { sourceSubmissionId } : {}),
       sellerId: actor.userId,
       sellerRole: actor.role === "artist" ? "artist" : "collector",
       artistLegalName,

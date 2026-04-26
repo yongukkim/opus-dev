@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
+import type { TransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 
 /**
  * `next/dynamic` with `ssr: false` must live in a Client Component (Next 16+).
@@ -36,6 +37,8 @@ export function CollectorTransferRegisterFormClient(props: {
   locale: Locale;
   m: Messages;
   vaultRole: VaultUiRole;
+  lockedWork?: TransferRegisterLockedWork | null;
+  sessionUserId?: string;
 }) {
   return <Inner {...props} />;
 }

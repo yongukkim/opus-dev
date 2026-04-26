@@ -663,7 +663,17 @@ export const en: Messages = {
     registerKicker: "Collection transfer",
     registerTitle: "List an edition for the next collector",
     registerSubtitle:
-      "Use the same field layout as artwork registration. The artist’s legal name stays private; only the public pen name appears on the list. The listed amount is set by the current holder transferring ownership. (Demo)",
+      "For works you hold, the artist’s original registration details are shown read-only. As the current custodian you only set amount, listing mode, and optional notes. The pen name and work fields flow into the public listing.",
+    transferRegisterMissingSubmission: "A submission ID is required to open this transfer form.",
+    transferRegisterMissingSubmissionHint:
+      "Open this page with `?submissionId=` for an operator-approved work you currently hold, or use the link from your My Page collection when available.",
+    transferRegisterInvalidSubmission:
+      "That work could not be loaded, is not approved yet, or is not held under your signed-in account.",
+    transferRegisterWorkLockedHint:
+      "Artist attribution and work details come from the artist’s first registration and cannot be edited here. Only price, listing mode, and notes can be changed.",
+    artistLegalNameRedactedHint: "The artist kept their legal name private on the original registration.",
+    transferRegisterApiSubmissionRequired: "Custodian transfers require an artwork submission ID.",
+    transferRegisterApiForbiddenSubmission: "The submission could not be loaded. Check holder and approval status.",
     sectionArtist: "Artist attribution",
     sectionWork: "Work details",
     sectionOffer: "Transfer terms",

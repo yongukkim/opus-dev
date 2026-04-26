@@ -5,10 +5,24 @@ import { appendJsonl } from "@/lib/privateStorage";
 const STORAGE_ROOT = path.join(process.cwd(), "storage");
 export const COLLECTOR_TRANSFER_LISTINGS_FILE = path.join(STORAGE_ROOT, "collector-transfer-listings.jsonl");
 
+/** Must match artwork submission genre keys (`ArtworkSubmissionForm`, API POST). */
+export const COLLECTOR_TRANSFER_GENRES = new Set([
+  "digital-painting",
+  "photography",
+  "3d",
+  "generative",
+  "illustration",
+  "video",
+  "mixed-media",
+  "other",
+]);
+
 /** Stored record; `artistLegalName` is never exposed on the public listings surface (APPI / collector experience). */
 export type CollectorTransferListing = {
   id: string;
   createdAt: string;
+  /** When set, listing artwork fields were copied from this approved submission at registration time. */
+  sourceSubmissionId?: string;
   sellerId: string;
   sellerRole: "collector" | "artist";
   /** Verified / internal use only — omit from public API and listing UI. */
@@ -42,6 +56,10 @@ function parseListingLine(line: string): CollectorTransferListing | null {
     return {
       id: raw.id,
       createdAt: typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString(),
+      sourceSubmissionId:
+        typeof raw.sourceSubmissionId === "string" && raw.sourceSubmissionId.trim()
+          ? raw.sourceSubmissionId.trim().slice(0, 80)
+          : undefined,
       sellerId: raw.sellerId,
       sellerRole: raw.sellerRole === "artist" ? "artist" : "collector",
       artistLegalName: typeof raw.artistLegalName === "string" && raw.artistLegalName.trim() ? raw.artistLegalName.trim() : undefined,

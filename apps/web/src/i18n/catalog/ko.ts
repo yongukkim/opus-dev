@@ -661,7 +661,17 @@ export const ko: Messages = {
     registerKicker: "소장 이전",
     registerTitle: "소장 에디션 이전 등록",
     registerSubtitle:
-      "작품 등록 폼과 같은 항목으로 작품 정보를 정리합니다. 작가 본명은 공개되지 않고 필명만 목록에 표시됩니다. 금액은 소유권을 넘기는 분(현재 소장자)이 제시합니다. (데모)",
+      "소장 중인 작품은 최초 작가 등록 정보가 그대로 표시되며, 수탁 이전을 등록하는 분은 금액·판매 방식·비고만 설정합니다. 작가 본명은 공개 설정에 따라 비워 보일 수 있고, 필명·작품 정보는 목록에 반영됩니다.",
+    transferRegisterMissingSubmission: "이전 등록을 열려면 소장 중인 작품의 제출 ID가 필요합니다.",
+    transferRegisterMissingSubmissionHint:
+      "주소에 `?submissionId=`(운영자 승인된 작품의 ID)를 붙여 접근하거나, 마이페이지의 소장 목록에서 링크를 사용해 주세요.",
+    transferRegisterInvalidSubmission:
+      "해당 작품을 찾을 수 없거나, 아직 승인되지 않았거나, 현재 계정이 소장자로 등록되어 있지 않습니다.",
+    transferRegisterWorkLockedHint:
+      "아래 작가 표기·작품 정보는 작가가 최초 등록한 내용이며 변경할 수 없습니다. 가격·판매 방식·비고만 수정할 수 있습니다.",
+    artistLegalNameRedactedHint: "작가가 비공개로 둔 본명입니다.",
+    transferRegisterApiSubmissionRequired: "소장자 이전 등록에는 작품 제출 ID가 필요합니다.",
+    transferRegisterApiForbiddenSubmission: "제출 정보를 불러올 수 없습니다. 소장자·승인 상태를 확인해 주세요.",
     sectionArtist: "작가 표기",
     sectionWork: "작품 정보",
     sectionOffer: "이전 조건",

@@ -679,7 +679,17 @@ export const ja: Messages = {
     registerKicker: "コレクター譲渡",
     registerTitle: "保有エディションの譲渡希望を登録",
     registerSubtitle:
-      "作品登録フォームと同様の項目で作品情報を整理します。作家の本名は公開されず、公開名（ペンネーム）のみが一覧に表示されます。金額は所有権を移す側（現在の保有者）が提示します。（デモ）",
+      "所蔵中の作品は、作家が初回登録した内容が読み取り専用で表示されます。所蔵者移転を登録する方は金額・販売方式・備考のみを設定します。本名は公開設定により空欄になる場合があります。",
+    transferRegisterMissingSubmission: "所蔵者移転の登録には作品提出IDが必要です。",
+    transferRegisterMissingSubmissionHint:
+      "URL に `?submissionId=`（運営承認済みの提出ID）を付けて開くか、マイページの所蔵一覧からリンクを利用してください。",
+    transferRegisterInvalidSubmission:
+      "該当作品が見つからないか、未承認か、またはサインイン中のアカウントが所蔵者として登録されていません。",
+    transferRegisterWorkLockedHint:
+      "以下の作家表記・作品情報は作家の初回登録内容であり変更できません。金額・販売方式・備考のみ変更できます。",
+    artistLegalNameRedactedHint: "作家が非公開にした本名です。",
+    transferRegisterApiSubmissionRequired: "所蔵者移転の登録には作品提出IDが必要です。",
+    transferRegisterApiForbiddenSubmission: "提出情報を読み込めません。所蔵者・承認状態をご確認ください。",
     sectionArtist: "作家表記",
     sectionWork: "作品情報",
     sectionOffer: "譲渡条件",
