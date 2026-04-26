@@ -41,11 +41,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const email = user.email?.trim();
       if (!email) return false;
 
-      const existing = await prisma.user.findUnique({ where: { email }, select: { id: true } });
-      if (existing) return true;
-
       const jar = await cookies();
       const consent = readOAuthConsentFromCookieJar(jar);
+      const existing = await prisma.user.findUnique({
+        where: { email },
+        select: { id: true, role: true },
+      });
+      if (existing) {
+        if (consent?.flow === "artist-signup" && existing.role === "COLLECTOR") {
+          const acceptedAt = new Date(consent.recordedAt);
+          await prisma.user.update({
+            where: { id: existing.id },
+            data: {
+              role: "ARTIST",
+              tosAcceptedAt: acceptedAt,
+              tosVersionAccepted: consent.tosVersion,
+              privacyAcceptedAt: acceptedAt,
+              privacyVersionAccepted: consent.privacyVersion,
+              overseasTransferAcceptedAt: acceptedAt,
+              buyerAgeSelfAttestedAt: acceptedAt,
+              ...(consent.marketing ? { marketingOptInAt: acceptedAt } : {}),
+            },
+          });
+        }
+        return true;
+      }
+
       if (!consent) {
         return `/${defaultLocale}/signup?error=oauth_consent_required`;
       }
