@@ -17,6 +17,13 @@ fi
 
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
+
+# On small EC2 disks, stale layers from previous deploys can block new pulls.
+# Best-effort cleanup keeps deploy automation resilient to "no space left on device".
+docker image prune -af || true
+docker container prune -f || true
+docker builder prune -af || true
+
 docker pull "$OPUS_WEB_IMAGE"
 
 # ISO 27001 A.12.1.2 / A.14.2.8 (§5, §8): run Prisma migrations before exposing the new container so schema
