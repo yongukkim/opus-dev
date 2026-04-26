@@ -67,9 +67,8 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             aria-label={m.a11y.primaryNav}
           >
             {/*
-              Primary nav: Releases → Curation → Artists → Provenance →
-              Provenance (auction-mode index). The last item deep-links
-              `/provenance?saleMode=auction`.
+              Primary nav: Releases → Curation → Artists → Chronicle (issuance)
+              → Provenance → auction-mode provenance index.
             */}
             <Link href={withLocale(locale, "/releases")} className={navItemClass}>
               {m.nav.releases}
@@ -79,6 +78,9 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             </Link>
             <Link href={withLocale(locale, "/featured-artists")} className={navItemClass}>
               {m.nav.artists}
+            </Link>
+            <Link href={withLocale(locale, "/chronicle")} className={navItemClass}>
+              {m.nav.chronicle}
             </Link>
             <Link href={withLocale(locale, "/provenance")} className={navItemClass}>
               {m.nav.provenance}

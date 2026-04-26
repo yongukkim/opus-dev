@@ -223,6 +223,12 @@ enum ContentRating {
 /// EN: Stores artist-submitted artwork meta, review state, and edition policy. Legal names are never copied here.
 model Artwork {
   id           String @id @default(cuid())
+  /// JSONL `SubmissionRecord.id` — optional dual-write bridge until catalog reads cut over to Prisma.
+  /// KO: Prisma 컷오버 전까지 JSONL 제출 ID를 멱등 upsert 키로 사용한다.
+  /// JA: Prisma移行前までJSONL提出IDを冪等upsertキーとして用いる。
+  /// EN: Use JSONL submission id as the idempotent upsert key until Prisma becomes the read path.
+  opusSubmissionId String? @unique @map("opus_submission_id") @db.VarChar(64)
+
   artistUserId String @map("artist_user_id")
 
   title            String            @db.VarChar(256)

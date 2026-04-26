@@ -9,6 +9,7 @@ import {
   listOpenCollectorTransferListings,
 } from "@/lib/collectorTransferListings";
 import { loadShelves } from "@/lib/curationCatalog";
+import { LEDGER_FILES } from "@/lib/ledgerStores";
 import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
 
 /**
@@ -18,7 +19,7 @@ import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
  * alternates, so search engines can negotiate per-visitor locale
  * correctly. The set of public routes is the union of:
  *
- *   Static:    /, /releases, /provenance, /curation, /featured-artists,
+ *   Static:    /, /releases, /provenance, /chronicle, /curation, /featured-artists,
  *              /terms, /privacy, /legal/copyright, /legal/specified-commercial
  *   Dynamic:   /releases/[slug]       ← loadCatalogFiles
  *              /artist/[slug]         ← loadArtists (same selection rule
@@ -114,6 +115,7 @@ const STATIC_ROUTES: readonly RouteSpec[] = [
   { path: "/", changeFrequency: "weekly", priority: 1.0 },
   { path: "/releases", changeFrequency: "weekly", priority: 0.8 },
   { path: "/provenance", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/chronicle", changeFrequency: "weekly", priority: 0.65 },
   { path: "/curation", changeFrequency: "weekly", priority: 0.8 },
   { path: "/featured-artists", changeFrequency: "weekly", priority: 0.8 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
@@ -168,16 +170,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     curationDataMtime,
     featuredDataMtime,
     jsonlMtime,
+    chronicleLedgerMtime,
   ] = await Promise.all([
     buildCatalogMtimeMap(files, useLocal),
     fileMtime(path.join(process.cwd(), "src", "data", "curation.ts")),
     fileMtime(path.join(process.cwd(), "src", "data", "featured-artists.ts")),
     fileMtime(COLLECTOR_TRANSFER_LISTINGS_FILE),
+    fileMtime(LEDGER_FILES.chronicleEntries),
   ]);
 
   const now = new Date();
   const maxCatalogMtime = maxDate([...catalogMtimes.values()]);
-  const staticLastMod = maxDate([maxCatalogMtime, curationDataMtime, featuredDataMtime]);
+  const staticLastMod = maxDate([maxCatalogMtime, curationDataMtime, featuredDataMtime, chronicleLedgerMtime]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.flatMap((s) =>
     buildEntries(s, staticLastMod),

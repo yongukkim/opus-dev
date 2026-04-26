@@ -119,9 +119,14 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
           <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {pageItems.map((rec) => {
               const previewSrc = `/api/artwork-submissions/${rec.id}/preview?artistId=${encodeURIComponent(artistId)}`;
-              const edition = `${a.editionLabel} 1/${rec.editionTotal}`;
+              const edition =
+                rec.editionMode === "unique"
+                  ? `${a.editionLabel} 1/1`
+                  : `${a.editionLabel} ${rec.initialMint}/${rec.editionTotal}`;
               const isVideo = rec.storedFile.mime.startsWith("video/");
               const reviewStatus = rec.reviewStatus ?? "pending_review";
+              const editionEditable = reviewStatus === "pending_review" || reviewStatus === "changes_requested";
+              const editEditionHref = `${withLocale(locale, `/vault/my-artworks/${rec.id}/edit`)}${artistId ? `?artist=${encodeURIComponent(artistId)}` : ""}`;
               const statusLabel =
                 reviewStatus === "approved"
                   ? m.operatorReview.filterApproved
@@ -163,6 +168,27 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
                           {statusLabel}
                         </span>
                       </p>
+                      {editionEditable ? (
+                        <p className="mt-3">
+                          <Link
+                            href={editEditionHref}
+                            className="text-xs text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+                          >
+                            {aa.editEditionCta}
+                          </Link>
+                        </p>
+                      ) : null}
+                      {(reviewStatus === "changes_requested" || reviewStatus === "rejected") &&
+                      rec.reviewNote?.trim() ? (
+                        <div className="mt-3 rounded-md border border-opus-gold/20 bg-opus-gold/[0.06] p-3">
+                          <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/50">
+                            {aa.operatorFeedbackLabel}
+                          </p>
+                          <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-opus-warm/85">
+                            {rec.reviewNote.trim()}
+                          </p>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </li>

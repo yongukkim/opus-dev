@@ -1,8 +1,8 @@
+import { readFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
 import { renderCatalogPublicPreviewWatermarked } from "@/lib/catalogImageServe";
+import { resolveStorageRelativeFile } from "@/lib/ledgerStores";
 import { getSubmissionById } from "@/lib/privateStorage";
-import path from "node:path";
-import { readFile } from "node:fs/promises";
 
 export const runtime = "nodejs";
 
@@ -22,8 +22,9 @@ export async function GET(
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
   }
 
-  const absPath = path.join(process.cwd(), "storage", submission.storedFile.relativePath);
+  let absPath: string;
   try {
+    absPath = resolveStorageRelativeFile(submission.storedFile.relativePath);
     await readFile(absPath);
   } catch {
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });

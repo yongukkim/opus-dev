@@ -9,7 +9,8 @@ import { withLocale } from "@/i18n/paths";
 export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
   const ja = locale === "ja";
   const items = [
-    { href: withLocale(locale, "/provenance"), label: m.trust.chronicle },
+    { href: withLocale(locale, "/chronicle"), label: m.trust.chronicle },
+    { href: withLocale(locale, "/provenance"), label: m.nav.provenance },
     { href: withLocale(locale, "/vault"), label: m.trust.vaultShort },
   ] as const;
 
@@ -17,7 +18,7 @@ export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
     <div
       className="fixed inset-x-0 top-[var(--opus-site-header-height)] z-40 border-b border-white/[0.07] bg-opus-charcoal/78 backdrop-blur-md"
       role="navigation"
-      aria-label={m.a11y.utilityNav}
+      aria-label={m.a11y.trustStripNav}
     >
       <div className="mx-auto flex h-[var(--opus-trust-strip-height)] max-w-6xl items-center justify-between gap-3 px-6 md:px-10">
         <p

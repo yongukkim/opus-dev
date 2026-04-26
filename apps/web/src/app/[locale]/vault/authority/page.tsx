@@ -22,6 +22,11 @@ function normalizeSubmission(rec: SubmissionRecord): OperatorReviewRow {
     reviewStatus: rec.reviewStatus ?? "pending_review",
     contentRating: rec.contentRating ?? "general",
     reviewNote: rec.reviewNote,
+    editionMode: rec.editionMode,
+    editionTotal: rec.editionTotal,
+    initialMint: rec.initialMint,
+    numberingPolicy: rec.numberingPolicy,
+    lockEdition: rec.lockEdition,
   };
 }
 

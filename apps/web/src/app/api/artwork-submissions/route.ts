@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { auth } from "@/auth";
 import { readActorFromRequest } from "@/lib/authContext";
+import { STORAGE_ROOT } from "@/lib/ledgerStores";
 import {
   appendOwnershipEvent,
   appendSubmission,
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
     await mkdir(workDir, { recursive: true });
     const storedAbsPath = path.join(workDir, filename);
     await writeFile(storedAbsPath, buf);
-    const storedRelativePath = path.relative(path.join(process.cwd(), "storage"), storedAbsPath);
+    const storedRelativePath = path.relative(STORAGE_ROOT, storedAbsPath);
 
     const rec: SubmissionRecord = {
       id,

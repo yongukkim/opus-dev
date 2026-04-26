@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { AUX_LEDGER_FILES, STORAGE_ROOT } from "@/lib/ledgerStores";
 
 export type RoleAuditRecord = {
   id: string;
@@ -10,8 +10,7 @@ export type RoleAuditRecord = {
   toRole: "COLLECTOR" | "ARTIST" | "OPERATOR";
 };
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
-const AUDIT_FILE = path.join(STORAGE_ROOT, "operator-role-audit.jsonl");
+const AUDIT_FILE = AUX_LEDGER_FILES.operatorRoleAudit;
 
 /**
  * ISO 27001 A.12.4.1 (§5) Audit logging

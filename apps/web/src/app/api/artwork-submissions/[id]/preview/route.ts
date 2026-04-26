@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { resolveStorageRelativeFile } from "@/lib/ledgerStores";
 import { getCurrentOwner, getSubmissionById } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   }
 
   try {
-    const abs = path.join(process.cwd(), "storage", submission.storedFile.relativePath);
+    const abs = resolveStorageRelativeFile(submission.storedFile.relativePath);
     const buf = await readFile(abs);
     return new NextResponse(buf, {
       status: 200,

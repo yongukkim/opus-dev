@@ -1,9 +1,8 @@
 import { appendFile, mkdir } from "node:fs/promises";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { AUX_LEDGER_FILES, STORAGE_ROOT } from "@/lib/ledgerStores";
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
-const SELLER_VERIFY_CONSENT_FILE = path.join(STORAGE_ROOT, "seller-verify-consent.jsonl");
+const SELLER_VERIFY_CONSENT_FILE = AUX_LEDGER_FILES.sellerVerifyConsent;
 
 export type SellerVerifyConsentAuditRecord = {
   id: string;

@@ -76,6 +76,10 @@ function hintClass(): string {
   return "mt-2 text-xs leading-relaxed text-opus-warm/45";
 }
 
+function tpl(template: string, vars: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ""));
+}
+
 export function ArtworkSubmissionForm({
   locale,
   m,
@@ -349,6 +353,20 @@ export function ArtworkSubmissionForm({
     };
   }, [draft, s]);
 
+  const editionPreview = useMemo(() => {
+    const total = Number.parseInt(draft.editionTotal || "0", 10);
+    const initial = Number.parseInt(draft.initialMint || "0", 10);
+    const safeTotal = Number.isFinite(total) && total > 0 ? total : 0;
+    const safeInitial = Number.isFinite(initial) && initial > 0 ? initial : 0;
+    const remaining = Math.max(0, safeTotal - safeInitial);
+    const headline =
+      draft.editionMode === "unique"
+        ? s.editionSummaryUnique
+        : tpl(s.editionSummaryLimitedTpl, { initial: safeInitial || "—", total: safeTotal || "—" });
+    const sub = tpl(s.editionSummaryMintTpl, { initial: safeInitial || "—", remaining });
+    return { headline, sub };
+  }, [draft.editionMode, draft.editionTotal, draft.initialMint, s]);
+
   const invalid = (k: keyof Draft) => Boolean((touched[k] || banner) && errors[k]);
 
   return (
@@ -566,6 +584,12 @@ export function ArtworkSubmissionForm({
             />
             <p className={hintClass()}>{s.tagsHint}</p>
           </div>
+          <div className="md:col-span-2 mt-2 rounded-lg border border-white/[0.08] bg-black/15 p-4">
+            <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.24em]">
+              {s.editionSectionTitle}
+            </p>
+            <p className={hintClass()}>{s.editionSectionHint}</p>
+          </div>
           <div>
             <p className={labelClass()}>{s.editionModeLabel}</p>
             <div className="mt-1 grid grid-cols-2 gap-2">
@@ -607,6 +631,9 @@ export function ArtworkSubmissionForm({
               disabled={draft.editionMode === "unique"}
             />
             <p className={hintClass()}>{s.editionTotalHint}</p>
+            {invalid("editionTotal") ? (
+              <p className="mt-1 text-xs text-red-300/70">{s.editionTotalInvalid}</p>
+            ) : null}
           </div>
           <div>
             <p className={labelClass()}>{s.initialMintLabel}</p>
@@ -621,6 +648,9 @@ export function ArtworkSubmissionForm({
               max={draft.editionTotal || MAX_EDITIONS}
             />
             <p className={hintClass()}>{s.initialMintHint}</p>
+            {invalid("initialMint") ? (
+              <p className="mt-1 text-xs text-red-300/70">{s.initialMintInvalid}</p>
+            ) : null}
           </div>
           <div>
             <p className={labelClass()}>{s.numberingPolicyLabel}</p>
@@ -648,6 +678,11 @@ export function ArtworkSubmissionForm({
               />
               <span className="leading-relaxed">{s.lockEditionHint}</span>
             </label>
+          </div>
+          <div className="md:col-span-2 rounded-lg border border-opus-gold/20 bg-opus-gold/[0.06] p-4">
+            <p className={labelClass()}>{s.editionSummaryLabel}</p>
+            <p className="mt-2 text-sm text-opus-gold-light">{editionPreview.headline}</p>
+            <p className="mt-1 text-xs text-opus-warm/65">{editionPreview.sub}</p>
           </div>
         </div>
 

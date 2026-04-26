@@ -1,5 +1,6 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { LEDGER_FILES, PRIVATE_ROOT, STORAGE_ROOT, resolveStorageRelativeFile } from "@/lib/ledgerStores";
 
 export type OpusRole = "artist" | "operator" | "collector";
 
@@ -47,10 +48,8 @@ export type OwnershipState = {
   updatedAt: string;
 };
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
-const PRIVATE_ROOT = path.join(STORAGE_ROOT, "private");
-const SUBMISSIONS_FILE = path.join(STORAGE_ROOT, "submissions.jsonl");
-const OWNERSHIP_FILE = path.join(STORAGE_ROOT, "ownership-events.jsonl");
+const SUBMISSIONS_FILE = LEDGER_FILES.submissions;
+const OWNERSHIP_FILE = LEDGER_FILES.ownershipEvents;
 
 export function safeSlug(value: string): string {
   return value
@@ -139,8 +138,16 @@ export async function appendSubmissionReviewPatch(input: {
   reviewStatus: NonNullable<SubmissionRecord["reviewStatus"]>;
   contentRating: NonNullable<SubmissionRecord["contentRating"]>;
   reviewNote?: string;
-}): Promise<void> {
-  const { submission, reviewerId, reviewStatus, contentRating, reviewNote } = input;
+  /** When set, overwrites edition fields on the same appended record as the review decision. */
+  editionOverride?: {
+    editionMode: SubmissionRecord["editionMode"];
+    editionTotal: number;
+    initialMint: number;
+    numberingPolicy: SubmissionRecord["numberingPolicy"];
+    lockEdition: boolean;
+  };
+}): Promise<SubmissionRecord> {
+  const { submission, reviewerId, reviewStatus, contentRating, reviewNote, editionOverride } = input;
   const patch: SubmissionRecord = {
     ...submission,
     reviewStatus,
@@ -149,7 +156,15 @@ export async function appendSubmissionReviewPatch(input: {
     reviewedAt: new Date().toISOString(),
     reviewedBy: reviewerId,
   };
+  if (editionOverride) {
+    patch.editionMode = editionOverride.editionMode;
+    patch.editionTotal = editionOverride.editionTotal;
+    patch.initialMint = editionOverride.initialMint;
+    patch.numberingPolicy = editionOverride.numberingPolicy;
+    patch.lockEdition = editionOverride.lockEdition;
+  }
   await appendSubmission(patch);
+  return patch;
 }
 
 export async function getCurrentOwner(submissionId: string, fallbackArtistId: string): Promise<OwnershipState> {
@@ -199,7 +214,7 @@ export async function transferOwnershipToBuyer(input: {
   buyerRole: "artist" | "collector";
 }): Promise<{ toRelativePath: string }> {
   const { submission, buyerId, buyerRole } = input;
-  const src = path.join(STORAGE_ROOT, submission.storedFile.relativePath);
+  const src = resolveStorageRelativeFile(submission.storedFile.relativePath);
   const targetDir =
     buyerRole === "artist"
       ? buildArtistCollectedWorkDir(buyerId, submission.id)

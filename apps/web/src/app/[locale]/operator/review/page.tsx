@@ -20,6 +20,11 @@ function normalizeSubmission(rec: SubmissionRecord): OperatorReviewRow {
     reviewStatus: rec.reviewStatus ?? "pending_review",
     contentRating: rec.contentRating ?? "general",
     reviewNote: rec.reviewNote,
+    editionMode: rec.editionMode,
+    editionTotal: rec.editionTotal,
+    initialMint: rec.initialMint,
+    numberingPolicy: rec.numberingPolicy,
+    lockEdition: rec.lockEdition,
   };
 }
 
@@ -41,6 +46,17 @@ export default async function OperatorReviewPage({ params }: Props) {
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{m.operatorReview.subtitle}</p>
 
+        {authed ? (
+          <p className="mt-6 text-center">
+            <Link
+              href={withLocale(locale, "/operator/onchain-mint")}
+              className="text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+            >
+              {m.operatorReview.linkMintQueue}
+            </Link>
+          </p>
+        ) : null}
+
         {!authed ? (
           <div className="mx-auto mt-10 max-w-xl rounded-xl border border-white/[0.08] bg-opus-slate/30 p-6 text-center shadow-opus-card">
             <p className="font-display text-xl text-opus-warm">{m.operatorAdmin.unauthorizedTitle}</p>
@@ -55,7 +71,7 @@ export default async function OperatorReviewPage({ params }: Props) {
             href={withLocale(locale, "/")}
             className="inline-block text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
-            ← Home
+            {m.operatorReview.backHome}
           </Link>
         </div>
       </div>

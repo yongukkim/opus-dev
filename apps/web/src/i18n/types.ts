@@ -49,6 +49,9 @@ export type Messages = {
     /** `/provenance?saleMode=auction` index `<title>` / OG. */
     provenanceAuctionIndexTitle: string;
     provenanceAuctionIndexDescription: string;
+    /** `/chronicle` public issuance log index. */
+    chronicleIndexTitle: string;
+    chronicleIndexDescription: string;
     /** PR-19: `/releases/[slug]` detail. Templated with `{title}`
      *  (artwork title) and `{artist}` (pen name). Falls back to the
      *  releases index copy when the slug doesn't resolve, same
@@ -59,6 +62,8 @@ export type Messages = {
   a11y: {
     primaryNav: string;
     utilityNav: string;
+    /** Trust bar under header (Chronicle / Provenance / Vault shortcuts). */
+    trustStripNav: string;
     language: string;
     vaultNav: string;
     designPhilosophy: string;
@@ -70,6 +75,8 @@ export type Messages = {
     releases: string;
     vault: string;
     legal: string;
+    /** Primary nav → `/chronicle` (masked issuance log). */
+    chronicle: string;
     provenance: string;
     /** Primary nav — custody transfers listed in auction mode (`/provenance?saleMode=auction`). */
     provenanceAuctions: string;
@@ -132,6 +139,7 @@ export type Messages = {
     empty: string;
     /** Empty state CTAs (links into Releases / Provenance). */
     viewAllReleases: string;
+    viewAllChronicle: string;
     viewAllProvenance: string;
     /**
      * Home §3.2 — fake "search field" on the first screen (between Hero and
@@ -319,6 +327,8 @@ export type Messages = {
     releases: string;
     provenance: string;
     vault: string;
+    /** Footer / service nav → `/chronicle` (masked issuance log). */
+    chronicleIssuanceLog: string;
     legal: string;
     privacy: string;
     terms: string;
@@ -333,6 +343,18 @@ export type Messages = {
     appRequiredComingSoon: string;
     /** Strapline under the enclosure mark in the site footer. */
     securedByLine: string;
+    /** Four-column footer headings + home link (localized; was hardcoded EN). */
+    colService: string;
+    colChronicle: string;
+    colLegal: string;
+    colContact: string;
+    linkHome: string;
+    ariaSiteFooter: string;
+    ariaServiceNav: string;
+    ariaLegalNav: string;
+    contactPlaceholder: string;
+    contactChannelGeneral: string;
+    contactChannelLegal: string;
   };
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
@@ -444,6 +466,21 @@ export type Messages = {
       eventVaultNote: string;
       /** Legend explaining the masking format for from/to identifiers. */
       maskLegend: string;
+      /** Shown when `listPublicChroniclePreviewRows` returns rows (JSONL ledger live). */
+      recentLead: string;
+      /** Replace `{masked}` with `maskSellerId` output. */
+      custodyTpl: string;
+      /** Small metallic line above the preview title (product name). */
+      kicker: string;
+      /** Home preview CTA → `/chronicle`. */
+      viewAllCta: string;
+    };
+    /** Public read-only Chronicle index (`/[locale]/chronicle`). */
+    chroniclePage: {
+      title: string;
+      subtitle: string;
+      emptyLead: string;
+      backHome: string;
     };
   };
   stats: {
@@ -636,6 +673,19 @@ export type Messages = {
     devHint: string;
     backVault: string;
     backHome: string;
+    editEditionCta: string;
+    editEditionKicker: string;
+    editEditionTitle: string;
+    editEditionBody: string;
+    editionLockedTitle: string;
+    editionLockedBody: string;
+    backToMyArtworks: string;
+    /** Shown when operator left a review note (changes requested / rejected). */
+    operatorFeedbackLabel: string;
+    editionSaveCta: string;
+    editionSaving: string;
+    editionSaveError: string;
+    editionSaveConflict: string;
   };
   submitArtwork: {
     kicker: string;
@@ -663,18 +713,26 @@ export type Messages = {
     descriptionLabel: string;
     tagsLabel: string;
     tagsHint: string;
+    editionSectionTitle: string;
+    editionSectionHint: string;
     editionModeLabel: string;
     editionModeUnique: string;
     editionModeLimited: string;
     editionTotalLabel: string;
     editionTotalHint: string;
+    editionTotalInvalid: string;
     initialMintLabel: string;
     initialMintHint: string;
+    initialMintInvalid: string;
     numberingPolicyLabel: string;
     numberingPolicyAuto: string;
     numberingPolicyManual: string;
     lockEditionLabel: string;
     lockEditionHint: string;
+    editionSummaryLabel: string;
+    editionSummaryUnique: string;
+    editionSummaryLimitedTpl: string;
+    editionSummaryMintTpl: string;
     rightsConfirmLabel: string;
     rightsConfirmHint: string;
     uploadLabel: string;
@@ -892,12 +950,70 @@ export type Messages = {
     colActions: string;
     approve: string;
     approveMature: string;
+    /** Set submission to changes_requested (artist may revise and resubmit). */
+    requestChanges: string;
+    reviewNoteLabel: string;
+    reviewNotePlaceholder: string;
+    reviewNoteHint: string;
+    /** Confirm before changes_requested from the list row (no operator note is sent). */
+    requestChangesTableConfirm: string;
+    /** Confirm before reject (explicit) from the list row (no operator note is sent). */
+    rejectExplicitTableConfirm: string;
     rejectExplicit: string;
     bootstrapHeading: string;
     bootstrapBody: string;
     bootstrapCta: string;
     bootstrapPending: string;
     alertFail: string;
+    /** Strip: pending review + changes requested queue. */
+    actionableStripLabel: string;
+    actionableEmpty: string;
+    editionPanelTitle: string;
+    editionPanelHint: string;
+    openOriginal: string;
+    backHome: string;
+    /** Thumbnail strip when submission is video (not image). */
+    videoPlaceholder: string;
+    statusPendingReview: string;
+    statusApproved: string;
+    statusChangesRequested: string;
+    statusRejected: string;
+    ratingGeneral: string;
+    ratingMature: string;
+    ratingExplicit: string;
+    /** Link to on-chain mint queue console (operator tooling). */
+    linkMintQueue: string;
+  };
+  /** Operator-only: inspect due mint jobs and trigger batch processing (demo JSONL queue). */
+  operatorMintQueue: {
+    title: string;
+    subtitle: string;
+    linkReview: string;
+    empty: string;
+    refresh: string;
+    loadingJobs: string;
+    processCta: string;
+    processing: string;
+    loadFail: string;
+    processFail: string;
+    lastRun: string;
+    colSubmission: string;
+    colStatus: string;
+    colAttempts: string;
+    colNextAttempt: string;
+    colTx: string;
+    colNetwork: string;
+    colMode: string;
+    colUpdated: string;
+    colError: string;
+    statusQueued: string;
+    statusSubmitted: string;
+    statusConfirmed: string;
+    statusFailed: string;
+    statsScanned: string;
+    statsProcessed: string;
+    statsConfirmed: string;
+    statsFailed: string;
   };
   operatorAdmin: {
     title: string;

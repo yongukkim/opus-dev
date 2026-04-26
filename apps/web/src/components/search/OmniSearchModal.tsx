@@ -239,6 +239,13 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
                   {t.viewAllReleases}
                 </Link>
                 <Link
+                  href={withLocale(locale, "/chronicle")}
+                  onClick={close}
+                  className="rounded-full border border-white/[0.12] px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/65 hover:border-opus-gold/40 hover:text-opus-gold-light"
+                >
+                  {t.viewAllChronicle}
+                </Link>
+                <Link
                   href={withLocale(locale, "/provenance")}
                   onClick={close}
                   className="rounded-full border border-white/[0.12] px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-opus-warm/65 hover:border-opus-gold/40 hover:text-opus-gold-light"

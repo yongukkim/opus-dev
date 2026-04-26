@@ -64,7 +64,7 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
     <footer
       className="border-t border-white/[0.06] bg-[#060606] text-opus-gold/55"
       role="contentinfo"
-      aria-label="Site footer"
+      aria-label={m.footer.ariaSiteFooter}
     >
       <div className="mx-auto max-w-6xl px-6 py-14 md:px-10">
         <div className="mb-12">
@@ -86,18 +86,27 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
         */}
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 lg:grid-cols-4 lg:gap-x-0 lg:gap-y-0 lg:divide-x lg:divide-white/[0.08]">
           <div className="lg:min-w-0 lg:pr-8">
-            <p className={headingClass}>Service</p>
+            <p className={headingClass}>{m.footer.colService}</p>
             <p
               className={`opus-text-metallic-soft mt-4 font-display text-xs ${ja ? "font-semibold tracking-tight" : "tracking-[0.2em]"}`}
             >
               OPUS
             </p>
-            <nav className="mt-6 flex flex-col gap-2.5" aria-label="Service links">
+            <nav className="mt-6 flex flex-col gap-2.5" aria-label={m.footer.ariaServiceNav}>
               <Link href={withLocale(locale, "/")} className={linkClass}>
-                Home
+                {m.footer.linkHome}
               </Link>
               <Link href={withLocale(locale, "/releases")} className={linkClass}>
                 {m.footer.releases}
+              </Link>
+              <Link href={withLocale(locale, "/curation")} className={linkClass}>
+                {m.nav.curation}
+              </Link>
+              <Link href={withLocale(locale, "/featured-artists")} className={linkClass}>
+                {m.nav.artists}
+              </Link>
+              <Link href={withLocale(locale, "/chronicle")} className={linkClass}>
+                {m.footer.chronicleIssuanceLog}
               </Link>
               <Link href={withLocale(locale, "/provenance")} className={linkClass}>
                 {m.footer.provenance}
@@ -109,7 +118,7 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
           </div>
 
           <div className="lg:min-w-0 lg:px-8">
-            <p className={headingClass}>The Chronicle</p>
+            <p className={headingClass}>{m.footer.colChronicle}</p>
             <p
               className={`mt-6 text-sm leading-relaxed text-opus-gold/42 ${ja ? "tracking-tight break-keep font-medium" : ""}`}
             >
@@ -118,8 +127,8 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
           </div>
 
           <div className="lg:min-w-0 lg:px-8">
-            <p className={headingClass}>Legal</p>
-            <nav className="mt-6 flex flex-col gap-2.5" aria-label="Legal documents">
+            <p className={headingClass}>{m.footer.colLegal}</p>
+            <nav className="mt-6 flex flex-col gap-2.5" aria-label={m.footer.ariaLegalNav}>
               <Link href={withLocale(locale, "/privacy")} className={linkClass}>
                 {m.footer.privacy}
               </Link>
@@ -139,18 +148,16 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
           </div>
 
           <div className="lg:min-w-0 lg:pl-8">
-            <p className={headingClass}>Contact</p>
-            <p className="mt-6 text-sm leading-relaxed text-opus-gold/42">
-              Placeholder — replace before launch.
-            </p>
+            <p className={headingClass}>{m.footer.colContact}</p>
+            <p className="mt-6 text-sm leading-relaxed text-opus-gold/42">{m.footer.contactPlaceholder}</p>
             <p className="mt-4 font-mono text-xs text-opus-gold/45">
-              <span className="block text-opus-gold/35">General</span>
+              <span className="block text-opus-gold/35">{m.footer.contactChannelGeneral}</span>
               <a href="mailto:support@opus.example" className="mt-1 inline-block hover:text-opus-gold/80">
                 support@opus.example
               </a>
             </p>
             <p className="mt-3 font-mono text-xs text-opus-gold/45">
-              <span className="block text-opus-gold/35">Legal &amp; privacy</span>
+              <span className="block text-opus-gold/35">{m.footer.contactChannelLegal}</span>
               <a href="mailto:legal@opus.example" className="mt-1 inline-block hover:text-opus-gold/80">
                 legal@opus.example
               </a>

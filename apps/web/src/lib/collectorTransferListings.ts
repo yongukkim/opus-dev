@@ -1,9 +1,8 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { AUX_LEDGER_FILES } from "@/lib/ledgerStores";
 import { appendJsonl } from "@/lib/privateStorage";
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
-export const COLLECTOR_TRANSFER_LISTINGS_FILE = path.join(STORAGE_ROOT, "collector-transfer-listings.jsonl");
+export const COLLECTOR_TRANSFER_LISTINGS_FILE = AUX_LEDGER_FILES.collectorTransferListings;
 
 /** Must match artwork submission genre keys (`ArtworkSubmissionForm`, API POST). */
 export const COLLECTOR_TRANSFER_GENRES = new Set([

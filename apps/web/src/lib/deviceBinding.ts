@@ -1,9 +1,8 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { AUX_LEDGER_FILES } from "@/lib/ledgerStores";
 import { appendJsonl } from "@/lib/privateStorage";
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
-export const DEVICE_BINDINGS_FILE = path.join(STORAGE_ROOT, "device-bindings.jsonl");
+export const DEVICE_BINDINGS_FILE = AUX_LEDGER_FILES.deviceBindings;
 
 export type DeviceBindingEvent =
   | {
