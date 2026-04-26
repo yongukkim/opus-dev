@@ -1,6 +1,12 @@
 terraform {
   required_version = ">= 1.5.0"
 
+  # Partial config: pass `backend.hcl` (gitignored; copy from backend.hcl.example) on every `terraform init`.
+  # KO: 버킷·키·리전은 backend.hcl 로만 주입한다(저장소에 커밋하지 않는다).
+  # JA: bucket/key/region は backend.hcl のみで注入する（リポジトリにコミットしない）。
+  # EN: Supply bucket/key/region only via backend.hcl; never commit that file.
+  backend "s3" {}
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

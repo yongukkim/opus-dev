@@ -67,3 +67,4 @@ coverage
 *.tfstate.*
 crash.*.log
 **/terraform.tfvars
+infra/terraform/backend.hcl
