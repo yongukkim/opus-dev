@@ -260,7 +260,14 @@ export const ja: Messages = {
     payouts: "精算/口座",
     artistProfile: "作家プロフィール",
     settings: "設定",
+    authoritySettings: "権限設定",
     transferRegister: "譲渡希望を登録",
+  },
+  vaultAuthority: {
+    title: "権限設定",
+    subtitle: "作品登録の承認とスタッフアカウント権限管理を運営者権限で処理します。",
+    reviewSection: "作品登録の承認",
+    accountSection: "スタッフ/アカウント権限付与",
   },
   artistKyc: {
     consentTitle: "作家本人確認",

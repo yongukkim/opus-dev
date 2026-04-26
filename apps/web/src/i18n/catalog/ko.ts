@@ -256,7 +256,14 @@ export const ko: Messages = {
     payouts: "정산/계좌",
     artistProfile: "작가 프로필",
     settings: "설정",
+    authoritySettings: "권한설정",
     transferRegister: "소장 이전 등록",
+  },
+  vaultAuthority: {
+    title: "권한설정",
+    subtitle: "작품 등록 승인과 직원 계정 권한 관리를 운영자 권한으로 처리합니다.",
+    reviewSection: "작품 등록 승인",
+    accountSection: "직원/계정 권한 부여",
   },
   artistKyc: {
     consentTitle: "작가 본인 확인",

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
+import { auth } from "@/auth";
 import { VaultSidebar } from "@/components/vault/VaultSidebar";
 import { getDictionary } from "@/i18n/catalog";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
@@ -17,11 +18,13 @@ export default async function VaultLayout({ children, params }: Props) {
   const { locale: raw } = await params;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
+  const session = await auth();
   const vaultRole = getVaultUiRoleFromCookies(await cookies());
+  const isOperator = session?.user?.role === "operator";
 
   return (
     <div className="flex min-h-[50vh] flex-col bg-opus-charcoal pt-[6.5rem] md:min-h-[calc(100dvh-12rem)] md:flex-row">
-      <VaultSidebar locale={locale} m={m} vaultRole={vaultRole} />
+      <VaultSidebar locale={locale} m={m} vaultRole={vaultRole} isOperator={isOperator} />
       <div className="flex min-w-0 flex-1 flex-col border-t border-white/[0.05] md:border-l md:border-t-0">
         {children}
       </div>

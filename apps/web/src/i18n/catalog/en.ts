@@ -257,7 +257,14 @@ export const en: Messages = {
     payouts: "Payouts",
     artistProfile: "Artist profile",
     settings: "Settings",
+    authoritySettings: "Authority settings",
     transferRegister: "List a transfer",
+  },
+  vaultAuthority: {
+    title: "Authority settings",
+    subtitle: "Handle artwork submission approvals and staff account role assignments with operator authority.",
+    reviewSection: "Artwork submission approvals",
+    accountSection: "Staff/account role assignments",
   },
   artistKyc: {
     consentTitle: "Artist verification",

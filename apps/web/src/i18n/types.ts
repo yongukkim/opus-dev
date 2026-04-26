@@ -343,6 +343,14 @@ export type Messages = {
     settings: string;
     /** Vault: register a collector-to-collector transfer offer (demo). */
     transferRegister: string;
+    /** Operator-only authority settings. */
+    authoritySettings: string;
+  };
+  vaultAuthority: {
+    title: string;
+    subtitle: string;
+    reviewSection: string;
+    accountSection: string;
   };
   hero: {
     kicker: string;

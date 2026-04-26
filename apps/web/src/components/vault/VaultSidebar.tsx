@@ -16,15 +16,18 @@ const ARTIST_ONLY_PATHS = [
   "/vault/payouts",
   "/vault/artist-profile",
 ] as const;
+const OPERATOR_ONLY_PATHS = ["/vault/authority"] as const;
 
 export function VaultSidebar({
   locale,
   m,
   vaultRole,
+  isOperator,
 }: {
   locale: Locale;
   m: Messages;
   vaultRole: VaultUiRole;
+  isOperator: boolean;
 }) {
   const pathname = usePathname();
   const ja = locale === "ja";
@@ -38,10 +41,14 @@ export function VaultSidebar({
     { path: "/vault/my-artworks" as const, label: v.myArtworks },
     { path: "/vault/payouts" as const, label: v.payouts },
     { path: "/vault/artist-profile" as const, label: v.artistProfile },
+    { path: "/vault/authority" as const, label: v.authoritySettings },
     { path: "/vault/settings" as const, label: v.settings },
   ]
     .filter(({ path }) => {
       if (vaultRole !== "artist" && (ARTIST_ONLY_PATHS as readonly string[]).includes(path)) {
+        return false;
+      }
+      if (!isOperator && (OPERATOR_ONLY_PATHS as readonly string[]).includes(path)) {
         return false;
       }
       return true;
