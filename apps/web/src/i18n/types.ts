@@ -444,6 +444,8 @@ export type Messages = {
     monthBest: string;
     yearBest: string;
     caption: string;
+    /** Shown when there are no picks images (no approved submissions and insufficient local catalog). */
+    empty: string;
   };
   marketing: {
     title: string;

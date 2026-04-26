@@ -1,44 +1,61 @@
 import Image from "next/image";
 import type { Messages } from "@/i18n/types";
+import { listLocalArtworks } from "@/lib/artworksCatalog";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
-import { readdir } from "node:fs/promises";
-import path from "node:path";
+import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
 
-const FALLBACK = [
-  "unsplash_01_HzI3vf8wUwE.jpg",
-  "unsplash_02_H2Z8A4af4Zo.jpg",
-  "unsplash_03_4MksxMVbRrA.jpg",
-] as const;
-
-async function listLocalArtworks(): Promise<string[]> {
-  const dir = path.join(process.cwd(), "public", "local-artworks");
-  try {
-    const files = await readdir(dir);
-    return files
-      .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
-      .sort((a, b) => a.localeCompare(b, "en", { numeric: true, sensitivity: "base" }));
-  } catch {
-    return [];
-  }
-}
+const TAGS = ["WEEK", "MON", "YEAR"] as const;
 
 /**
- * Featured picks band (replaces "Live soon" stats):
- * week best / month best / year best.
+ * Featured picks band — images must not fall back to removed demo catalog files.
+ * Priority: operator-approved submissions → optional local `public/local-artworks`
+ * (dev) → empty copy when neither has enough material.
  */
 export async function StatsTrustRow({ m }: { m: Messages }) {
   const s = m.stats;
+  const approved = await listApprovedArtistSubmissions(3);
   const local = await listLocalArtworks();
-  const useLocal = local.length >= 3;
-  const fileTriple: [string, string, string] = useLocal
-    ? [local[0]!, local[1]!, local[2]!]
-    : [FALLBACK[0], FALLBACK[1], FALLBACK[2]];
 
-  const picks = [
-    { label: s.weekBest, file: fileTriple[0], tag: "WEEK" },
-    { label: s.monthBest, file: fileTriple[1], tag: "MONTH" },
-    { label: s.yearBest, file: fileTriple[2], tag: "YEAR" },
-  ] as const;
+  type Pick = { label: string; tag: string; imageSrc: string };
+
+  let picks: Pick[] = [];
+
+  if (approved.length > 0) {
+    picks = approved.slice(0, 3).map((rec, i) => ({
+      label: [s.weekBest, s.monthBest, s.yearBest][i]!,
+      tag: TAGS[i]!,
+      imageSrc: `/api/artwork-submissions/${rec.id}/public-preview`,
+    }));
+  } else if (local.length >= 3) {
+    picks = [local[0]!, local[1]!, local[2]!].map((file, i) => ({
+      label: [s.weekBest, s.monthBest, s.yearBest][i]!,
+      tag: TAGS[i]!,
+      imageSrc: catalogImageSrcFromFile(file, "thumb"),
+    }));
+  }
+
+  if (picks.length === 0) {
+    return (
+      <section
+        className="border-y border-white/[0.08] bg-opus-slate/30 py-12 md:py-14"
+        aria-labelledby="opus-stats-heading"
+      >
+        <h2 id="opus-stats-heading" className="sr-only">
+          {m.a11y.stats}
+        </h2>
+        <p className="mx-auto max-w-xl px-6 text-center text-sm leading-relaxed text-opus-warm/50 md:px-10">
+          {s.empty}
+        </p>
+      </section>
+    );
+  }
+
+  const gridCols =
+    picks.length === 1
+      ? "grid grid-cols-1 md:mx-auto md:max-w-md"
+      : picks.length === 2
+        ? "grid grid-cols-1 sm:grid-cols-2"
+        : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
 
   return (
     <section
@@ -48,7 +65,7 @@ export async function StatsTrustRow({ m }: { m: Messages }) {
       <h2 id="opus-stats-heading" className="sr-only">
         {m.a11y.stats}
       </h2>
-      <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-3 md:px-10">
+      <div className={`mx-auto max-w-6xl gap-6 px-6 md:px-10 ${gridCols}`}>
         {picks.map((pick) => (
           <div
             key={pick.tag}
@@ -56,7 +73,7 @@ export async function StatsTrustRow({ m }: { m: Messages }) {
           >
             <div className="relative aspect-[16/10] overflow-hidden">
               <Image
-                src={catalogImageSrcFromFile(pick.file, "thumb")}
+                src={pick.imageSrc}
                 alt={pick.label}
                 fill
                 sizes="(min-width: 1024px) 320px, 90vw"

@@ -513,6 +513,8 @@ export const en: Messages = {
     monthBest: "Best this month",
     yearBest: "Best of the year",
     caption: "Selection criteria may change per editorial policy.",
+    empty:
+      "There are not enough operator-approved works to show picks here yet. This band fills automatically as approved releases accumulate.",
   },
   marketing: {
     title: "Your collection, with the official record",

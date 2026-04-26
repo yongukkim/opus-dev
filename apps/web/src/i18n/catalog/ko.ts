@@ -511,6 +511,8 @@ export const ko: Messages = {
     monthBest: "이번달 베스트",
     yearBest: "올해의 베스트",
     caption: "선정 기준은 운영 정책에 따라 달라질 수 있습니다.",
+    empty:
+      "공개된 작가 작품이 충분하지 않아 이 구역의 이미지는 아직 표시하지 않습니다. 검수 완료 작품이 쌓이면 자동으로 채워집니다.",
   },
   marketing: {
     title: "컬렉션을 공식 기록과 함께",

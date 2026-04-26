@@ -11,6 +11,8 @@ type Props = {
   searchParams: Promise<{ page?: string; view?: string }>;
 };
 
+export const dynamic = "force-dynamic";
+
 type CatalogView = "grid" | "list";
 
 function parsePage(value: string | undefined): number {

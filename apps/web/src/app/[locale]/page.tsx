@@ -10,6 +10,9 @@ import { normalizeLocale } from "@/i18n/paths";
 
 type Props = { params: Promise<{ locale: string }> };
 
+/** Always read live `storage/` + submissions for rails; avoids stale static shells on deploy. */
+export const dynamic = "force-dynamic";
+
 /**
  * Home page IA — PR-3 of the home redesign series.
  * Spec: docs/home-redesign-curation-rails-and-omnisearch.md §2 (AFTER) and §3.
@@ -55,10 +58,8 @@ export default async function HomePage({ params }: Props) {
         className="border-t border-opus-gold/10 bg-gradient-to-b from-opus-charcoal via-[#141414] to-opus-charcoal"
       >
         {/*
-          Rail A · Releases (1차 / 新作公開). Per-artwork links + PRIMARY pill
-          as of PR-5 (spec §3.3). Data source is still the file-system catalog
-          via loadCatalogFiles(); cutover to Edition + Listing(market=PRIMARY)
-          is tracked separately in spec §5.
+          Rail A · Releases — operator-approved artist submissions only
+          (`RailReleases` → `listApprovedArtistSubmissions`).
         */}
         <RailReleases locale={locale} m={m} />
 
