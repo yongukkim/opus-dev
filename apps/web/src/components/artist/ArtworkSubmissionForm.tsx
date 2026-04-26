@@ -19,11 +19,13 @@ type Genre =
 type EditionMode = "unique" | "limited";
 type NumberingPolicy = "auto" | "manual";
 type AudienceCategory = "" | "male" | "female" | "none";
+type ArtistNameVisibility = "public" | "private";
 
 type Draft = {
   actorUserId: string;
   actorRole: "artist" | "operator";
   artistName: string;
+  artistNameVisibility: ArtistNameVisibility;
   nickname: string;
   artworkTitle: string;
   genre: Genre;
@@ -74,13 +76,22 @@ function hintClass(): string {
   return "mt-2 text-xs leading-relaxed text-opus-warm/45";
 }
 
-export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messages }) {
+export function ArtworkSubmissionForm({
+  locale,
+  m,
+  artistLegalName,
+}: {
+  locale: Locale;
+  m: Messages;
+  artistLegalName: string;
+}) {
   const s = m.submitArtwork;
 
   const [draft, setDraft] = useState<Draft>({
     actorUserId: "artist-demo-001",
     actorRole: "artist",
-    artistName: "",
+    artistName: artistLegalName.trim(),
+    artistNameVisibility: "private",
     nickname: "",
     artworkTitle: "",
     genre: "",
@@ -224,6 +235,7 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
 
     setTouched({
       artistName: true,
+      artistNameVisibility: true,
       nickname: true,
       artworkTitle: true,
       genre: true,
@@ -250,6 +262,7 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
       try {
         const fd = new FormData();
         fd.set("artistName", draft.artistName);
+        fd.set("artistNameVisibility", draft.artistNameVisibility);
         fd.set("nickname", draft.nickname);
         fd.set("artworkTitle", draft.artworkTitle);
         fd.set("genre", draft.genre);
@@ -319,8 +332,9 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
           : draft.audienceCategory === "none"
             ? s.audienceNone
             : "—";
+    const artistNameDisplay = draft.artistNameVisibility === "public" ? safe(draft.artistName) : "Private";
     return {
-      artistName: safe(draft.artistName),
+      artistName: artistNameDisplay,
       nickname: safe(draft.nickname),
       artworkTitle: safe(draft.artworkTitle),
       genre,
@@ -375,11 +389,41 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
             <input
               name="artistName"
               value={draft.artistName}
-              onChange={onText}
               onBlur={() => markTouched("artistName")}
-              className={inputClass(invalid("artistName"))}
+              className={`${inputClass(invalid("artistName"))} bg-black/35 text-opus-warm/70`}
               autoComplete="name"
+              readOnly
             />
+            <p className={hintClass()}>{s.artistNameAutoHint}</p>
+          </div>
+          <div>
+            <p className={labelClass()}>{s.artistNameVisibilityLabel}</p>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <label className="flex items-center gap-2 rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75">
+                <input
+                  type="radio"
+                  name="artistNameVisibility"
+                  value="public"
+                  checked={draft.artistNameVisibility === "public"}
+                  onChange={onText}
+                  onBlur={() => markTouched("artistNameVisibility")}
+                  className="h-4 w-4 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+                />
+                {s.artistNameVisibilityPublic}
+              </label>
+              <label className="flex items-center gap-2 rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75">
+                <input
+                  type="radio"
+                  name="artistNameVisibility"
+                  value="private"
+                  checked={draft.artistNameVisibility === "private"}
+                  onChange={onText}
+                  onBlur={() => markTouched("artistNameVisibility")}
+                  className="h-4 w-4 border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+                />
+                {s.artistNameVisibilityPrivate}
+              </label>
+            </div>
           </div>
           <div>
             <p className={labelClass()}>{s.nicknameLabel}</p>

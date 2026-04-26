@@ -13,6 +13,7 @@ export type SubmissionRecord = {
   createdAt: string;
   artistId: string;
   artistName: string;
+  artistNameVisibility?: "public" | "private";
   nickname: string;
   artworkTitle: string;
   genre: string;

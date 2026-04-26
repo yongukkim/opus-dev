@@ -621,6 +621,10 @@ export type Messages = {
     title: string;
     subtitle: string;
     artistNameLabel: string;
+    artistNameAutoHint: string;
+    artistNameVisibilityLabel: string;
+    artistNameVisibilityPublic: string;
+    artistNameVisibilityPrivate: string;
     /** Pen name on artwork form (KO: 필명, JA: 筆名). */
     nicknameLabel: string;
     artworkTitleLabel: string;

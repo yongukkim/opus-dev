@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { auth } from "@/auth";
 import { readActorFromRequest } from "@/lib/authContext";
 import {
   appendOwnershipEvent,
@@ -80,7 +81,11 @@ export async function POST(request: NextRequest) {
 
     const fd = await request.formData();
 
-    const artistName = requireString(fd, "artistName");
+    const artistNameVisibility = requireEnum(fd, "artistNameVisibility", ["public", "private"] as const);
+    const session = await auth();
+    const artistName =
+      session?.user?.name?.trim() || (actor.role === "operator" ? requireString(fd, "artistName") : "");
+    if (!artistName) throw new Error("invalid:artistName");
     const nickname = requireString(fd, "nickname");
     const artworkTitle = requireString(fd, "artworkTitle", 200);
     const genre = requireString(fd, "genre", 40);
@@ -137,6 +142,7 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
       artistId: actor.userId,
       artistName,
+      artistNameVisibility,
       nickname,
       artworkTitle,
       genre,

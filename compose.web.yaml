@@ -26,6 +26,8 @@ services:
     env_file:
       - path: /etc/opus/opus.env
         required: false
+    volumes:
+      - opus_storage:/app/storage
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
@@ -59,3 +61,5 @@ volumes:
   # 인증서·ACME 계정 영구 저장소. 컨테이너 재기동/이미지 갱신에도 유지되어 Let's Encrypt rate-limit 회피.
   caddy_data:
   caddy_config:
+  # 작품 원본/파생 파일·jsonl 저장소. 웹 컨테이너 재배포 후에도 보존.
+  opus_storage:

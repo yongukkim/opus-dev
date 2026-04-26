@@ -376,6 +376,10 @@ export const ja: Messages = {
     subtitle:
       "作家公式登録に必要な基本情報を入力し、ファイルをアップロードしてください。",
     artistNameLabel: "作家名（実名）",
+    artistNameAutoHint: "作家登録時に入力した実名が自動表示されます。",
+    artistNameVisibilityLabel: "実名の公開設定",
+    artistNameVisibilityPublic: "公開",
+    artistNameVisibilityPrivate: "非公開",
     nicknameLabel: "筆名",
     artworkTitleLabel: "作品タイトル",
     genreLabel: "ジャンル",
