@@ -391,6 +391,8 @@ export type Messages = {
       body: string;
       /** Header link → /releases full list. */
       viewAll: string;
+      /** Home rail when no approved artist submissions are published yet. */
+      empty: string;
     };
     railProvenance: {
       title: string;
@@ -455,6 +457,8 @@ export type Messages = {
     kicker: string;
     title: string;
     body: string;
+    /** Shown on /releases when there are no approved artist submissions (no demo catalog). */
+    releasesEmpty: string;
     back: string;
     /** Shown before edition fraction, e.g. "Edition: 4/50". */
     editionLabel: string;

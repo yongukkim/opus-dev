@@ -4,28 +4,8 @@ import path from "node:path";
 export const TOTAL_EDITIONS = 50;
 export const PAGE_SIZE = 20;
 
-export const FALLBACK = [
-  "unsplash_01_HzI3vf8wUwE.jpg",
-  "unsplash_02_H2Z8A4af4Zo.jpg",
-  "unsplash_03_4MksxMVbRrA.jpg",
-  "unsplash_04_h7EvXCadies.jpg",
-  "unsplash_05_HI0GShPQegc.jpg",
-  "unsplash_06_a5RK_uk5Ej0.jpg",
-  "unsplash_07_RBqC7kQoMIg.jpg",
-  "unsplash_08__sZ7R0C_xKY.jpg",
-  "unsplash_09_QVRHf8Gc9Pk.jpg",
-  "unsplash_10_zl8hQxXZCeI.jpg",
-  "unsplash_11_aVFTleL-L0g.jpg",
-  "unsplash_12_dPn-PAuwYss.jpg",
-  "unsplash_13_dKB6EJFLUaA.jpg",
-  "unsplash_14_UG2Vqz5Q000.jpg",
-  "unsplash_15_nuRF1oaw-Pg.jpg",
-  "unsplash_16_GB1sPyY2YpQ.jpg",
-  "unsplash_17_Bqrr9yrKD1o.jpg",
-  "unsplash_18_KC5btjnw0_s.jpg",
-  "unsplash_19_DQpHtE5WY-U.jpg",
-  "unsplash_20_4hYSTQkZMNQ.jpg",
-] as const;
+/** Demo catalog fallback removed — public releases use verified artist submissions only. */
+export const FALLBACK: readonly string[] = [];
 
 export async function listLocalArtworks(): Promise<string[]> {
   const dir = path.join(process.cwd(), "public", "local-artworks");

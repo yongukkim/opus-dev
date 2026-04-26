@@ -475,6 +475,8 @@ export const en: Messages = {
       title: "Releases — latest primary editions",
       body: "Limited editions from verified artists.",
       viewAll: "View all",
+      empty:
+        "No operator-approved releases are published yet. Approved artist uploads appear here for everyone, including signed-out visitors.",
     },
     railProvenance: {
       title: "Provenance",
@@ -525,6 +527,8 @@ export const en: Messages = {
     title: "First releases by participating artists",
     body:
       "Editions released on OPUS for the first time by participating artists. On each work page, review authentication, provenance, and edition details. OPUS offers a collector experience around non-reproducible digital art, not an investment product.",
+    releasesEmpty:
+      "There are no operator-approved releases yet. Approved artist submissions appear in this list for everyone, including signed-out visitors.",
     back: "← Back home",
     editionLabel: "Edition:",
     buyCta: "Buy",

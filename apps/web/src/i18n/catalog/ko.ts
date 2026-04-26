@@ -473,6 +473,8 @@ export const ko: Messages = {
       title: "신작공개 · 최신 1차 에디션",
       body: "검증된 작가의 한정 에디션입니다.",
       viewAll: "전체 보기",
+      empty:
+        "검수 완료되어 공개된 작품이 아직 없습니다. 작가 제출이 승인되면 로그인 여부와 관계없이 여기에 표시됩니다.",
     },
     railProvenance: {
       title: "소장계보",
@@ -523,6 +525,8 @@ export const ko: Messages = {
     title: "작가가 처음 공개한 작품",
     body:
       "참여 작가가 OPUS를 통해 최초로 공개한 에디션입니다. 각 작품 페이지에서 인증·출처·에디션 정보를 확인하세요. 투자 상품이 아닌, 복제 불가능한 디지털 아트의 감상·소장 경험을 제공합니다.",
+    releasesEmpty:
+      "운영 검수를 마친 작가 작품이 아직 없습니다. 승인된 제출이 있으면 로그인 없이도 이 목록에 표시됩니다.",
     back: "← 홈으로",
     editionLabel: "Edition:",
     buyCta: "구매",

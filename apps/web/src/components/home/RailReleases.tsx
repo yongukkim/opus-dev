@@ -3,13 +3,6 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
-import {
-  loadCatalogFiles,
-  encodeArtworkSlug,
-  parseTitleArtist,
-  TOTAL_EDITIONS,
-} from "@/lib/artworksCatalog";
-import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
 
 /**
@@ -31,9 +24,9 @@ import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
  * (PR-4); together they make spec §3.4's channel separation visible at a
  * glance — same component contract from `m.badge.*` (ISO 27001 A.5.1.1).
  *
- * Data source (this PR): `loadCatalogFiles()` over the file system catalog.
- * Cutover to `Edition (isIssued=true) ⨝ Artwork ⨝ Listing(market=PRIMARY,
- * status=OPEN)` is tracked separately (spec §5, "Rail A Releases").
+ * Data source: `listApprovedArtistSubmissions()` (operator-approved artist
+ * uploads). Thumbnails use `/api/artwork-submissions/[id]/public-preview`
+ * (watermarked; no login required). No demo catalog fallback.
  */
 const HOME_RAIL_LIMIT = 8;
 
@@ -46,27 +39,14 @@ export async function RailReleases({
 }) {
   const r = m.home.railReleases;
   const approved = await listApprovedArtistSubmissions(HOME_RAIL_LIMIT);
-  const useApproved = approved.length > 0;
-  const items = useApproved
-    ? approved.map((rec) => ({
-        key: rec.id,
-        href: withLocale(locale, `/releases/submission/${rec.id}`),
-        title: rec.artworkTitle,
-        artist: rec.nickname || rec.artistName,
-        meta: `Edition 1 / ${rec.editionTotal}`,
-        imageSrc: `/api/artwork-submissions/${rec.id}/public-preview`,
-      }))
-    : (await loadCatalogFiles()).files.slice(0, HOME_RAIL_LIMIT).map((file, idx) => {
-        const { title, artist } = parseTitleArtist(file, idx);
-        return {
-          key: file,
-          href: withLocale(locale, `/releases/${encodeArtworkSlug(file)}`),
-          title,
-          artist,
-          meta: `Edition ${idx + 1} / ${TOTAL_EDITIONS}`,
-          imageSrc: catalogImageSrcFromFile(file, "thumb"),
-        };
-      });
+  const items = approved.map((rec) => ({
+    key: rec.id,
+    href: withLocale(locale, `/releases/submission/${rec.id}`),
+    title: rec.artworkTitle,
+    artist: rec.nickname || rec.artistName,
+    meta: `Edition 1 / ${rec.editionTotal}`,
+    imageSrc: `/api/artwork-submissions/${rec.id}/public-preview`,
+  }));
 
   return (
     <section
@@ -95,44 +75,46 @@ export async function RailReleases({
           </Link>
         </div>
 
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {items.map((item) => (
-            <li key={item.key}>
-              <Link
-                href={item.href}
-                className="group block overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card transition hover:border-opus-gold/38"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
-                  <Image
-                    src={item.imageSrc}
-                    alt={`${item.title} — ${item.artist}`}
-                    fill
-                    sizes="(min-width: 1024px) 220px, (min-width: 640px) 45vw, 90vw"
-                    unoptimized
-                    className="object-cover opacity-95 transition duration-700 group-hover:scale-[1.02] group-hover:opacity-100"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.18),transparent_60%)] opacity-70" />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
-                  {/*
+        {items.length === 0 ? (
+          <p className="mt-12 max-w-lg text-sm leading-relaxed text-opus-warm/50">{r.empty}</p>
+        ) : (
+          <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {items.map((item) => (
+              <li key={item.key}>
+                <Link
+                  href={item.href}
+                  className="group block overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card transition hover:border-opus-gold/38"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
+                    <Image
+                      src={item.imageSrc}
+                      alt={`${item.title} — ${item.artist}`}
+                      fill
+                      sizes="(min-width: 1024px) 220px, (min-width: 640px) 45vw, 90vw"
+                      unoptimized
+                      className="object-cover opacity-95 transition duration-700 group-hover:scale-[1.02] group-hover:opacity-100"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.18),transparent_60%)] opacity-70" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+                    {/*
                     PRIMARY pill — sourced from m.badge.primary so the ⌘K
                     omni-search results in PR-8 reuse the exact same label.
                   */}
-                  <span className="absolute right-3 top-3 rounded-full border border-opus-gold/45 bg-black/55 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.22em] text-opus-gold-light backdrop-blur-sm">
-                    {m.badge.primary}
-                  </span>
-                </div>
-                <div className="border-t border-white/[0.06] px-4 py-4">
-                  <p className="opus-text-metallic line-clamp-1 font-display text-sm tracking-wide">
-                    {item.title}
-                  </p>
-                  <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">
-                    {item.meta}
-                  </p>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                    <span className="absolute right-3 top-3 rounded-full border border-opus-gold/45 bg-black/55 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.22em] text-opus-gold-light backdrop-blur-sm">
+                      {m.badge.primary}
+                    </span>
+                  </div>
+                  <div className="border-t border-white/[0.06] px-4 py-4">
+                    <p className="opus-text-metallic line-clamp-1 font-display text-sm tracking-wide">
+                      {item.title}
+                    </p>
+                    <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{item.meta}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

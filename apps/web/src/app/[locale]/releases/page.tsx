@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
-import {
-  encodeArtworkSlug,
-  loadCatalogFiles,
-  PAGE_SIZE,
-  parseTitleArtist,
-  TOTAL_EDITIONS,
-} from "@/lib/artworksCatalog";
+import { PAGE_SIZE } from "@/lib/artworksCatalog";
 import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,15 +59,11 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
   const m = getDictionary(locale);
   const a = m.artworks;
   const approved = await listApprovedArtistSubmissions(200);
-  const useApproved = approved.length > 0;
-  const { files, useLocal } = useApproved ? { files: [] as string[], useLocal: false } : await loadCatalogFiles();
-
-  const totalItems = useApproved ? approved.length : files.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const totalItems = approved.length;
+  const totalPages = totalItems === 0 ? 1 : Math.ceil(totalItems / PAGE_SIZE);
   const requestedPage = parsePage(pageParam);
   const currentPage = Math.min(requestedPage, totalPages);
   const offset = (currentPage - 1) * PAGE_SIZE;
-  const pageFiles = files.slice(offset, offset + PAGE_SIZE);
   const pageApproved = approved.slice(offset, offset + PAGE_SIZE);
   const view = parseView(viewParam);
 
@@ -96,14 +85,8 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
           <p className="opus-text-metallic-soft text-sm uppercase tracking-[0.35em]">{a.kicker}</p>
           <h1 className="mt-4 font-display text-2xl text-opus-warm md:text-3xl">{a.title}</h1>
           <p className="mx-auto mt-4 max-w-md font-sans text-sm text-opus-warm/60">{a.body}</p>
-          {useApproved ? (
-            <p className="mx-auto mt-3 max-w-md text-xs text-opus-warm/45">
-              Approved artist releases are now shown from verified submissions.
-            </p>
-          ) : useLocal ? (
-            <p className="mx-auto mt-3 max-w-md text-xs text-opus-warm/45">
-              Local preview mode: showing images from <span className="font-mono">public/local-artworks/</span>.
-            </p>
+          {totalItems === 0 ? (
+            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-opus-warm/50">{a.releasesEmpty}</p>
           ) : null}
         </div>
 
@@ -127,193 +110,102 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
           </Link>
         </nav>
 
-        {view === "grid" ? (
+        {totalItems === 0 ? null : view === "grid" ? (
           <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {useApproved
-              ? pageApproved.map((entry) => {
-                  const title = entry.artworkTitle;
-                  const artist = entry.nickname || entry.artistName;
-                  const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
-                  const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
-                  const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
-                  return (
-                    <li key={entry.id}>
-                      <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
+            {pageApproved.map((entry) => {
+              const title = entry.artworkTitle;
+              const artist = entry.nickname || entry.artistName;
+              const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
+              const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
+              const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
+              return (
+                <li key={entry.id}>
+                  <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
+                    <Link
+                      href={detailHref}
+                      className="relative block aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
+                    >
+                      <Image
+                        src={imageSrc}
+                        alt={`${title} — ${artist}`}
+                        fill
+                        sizes="(min-width: 1024px) 240px, (min-width: 640px) 45vw, 90vw"
+                        unoptimized
+                        className="object-cover opacity-95 transition hover:opacity-100"
+                      />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+                    </Link>
+                    <div className="border-t border-white/[0.06] px-4 py-4">
+                      <Link href={detailHref} className="block">
+                        <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                          <span className="opus-text-metallic font-display text-sm tracking-wide">{title}</span>
+                          <span className="font-display text-sm tracking-wide text-opus-warm/55">{artist}</span>
+                        </p>
+                        <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
+                      </Link>
+                      <div className="mt-4 flex items-center justify-between gap-3">
                         <Link
                           href={detailHref}
-                          className="relative block aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
+                          className="opus-surface-metallic inline-flex shrink-0 items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
                         >
-                          <Image
-                            src={imageSrc}
-                            alt={`${title} — ${artist}`}
-                            fill
-                            sizes="(min-width: 1024px) 240px, (min-width: 640px) 45vw, 90vw"
-                            unoptimized
-                            className="object-cover opacity-95 transition hover:opacity-100"
-                          />
-                          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+                          {a.openWorkCta}
                         </Link>
-                        <div className="border-t border-white/[0.06] px-4 py-4">
-                          <Link href={detailHref} className="block">
-                            <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
-                              <span className="opus-text-metallic font-display text-sm tracking-wide">{title}</span>
-                              <span className="font-display text-sm tracking-wide text-opus-warm/55">{artist}</span>
-                            </p>
-                            <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
-                          </Link>
-                          <div className="mt-4 flex items-center justify-between gap-3">
-                            <Link
-                              href={detailHref}
-                              className="opus-surface-metallic inline-flex shrink-0 items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
-                            >
-                              {a.openWorkCta}
-                            </Link>
-                            <span className="text-right font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
-                              {a.buyHint}
-                            </span>
-                          </div>
-                        </div>
+                        <span className="text-right font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
+                          {a.buyHint}
+                        </span>
                       </div>
-                    </li>
-                  );
-                })
-              : pageFiles.map((file, idx) => {
-                  const globalIdx = offset + idx;
-                  const { title, artist } = parseTitleArtist(file, globalIdx);
-                  const edition = `${a.editionLabel} ${globalIdx + 1}/${TOTAL_EDITIONS}`;
-                  const detailHref = withLocale(locale, `/releases/${encodeArtworkSlug(file)}`);
-                  return (
-                    <li key={file}>
-                      <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
-                        <Link
-                          href={detailHref}
-                          className="relative block aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
-                        >
-                          <Image
-                            src={catalogImageSrcFromFile(file, "thumb")}
-                            alt={`${title} — ${artist}`}
-                            fill
-                            sizes="(min-width: 1024px) 240px, (min-width: 640px) 45vw, 90vw"
-                            unoptimized
-                            className="object-cover opacity-95 transition hover:opacity-100"
-                          />
-                          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
-                        </Link>
-                        <div className="border-t border-white/[0.06] px-4 py-4">
-                          <Link href={detailHref} className="block">
-                            <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
-                              <span className="opus-text-metallic font-display text-sm tracking-wide">{title}</span>
-                              <span className="font-display text-sm tracking-wide text-opus-warm/55">{artist}</span>
-                            </p>
-                            <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
-                          </Link>
-                          <div className="mt-4 flex items-center justify-between gap-3">
-                            <Link
-                              href={detailHref}
-                              className="opus-surface-metallic inline-flex shrink-0 items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
-                            >
-                              {a.openWorkCta}
-                            </Link>
-                            <span className="text-right font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
-                              {a.buyHint}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <ul className="mt-10 divide-y divide-white/[0.08] rounded-lg border border-white/[0.08] bg-opus-slate/20">
-            {useApproved
-              ? pageApproved.map((entry) => {
-                  const title = entry.artworkTitle;
-                  const artist = entry.nickname || entry.artistName;
-                  const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
-                  const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
-                  const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
-                  return (
-                    <li key={entry.id}>
-                      <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-5">
+            {pageApproved.map((entry) => {
+              const title = entry.artworkTitle;
+              const artist = entry.nickname || entry.artistName;
+              const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
+              const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
+              const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
+              return (
+                <li key={entry.id}>
+                  <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-5">
+                    <Link
+                      href={detailHref}
+                      className="relative mx-auto aspect-[4/5] w-full max-w-[11rem] shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal sm:mx-0 sm:max-w-none sm:w-36"
+                    >
+                      <Image
+                        src={imageSrc}
+                        alt={`${title} — ${artist}`}
+                        fill
+                        sizes="(min-width: 640px) 144px, 100vw"
+                        unoptimized
+                        className="object-cover opacity-95 transition hover:opacity-100"
+                      />
+                    </Link>
+                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+                      <Link href={detailHref} className="min-w-0">
+                        <p className="opus-text-metallic font-display text-sm tracking-wide">{title}</p>
+                        <p className="mt-0.5 font-display text-sm text-opus-warm/55">{artist}</p>
+                        <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
+                      </Link>
+                      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end">
                         <Link
                           href={detailHref}
-                          className="relative mx-auto aspect-[4/5] w-full max-w-[11rem] shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal sm:mx-0 sm:max-w-none sm:w-36"
+                          className="opus-surface-metallic inline-flex items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
                         >
-                          <Image
-                            src={imageSrc}
-                            alt={`${title} — ${artist}`}
-                            fill
-                            sizes="(min-width: 640px) 144px, 100vw"
-                            unoptimized
-                            className="object-cover opacity-95 transition hover:opacity-100"
-                          />
+                          {a.openWorkCta}
                         </Link>
-                        <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                          <Link href={detailHref} className="min-w-0">
-                            <p className="opus-text-metallic font-display text-sm tracking-wide">{title}</p>
-                            <p className="mt-0.5 font-display text-sm text-opus-warm/55">{artist}</p>
-                            <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
-                          </Link>
-                          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end">
-                            <Link
-                              href={detailHref}
-                              className="opus-surface-metallic inline-flex items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
-                            >
-                              {a.openWorkCta}
-                            </Link>
-                            <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
-                              {a.buyHint}
-                            </span>
-                          </div>
-                        </div>
+                        <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
+                          {a.buyHint}
+                        </span>
                       </div>
-                    </li>
-                  );
-                })
-              : pageFiles.map((file, idx) => {
-                  const globalIdx = offset + idx;
-                  const { title, artist } = parseTitleArtist(file, globalIdx);
-                  const edition = `${a.editionLabel} ${globalIdx + 1}/${TOTAL_EDITIONS}`;
-                  const detailHref = withLocale(locale, `/releases/${encodeArtworkSlug(file)}`);
-                  return (
-                    <li key={file}>
-                      <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-5">
-                        <Link
-                          href={detailHref}
-                          className="relative mx-auto aspect-[4/5] w-full max-w-[11rem] shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal sm:mx-0 sm:max-w-none sm:w-36"
-                        >
-                          <Image
-                            src={catalogImageSrcFromFile(file, "thumb")}
-                            alt={`${title} — ${artist}`}
-                            fill
-                            sizes="(min-width: 640px) 144px, 100vw"
-                            unoptimized
-                            className="object-cover opacity-95 transition hover:opacity-100"
-                          />
-                        </Link>
-                        <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                          <Link href={detailHref} className="min-w-0">
-                            <p className="opus-text-metallic font-display text-sm tracking-wide">{title}</p>
-                            <p className="mt-0.5 font-display text-sm text-opus-warm/55">{artist}</p>
-                            <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">{edition}</p>
-                          </Link>
-                          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end">
-                            <Link
-                              href={detailHref}
-                              className="opus-surface-metallic inline-flex items-center justify-center rounded-full px-5 py-2 text-[0.72rem] font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
-                            >
-                              {a.openWorkCta}
-                            </Link>
-                            <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/35">
-                              {a.buyHint}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
 
