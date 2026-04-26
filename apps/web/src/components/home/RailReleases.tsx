@@ -4,12 +4,13 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import {
-  encodeArtworkSlug,
   loadCatalogFiles,
+  encodeArtworkSlug,
   parseTitleArtist,
   TOTAL_EDITIONS,
 } from "@/lib/artworksCatalog";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
+import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
 
 /**
  * Rail A · Releases — PR-5 of the home redesign series.
@@ -44,19 +45,28 @@ export async function RailReleases({
   m: Messages;
 }) {
   const r = m.home.railReleases;
-  const { files } = await loadCatalogFiles();
-  const items = files.slice(0, HOME_RAIL_LIMIT).map((file, idx) => {
-    const { title, artist } = parseTitleArtist(file, idx);
-    return {
-      file,
-      slug: encodeArtworkSlug(file),
-      title,
-      artist,
-      // Demo edition fraction matches the artwork detail page (PDP) so the
-      // home rail and the destination page stay consistent.
-      meta: `Edition ${idx + 1} / ${TOTAL_EDITIONS}`,
-    };
-  });
+  const approved = await listApprovedArtistSubmissions(HOME_RAIL_LIMIT);
+  const useApproved = approved.length > 0;
+  const items = useApproved
+    ? approved.map((rec, idx) => ({
+        key: rec.id,
+        href: withLocale(locale, "/releases"),
+        title: rec.artworkTitle,
+        artist: rec.nickname || rec.artistName,
+        meta: `Edition 1 / ${rec.editionTotal}`,
+        imageSrc: `/api/artwork-submissions/${rec.id}/public-preview`,
+      }))
+    : (await loadCatalogFiles()).files.slice(0, HOME_RAIL_LIMIT).map((file, idx) => {
+        const { title, artist } = parseTitleArtist(file, idx);
+        return {
+          key: file,
+          href: withLocale(locale, `/releases/${encodeArtworkSlug(file)}`),
+          title,
+          artist,
+          meta: `Edition ${idx + 1} / ${TOTAL_EDITIONS}`,
+          imageSrc: catalogImageSrcFromFile(file, "thumb"),
+        };
+      });
 
   return (
     <section
@@ -87,14 +97,14 @@ export async function RailReleases({
 
         <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {items.map((item) => (
-            <li key={item.file}>
+            <li key={item.key}>
               <Link
-                href={withLocale(locale, `/releases/${item.slug}`)}
+                href={item.href}
                 className="group block overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card transition hover:border-opus-gold/38"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
                   <Image
-                    src={catalogImageSrcFromFile(item.file, "thumb")}
+                    src={item.imageSrc}
                     alt={`${item.title} — ${item.artist}`}
                     fill
                     sizes="(min-width: 1024px) 220px, (min-width: 640px) 45vw, 90vw"

@@ -27,7 +27,7 @@ export const ko: Messages = {
     releasesIndexTitle: "신작 공개",
     releasesIndexDescription:
       "OPUS 작가들이 최초로 공개하는 1차 에디션 아카이브입니다. 복제 불가 디지털 아트의 인증·소장·감상 경험을 위한 신작 목록을 확인하세요.",
-    provenanceIndexTitle: "소장 계보",
+    provenanceIndexTitle: "소장계보",
     provenanceIndexDescription:
       "소장자가 다음 수탁자를 찾는 来歴 리스팅 모음입니다. 작가 본명·연락처는 공개되지 않으며 판매자 식별자는 마스킹되어 표시됩니다.",
     releaseTitleTpl: "{title} — {artist}",
@@ -48,7 +48,7 @@ export const ko: Messages = {
     releases: "신작 공개",
     vault: "마이페이지",
     legal: "법적 고지",
-    provenance: "소장 계보",
+    provenance: "소장계보",
     curation: "큐레이션",
     artists: "작가",
   },
@@ -75,7 +75,7 @@ export const ko: Messages = {
     itemsCount: "작품 {n}점",
     empty: "일치하는 결과가 없습니다",
     viewAllReleases: "신작 공개 전체 보기",
-    viewAllProvenance: "소장 계보 전체 보기",
+    viewAllProvenance: "소장계보 전체 보기",
     hintCardPrompt: "작품·작가·에디션을 찾아보세요",
     hintCardAriaLabel: "검색 열기. 작품·작가·리스팅·셸프를 키워드로 찾을 수 있습니다",
     loading: "검색 인덱스를 불러오는 중…",
@@ -212,7 +212,7 @@ export const ko: Messages = {
     design:
       "디자인: Classic Luxury — near-black 차콜, 샴페인 브라스(그라데이션 금속), 웜 화이트, 절제된 장식. 투자·실물자산 상품이 아닙니다.",
     releases: "신작 공개",
-    provenance: "소장 계보",
+    provenance: "소장계보",
     vault: "마이페이지",
     legal: "특정상거래법 표시",
     privacy: "개인정보 처리방침",
@@ -446,7 +446,7 @@ export const ko: Messages = {
     line2:
       "",
     openReleases: "신작 공개",
-    openProvenance: "소장 계보",
+    openProvenance: "소장계보",
     searchHint: "검색",
   },
   design: {
@@ -475,7 +475,7 @@ export const ko: Messages = {
       viewAll: "전체 보기",
     },
     railProvenance: {
-      title: "소장 계보",
+      title: "소장계보",
       body: "운영 검토를 통과한 활성 수탁 이전입니다.",
       viewAll: "전체 보기",
       empty: "지금은 진행 중인 수탁 이전이 없습니다.",
@@ -516,7 +516,7 @@ export const ko: Messages = {
       "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
     openVault: "마이페이지 열기",
-    openProvenance: "소장 계보 둘러보기",
+    openProvenance: "소장계보 둘러보기",
   },
   artworks: {
     kicker: "Releases · 신작 공개",
@@ -709,9 +709,9 @@ export const ko: Messages = {
     devPreviewLink: "로그인 없이 화면만 보기 (로컬 개발)",
     devPreviewBanner:
       "로컬 개발 미리보기입니다. 데모 로그인 쿠키 없이 등록 화면 레이아웃만 확인합니다. 실제 마이페이지 게이트와 동일한 폼이며, 제출은 헤더의 데모 회원 ID로 API에 전달됩니다.",
-    listingsTitle: "소장 계보 · Provenance",
+    listingsTitle: "소장계보 · Provenance",
     listingsSubtitle:
-      "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장 계보를 잇는 경로로 설계되었습니다.",
+      "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장계보를 잇는 경로로 설계되었습니다.",
     listingsEmpty: "등록된 항목이 없습니다.",
     listingsArtistPublic: "표시 작가명 (필명)",
     listingsGenre: "장르",

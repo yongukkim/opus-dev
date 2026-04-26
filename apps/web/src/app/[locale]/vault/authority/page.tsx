@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { OperatorReviewTable, type OperatorReviewRow } from "@/components/operator/OperatorReviewTable";
-import { OperatorAccountAdminTable } from "@/components/operator/OperatorAccountAdminTable";
+import { OperatorStaffRolePanel } from "@/components/operator/OperatorStaffRolePanel";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { prisma } from "@/lib/prisma";
@@ -55,7 +55,8 @@ export default async function VaultAuthoritySettingsPage({ params }: Props) {
   const submissionRows = (await listAllSubmissions()).map(normalizeSubmission);
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
-    take: 100,
+    where: { role: "OPERATOR" },
+    take: 50,
     select: { id: true, name: true, email: true, role: true, createdAt: true },
   });
   const accountRows = users.map((u) => ({
@@ -81,7 +82,7 @@ export default async function VaultAuthoritySettingsPage({ params }: Props) {
 
       <section className="mt-12">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/45">{a.accountSection}</p>
-        <OperatorAccountAdminTable rows={accountRows} sessionUserId={session.user.id} m={m} />
+        <OperatorStaffRolePanel rows={accountRows} m={m} />
       </section>
     </main>
   );
