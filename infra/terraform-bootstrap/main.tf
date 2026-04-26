@@ -39,6 +39,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "tf_state" {
     id     = "abort-incomplete-multipart-uploads"
     status = "Enabled"
 
+    filter {
+      prefix = ""
+    }
+
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
     }
