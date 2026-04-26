@@ -11,7 +11,7 @@
 set -euo pipefail
 
 REPO_URL="${REPO_URL:-https://github.com/yongukkim/opus-dev.git}"
-BRANCH="${BRANCH:-feat/signup-sso-collector}"
+BRANCH="${BRANCH:-main}"
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
 # 8GB 루트에서 4G 스왑은 Docker 빌드와 충돌 → 기본 2G (환경변수로 조절)
 SWAP_SIZE_GB="${SWAP_SIZE_GB:-2}"
@@ -31,8 +31,11 @@ swap_mb=$(awk '/SwapTotal/ {printf "%d", $2/1024}' /proc/meminfo)
 # df 4번째 칼럼 = 사용 가능 1K 블록 수 (Ubuntu 기본)
 avail_kb=$(df / | awk 'NR==2 {print int($4)}')
 avail_gb=$((avail_kb / 1024 / 1024))
-# 루트 디스크에 스왑+Docker+pnpm 여유(약 4G) 남길 수 있을 때만 스왑 파일 생성
-need_gb=$((SWAP_SIZE_GB + 4))
+# 루트 디스크에 스왑 + Docker 빌드 최소 여유를 남길 때만 스왑 생성.
+# KO: t4g.micro(8G 루트)에서 예전 +4G 조건은 스왑이 거의 안 생겨 next build OOM/SSH 멈춤처럼 보였다.
+# JA: 旧+4G条件ではスワップが作られず next build でメモリ枯渇しSSHが固まった。
+# EN: The old +4GiB gate skipped swap on 8GiB roots; Next build then thrashed and SSH looked hung.
+need_gb=$((SWAP_SIZE_GB + 2))
 if [[ "$mem_mb" -lt 2048 && "$swap_mb" -lt 512 && "$avail_gb" -ge "$need_gb" ]]; then
   log "RAM ${mem_mb}MiB, swap ${swap_mb}MiB, / 여유 ${avail_gb}G → ${SWAP_SIZE_GB}G 스왑 (${SWAP_FILE})"
   if [[ ! -f "$SWAP_FILE" ]]; then
