@@ -79,6 +79,10 @@ function inputClass(invalid: boolean): string {
   }`;
 }
 
+function readonlyBlockClass(): string {
+  return "mt-2 rounded-md border border-white/[0.12] bg-black/20 px-3 py-2 text-sm text-opus-warm/80";
+}
+
 function labelClass(): string {
   return "font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/50";
 }
@@ -438,38 +442,38 @@ export function CollectorTransferRegisterForm({
           </p>
         ) : null}
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div>
-            <p className={labelClass()}>{t.artistLegalNameLabel}</p>
-            {artworkLocked && lockedWork?.artistLegalNameRedacted ? (
-              <p className="mt-2 rounded-md border border-white/[0.12] bg-black/20 px-3 py-2 text-sm text-opus-warm/45">
-                {t.artistLegalNameRedactedHint}
-              </p>
-            ) : (
+          {!artworkLocked ? (
+            <div>
+              <p className={labelClass()}>{t.artistLegalNameLabel}</p>
               <input
                 name="artistLegalName"
                 value={draft.artistLegalName}
                 onChange={onText}
                 onBlur={() => markTouched("artistLegalName")}
-                readOnly={artworkLocked}
                 className={`${inputClass(false)} mt-2`}
                 autoComplete="off"
               />
-            )}
-            <p className={hintClass()}>{t.artistLegalNameHint}</p>
-          </div>
+              <p className={hintClass()}>{t.artistLegalNameHint}</p>
+            </div>
+          ) : null}
           <div>
             <p className={labelClass()}>{t.artistPenNameLabel}</p>
-            <input
-              name="artistPenName"
-              value={draft.artistPenName}
-              onChange={onText}
-              onBlur={() => markTouched("artistPenName")}
-              readOnly={artworkLocked}
-              className={`${inputClass(invalid("artistPenName"))} mt-2`}
-              autoComplete="off"
-            />
+            {artworkLocked ? (
+              <p className={readonlyBlockClass()}>{draft.artistPenName.trim() || "—"}</p>
+            ) : (
+              <>
+                <input
+                  name="artistPenName"
+                  value={draft.artistPenName}
+                  onChange={onText}
+                  onBlur={() => markTouched("artistPenName")}
+                  className={`${inputClass(invalid("artistPenName"))} mt-2`}
+                  autoComplete="off"
+                />
+                {invalid("artistPenName") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
+              </>
+            )}
             <p className={hintClass()}>{t.artistPenNameHint}</p>
-            {invalid("artistPenName") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
           </div>
         </div>
 

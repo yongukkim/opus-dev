@@ -734,6 +734,10 @@ export type Messages = {
     registerKicker: string;
     registerTitle: string;
     registerSubtitle: string;
+    registerSelectFromVaultTitle: string;
+    registerSelectFromVaultBody: string;
+    registerSelectFromVaultEmpty: string;
+    registerSelectFromVaultCta: string;
     /** Collector must open this page with `?submissionId=` of an owned approved work. */
     transferRegisterMissingSubmission: string;
     transferRegisterMissingSubmissionHint: string;

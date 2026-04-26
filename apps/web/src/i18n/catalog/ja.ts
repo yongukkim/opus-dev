@@ -693,7 +693,13 @@ export const ja: Messages = {
     registerKicker: "コレクター譲渡",
     registerTitle: "保有エディションの譲渡希望を登録",
     registerSubtitle:
-      "所蔵中の作品は、作家が初回登録した内容が読み取り専用で表示されます。所蔵者移転を登録する方は金額・販売方式・備考のみを設定します。本名は公開設定により空欄になる場合があります。",
+      "所蔵者移転の登録は、サーバ上の保管庫にある所蔵作品サムネイルから選択して行います。別途画像アップロードは不要で、設定できるのは金額・販売方式・備考のみです。作家表記は公開されたペンネームのみが使われ、所蔵者は編集できません。",
+    registerSelectFromVaultTitle: "保管庫の作品を選択",
+    registerSelectFromVaultBody:
+      "このアカウントで現在所蔵し、かつ承認済みの作品のみ表示されます。サムネイルを選ぶと譲渡登録フォームを開けます。",
+    registerSelectFromVaultEmpty:
+      "このアカウントで譲渡登録可能な承認済み作品はまだありません。マイページのコレクションをご確認ください。",
+    registerSelectFromVaultCta: "この作品で登録",
     transferRegisterMissingSubmission: "所蔵者移転の登録には作品提出IDが必要です。",
     transferRegisterMissingSubmissionHint:
       "マイページのコレクションから該当作品の「所蔵者移転を登録」を押すか、URL に `?submissionId=`（承認済み提出ID）を付けて開いてください。",

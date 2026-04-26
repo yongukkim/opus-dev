@@ -675,7 +675,13 @@ export const ko: Messages = {
     registerKicker: "소장 이전",
     registerTitle: "소장 에디션 이전 등록",
     registerSubtitle:
-      "소장 중인 작품은 최초 작가 등록 정보가 그대로 표시되며, 수탁 이전을 등록하는 분은 금액·판매 방식·비고만 설정합니다. 작가 본명은 공개 설정에 따라 비워 보일 수 있고, 필명·작품 정보는 목록에 반영됩니다.",
+      "소장 중인 작품은 서버 보관함의 작품 썸네일에서 선택하며, 이전 등록 시에는 금액·판매 방식·비고만 설정합니다. 작가 표시는 공개된 필명만 사용되고 소장자는 수정할 수 없습니다.",
+    registerSelectFromVaultTitle: "내 보관함 작품 선택",
+    registerSelectFromVaultBody:
+      "별도 업로드 없이 현재 계정이 소장 중이고 승인된 작품만 표시됩니다. 썸네일을 눌러 이전 등록 폼을 여세요.",
+    registerSelectFromVaultEmpty:
+      "현재 계정으로 이전 등록 가능한 승인 작품이 없습니다. 마이페이지 컬렉션에서 소장 상태를 확인해 주세요.",
+    registerSelectFromVaultCta: "이 작품으로 이전 등록",
     transferRegisterMissingSubmission: "이전 등록을 열려면 소장 중인 작품의 제출 ID가 필요합니다.",
     transferRegisterMissingSubmissionHint:
       "마이페이지 컬렉션에서 해당 작품의 「수탁 이전 등록」을 누르거나, 주소에 `?submissionId=`(승인된 제출 ID)를 붙여 접근해 주세요.",

@@ -677,7 +677,13 @@ export const en: Messages = {
     registerKicker: "Collection transfer",
     registerTitle: "List an edition for the next collector",
     registerSubtitle:
-      "For works you hold, the artist’s original registration details are shown read-only. As the current custodian you only set amount, listing mode, and optional notes. The pen name and work fields flow into the public listing.",
+      "Select from thumbnails of approved works held in your server-side vault; no separate image upload is needed. On transfer listing, you only set amount, listing mode, and notes. Artist attribution uses the published pen name only and cannot be edited by the custodian.",
+    registerSelectFromVaultTitle: "Select from your vault",
+    registerSelectFromVaultBody:
+      "Only approved works currently held by this account are shown. Choose a thumbnail to open the transfer form for that work.",
+    registerSelectFromVaultEmpty:
+      "No approved held works are currently available for transfer listing under this account.",
+    registerSelectFromVaultCta: "List this edition",
     transferRegisterMissingSubmission: "A submission ID is required to open this transfer form.",
     transferRegisterMissingSubmissionHint:
       "Use “Open custody transfer registration” on My Page → Collection for an approved work you hold, or open this URL with `?submissionId=` set to that submission’s id.",

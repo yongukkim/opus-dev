@@ -130,9 +130,8 @@ export async function POST(request: NextRequest) {
       description = locked.description ? locked.description.slice(0, 4000) : undefined;
       tags = locked.tags ? locked.tags.slice(0, 400) : undefined;
       editionRef = locked.editionRef.slice(0, 160);
-      artistLegalName = locked.artistLegalNameRedacted
-        ? undefined
-        : locked.artistLegalName.trim().slice(0, 120) || undefined;
+      // Collector transfer listings publish artist pen name only.
+      artistLegalName = undefined;
       sourceSubmissionId = locked.submissionId;
     } else {
       const artistLegalRaw = optionalString(fd, "artistLegalName", 120);
