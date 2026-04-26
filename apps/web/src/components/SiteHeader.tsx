@@ -12,6 +12,7 @@ import { SiteHeaderAuth } from "./SiteHeaderAuth";
  */
 export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
   const session = await auth();
+  const isArtist = session?.user?.role === "artist";
   const ja = locale === "ja";
   const artistSignupLabel = m.artistSignup?.title ?? m.signup.title;
   const navItemClass = ja
@@ -69,9 +70,15 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             signOutLabel={m.auth.signOut}
             userEmail={session?.user?.email}
           />
-          <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
-            {artistSignupLabel}
-          </Link>
+          {isArtist ? (
+            <Link href={withLocale(locale, "/vault")} className={authItemClass}>
+              {m.nav.vault}
+            </Link>
+          ) : (
+            <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
+              {artistSignupLabel}
+            </Link>
+          )}
           <LocaleSwitcher ariaLabel={m.a11y.language} />
         </div>
       </div>
