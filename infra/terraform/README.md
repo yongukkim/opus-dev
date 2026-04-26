@@ -52,6 +52,8 @@ terraform apply
 
 `terraform.tfvars`와 `*.tfstate`는 `.gitignore`에 포함되어 있습니다. **state에 RDS 비밀번호가 들어가므로** S3 백엔드 + 버킷 암호화·IAM 최소 권한을 유지하세요.
 
+앱 EC2 타입은 변수 **`app_instance_type`**(기본 `t4g.small`)로 조절합니다. `terraform apply` 시 타입이 바뀌면 인스턴스가 **교체**될 수 있고 **퍼블릭 IP가 바뀔 수** 있습니다.
+
 ## RDS 켜기
 
 `terraform.tfvars`에서:

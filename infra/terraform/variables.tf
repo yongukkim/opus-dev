@@ -9,6 +9,15 @@ variable "ssh_public_key" {
   sensitive   = true
 }
 
+# KO: 웹/WAS 호스트 — Docker 빌드·Next 런타임에 t4g.micro 보다 여유 RAM이 필요하면 한 단계 올린다.
+# JA: Web/WAS ホスト — Docker/Next のため RAM に余裕が必要なら一段上げる。
+# EN: Web/WAS host; bump one size when Docker/Next needs more RAM than t4g.micro.
+variable "app_instance_type" {
+  type        = string
+  description = "EC2 instance type for the OPUS app server (arm64 Graviton, e.g. t4g.small)."
+  default     = "t4g.small"
+}
+
 # ISO 27001 A.13.1.3 / A.10.1.1: RDS 네트워크·암호화 경계를 변수로 노출해
 # 환경(개발/스테이징) 단위로 독립 관리한다.
 # KO: RDS 활성/비활성과 규모는 tfvars 에서만 토글해 실수로 프로덕션 크기를 띄우지 않는다.

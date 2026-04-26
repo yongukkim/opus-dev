@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# EC2(Ubuntu, arm64, t4g.micro 전제)에서 OPUS 웹 컨테이너를 띄우는 단일 스크립트.
+# EC2(Ubuntu, arm64, t4g.small 이상 권장)에서 OPUS 웹 컨테이너를 띄우는 단일 스크립트.
 # 용도:
 #   1) 이 스크립트만 EC2로 가져가 실행해도 됨 (curl | bash 형태로도 가능)
 #   2) 기본은 소스 코드 clone 후 Docker 이미지 빌드
-#   3) OPUS_WEB_IMAGE 를 주면 레지스트리에서 pull (t4g.micro 빌드 부담 회피)
+#   3) OPUS_WEB_IMAGE 를 주면 레지스트리에서 pull (소형 인스턴스에서 빌드 부담 회피)
 # 예:
 #   curl -fsSL https://raw.githubusercontent.com/yongukkim/opus-dev/feat/signup-sso-collector/scripts/deploy-web-docker-ec2.sh | bash
 #   OPUS_WEB_IMAGE=ghcr.io/yongukkim/opus-web:latest BRANCH=main bash scripts/deploy-web-docker-ec2.sh

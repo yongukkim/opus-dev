@@ -3,6 +3,9 @@
 
 ssh_public_key = "REPLACE_WITH_YOUR_PUBLIC_KEY"
 
+# 앱 EC2 타입 (기본 t4g.small — micro 에서 Docker 빌드가 버거우면 유지).
+# app_instance_type = "t4g.micro"
+
 # RDS (PostgreSQL) — 기본 off. true 로 바꾸면 private subnet·SG·인스턴스가 함께 만들어진다.
 # enable_rds           = true
 # db_name              = "opus"
