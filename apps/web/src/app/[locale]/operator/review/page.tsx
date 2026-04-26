@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
+import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { hasOperatorSessionFromCookies } from "@/lib/operatorSession";
 import { listAllSubmissions, type SubmissionRecord } from "@/lib/privateStorage";
 import { OperatorReviewTable, type OperatorReviewRow } from "@/components/operator/OperatorReviewTable";
-import { OperatorSessionBootstrap } from "@/components/operator/OperatorSessionBootstrap";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -29,8 +27,8 @@ export default async function OperatorReviewPage({ params }: Props) {
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
 
-  const cookieStore = await cookies();
-  const authed = hasOperatorSessionFromCookies(cookieStore);
+  const session = await auth();
+  const authed = session?.user?.role === "operator";
   const rows = (await listAllSubmissions()).map(normalizeSubmission);
 
   return (
@@ -42,7 +40,12 @@ export default async function OperatorReviewPage({ params }: Props) {
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{m.operatorReview.subtitle}</p>
 
-        {!authed ? <OperatorSessionBootstrap m={m} /> : null}
+        {!authed ? (
+          <div className="mx-auto mt-10 max-w-xl rounded-xl border border-white/[0.08] bg-opus-slate/30 p-6 text-center shadow-opus-card">
+            <p className="font-display text-xl text-opus-warm">{m.operatorAdmin.unauthorizedTitle}</p>
+            <p className="mt-3 text-sm text-opus-warm/60">{m.operatorAdmin.unauthorizedBody}</p>
+          </div>
+        ) : null}
 
         {authed ? <OperatorReviewTable m={m} rows={rows} /> : null}
 

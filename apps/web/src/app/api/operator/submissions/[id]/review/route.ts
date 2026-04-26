@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readActorFromRequest } from "@/lib/authContext";
+import { auth } from "@/auth";
 import {
   appendSubmissionReviewPatch,
   getSubmissionById,
   type SubmissionRecord,
 } from "@/lib/privateStorage";
-import { hasOperatorSessionFromCookies } from "@/lib/operatorSession";
 
 export const runtime = "nodejs";
 
@@ -15,9 +14,9 @@ type ContentRating = NonNullable<SubmissionRecord["contentRating"]>;
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.2.1 (§4) Least Privilege RBAC
- *   KO: 검수 상태 변경은 운영자만 수행할 수 있으며, 데모 단계에서는 운영자 세션 쿠키로 접근을 제한합니다.
- *   JA: 審査ステータス変更は運営者のみが実行でき、デモ段階では運営者セッションクッキーでアクセスを制限します。
- *   EN: Review status changes are restricted to operators; in demo mode we gate via an operator session cookie.
+ *   KO: 검수 상태 변경은 DB 기반 OPERATOR 세션만 수행할 수 있도록 제한합니다.
+ *   JA: 審査ステータス変更はDBベースのOPERATORセッションのみに制限します。
+ *   EN: Review status changes are restricted to DB-backed OPERATOR sessions only.
  *
  * - A.14.2.1 (§1) Input validation
  *   KO: reviewStatus/contentRating/note는 허용 값만 수용하고 길이를 제한합니다.
@@ -28,15 +27,9 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<{ id: string }> },
 ): Promise<Response> {
-  const cookieStore = request.cookies;
-  if (!hasOperatorSessionFromCookies(cookieStore)) {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== "operator") {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
-  }
-
-  // Optional hardening for internal tooling: if actor headers exist, enforce operator role.
-  const actor = await readActorFromRequest(request);
-  if (actor && actor.role !== "operator") {
-    return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
   }
 
   const { id } = await context.params;
@@ -70,7 +63,7 @@ export async function POST(
 
   await appendSubmissionReviewPatch({
     submission,
-    reviewerId: actor?.userId ?? "operator-demo",
+    reviewerId: session.user.id,
     reviewStatus: normalizedStatus,
     contentRating,
     reviewNote,

@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { readOAuthConsentFromCookieJar } from "@/lib/oauthConsentCookie";
 import { authConfig } from "@/auth.config";
 
+const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set(["admin@opus-store.com"]);
+
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.4.2 (§2) Authentication & session — JWT sessions, HttpOnly cookies via Auth.js; no client-visible secrets.
@@ -32,6 +34,21 @@ function mapDbRoleToSession(
   return "collector";
 }
 
+/**
+ * ISO 27001 A.9.2.1 (§4) Least Privilege RBAC
+ * KO: 지정된 운영자 이메일은 로그인 시 DB 역할을 OPERATOR로 강제 동기화해 권한 기준을 서버 DB에 일관되게 유지합니다.
+ * JA: 指定された運営者メールはログイン時にDBロールをOPERATORへ同期し、権限制御の基準をサーバDBで一貫化します。
+ * EN: Designated operator emails are synchronized to OPERATOR in the DB at sign-in to keep RBAC source-of-truth server-side.
+ */
+async function ensureBootstrapOperatorRoleByEmail(email: string): Promise<void> {
+  const normalized = email.trim().toLowerCase();
+  if (!OPUS_BOOTSTRAP_OPERATOR_EMAILS.has(normalized)) return;
+  await prisma.user.updateMany({
+    where: { email, NOT: { role: "OPERATOR" } },
+    data: { role: "OPERATOR" },
+  });
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
@@ -48,6 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         select: { id: true, role: true },
       });
       if (existing) {
+        await ensureBootstrapOperatorRoleByEmail(email);
         if (consent?.flow === "artist-signup" && existing.role === "COLLECTOR") {
           const acceptedAt = new Date(consent.recordedAt);
           await prisma.user.update({
@@ -102,7 +120,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async createUser({ user }) {
       const jar = await cookies();
       const consent = readOAuthConsentFromCookieJar(jar);
-      if (!consent || !user.id) return;
+      if (!user.id) return;
+
+      const email = user.email?.trim();
+      if (email) await ensureBootstrapOperatorRoleByEmail(email);
+      if (!consent) return;
 
       const acceptedAt = new Date(consent.recordedAt);
       const role = consent.flow === "artist-signup" ? "ARTIST" : "COLLECTOR";
