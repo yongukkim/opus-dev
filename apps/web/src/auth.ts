@@ -27,8 +27,8 @@ import { authConfig } from "@/auth.config";
 function mapDbRoleToSession(
   role: string | undefined,
 ): "collector" | "artist" | "operator" {
-  if (role === "ARTIST") return "artist";
-  if (role === "OPERATOR") return "operator";
+  if (role === "ARTIST" || role === "artist") return "artist";
+  if (role === "OPERATOR" || role === "operator") return "operator";
   return "collector";
 }
 
@@ -73,16 +73,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user }) {
-      if (user?.id) {
-        token.sub = user.id;
+      const subjectId = user?.id ?? token.sub;
+      if (subjectId) {
+        token.sub = subjectId;
         const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
+          where: { id: subjectId },
           select: { role: true, email: true, name: true, image: true },
         });
         token["role"] = mapDbRoleToSession(dbUser?.["role"]);
-        token["email"] = dbUser?.email ?? user.email ?? undefined;
-        token["name"] = dbUser?.name ?? user.name ?? undefined;
-        token["picture"] = dbUser?.image ?? user.image ?? undefined;
+        token["email"] = dbUser?.email ?? user?.email ?? token["email"] ?? undefined;
+        token["name"] = dbUser?.name ?? user?.name ?? token["name"] ?? undefined;
+        token["picture"] = dbUser?.image ?? user?.image ?? token["picture"] ?? undefined;
       }
       return token;
     },
