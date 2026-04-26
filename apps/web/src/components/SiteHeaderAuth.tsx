@@ -17,30 +17,42 @@ export function SiteHeaderAuth({
   signUpLabel,
   signOutLabel,
   userEmail,
+  variant = "default",
 }: {
   locale: Locale;
   signInLabel: string;
   signUpLabel: string;
   signOutLabel: string;
   userEmail: string | null | undefined;
+  /** `compact`: narrow header row — links always visible (no `hidden sm:`). */
+  variant?: "default" | "compact";
 }) {
   const ja = locale === "ja";
-  const linkClass = ja
+  const linkClassDefault = ja
     ? "hidden shrink-0 font-mono text-[0.65rem] tracking-tight break-keep text-opus-warm/55 transition hover:text-opus-gold sm:inline"
     : "hidden shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/55 transition hover:text-opus-gold sm:inline";
+  const linkClassCompact = ja
+    ? "inline shrink-0 font-mono text-[0.65rem] tracking-tight break-keep text-opus-warm/55 transition hover:text-opus-gold"
+    : "inline shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-opus-warm/55 transition hover:text-opus-gold";
+  const linkClass = variant === "compact" ? linkClassCompact : linkClassDefault;
 
   if (userEmail) {
     return (
       <>
-        <span
-          className={`hidden max-w-[10rem] truncate sm:inline ${ja ? "font-mono text-[0.65rem] tracking-tight text-opus-warm/50" : "font-mono text-[0.65rem] uppercase tracking-[0.18em] text-opus-warm/50"}`}
-          title={userEmail}
-        >
-          {userEmail}
-        </span>
+        {variant === "compact" ? (
+          <span className="sr-only">{userEmail}</span>
+        ) : (
+          <span
+            className={`hidden max-w-[10rem] truncate sm:inline ${ja ? "font-mono text-[0.65rem] tracking-tight text-opus-warm/50" : "font-mono text-[0.65rem] uppercase tracking-[0.18em] text-opus-warm/50"}`}
+            title={userEmail}
+          >
+            {userEmail}
+          </span>
+        )}
         <button
           type="button"
           onClick={() => void signOut({ callbackUrl: withLocale(locale, "/") })}
+          title={userEmail ?? undefined}
           className={`${linkClass} cursor-pointer border-0 bg-transparent p-0 text-left`}
         >
           {signOutLabel}

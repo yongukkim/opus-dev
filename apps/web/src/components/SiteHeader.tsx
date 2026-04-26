@@ -22,6 +22,9 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
   const authItemClass = ja
     ? "hidden shrink-0 font-mono text-[0.65rem] tracking-tight break-keep text-opus-warm/55 transition hover:text-opus-gold sm:inline"
     : "hidden shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/55 transition hover:text-opus-gold sm:inline";
+  const authItemClassMobile = ja
+    ? "inline shrink-0 font-mono text-[0.65rem] tracking-tight break-keep text-opus-warm/55 transition hover:text-opus-gold"
+    : "inline shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-opus-warm/55 transition hover:text-opus-gold";
 
   return (
     <header
@@ -36,7 +39,24 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
           >
             OPUS
           </Link>
-          <div className="shrink-0 md:hidden">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-x-2 gap-y-1 md:hidden">
+            <SiteHeaderAuth
+              variant="compact"
+              locale={locale}
+              signInLabel={m.auth.signIn}
+              signUpLabel={m.signup.title}
+              signOutLabel={m.auth.signOut}
+              userEmail={session?.user?.email}
+            />
+            {isArtist ? (
+              <Link href={withLocale(locale, "/vault")} className={authItemClassMobile}>
+                {m.nav.vault}
+              </Link>
+            ) : (
+              <Link href={withLocale(locale, "/artist-signup")} className={authItemClassMobile}>
+                {artistSignupLabel}
+              </Link>
+            )}
             <LocaleSwitcher ariaLabel={m.a11y.language} />
           </div>
         </div>
