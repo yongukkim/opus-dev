@@ -327,7 +327,7 @@ export default async function ProvenanceDetailPage({ params }: Props) {
             {t.listingsDetailBackToIndex}
           </Link>
           <Link
-            href={withLocale(locale, "/vault/transfer/register")}
+            href={withLocale(locale, "/vault/collection")}
             className="opus-surface-metallic inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold text-black transition hover:opacity-95"
           >
             {t.listingsRegisterCta}

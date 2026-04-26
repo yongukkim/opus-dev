@@ -653,7 +653,17 @@ export const ja: Messages = {
     balance: "残高",
     activeBids: "進行中の入札",
     collectionTitle: "コレクション",
-    collectionBody: "保有エディション一覧のプレースホルダです。",
+    collectionBody:
+      "サインイン中のアカウントがThe Chronicle上で所蔵しているエディションです。運営審査済みの作品から、次の所蔵者を探す登録フォームへ進めます。",
+    collectionEmpty: "このアカウントで所蔵として記録された作品はまだありません。",
+    collectionTransferCta: "所蔵者移転を登録",
+    collectionViewDetail: "作品ページ",
+    collectionNotApprovedHint: "運営審査が承認されると、次の所蔵者を探す登録を開けます。",
+    collectionStatusApproved: "審査済み",
+    collectionStatusPending: "審査待ち",
+    collectionStatusOther: "保留",
+    collectionHeldBadgeArtist: "作家保有",
+    collectionHeldBadgeCollector: "所蔵",
     activityTitle: "アクティビティ",
     activityBody: "入札・決済・Chronicleイベントのプレースホルダです。",
     settingsTitle: "設定",
@@ -682,7 +692,7 @@ export const ja: Messages = {
       "所蔵中の作品は、作家が初回登録した内容が読み取り専用で表示されます。所蔵者移転を登録する方は金額・販売方式・備考のみを設定します。本名は公開設定により空欄になる場合があります。",
     transferRegisterMissingSubmission: "所蔵者移転の登録には作品提出IDが必要です。",
     transferRegisterMissingSubmissionHint:
-      "URL に `?submissionId=`（運営承認済みの提出ID）を付けて開くか、マイページの所蔵一覧からリンクを利用してください。",
+      "マイページのコレクションから該当作品の「所蔵者移転を登録」を押すか、URL に `?submissionId=`（承認済み提出ID）を付けて開いてください。",
     transferRegisterInvalidSubmission:
       "該当作品が見つからないか、未承認か、またはサインイン中のアカウントが所蔵者として登録されていません。",
     transferRegisterWorkLockedHint:

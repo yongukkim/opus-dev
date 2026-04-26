@@ -80,7 +80,7 @@ export async function RailProvenance({
           <div className="mt-12 flex flex-col items-center gap-5 rounded-lg border border-white/[0.06] bg-opus-slate/20 px-6 py-14 text-center">
             <p className="text-sm text-opus-warm/60">{r.empty}</p>
             <Link
-              href={withLocale(locale, "/vault/transfer/register")}
+              href={withLocale(locale, "/vault/collection")}
               className="opus-surface-metallic inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold text-black transition hover:opacity-95"
             >
               {r.registerCta}

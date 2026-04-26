@@ -176,7 +176,7 @@ export default async function CollectorTransferListingsPage({ params, searchPara
 
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
-            href={withLocale(locale, "/vault/transfer/register")}
+            href={withLocale(locale, "/vault/collection")}
             className="opus-surface-metallic inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold text-black transition hover:opacity-95"
           >
             {t.listingsRegisterCta}

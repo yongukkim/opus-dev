@@ -408,7 +408,7 @@ export type Messages = {
       viewAll: string;
       /** Empty state when there are no open custody transfers. */
       empty: string;
-      /** Empty-state CTA → /vault/transfer/register. */
+      /** Empty-state CTA → /vault/collection (pick a held work, then transfer). */
       registerCta: string;
     };
     railFeaturedArtists: {
@@ -693,6 +693,19 @@ export type Messages = {
     activeBids: string;
     collectionTitle: string;
     collectionBody: string;
+    collectionEmpty: string;
+    /** CTA → `/vault/transfer/register?submissionId=` */
+    collectionTransferCta: string;
+    collectionViewDetail: string;
+    /** Shown when work is not operator-approved yet (no transfer form link). */
+    collectionNotApprovedHint: string;
+    collectionStatusApproved: string;
+    collectionStatusPending: string;
+    collectionStatusOther: string;
+    /** Chip when Chronicle owner role is artist (studio inventory). */
+    collectionHeldBadgeArtist: string;
+    /** Chip when Chronicle owner role is collector. */
+    collectionHeldBadgeCollector: string;
     activityTitle: string;
     activityBody: string;
     settingsTitle: string;

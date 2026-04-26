@@ -637,7 +637,17 @@ export const en: Messages = {
     balance: "Balance",
     activeBids: "Active bids",
     collectionTitle: "Collection",
-    collectionBody: "Placeholder for owned editions.",
+    collectionBody:
+      "Editions currently held under your signed-in account (per Chronicle ownership). Operator-approved works can open the next-custodian transfer form directly.",
+    collectionEmpty: "No editions are recorded under this account yet.",
+    collectionTransferCta: "Open custody transfer registration",
+    collectionViewDetail: "Work page",
+    collectionNotApprovedHint: "Once operator review approves the work, you can open the transfer registration.",
+    collectionStatusApproved: "Approved",
+    collectionStatusPending: "Pending review",
+    collectionStatusOther: "On hold",
+    collectionHeldBadgeArtist: "Artist custody",
+    collectionHeldBadgeCollector: "In collection",
     activityTitle: "Activity",
     activityBody: "Placeholder for bids, payments, and Chronicle events.",
     settingsTitle: "Settings",
@@ -666,7 +676,7 @@ export const en: Messages = {
       "For works you hold, the artist’s original registration details are shown read-only. As the current custodian you only set amount, listing mode, and optional notes. The pen name and work fields flow into the public listing.",
     transferRegisterMissingSubmission: "A submission ID is required to open this transfer form.",
     transferRegisterMissingSubmissionHint:
-      "Open this page with `?submissionId=` for an operator-approved work you currently hold, or use the link from your My Page collection when available.",
+      "Use “Open custody transfer registration” on My Page → Collection for an approved work you hold, or open this URL with `?submissionId=` set to that submission’s id.",
     transferRegisterInvalidSubmission:
       "That work could not be loaded, is not approved yet, or is not held under your signed-in account.",
     transferRegisterWorkLockedHint:

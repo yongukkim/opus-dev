@@ -635,7 +635,17 @@ export const ko: Messages = {
     balance: "잔액",
     activeBids: "진행 중 입찰",
     collectionTitle: "컬렉션",
-    collectionBody: "보유 에디션 목록 플레이스홀더입니다.",
+    collectionBody:
+      "현재 계정이 The Chronicle 기준으로 소장 중인 에디션입니다. 검수 완료된 작품은 다음 수탁자를 찾는 등록 폼으로 바로 이동할 수 있습니다.",
+    collectionEmpty: "아직 이 계정으로 소장으로 등록된 작품이 없습니다.",
+    collectionTransferCta: "수탁 이전 등록",
+    collectionViewDetail: "작품 페이지",
+    collectionNotApprovedHint: "운영 검수가 완료되면 다음 수탁자를 찾는 등록을 열 수 있습니다.",
+    collectionStatusApproved: "검수 완료",
+    collectionStatusPending: "검수 대기",
+    collectionStatusOther: "검수 보류",
+    collectionHeldBadgeArtist: "작가 보유",
+    collectionHeldBadgeCollector: "소장",
     activityTitle: "활동",
     activityBody: "입찰·결제·Chronicle 이벤트 플레이스홀더입니다.",
     settingsTitle: "설정",
@@ -664,7 +674,7 @@ export const ko: Messages = {
       "소장 중인 작품은 최초 작가 등록 정보가 그대로 표시되며, 수탁 이전을 등록하는 분은 금액·판매 방식·비고만 설정합니다. 작가 본명은 공개 설정에 따라 비워 보일 수 있고, 필명·작품 정보는 목록에 반영됩니다.",
     transferRegisterMissingSubmission: "이전 등록을 열려면 소장 중인 작품의 제출 ID가 필요합니다.",
     transferRegisterMissingSubmissionHint:
-      "주소에 `?submissionId=`(운영자 승인된 작품의 ID)를 붙여 접근하거나, 마이페이지의 소장 목록에서 링크를 사용해 주세요.",
+      "마이페이지 컬렉션에서 해당 작품의 「수탁 이전 등록」을 누르거나, 주소에 `?submissionId=`(승인된 제출 ID)를 붙여 접근해 주세요.",
     transferRegisterInvalidSubmission:
       "해당 작품을 찾을 수 없거나, 아직 승인되지 않았거나, 현재 계정이 소장자로 등록되어 있지 않습니다.",
     transferRegisterWorkLockedHint:

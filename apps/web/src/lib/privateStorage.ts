@@ -165,6 +165,34 @@ export async function getCurrentOwner(submissionId: string, fallbackArtistId: st
   };
 }
 
+/** Latest `OwnershipState` per submission id (append order), then join to all submissions. */
+export async function listSubmissionsHeldByUser(
+  userId: string,
+): Promise<{ submission: SubmissionRecord; owner: OwnershipState }[]> {
+  const uid = userId.trim();
+  if (!uid) return [];
+  const events = await readJsonl<OwnershipState>(OWNERSHIP_FILE);
+  const ownerBySubmission = new Map<string, OwnershipState>();
+  for (const ev of events) {
+    if (ev?.submissionId) ownerBySubmission.set(ev.submissionId, ev);
+  }
+  const submissions = await listAllSubmissions();
+  const held: { submission: SubmissionRecord; owner: OwnershipState }[] = [];
+  for (const rec of submissions) {
+    const owner = ownerBySubmission.get(rec.id) ?? {
+      submissionId: rec.id,
+      ownerType: "artist" as const,
+      ownerId: rec.artistId,
+      updatedAt: rec.createdAt,
+    };
+    if (owner.ownerId === uid) {
+      held.push({ submission: rec, owner });
+    }
+  }
+  held.sort((a, b) => (a.submission.createdAt < b.submission.createdAt ? 1 : -1));
+  return held;
+}
+
 export async function transferOwnershipToBuyer(input: {
   submission: SubmissionRecord;
   buyerId: string;
