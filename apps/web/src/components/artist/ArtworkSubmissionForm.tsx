@@ -275,9 +275,10 @@ export function ArtworkSubmissionForm({ locale, m }: { locale: Locale; m: Messag
           },
         });
         if (!res.ok) throw new Error("bad_status");
+        const json = (await res.json()) as { ok?: boolean; artistId?: string };
 
         setBanner(s.apiSaveOk);
-        const uid = draft.actorUserId.trim();
+        const uid = json.artistId?.trim() || draft.actorUserId.trim();
         const displayName = draft.nickname.trim() || draft.artistName.trim();
         const q = new URLSearchParams();
         if (uid) q.set("artist", uid);

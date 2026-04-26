@@ -67,6 +67,10 @@ export function buildCollectorWorkDir(collectorId: string, submissionId: string)
   return path.join(PRIVATE_ROOT, "collectors", collectorId, "works", submissionId);
 }
 
+export function buildArtistCollectedWorkDir(artistId: string, submissionId: string): string {
+  return path.join(PRIVATE_ROOT, "artists", artistId, "collected", submissionId);
+}
+
 export async function ensureStorage(): Promise<void> {
   await mkdir(PRIVATE_ROOT, { recursive: true });
 }
@@ -160,13 +164,17 @@ export async function getCurrentOwner(submissionId: string, fallbackArtistId: st
   };
 }
 
-export async function transferOwnershipToCollector(input: {
+export async function transferOwnershipToBuyer(input: {
   submission: SubmissionRecord;
   buyerId: string;
+  buyerRole: "artist" | "collector";
 }): Promise<{ toRelativePath: string }> {
-  const { submission, buyerId } = input;
+  const { submission, buyerId, buyerRole } = input;
   const src = path.join(STORAGE_ROOT, submission.storedFile.relativePath);
-  const targetDir = buildCollectorWorkDir(buyerId, submission.id);
+  const targetDir =
+    buyerRole === "artist"
+      ? buildArtistCollectedWorkDir(buyerId, submission.id)
+      : buildCollectorWorkDir(buyerId, submission.id);
   await mkdir(targetDir, { recursive: true });
   const to = path.join(targetDir, submission.storedFile.filename);
   await rename(src, to);
@@ -179,7 +187,7 @@ export async function transferOwnershipToCollector(input: {
   await appendSubmission(patch);
   await appendOwnershipEvent({
     submissionId: submission.id,
-    ownerType: "collector",
+    ownerType: buyerRole === "artist" ? "artist" : "collector",
     ownerId: buyerId,
     updatedAt: new Date().toISOString(),
   });
@@ -189,7 +197,7 @@ export async function transferOwnershipToCollector(input: {
 export function canAccessSubmission(actor: Actor, submission: SubmissionRecord, owner: OwnershipState): boolean {
   if (actor.role === "operator") return true;
   if (actor.role === "artist" && actor.userId === submission.artistId) return true;
-  if (actor.role === "collector" && owner.ownerType === "collector" && owner.ownerId === actor.userId) return true;
+  if (owner.ownerId === actor.userId) return true;
   return false;
 }
 

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readActorFromRequest } from "@/lib/authContext";
-import { getSubmissionById, transferOwnershipToCollector } from "@/lib/privateStorage";
+import { getSubmissionById, transferOwnershipToBuyer } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
 
 type Body = {
   submissionId?: string;
   buyerId?: string;
+  buyerRole?: "artist" | "collector";
 };
 
 /**
@@ -31,6 +32,7 @@ export async function POST(request: NextRequest) {
 
   const submissionId = body.submissionId?.trim() ?? "";
   const buyerId = body.buyerId?.trim() ?? "";
+  const buyerRole = body.buyerRole === "artist" ? "artist" : "collector";
   if (!submissionId || !buyerId) {
     return NextResponse.json({ ok: false, error: "invalid_request" }, { status: 400 });
   }
@@ -41,8 +43,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const moved = await transferOwnershipToCollector({ submission, buyerId });
-    return NextResponse.json({ ok: true, submissionId, buyerId, storedAt: moved.toRelativePath }, { status: 200 });
+    const moved = await transferOwnershipToBuyer({ submission, buyerId, buyerRole });
+    return NextResponse.json({ ok: true, submissionId, buyerId, buyerRole, storedAt: moved.toRelativePath }, { status: 200 });
   } catch {
     return NextResponse.json({ ok: false, error: "transfer_failed" }, { status: 400 });
   }

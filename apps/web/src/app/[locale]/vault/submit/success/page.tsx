@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
@@ -19,6 +20,7 @@ export default async function VaultSubmitSuccessPage({ params, searchParams }: P
   const m = getDictionary(locale);
 
   const cookieStore = await cookies();
+  const session = await auth();
   const vaultRole = getVaultUiRoleFromCookies(cookieStore);
   if (vaultRole !== "artist") {
     return <VaultArtistGate variant="submit" locale={locale} vault={m.vault} currentRole={vaultRole} />;
@@ -29,7 +31,7 @@ export default async function VaultSubmitSuccessPage({ params, searchParams }: P
     return <VaultArtistKycGate locale={locale} m={m} returnTo={withLocale(locale, "/vault/submit")} />;
   }
 
-  const artist = artistParam?.trim() ?? "";
+  const artist = artistParam?.trim() || session?.user?.id || "";
   const name = nameParam?.trim() ?? "";
   const myArtworksBase = withLocale(locale, "/vault/my-artworks");
   const q = new URLSearchParams();

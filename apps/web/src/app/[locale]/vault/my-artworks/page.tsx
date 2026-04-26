@@ -1,4 +1,5 @@
 import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
+import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import {
@@ -47,6 +48,7 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
   const aa = m.artistArtworks;
   const a = m.artworks;
 
+  const session = await auth();
   const cookieStore = await cookies();
   const vaultRole = getVaultUiRoleFromCookies(cookieStore);
   if (vaultRole !== "artist") {
@@ -60,7 +62,7 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
     );
   }
 
-  const artistId = artistParam?.trim() ?? "";
+  const artistId = artistParam?.trim() || session?.user?.id || "";
   const displayNameFromQuery = nameParam?.trim() ?? "";
   const signupNickname = decodeArtistNicknameFromCookie(
     cookieStore.get(OPUS_ARTIST_NICKNAME_COOKIE)?.value,
