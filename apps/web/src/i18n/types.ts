@@ -842,4 +842,24 @@ export type Messages = {
     bootstrapPending: string;
     alertFail: string;
   };
+  operatorAdmin: {
+    title: string;
+    subtitle: string;
+    unauthorizedTitle: string;
+    unauthorizedBody: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    empty: string;
+    colName: string;
+    colEmail: string;
+    colRole: string;
+    colCreated: string;
+    colActions: string;
+    roleCollector: string;
+    roleArtist: string;
+    roleOperator: string;
+    updateSuccess: string;
+    updateFail: string;
+    selfGuard: string;
+  };
 };
