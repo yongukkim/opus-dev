@@ -30,6 +30,9 @@ export const ko: Messages = {
     provenanceIndexTitle: "소장계보",
     provenanceIndexDescription:
       "소장자가 다음 수탁자를 찾는 来歴 리스팅 모음입니다. 작가 본명·연락처는 공개되지 않으며 판매자 식별자는 마스킹되어 표시됩니다.",
+    provenanceAuctionIndexTitle: "소장계보 · 경매",
+    provenanceAuctionIndexDescription:
+      "다음 수탁자를 찾기 위해 등록된 항목 중, 경매 방식으로만 표시합니다. 본명·연락처는 공개되지 않습니다.",
     releaseTitleTpl: "{title} — {artist}",
     releaseDescriptionTpl:
       "{artist}의 1차 에디션 {title}. OPUS가 인증한 복제 불가 디지털 아트 작품 상세입니다.",
@@ -49,6 +52,7 @@ export const ko: Messages = {
     vault: "마이페이지",
     legal: "법적 고지",
     provenance: "소장계보",
+    provenanceAuctions: "경매중",
     curation: "큐레이션",
     artists: "작가",
   },
@@ -479,6 +483,7 @@ export const ko: Messages = {
     railProvenance: {
       title: "소장계보",
       body: "운영 검토를 통과한 활성 수탁 이전입니다.",
+      viewAuctions: "경매중",
       viewAll: "전체 보기",
       empty: "지금은 진행 중인 수탁 이전이 없습니다.",
       registerCta: "수탁 이전 등록",
@@ -719,6 +724,8 @@ export const ko: Messages = {
     listingsSubtitle:
       "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장계보를 잇는 경로로 설계되었습니다.",
     listingsEmpty: "등록된 항목이 없습니다.",
+    listingsEmptyAuctionFilter: "경매 방식으로 등록된 진행 항목이 없습니다.",
+    listingsAuctionFilterHint: "경매 방식으로 등록된 항목만 표시합니다.",
     listingsArtistPublic: "표시 작가명 (필명)",
     listingsGenre: "장르",
     listingsYear: "연도",

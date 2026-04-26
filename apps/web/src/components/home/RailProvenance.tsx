@@ -36,9 +36,14 @@ export async function RailProvenance({
 }) {
   const r = m.home.railProvenance;
   const all = await listOpenCollectorTransferListings();
-  // Cap to four to keep visual rhythm consistent with the other rails
-  // (lg:grid-cols-4 throughout). The full list lives at `/provenance`.
-  const items = all.slice(0, 4);
+  const sorted = [...all].sort((a, b) => {
+    const pa = a.saleMode === "auction" ? 0 : 1;
+    const pb = b.saleMode === "auction" ? 0 : 1;
+    if (pa !== pb) return pa - pb;
+    return a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0;
+  });
+  // Cap to four; auction-mode listings surface first. Full lists: `/provenance`, `?saleMode=auction`.
+  const items = sorted.slice(0, 4);
 
   return (
     <section
@@ -55,12 +60,20 @@ export async function RailProvenance({
               {r.body}
             </p>
           </div>
-          <Link
-            href={withLocale(locale, "/provenance")}
-            className="shrink-0 border border-opus-gold/42 px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-gold transition hover:border-opus-gold-light/55 hover:bg-opus-gold/10"
-          >
-            {r.viewAll}
-          </Link>
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 sm:gap-3">
+            <Link
+              href={withLocale(locale, "/provenance?saleMode=auction")}
+              className="border border-opus-gold/42 px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-gold transition hover:border-opus-gold-light/55 hover:bg-opus-gold/10"
+            >
+              {r.viewAuctions}
+            </Link>
+            <Link
+              href={withLocale(locale, "/provenance")}
+              className="border border-white/[0.12] px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/70 transition hover:border-opus-gold/35 hover:text-opus-gold"
+            >
+              {r.viewAll}
+            </Link>
+          </div>
         </div>
 
         {items.length === 0 ? (

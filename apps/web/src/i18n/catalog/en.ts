@@ -30,6 +30,9 @@ export const en: Messages = {
     provenanceIndexTitle: "Provenance",
     provenanceIndexDescription:
       "Custody-transfer (provenance) listings — collectors searching for the next custodian of a work. Legal names and contact details are never published; seller identifiers are surfaced masked.",
+    provenanceAuctionIndexTitle: "Provenance — live auctions",
+    provenanceAuctionIndexDescription:
+      "Open custody-transfer listings shown in auction mode only. Legal names and contact details are never published.",
     releaseTitleTpl: "{title} — {artist}",
     releaseDescriptionTpl:
       "Primary edition \u201C{title}\u201D by {artist}. An authenticated, non-reproducible digital-art work on OPUS.",
@@ -49,6 +52,7 @@ export const en: Messages = {
     vault: "My Page",
     legal: "Legal",
     provenance: "Provenance",
+    provenanceAuctions: "Live auctions",
     curation: "Curation",
     artists: "Artists",
   },
@@ -481,6 +485,7 @@ export const en: Messages = {
     railProvenance: {
       title: "Provenance",
       body: "Open custody transfers cleared by operator review.",
+      viewAuctions: "Live auctions",
       viewAll: "View all",
       empty: "No open custody transfers right now.",
       registerCta: "Register a transfer",
@@ -720,6 +725,8 @@ export const en: Messages = {
     listingsSubtitle:
       "Editions listed by previous custodians seeking a next owner. OPUS records each custody change on The Chronicle, and the artist attribution shows the pen name only. Designed as a line of custody for digital art, not as a profit-oriented trading venue.",
     listingsEmpty: "No listings yet.",
+    listingsEmptyAuctionFilter: "No open listings in auction mode right now.",
+    listingsAuctionFilterHint: "Showing listings registered in auction mode only.",
     listingsArtistPublic: "Artist (pen name)",
     listingsGenre: "Genre",
     listingsYear: "Year",

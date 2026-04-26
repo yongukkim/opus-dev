@@ -46,6 +46,9 @@ export type Messages = {
     releasesIndexDescription: string;
     provenanceIndexTitle: string;
     provenanceIndexDescription: string;
+    /** `/provenance?saleMode=auction` index `<title>` / OG. */
+    provenanceAuctionIndexTitle: string;
+    provenanceAuctionIndexDescription: string;
     /** PR-19: `/releases/[slug]` detail. Templated with `{title}`
      *  (artwork title) and `{artist}` (pen name). Falls back to the
      *  releases index copy when the slug doesn't resolve, same
@@ -68,6 +71,8 @@ export type Messages = {
     vault: string;
     legal: string;
     provenance: string;
+    /** Primary nav — custody transfers listed in auction mode (`/provenance?saleMode=auction`). */
+    provenanceAuctions: string;
     /** Operator-curated shelves index (PR-11). Single word per locale. */
     curation: string;
     /** Featured artists index (PR-12). Single word per locale. */
@@ -397,6 +402,8 @@ export type Messages = {
     railProvenance: {
       title: string;
       body: string;
+      /** Header link → /provenance?saleMode=auction (auction-mode listings only). */
+      viewAuctions: string;
       /** Header link → /provenance full list. Wired in PR-4. */
       viewAll: string;
       /** Empty state when there are no open custody transfers. */
@@ -766,6 +773,10 @@ export type Messages = {
     listingsTitle: string;
     listingsSubtitle: string;
     listingsEmpty: string;
+    /** Shown when `?saleMode=auction` is active but there are no open auction-mode listings. */
+    listingsEmptyAuctionFilter: string;
+    /** Shown under the index title when viewing `/provenance?saleMode=auction`. */
+    listingsAuctionFilterHint: string;
     listingsArtistPublic: string;
     listingsGenre: string;
     listingsYear: string;

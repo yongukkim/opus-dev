@@ -30,6 +30,9 @@ export const ja: Messages = {
     provenanceIndexTitle: "来歴",
     provenanceIndexDescription:
       "所蔵者が次の所蔵者を探す来歴出品の一覧です。作家本名・連絡先は公開されず、出品者識別子はマスキング表示されます。",
+    provenanceAuctionIndexTitle: "来歴 · オークション",
+    provenanceAuctionIndexDescription:
+      "次の所蔵者を探す登録のうち、オークション方式のみを表示します。本名・連絡先は公開されません。",
     releaseTitleTpl: "{title} — {artist}",
     releaseDescriptionTpl:
       "{artist}の一次エディション『{title}』。OPUSが認証する複製不可デジタルアート作品の詳細ページです。",
@@ -49,6 +52,7 @@ export const ja: Messages = {
     vault: "My Page",
     legal: "法的情報",
     provenance: "来歴",
+    provenanceAuctions: "オークション中",
     curation: "キュレーション",
     artists: "作家",
   },
@@ -493,6 +497,7 @@ export const ja: Messages = {
     railProvenance: {
       title: "来歴",
       body: "運営審査を通過した稼働中の所蔵者移転です。",
+      viewAuctions: "オークション中",
       viewAll: "すべて見る",
       empty: "現在進行中の所蔵者移転はありません。",
       registerCta: "所蔵者移転を登録",
@@ -736,6 +741,8 @@ export const ja: Messages = {
     listingsSubtitle:
       "前の所蔵者が次の所蔵者を探すために登録したエディションです。OPUS は所蔵の記録を The Chronicle に残し、作家表記は公開名（ペンネーム）のみとします。収益を目的とする市場ではなく、デジタルアートの所蔵を継承する経路として設計されています。",
     listingsEmpty: "登録された項目はありません。",
+    listingsEmptyAuctionFilter: "オークション方式で進行中の登録はありません。",
+    listingsAuctionFilterHint: "オークション方式で登録された項目のみ表示しています。",
     listingsArtistPublic: "表示作家名（ペンネーム）",
     listingsGenre: "ジャンル",
     listingsYear: "年",

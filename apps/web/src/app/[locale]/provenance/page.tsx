@@ -5,7 +5,12 @@ import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { listOpenCollectorTransferListings, maskSellerId } from "@/lib/collectorTransferListings";
 import Link from "next/link";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ saleMode?: string }>;
+};
+
+export const dynamic = "force-dynamic";
 
 /**
  * PR-19 — fills the metadata gap PR-16 left for `/provenance`. Static
@@ -13,10 +18,17 @@ type Props = { params: Promise<{ locale: string }> };
  * listing titles/descriptions. Vocabulary follows the provenance /
  * 来歴 / 소장 계보 contract in `.cursorrules` §2.
  */
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale: raw } = await params;
+  const { saleMode } = await searchParams;
   const locale = normalizeLocale(raw);
   const d = getDictionary(locale);
+  if (saleMode === "auction") {
+    return {
+      title: d.meta.provenanceAuctionIndexTitle,
+      description: d.meta.provenanceAuctionIndexDescription,
+    };
+  }
   return {
     title: d.meta.provenanceIndexTitle,
     description: d.meta.provenanceIndexDescription,
@@ -44,12 +56,18 @@ function transferGenreLabel(ct: Messages["collectorTransfer"], key: string): str
   return map[key] || key || "—";
 }
 
-export default async function CollectorTransferListingsPage({ params }: Props) {
+export default async function CollectorTransferListingsPage({ params, searchParams }: Props) {
   const { locale: raw } = await params;
+  const { saleMode: saleModeRaw } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const t = m.collectorTransfer;
-  const rows = await listOpenCollectorTransferListings();
+  const saleModeFilter =
+    saleModeRaw === "auction" || saleModeRaw === "fixed" ? saleModeRaw : null;
+  const allRows = await listOpenCollectorTransferListings();
+  const rows = saleModeFilter
+    ? allRows.filter((r) => r.saleMode === saleModeFilter)
+    : allRows;
 
   return (
     <main className="min-h-screen px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
@@ -57,9 +75,16 @@ export default async function CollectorTransferListingsPage({ params }: Props) {
         <p className="opus-text-metallic-soft text-center text-xs uppercase tracking-[0.35em]">OPUS</p>
         <h1 className="mt-4 text-center font-display text-2xl text-opus-warm md:text-3xl">{t.listingsTitle}</h1>
         <p className="mx-auto mt-4 max-w-xl text-center text-sm text-opus-warm/55">{t.listingsSubtitle}</p>
+        {saleModeFilter === "auction" ? (
+          <p className="mx-auto mt-3 max-w-xl text-center text-xs leading-relaxed text-opus-gold/75">
+            {t.listingsAuctionFilterHint}
+          </p>
+        ) : null}
 
         {rows.length === 0 ? (
-          <p className="mt-14 text-center text-sm text-opus-warm/45">{t.listingsEmpty}</p>
+          <p className="mt-14 text-center text-sm text-opus-warm/45">
+            {saleModeFilter === "auction" ? t.listingsEmptyAuctionFilter : t.listingsEmpty}
+          </p>
         ) : (
           <ul className="mt-12 space-y-4">
             {rows.map((r) => {

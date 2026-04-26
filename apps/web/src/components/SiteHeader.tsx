@@ -41,11 +41,9 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             aria-label={m.a11y.primaryNav}
           >
             {/*
-              Primary nav order mirrors the home IA after PR-11 / PR-12:
-              Releases → Curation → Artists → Provenance.
-              Curation / Artists land between the two channels (Releases =
-              PRIMARY, Provenance = SECONDARY) so the IA reads as
-              "what's new → operator-curated views → custody history".
+              Primary nav: Releases → Curation → Artists → Provenance →
+              Provenance (auction-mode index). The last item deep-links
+              `/provenance?saleMode=auction`.
             */}
             <Link href={withLocale(locale, "/releases")} className={navItemClass}>
               {m.nav.releases}
@@ -61,6 +59,12 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             </Link>
             <Link href={withLocale(locale, "/provenance")} className={navItemClass}>
               {m.nav.provenance}
+            </Link>
+            <Link
+              href={withLocale(locale, "/provenance?saleMode=auction")}
+              className={navItemClass}
+            >
+              {m.nav.provenanceAuctions}
             </Link>
           </nav>
           <SiteHeaderAuth
