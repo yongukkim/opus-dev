@@ -682,8 +682,12 @@ export const ja: Messages = {
     artistKycGateBody:
       "作家機能を利用するには本人確認（デモ）の完了が必要です。本番ではeKYC提供者連携とセッション認可に移行します。",
     artistKycGateCta: "本人確認を続ける",
-    demoSwitchArtist: "デモ：作家モードに切り替え",
-    demoSwitchCollector: "デモ：一般会員モードに切り替え",
+    vaultModeSwitchTitle: "表示の切り替え",
+    artistUiModeGateTitle: "作家モードに切り替えてください",
+    artistUiModeGateBody:
+      "この画面はマイページを作家モードにしたときのみ開けます。下の切り替えから作家モードにしてから再度お試しください。",
+    demoSwitchArtist: "作家モード",
+    demoSwitchCollector: "一般会員モード",
   },
   collectorTransfer: {
     registerKicker: "コレクター譲渡",

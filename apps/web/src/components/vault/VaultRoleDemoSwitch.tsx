@@ -9,9 +9,15 @@ type Labels = { toArtist: string; toCollector: string };
 export function VaultRoleDemoSwitch({
   currentRole,
   labels,
+  sectionTitle,
+  layout = "standalone",
 }: {
   currentRole: VaultUiRole;
   labels: Labels;
+  /** When set, shown above buttons (e.g. My Page mode switch). Omit on compact embeds. */
+  sectionTitle?: string;
+  /** `embedded`: sidebar strip without extra top offset (parent provides separation). */
+  layout?: "standalone" | "embedded";
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -35,11 +41,18 @@ export function VaultRoleDemoSwitch({
     [currentRole, pending, router],
   );
 
+  const shell =
+    layout === "embedded"
+      ? "flex flex-wrap gap-3 pt-2"
+      : "mt-8 flex flex-wrap gap-3 border-t border-white/[0.08] pt-8";
+
   return (
-    <div className="mt-8 flex flex-wrap gap-3 border-t border-white/[0.08] pt-8">
-      <p className="w-full font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/35">
-        Dev
-      </p>
+    <div className={shell}>
+      {sectionTitle ? (
+        <p className="w-full font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+          {sectionTitle}
+        </p>
+      ) : null}
       <button
         type="button"
         disabled={pending || currentRole === "artist"}

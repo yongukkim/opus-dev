@@ -664,8 +664,12 @@ export const ko: Messages = {
     artistKycGateBody:
       "작가 기능을 사용하려면 본인 확인(데모)을 완료해야 합니다. 실제 운영에서는 eKYC 제공자 연동과 세션 기반 권한으로 전환됩니다.",
     artistKycGateCta: "본인 확인 진행하기",
-    demoSwitchArtist: "데모: 작가 모드로 전환",
-    demoSwitchCollector: "데모: 일반 회원 모드로 전환",
+    vaultModeSwitchTitle: "보기 전환",
+    artistUiModeGateTitle: "작가 보기로 전환하세요",
+    artistUiModeGateBody:
+      "이 화면은 작가 보기에서만 열 수 있습니다. 아래에서 작가 모드로 바꾼 뒤 다시 시도해 주세요.",
+    demoSwitchArtist: "작가 모드",
+    demoSwitchCollector: "일반 회원 모드",
   },
   collectorTransfer: {
     registerKicker: "소장 이전",

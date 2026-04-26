@@ -21,9 +21,30 @@ export default async function VaultSubmitSuccessPage({ params, searchParams }: P
 
   const cookieStore = await cookies();
   const session = await auth();
-  const vaultRole = getVaultUiRoleFromCookies(cookieStore);
-  if (vaultRole !== "artist") {
-    return <VaultArtistGate variant="submit" locale={locale} vault={m.vault} currentRole={vaultRole} />;
+  const cookieRole = getVaultUiRoleFromCookies(cookieStore);
+
+  if (session?.user?.role !== "artist") {
+    return (
+      <VaultArtistGate
+        variant="submit"
+        gateReason="notRegisteredArtist"
+        locale={locale}
+        vault={m.vault}
+        currentRole={cookieRole}
+      />
+    );
+  }
+
+  if (cookieRole !== "artist") {
+    return (
+      <VaultArtistGate
+        variant="submit"
+        gateReason="needArtistUiMode"
+        locale={locale}
+        vault={m.vault}
+        currentRole={cookieRole}
+      />
+    );
   }
 
   const kyc = getArtistKycFromCookies(cookieStore);

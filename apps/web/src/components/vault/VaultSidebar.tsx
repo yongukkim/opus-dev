@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
 import { withLocale } from "@/i18n/paths";
+import { VaultRoleDemoSwitch } from "./VaultRoleDemoSwitch";
 
 /**
  * Account sidebar (pattern: Web_Template 2135_mini_finance dashboard nav).
@@ -22,30 +23,35 @@ export function VaultSidebar({
   locale,
   m,
   vaultRole,
+  sessionIsArtist,
   isOperator,
 }: {
   locale: Locale;
   m: Messages;
   vaultRole: VaultUiRole;
+  /** DB / session role: artist registration complete. */
+  sessionIsArtist: boolean;
   isOperator: boolean;
 }) {
   const pathname = usePathname();
   const ja = locale === "ja";
-  const v = m.vaultNav;
+  const nav = m.vaultNav;
+  const vaultCopy = m.vault;
   const links = [
-    { path: "/vault" as const, label: v.overview },
-    { path: "/vault/collection" as const, label: v.collection },
-    { path: "/vault/transfer/register" as const, label: v.transferRegister },
-    { path: "/vault/activity" as const, label: v.activity },
-    { path: "/vault/submit" as const, label: v.submit },
-    { path: "/vault/my-artworks" as const, label: v.myArtworks },
-    { path: "/vault/payouts" as const, label: v.payouts },
-    { path: "/vault/artist-profile" as const, label: v.artistProfile },
-    { path: "/vault/authority" as const, label: v.authoritySettings },
-    { path: "/vault/settings" as const, label: v.settings },
+    { path: "/vault" as const, label: nav.overview },
+    { path: "/vault/collection" as const, label: nav.collection },
+    { path: "/vault/transfer/register" as const, label: nav.transferRegister },
+    { path: "/vault/activity" as const, label: nav.activity },
+    { path: "/vault/submit" as const, label: nav.submit },
+    { path: "/vault/my-artworks" as const, label: nav.myArtworks },
+    { path: "/vault/payouts" as const, label: nav.payouts },
+    { path: "/vault/artist-profile" as const, label: nav.artistProfile },
+    { path: "/vault/authority" as const, label: nav.authoritySettings },
+    { path: "/vault/settings" as const, label: nav.settings },
   ]
     .filter(({ path }) => {
-      if (vaultRole !== "artist" && (ARTIST_ONLY_PATHS as readonly string[]).includes(path)) {
+      const showArtistNav = sessionIsArtist && vaultRole === "artist";
+      if (!showArtistNav && (ARTIST_ONLY_PATHS as readonly string[]).includes(path)) {
         return false;
       }
       if (!isOperator && (OPERATOR_ONLY_PATHS as readonly string[]).includes(path)) {
@@ -90,6 +96,16 @@ export function VaultSidebar({
           );
         })}
       </nav>
+      {sessionIsArtist ? (
+        <div className="border-t border-white/[0.08] px-3 pb-4 md:px-4">
+          <VaultRoleDemoSwitch
+            layout="embedded"
+            currentRole={vaultRole}
+            sectionTitle={vaultCopy.vaultModeSwitchTitle}
+            labels={{ toArtist: vaultCopy.demoSwitchArtist, toCollector: vaultCopy.demoSwitchCollector }}
+          />
+        </div>
+      ) : null}
     </aside>
   );
 }

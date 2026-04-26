@@ -666,8 +666,12 @@ export const en: Messages = {
     artistKycGateBody:
       "To use artist features, complete artist verification (demo). In production, this will move to eKYC provider integration and session-based authorization.",
     artistKycGateCta: "Continue verification",
-    demoSwitchArtist: "Demo: switch to artist mode",
-    demoSwitchCollector: "Demo: switch to member mode",
+    vaultModeSwitchTitle: "View mode",
+    artistUiModeGateTitle: "Switch to artist view",
+    artistUiModeGateBody:
+      "This page is available only while My Page is in artist mode. Use the controls below to switch, then open this page again.",
+    demoSwitchArtist: "Artist mode",
+    demoSwitchCollector: "Member mode",
   },
   collectorTransfer: {
     registerKicker: "Collection transfer",

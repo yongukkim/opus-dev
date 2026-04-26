@@ -1,5 +1,6 @@
 import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
 import { VaultArtistKycGate } from "@/components/vault/VaultArtistKycGate";
+import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { getArtistKycFromCookies } from "@/lib/artistKyc";
@@ -14,10 +15,32 @@ export default async function VaultPayoutsPage({ params }: Props) {
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
 
+  const session = await auth();
   const cookieStore = await cookies();
-  const vaultRole = getVaultUiRoleFromCookies(cookieStore);
-  if (vaultRole !== "artist") {
-    return <VaultArtistGate variant="payouts" locale={locale} vault={m.vault} currentRole={vaultRole} />;
+  const cookieRole = getVaultUiRoleFromCookies(cookieStore);
+
+  if (session?.user?.role !== "artist") {
+    return (
+      <VaultArtistGate
+        variant="payouts"
+        gateReason="notRegisteredArtist"
+        locale={locale}
+        vault={m.vault}
+        currentRole={cookieRole}
+      />
+    );
+  }
+
+  if (cookieRole !== "artist") {
+    return (
+      <VaultArtistGate
+        variant="payouts"
+        gateReason="needArtistUiMode"
+        locale={locale}
+        vault={m.vault}
+        currentRole={cookieRole}
+      />
+    );
   }
 
   const kyc = getArtistKycFromCookies(cookieStore);

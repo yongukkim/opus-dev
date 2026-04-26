@@ -720,7 +720,12 @@ export type Messages = {
     artistGateBackVault: string;
     artistKycGateBody: string;
     artistKycGateCta: string;
-    /** Until SSO: switch UI role for local demo */
+    /** My Page sidebar: heading above artist / member mode controls (DB artist only). */
+    vaultModeSwitchTitle: string;
+    /** Signed-in artist viewing vault in member mode; deep link to artist-only route. */
+    artistUiModeGateTitle: string;
+    artistUiModeGateBody: string;
+    /** Toggle vault UI between artist tools and standard member nav (session must be artist). */
     demoSwitchArtist: string;
     demoSwitchCollector: string;
   };

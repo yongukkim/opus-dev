@@ -50,14 +50,28 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
 
   const session = await auth();
   const cookieStore = await cookies();
-  const vaultRole = getVaultUiRoleFromCookies(cookieStore);
-  if (vaultRole !== "artist") {
+  const cookieRole = getVaultUiRoleFromCookies(cookieStore);
+
+  if (session?.user?.role !== "artist") {
     return (
       <VaultArtistGate
         variant="myArtworks"
+        gateReason="notRegisteredArtist"
         locale={locale}
         vault={m.vault}
-        currentRole={vaultRole}
+        currentRole={cookieRole}
+      />
+    );
+  }
+
+  if (cookieRole !== "artist") {
+    return (
+      <VaultArtistGate
+        variant="myArtworks"
+        gateReason="needArtistUiMode"
+        locale={locale}
+        vault={m.vault}
+        currentRole={cookieRole}
       />
     );
   }
