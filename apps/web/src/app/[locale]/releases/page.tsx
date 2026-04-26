@@ -134,7 +134,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                   const title = entry.artworkTitle;
                   const artist = entry.nickname || entry.artistName;
                   const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
-                  const detailHref = withLocale(locale, "/releases");
+                  const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
                   const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
                   return (
                     <li key={entry.id}>
@@ -231,7 +231,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
                   const title = entry.artworkTitle;
                   const artist = entry.nickname || entry.artistName;
                   const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
-                  const detailHref = withLocale(locale, "/releases");
+                  const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
                   const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
                   return (
                     <li key={entry.id}>

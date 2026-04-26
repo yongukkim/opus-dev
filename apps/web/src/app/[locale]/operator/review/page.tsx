@@ -14,6 +14,7 @@ function normalizeSubmission(rec: SubmissionRecord): OperatorReviewRow {
     artistId: rec.artistId,
     nickname: rec.nickname,
     artworkTitle: rec.artworkTitle,
+    mime: rec.storedFile?.mime,
     audienceCategory: rec.audienceCategory,
     priceJpy: rec.priceJpy,
     reviewStatus: rec.reviewStatus ?? "pending_review",

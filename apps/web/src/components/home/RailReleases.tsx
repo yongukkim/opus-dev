@@ -48,9 +48,9 @@ export async function RailReleases({
   const approved = await listApprovedArtistSubmissions(HOME_RAIL_LIMIT);
   const useApproved = approved.length > 0;
   const items = useApproved
-    ? approved.map((rec, idx) => ({
+    ? approved.map((rec) => ({
         key: rec.id,
-        href: withLocale(locale, "/releases"),
+        href: withLocale(locale, `/releases/submission/${rec.id}`),
         title: rec.artworkTitle,
         artist: rec.nickname || rec.artistName,
         meta: `Edition 1 / ${rec.editionTotal}`,
