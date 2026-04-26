@@ -4,7 +4,7 @@
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
-BRANCH="${BRANCH:-feat/signup-sso-collector}"
+BRANCH="${BRANCH:-main}"
 OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-ghcr.io/yongukkim/opus-web:latest}"
 
 if [[ ! -d "$APP_DIR/.git" ]]; then
