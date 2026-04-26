@@ -37,7 +37,7 @@ export default async function LoginPage({
   );
 
   return (
-    <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
+    <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-md">
         <p className="opus-text-metallic-soft text-center text-xs uppercase tracking-[0.4em]">OPUS</p>
         <h1 className="mt-4 text-center font-display text-3xl tracking-[0.12em] text-opus-warm">

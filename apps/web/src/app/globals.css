@@ -5,6 +5,14 @@
 :root {
   color-scheme: dark;
   /**
+   * Fixed chrome: `SiteHeader` + `TrustStrip` (see `SiteHeader.tsx`, `TrustStrip.tsx`).
+   * Mobile uses a two-row header so primary nav can wrap without horizontal scroll;
+   * `--opus-site-header-height` must match that layout’s block size (md+ stays single row).
+   */
+  --opus-trust-strip-height: 2.25rem;
+  --opus-site-header-height: 6.25rem;
+  --opus-header-plus-trust: calc(var(--opus-site-header-height) + var(--opus-trust-strip-height));
+  /**
    * Brighter champagne brass — multi-stop gradients for surface light / shade.
    * Accent aligns with `opus.gold` in tailwind preset.
    */
@@ -13,6 +21,12 @@
   --opus-brass-body: #d6bc96;
   --opus-brass-shadow: #c4a06e;
   --opus-brass-accent: #deb892;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --opus-site-header-height: 4.25rem;
+  }
 }
 
 @layer base {

@@ -72,7 +72,7 @@ export default async function TermsPage({ params }: Props) {
   const loaded = await loadTermsMd(locale);
 
   return (
-    <main className="mx-auto max-w-3xl px-6 pb-16 pt-[calc(6.5rem+2.5rem)] text-opus-warm/80">
+    <main className="mx-auto max-w-3xl px-6 pb-16 pt-[calc(var(--opus-header-plus-trust)+2.5rem)] text-opus-warm/80">
       <Link
         href={withLocale(locale, "/")}
         className="text-sm text-opus-warm/70 underline-offset-4 hover:text-opus-gold hover:underline"

@@ -143,7 +143,7 @@ export default async function ProvenanceDetailPage({ params }: Props) {
           priceJpy: listing.priceJpy,
         })}
       />
-    <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(6.5rem+4rem)] text-opus-warm/80">
+    <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-3xl">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/40">
           {t.listingsDetailKicker}

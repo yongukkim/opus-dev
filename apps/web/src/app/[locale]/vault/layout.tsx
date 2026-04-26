@@ -24,7 +24,7 @@ export default async function VaultLayout({ children, params }: Props) {
   const sessionIsArtist = session?.user?.role === "artist";
 
   return (
-    <div className="flex min-h-[50vh] flex-col bg-opus-charcoal pt-[6.5rem] md:min-h-[calc(100dvh-12rem)] md:flex-row">
+    <div className="flex min-h-[50vh] flex-col bg-opus-charcoal pt-[var(--opus-header-plus-trust)] md:min-h-[calc(100dvh-12rem)] md:flex-row">
       <VaultSidebar
         locale={locale}
         m={m}

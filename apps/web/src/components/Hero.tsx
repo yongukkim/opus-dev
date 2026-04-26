@@ -41,7 +41,7 @@ export function Hero({ locale, m }: { locale: Locale; m: Messages }) {
 
   return (
     <section
-      className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-opus-charcoal px-6 pb-4 pt-[calc(6.5rem+2.1rem)] md:pb-8 md:pt-[calc(6.5rem+2.8rem)]"
+      className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-opus-charcoal px-6 pb-4 pt-[calc(var(--opus-header-plus-trust)+2.1rem)] md:pb-8 md:pt-[calc(var(--opus-header-plus-trust)+2.8rem)]"
       aria-label={m.a11y.hero}
     >
       <div

@@ -15,11 +15,11 @@ export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
 
   return (
     <div
-      className="fixed inset-x-0 top-[4.25rem] z-40 border-b border-white/[0.07] bg-opus-charcoal/78 backdrop-blur-md"
+      className="fixed inset-x-0 top-[var(--opus-site-header-height)] z-40 border-b border-white/[0.07] bg-opus-charcoal/78 backdrop-blur-md"
       role="navigation"
       aria-label={m.a11y.utilityNav}
     >
-      <div className="mx-auto flex h-[2.25rem] max-w-6xl items-center justify-between gap-3 px-6 md:px-10">
+      <div className="mx-auto flex h-[var(--opus-trust-strip-height)] max-w-6xl items-center justify-between gap-3 px-6 md:px-10">
         <p
           className={`hidden max-w-[14rem] font-sans text-[0.6rem] leading-snug text-opus-warm/42 sm:block md:max-w-none md:text-[0.65rem] ${ja ? "tracking-tight break-keep" : ""}`}
         >
