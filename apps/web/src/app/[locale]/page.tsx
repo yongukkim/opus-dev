@@ -3,7 +3,6 @@ import { RailCuration } from "@/components/home/RailCuration";
 import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
-import { StatsTrustRow } from "@/components/home/StatsTrustRow";
 import { OmniSearchHintCard } from "@/components/search/OmniSearchHintCard";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale } from "@/i18n/paths";
@@ -31,10 +30,9 @@ export const dynamic = "force-dynamic";
  *   (spec §3.7). Phase-2 wires real `ChronicleEntry` rows once the
  *   Chronicle write cutover is in place; only the card body changes,
  *   the masking contract is already committed in copy.
- * - `DesignPhilosophyBand` sits **after** Chronicle and **before**
- *   StatsTrustRow so the vertical IA matches spec §2 (AFTER): rails A–D
- *   and Chronicle stay above the philosophy strip; it is not a second
- *   hero band under `Hero`.
+ * - `StatsTrustRow` (week / month / year picks) is **not rendered** for now;
+ *   restore by importing `@/components/home/StatsTrustRow` and placing
+ *   `<StatsTrustRow m={m} />` after `RailCuration` when editorial picks return.
  * - §3.2 `OmniSearchHintCard` between `Hero` and `<main>`: search-bar
  *   affordance that calls the same `open()` as ⌘K / the header trigger
  *   (`OmniSearchProvider` in `[locale]/layout.tsx`).
@@ -86,8 +84,6 @@ export default async function HomePage({ params }: Props) {
           index page ships in a follow-up PR (spec §8.2).
         */}
         <RailCuration locale={locale} m={m} />
-
-        <StatsTrustRow m={m} />
       </main>
     </>
   );
