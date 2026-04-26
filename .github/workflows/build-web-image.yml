@@ -85,7 +85,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          command_timeout: 10m
+          command_timeout: 20m
           script_stop: true
           script: |
             bash -lc 'set -eo pipefail; IMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy] img=$IMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" https://github.com/yongukkim/opus-dev.git "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$IMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'
