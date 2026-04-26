@@ -45,7 +45,7 @@ export const ko: Messages = {
     cta: "행동 유도",
   },
   nav: {
-    releases: "신작 공개",
+    releases: "신작공개",
     vault: "마이페이지",
     legal: "법적 고지",
     provenance: "소장계보",
@@ -445,7 +445,7 @@ export const ko: Messages = {
       "어디에도 없는 나만의 리미티드 에디션",
     line2:
       "",
-    openReleases: "신작 공개",
+    openReleases: "신작공개",
     openProvenance: "소장계보",
     searchHint: "검색",
   },
@@ -470,7 +470,7 @@ export const ko: Messages = {
     appRequiredComingSoon: "스토어 링크 준비 중",
     comingSoon: "곧 공개",
     railReleases: {
-      title: "신작 공개 · 최신 1차 에디션",
+      title: "신작공개 · 최신 1차 에디션",
       body: "검증된 작가의 한정 에디션입니다.",
       viewAll: "전체 보기",
     },

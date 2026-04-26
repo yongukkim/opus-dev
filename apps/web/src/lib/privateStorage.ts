@@ -223,16 +223,13 @@ export async function listArtistSubmissions(artistId: string): Promise<Submissio
   return out;
 }
 
-/** Approved submissions currently retained by artists (for public release surfaces). */
+/** Approved submissions for public release surfaces (including transferred ownership). */
 export async function listApprovedArtistSubmissions(limit = 100): Promise<SubmissionRecord[]> {
   const records = await listAllSubmissions();
   const out: SubmissionRecord[] = [];
   for (const rec of records) {
     if ((rec.reviewStatus ?? "pending_review") !== "approved") continue;
-    const owner = await getCurrentOwner(rec.id, rec.artistId);
-    if (owner.ownerType === "artist" && owner.ownerId === rec.artistId) {
-      out.push(rec);
-    }
+    out.push(rec);
     if (out.length >= limit) break;
   }
   return out;
