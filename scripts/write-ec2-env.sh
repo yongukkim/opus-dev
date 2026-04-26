@@ -9,12 +9,16 @@
 set -euo pipefail
 
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/opus_ci_deploy}"
-EC2_HOST="${EC2_HOST:-13.114.20.122}"
 EC2_USER="${EC2_USER:-ubuntu}"
 ENV_PATH="${ENV_PATH:-/etc/opus/opus.env}"
 TF_DIR="${TF_DIR:-$(cd "$(dirname "$0")/.." && pwd)/infra/terraform}"
 
 cd "$TF_DIR"
+
+# KO: 고정 IP 대신 Terraform 출력을 기본으로 써 인스턴스 타입 변경·재생성 후에도 맞는다.
+# JA: 固定IPではなくTerraform出力をデフォルトにし、タイプ変更後も一致させる。
+# EN: Default EC2 host from Terraform output so resize/replace does not stale a baked-in IP.
+EC2_HOST="${EC2_HOST:-$(terraform output -raw instance_public_ip)}"
 
 DATABASE_URL="$(terraform output -raw rds_database_url)"
 RDS_HOST="$(terraform output -raw rds_endpoint)"

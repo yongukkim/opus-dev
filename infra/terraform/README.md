@@ -96,6 +96,7 @@ DATABASE_URL="$(terraform -chdir=../../infra/terraform output -raw rds_database_
 
 ## 운영·보안 메모
 
+- GitHub Actions 배포(`.github/workflows/build-web-image.yml`)는 **`secrets.EC2_HOST`** 를 씁니다. EC2를 바꾸거나 퍼블릭 IP가 갱신되면 GitHub 저장소 Settings → Secrets 에서 **`EC2_HOST`를 `terraform output -raw instance_public_ip` 값으로** 맞춰 주세요. 로컬에서는 `scripts/write-ec2-env.sh`가 같은 출력을 기본 호스트로 사용합니다.
 - 프로덕션에서는 `SECURITY_GOVERNANCE.md`에 맞춰 비밀은 **GCP/AWS Secret Manager** 등으로 이전하고, Terraform output은 초기 부트스트랩에만 쓰는 패턴이 안전합니다.
 - EC2 SSH(22)·HTTP(80)·HTTPS(443)는 현재 `0.0.0.0/0` 입니다. 운영 시 관리 IP·Tailscale 등으로 좁히는 것을 검토하세요.
 
