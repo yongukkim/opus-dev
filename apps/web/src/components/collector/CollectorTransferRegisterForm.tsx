@@ -394,9 +394,9 @@ export function CollectorTransferRegisterForm({
         if (draft.auctionMinIncrementJpy.trim())
           fd.set("auctionMinIncrementJpy", draft.auctionMinIncrementJpy.trim());
         if (draft.auctionAntiSnipingPreset !== "off") {
-          const [t, e] = draft.auctionAntiSnipingPreset.split("_");
-          fd.set("auctionAntiSnipingTriggerMinutes", t);
-          fd.set("auctionAntiSnipingExtendMinutes", e);
+          const [trigger, extend] = draft.auctionAntiSnipingPreset.split("_") as [string, string];
+          fd.set("auctionAntiSnipingTriggerMinutes", trigger);
+          fd.set("auctionAntiSnipingExtendMinutes", extend);
         }
         fd.set("auctionShowSummary", draft.auctionShowSummary ? "true" : "false");
       }
