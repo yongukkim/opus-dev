@@ -111,3 +111,14 @@ resource "aws_instance" "app_server" {
 
   tags = { Name = "opus-dev-server" }
 }
+
+# ISO 27001 A.13.1.3 (§6) — fixed ingress endpoint for DNS/ACME stability.
+# KO: EC2 교체·스펙 변경 시 퍼블릭 IP가 흔들리지 않도록 EIP를 고정한다.
+# JA: EC2の置換・サイズ変更時にも公開IPが変わらないようEIPを固定する。
+# EN: Attach a fixed Elastic IP so public endpoint remains stable across instance changes.
+resource "aws_eip" "app_static_ip" {
+  domain   = "vpc"
+  instance = aws_instance.app_server.id
+
+  tags = { Name = "opus-app-eip" }
+}

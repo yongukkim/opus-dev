@@ -14,8 +14,8 @@ output "instance_id" {
 }
 
 output "instance_public_ip" {
-  value       = aws_instance.app_server.public_ip
-  description = "EC2 public IPv4 (after instance is running)"
+  value       = aws_eip.app_static_ip.public_ip
+  description = "EC2 public Elastic IP (stable across instance changes)"
 }
 
 # ---------- RDS (enable_rds = true 일 때만 값 노출) ----------
