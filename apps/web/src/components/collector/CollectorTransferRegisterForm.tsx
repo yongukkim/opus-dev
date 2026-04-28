@@ -149,6 +149,22 @@ export function CollectorTransferRegisterForm({
   const [banner, setBanner] = useState<"ok" | "err" | string | null>(null);
   const [pending, setPending] = useState(false);
 
+  function mapApiErrorToBanner(error: string | undefined): string {
+    if (!error) return t.errorBanner;
+    if (error === "submission_required") return t.transferRegisterApiSubmissionRequired;
+    if (error === "forbidden_submission") return t.transferRegisterApiForbiddenSubmission;
+    if (error === "invalid:auctionEndAt") return t.transferRegisterApiInvalidAuctionEndAt;
+    if (error === "invalid:auctionReservePriceJpy") return t.transferRegisterApiInvalidAuctionReserve;
+    if (error === "invalid:auctionBuyoutPriceJpy") return t.transferRegisterApiInvalidAuctionBuyout;
+    if (error === "invalid:auctionMinIncrementJpy") return t.transferRegisterApiInvalidAuctionIncrement;
+    if (error === "invalid:auctionAntiSnipingTriggerMinutes" || error === "invalid:auctionAntiSnipingExtendMinutes") {
+      return t.transferRegisterApiInvalidAuctionAntiSniping;
+    }
+    if (error === "invalid:priceJpy") return t.transferRegisterApiInvalidPrice;
+    if (error === "invalid:rightsConfirmed") return t.transferRegisterApiInvalidRightsConfirm;
+    return t.errorBanner;
+  }
+
   const errors = useMemo(() => {
     const e: Partial<Record<keyof Draft, string>> = {};
     if (!artworkLocked) {
@@ -413,9 +429,7 @@ export function CollectorTransferRegisterForm({
       });
       const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok) {
-        if (body.error === "submission_required") setBanner(t.transferRegisterApiSubmissionRequired);
-        else if (body.error === "forbidden_submission") setBanner(t.transferRegisterApiForbiddenSubmission);
-        else setBanner("err");
+        setBanner(mapApiErrorToBanner(body.error));
         return;
       }
       setBanner("ok");

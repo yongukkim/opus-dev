@@ -247,7 +247,11 @@ export async function POST(request: NextRequest) {
     };
     await appendCollectorTransferListing(rec);
     return NextResponse.json({ ok: true, id }, { status: 201 });
-  } catch {
+  } catch (error) {
+    const code = error instanceof Error ? error.message.trim() : "";
+    if (code.startsWith("invalid:")) {
+      return NextResponse.json({ ok: false, error: code }, { status: 400 });
+    }
     return NextResponse.json({ ok: false, error: "invalid_request" }, { status: 400 });
   }
 }

@@ -806,6 +806,13 @@ export type Messages = {
     artistLegalNameRedactedHint: string;
     transferRegisterApiSubmissionRequired: string;
     transferRegisterApiForbiddenSubmission: string;
+    transferRegisterApiInvalidAuctionEndAt: string;
+    transferRegisterApiInvalidAuctionReserve: string;
+    transferRegisterApiInvalidAuctionBuyout: string;
+    transferRegisterApiInvalidAuctionIncrement: string;
+    transferRegisterApiInvalidAuctionAntiSniping: string;
+    transferRegisterApiInvalidPrice: string;
+    transferRegisterApiInvalidRightsConfirm: string;
     sectionArtist: string;
     sectionWork: string;
     sectionOffer: string;
