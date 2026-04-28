@@ -229,7 +229,18 @@ export function CollectorTransferRegisterForm({
 
   function onText(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
-    if (artworkLocked && name !== "priceJpy" && name !== "note") return;
+    if (
+      artworkLocked &&
+      name !== "priceJpy" &&
+      name !== "note" &&
+      name !== "auctionEndAtLocal" &&
+      name !== "auctionReservePriceJpy" &&
+      name !== "auctionBuyoutPriceJpy" &&
+      name !== "auctionMinIncrementJpy" &&
+      name !== "auctionAntiSnipingPreset"
+    ) {
+      return;
+    }
     if (name === "priceJpy") {
       setDraft((d) => ({ ...d, priceJpy: value.replace(/\D/g, "").slice(0, 8) }));
       return;
