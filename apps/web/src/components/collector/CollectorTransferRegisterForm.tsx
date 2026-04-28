@@ -147,6 +147,7 @@ export function CollectorTransferRegisterForm({
 
   const [touched, setTouched] = useState<Partial<Record<keyof Draft, boolean>>>({});
   const [banner, setBanner] = useState<"ok" | "err" | string | null>(null);
+  const [errorModalMessage, setErrorModalMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   function mapApiErrorToBanner(error: string | undefined): string {
@@ -379,7 +380,7 @@ export function CollectorTransferRegisterForm({
     }
 
     if (hasErrors) {
-      setBanner("err");
+      setErrorModalMessage(t.errorBanner);
       return;
     }
 
@@ -429,7 +430,7 @@ export function CollectorTransferRegisterForm({
       });
       const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok) {
-        setBanner(mapApiErrorToBanner(body.error));
+        setErrorModalMessage(mapApiErrorToBanner(body.error));
         return;
       }
       setBanner("ok");
@@ -465,7 +466,7 @@ export function CollectorTransferRegisterForm({
       );
       setTouched({});
     } catch {
-      setBanner("err");
+      setErrorModalMessage(t.errorBanner);
     } finally {
       setPending(false);
     }
@@ -488,11 +489,6 @@ export function CollectorTransferRegisterForm({
             <Link href={listingsHref} className="text-opus-gold underline-offset-4 hover:underline">
               →
             </Link>
-          </div>
-        ) : null}
-        {banner === "err" ? (
-          <div className="mb-5 rounded-lg border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm text-red-200/90">
-            {t.errorBanner}
           </div>
         ) : null}
         {typeof banner === "string" && banner !== "ok" && banner !== "err" ? (
@@ -924,6 +920,24 @@ export function CollectorTransferRegisterForm({
           <p className="text-xs leading-relaxed text-opus-warm/45">{t.previewFooter}</p>
         </div>
       </aside>
+
+      {errorModalMessage ? (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/65 px-4" role="dialog" aria-modal="true">
+          <div className="w-full max-w-lg rounded-xl border border-red-400/30 bg-opus-charcoal p-5 shadow-opus-card">
+            <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-red-200/75">Submission Error</p>
+            <p className="mt-3 text-sm leading-relaxed text-opus-warm/85">{errorModalMessage}</p>
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setErrorModalMessage(null)}
+                className="rounded-md border border-white/[0.18] px-4 py-2 text-sm text-opus-warm/85 transition hover:border-opus-gold/35 hover:text-opus-gold-light"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
