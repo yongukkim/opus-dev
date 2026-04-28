@@ -150,10 +150,24 @@ export function CollectorTransferRegisterForm({
   const [errorModalMessage, setErrorModalMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
+  function mapClientValidationError(
+    errs: Partial<Record<keyof Draft, string>>,
+  ): string {
+    if (errs.priceJpy) return t.transferRegisterApiInvalidPrice;
+    if (errs.auctionEndAtLocal) return t.transferRegisterApiInvalidAuctionEndAt;
+    if (errs.auctionReservePriceJpy) return t.transferRegisterApiInvalidAuctionReserve;
+    if (errs.auctionBuyoutPriceJpy) return t.transferRegisterApiInvalidAuctionBuyout;
+    if (errs.auctionMinIncrementJpy) return t.transferRegisterApiInvalidAuctionIncrement;
+    if (errs.rightsConfirmed) return t.transferRegisterApiInvalidRightsConfirm;
+    return t.errorBanner;
+  }
+
   function mapApiErrorToBanner(error: string | undefined): string {
     if (!error) return t.errorBanner;
     if (error === "submission_required") return t.transferRegisterApiSubmissionRequired;
     if (error === "forbidden_submission") return t.transferRegisterApiForbiddenSubmission;
+    if (error === "unauthorized") return "로그인이 만료되었습니다. 다시 로그인해 주세요.";
+    if (error === "invalid_request") return "요청 형식 검증에 실패했습니다. 입력값을 다시 확인해 주세요.";
     if (error === "invalid:auctionEndAt") return t.transferRegisterApiInvalidAuctionEndAt;
     if (error === "invalid:auctionReservePriceJpy") return t.transferRegisterApiInvalidAuctionReserve;
     if (error === "invalid:auctionBuyoutPriceJpy") return t.transferRegisterApiInvalidAuctionBuyout;
@@ -163,7 +177,7 @@ export function CollectorTransferRegisterForm({
     }
     if (error === "invalid:priceJpy") return t.transferRegisterApiInvalidPrice;
     if (error === "invalid:rightsConfirmed") return t.transferRegisterApiInvalidRightsConfirm;
-    return t.errorBanner;
+    return `${t.errorBanner} (${error})`;
   }
 
   const errors = useMemo(() => {
@@ -391,7 +405,7 @@ export function CollectorTransferRegisterForm({
     }
 
     if (hasErrors) {
-      setErrorModalMessage(t.errorBanner);
+      setErrorModalMessage(mapClientValidationError(errors));
       return;
     }
 
