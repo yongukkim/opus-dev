@@ -30,6 +30,12 @@ type Draft = {
   tags: string;
   editionRef: string;
   priceJpy: string;
+  auctionEndAtLocal: string;
+  auctionReservePriceJpy: string;
+  auctionBuyoutPriceJpy: string;
+  auctionMinIncrementJpy: string;
+  auctionAntiSnipingPreset: "off" | "5_1" | "10_3" | "15_5";
+  auctionShowSummary: boolean;
   note: string;
   rightsConfirmed: boolean;
 };
@@ -39,6 +45,12 @@ function initialDraft(
   sessionUserId: string | undefined,
 ): Draft {
   const uid = sessionUserId?.trim() || "collector-demo-001";
+  const oneWeekLater = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const defaultEndAtLocal = new Date(
+    oneWeekLater.getTime() - oneWeekLater.getTimezoneOffset() * 60_000,
+  )
+    .toISOString()
+    .slice(0, 16);
   if (!locked) {
     return {
       userId: uid,
@@ -51,6 +63,12 @@ function initialDraft(
       tags: "",
       editionRef: "",
       priceJpy: "",
+      auctionEndAtLocal: defaultEndAtLocal,
+      auctionReservePriceJpy: "",
+      auctionBuyoutPriceJpy: "",
+      auctionMinIncrementJpy: "",
+      auctionAntiSnipingPreset: "10_3",
+      auctionShowSummary: true,
       note: "",
       rightsConfirmed: false,
     };
@@ -66,6 +84,12 @@ function initialDraft(
     tags: locked.tags,
     editionRef: locked.editionRef,
     priceJpy: "",
+    auctionEndAtLocal: defaultEndAtLocal,
+    auctionReservePriceJpy: "",
+    auctionBuyoutPriceJpy: "",
+    auctionMinIncrementJpy: "",
+    auctionAntiSnipingPreset: "10_3",
+    auctionShowSummary: true,
     note: "",
     rightsConfirmed: false,
   };
@@ -144,10 +168,41 @@ export function CollectorTransferRegisterForm({
       e.priceJpy = "Invalid";
     }
 
+    if (saleMode === "auction") {
+      const endRaw = draft.auctionEndAtLocal.trim();
+      const endDate = endRaw ? new Date(endRaw) : null;
+      const now = Date.now();
+      const maxMs = 30 * 24 * 60 * 60 * 1000;
+      if (!endDate || !Number.isFinite(endDate.getTime()) || endDate.getTime() <= now || endDate.getTime() - now > maxMs) {
+        e.auctionEndAtLocal = "Invalid";
+      }
+
+      const reserve = draft.auctionReservePriceJpy.trim()
+        ? Number.parseInt(draft.auctionReservePriceJpy, 10)
+        : undefined;
+      if (reserve !== undefined && (!Number.isFinite(reserve) || reserve < priceParsed)) {
+        e.auctionReservePriceJpy = "Invalid";
+      }
+
+      const buyout = draft.auctionBuyoutPriceJpy.trim()
+        ? Number.parseInt(draft.auctionBuyoutPriceJpy, 10)
+        : undefined;
+      if (buyout !== undefined && (!Number.isFinite(buyout) || buyout <= priceParsed)) {
+        e.auctionBuyoutPriceJpy = "Invalid";
+      }
+
+      const inc = draft.auctionMinIncrementJpy.trim()
+        ? Number.parseInt(draft.auctionMinIncrementJpy, 10)
+        : undefined;
+      if (inc !== undefined && (!Number.isFinite(inc) || inc < 1)) {
+        e.auctionMinIncrementJpy = "Invalid";
+      }
+    }
+
     if (!draft.rightsConfirmed) e.rightsConfirmed = "Confirm required";
 
     return e;
-  }, [draft, artworkLocked]);
+  }, [draft, artworkLocked, saleMode]);
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -162,11 +217,24 @@ export function CollectorTransferRegisterForm({
       setDraft((d) => ({ ...d, priceJpy: value.replace(/\D/g, "").slice(0, 8) }));
       return;
     }
+    if (
+      name === "auctionReservePriceJpy" ||
+      name === "auctionBuyoutPriceJpy" ||
+      name === "auctionMinIncrementJpy"
+    ) {
+      setDraft((d) => ({ ...d, [name]: value.replace(/\D/g, "").slice(0, 8) } as Draft));
+      return;
+    }
     setDraft((d) => ({ ...d, [name]: value } as Draft));
   }
 
   function onCheckbox(e: ChangeEvent<HTMLInputElement>) {
-    setDraft((d) => ({ ...d, rightsConfirmed: e.target.checked }));
+    const { name, checked } = e.target;
+    if (name === "auctionShowSummary") {
+      setDraft((d) => ({ ...d, auctionShowSummary: checked }));
+      return;
+    }
+    setDraft((d) => ({ ...d, rightsConfirmed: checked }));
   }
 
   function onSaveDraft() {
@@ -201,6 +269,35 @@ export function CollectorTransferRegisterForm({
       : "—";
     const saleModeLabel =
       saleMode === "auction" ? t.listingsSaleModeAuction : t.listingsSaleModeFixed;
+    const auctionSummary =
+      saleMode === "auction" && draft.auctionShowSummary
+        ? (() => {
+            const starting = draft.priceJpy.trim()
+              ? `¥${Number(draft.priceJpy).toLocaleString("ja-JP")}`
+              : "—";
+            const reserve = draft.auctionReservePriceJpy.trim()
+              ? `¥${Number(draft.auctionReservePriceJpy).toLocaleString("ja-JP")}`
+              : "";
+            const buyout = draft.auctionBuyoutPriceJpy.trim()
+              ? `¥${Number(draft.auctionBuyoutPriceJpy).toLocaleString("ja-JP")}`
+              : "";
+            const inc = draft.auctionMinIncrementJpy.trim()
+              ? `¥${Number(draft.auctionMinIncrementJpy).toLocaleString("ja-JP")}`
+              : "";
+            const endAt =
+              draft.auctionEndAtLocal.trim() && Number.isFinite(new Date(draft.auctionEndAtLocal).getTime())
+                ? new Date(draft.auctionEndAtLocal).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" })
+                : "—";
+            const parts = [
+              `${t.auctionSummaryStarting} ${starting}`,
+              reserve ? `${t.auctionSummaryReserve} ${reserve}` : "",
+              buyout ? `${t.auctionSummaryBuyout} ${buyout}` : "",
+              inc ? `${t.auctionSummaryMinIncrement} +${inc}` : "",
+              `${t.auctionSummaryEnds} ${endAt}`,
+            ].filter(Boolean);
+            return parts.join(" · ");
+          })()
+        : null;
     const tagList = draft.tags
       .split(",")
       .map((x) => x.trim())
@@ -214,10 +311,11 @@ export function CollectorTransferRegisterForm({
       editionRef: draft.editionRef.trim() || "—",
       priceJpyDisplay,
       saleModeLabel,
+      auctionSummary,
       tags: tagList,
       description: draft.description.trim(),
     };
-  }, [draft, saleMode, t]);
+  }, [draft, saleMode, t, locale]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -230,7 +328,15 @@ export function CollectorTransferRegisterForm({
      */
     setTouched(
       artworkLocked
-        ? { priceJpy: true, note: true, rightsConfirmed: true }
+        ? {
+            priceJpy: true,
+            auctionEndAtLocal: true,
+            auctionReservePriceJpy: true,
+            auctionBuyoutPriceJpy: true,
+            auctionMinIncrementJpy: true,
+            note: true,
+            rightsConfirmed: true,
+          }
         : {
             userId: true,
             artistLegalName: true,
@@ -242,6 +348,10 @@ export function CollectorTransferRegisterForm({
             tags: true,
             editionRef: true,
             priceJpy: true,
+            auctionEndAtLocal: true,
+            auctionReservePriceJpy: true,
+            auctionBuyoutPriceJpy: true,
+            auctionMinIncrementJpy: true,
             note: true,
             rightsConfirmed: true,
           },
@@ -276,6 +386,20 @@ export function CollectorTransferRegisterForm({
       }
       fd.set("priceJpy", String(price));
       fd.set("saleMode", saleMode);
+      if (saleMode === "auction") {
+        const endAtIso = new Date(draft.auctionEndAtLocal).toISOString();
+        fd.set("auctionEndAt", endAtIso);
+        if (draft.auctionReservePriceJpy.trim()) fd.set("auctionReservePriceJpy", draft.auctionReservePriceJpy.trim());
+        if (draft.auctionBuyoutPriceJpy.trim()) fd.set("auctionBuyoutPriceJpy", draft.auctionBuyoutPriceJpy.trim());
+        if (draft.auctionMinIncrementJpy.trim())
+          fd.set("auctionMinIncrementJpy", draft.auctionMinIncrementJpy.trim());
+        if (draft.auctionAntiSnipingPreset !== "off") {
+          const [t, e] = draft.auctionAntiSnipingPreset.split("_");
+          fd.set("auctionAntiSnipingTriggerMinutes", t);
+          fd.set("auctionAntiSnipingExtendMinutes", e);
+        }
+        fd.set("auctionShowSummary", draft.auctionShowSummary ? "true" : "false");
+      }
       fd.set("note", draft.note.trim());
       fd.set("rightsConfirmed", "true");
 
@@ -301,6 +425,9 @@ export function CollectorTransferRegisterForm({
           ? {
               ...d,
               priceJpy: "",
+              auctionReservePriceJpy: "",
+              auctionBuyoutPriceJpy: "",
+              auctionMinIncrementJpy: "",
               note: "",
               rightsConfirmed: false,
             }
@@ -315,6 +442,9 @@ export function CollectorTransferRegisterForm({
               tags: "",
               editionRef: "",
               priceJpy: "",
+              auctionReservePriceJpy: "",
+              auctionBuyoutPriceJpy: "",
+              auctionMinIncrementJpy: "",
               note: "",
               rightsConfirmed: false,
             },
@@ -592,6 +722,106 @@ export function CollectorTransferRegisterForm({
           {invalid("priceJpy") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
         </div>
 
+        {saleMode === "auction" ? (
+          <div className="mt-6">
+            <p className={labelClass()}>{t.auctionOptionsTitle}</p>
+            <div className="mt-3 grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <p className={labelClass()}>{t.auctionEndAtLabel}</p>
+                <input
+                  type="datetime-local"
+                  name="auctionEndAtLocal"
+                  value={draft.auctionEndAtLocal}
+                  onChange={onText}
+                  onBlur={() => markTouched("auctionEndAtLocal")}
+                  className={`${inputClass(invalid("auctionEndAtLocal"))} mt-2`}
+                />
+                <p className={hintClass()}>{t.auctionEndAtHint}</p>
+                {invalid("auctionEndAtLocal") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
+              </div>
+
+              <div>
+                <p className={labelClass()}>{t.auctionReservePriceLabel}</p>
+                <input
+                  name="auctionReservePriceJpy"
+                  value={draft.auctionReservePriceJpy}
+                  onChange={onText}
+                  onBlur={() => markTouched("auctionReservePriceJpy")}
+                  className={`${inputClass(invalid("auctionReservePriceJpy"))} mt-2`}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  placeholder="20000"
+                />
+                <p className={hintClass()}>{t.auctionReservePriceHint}</p>
+                {invalid("auctionReservePriceJpy") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
+              </div>
+
+              <div>
+                <p className={labelClass()}>{t.auctionBuyoutPriceLabel}</p>
+                <input
+                  name="auctionBuyoutPriceJpy"
+                  value={draft.auctionBuyoutPriceJpy}
+                  onChange={onText}
+                  onBlur={() => markTouched("auctionBuyoutPriceJpy")}
+                  className={`${inputClass(invalid("auctionBuyoutPriceJpy"))} mt-2`}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  placeholder="50000"
+                />
+                <p className={hintClass()}>{t.auctionBuyoutPriceHint}</p>
+                {invalid("auctionBuyoutPriceJpy") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
+              </div>
+
+              <div>
+                <p className={labelClass()}>{t.auctionMinIncrementLabel}</p>
+                <input
+                  name="auctionMinIncrementJpy"
+                  value={draft.auctionMinIncrementJpy}
+                  onChange={onText}
+                  onBlur={() => markTouched("auctionMinIncrementJpy")}
+                  className={`${inputClass(invalid("auctionMinIncrementJpy"))} mt-2`}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  placeholder="1000"
+                />
+                <p className={hintClass()}>{t.auctionMinIncrementHint}</p>
+                {invalid("auctionMinIncrementJpy") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
+              </div>
+
+              <div>
+                <p className={labelClass()}>{t.auctionAntiSnipingLabel}</p>
+                <select
+                  name="auctionAntiSnipingPreset"
+                  value={draft.auctionAntiSnipingPreset}
+                  onChange={onText}
+                  className={`${inputClass(false)} mt-2`}
+                >
+                  <option value="off">{t.auctionAntiSnipingOptOff}</option>
+                  <option value="5_1">{t.auctionAntiSnipingOpt5_1}</option>
+                  <option value="10_3">{t.auctionAntiSnipingOpt10_3}</option>
+                  <option value="15_5">{t.auctionAntiSnipingOpt15_5}</option>
+                </select>
+                <p className={hintClass()}>{t.auctionAntiSnipingHint}</p>
+              </div>
+
+              <div className="md:col-span-2 rounded-lg border border-white/[0.08] bg-black/10 p-4">
+                <p className={labelClass()}>{t.auctionVisibilityLabel}</p>
+                <label className="mt-3 flex gap-3 text-sm text-opus-warm/75">
+                  <input
+                    type="checkbox"
+                    name="auctionShowSummary"
+                    checked={draft.auctionShowSummary}
+                    onChange={onCheckbox}
+                    className="mt-1 h-4 w-4 rounded border-white/[0.25] bg-black/30 text-opus-gold focus:ring-0"
+                  />
+                  <span className="leading-relaxed">{t.auctionVisibilityShowSummary}</span>
+                </label>
+                <p className={hintClass()}>{t.auctionVisibilityHint}</p>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         <div className="mt-5">
           <p className={labelClass()}>{t.noteLabel}</p>
           <textarea
@@ -672,6 +902,9 @@ export function CollectorTransferRegisterForm({
             ) : null}
             {preview.description ? (
               <p className="mt-3 text-xs leading-relaxed text-opus-warm/50">{preview.description}</p>
+            ) : null}
+            {preview.auctionSummary ? (
+              <p className="mt-3 text-xs leading-relaxed text-opus-warm/55">{preview.auctionSummary}</p>
             ) : null}
           </div>
           <p className="text-xs leading-relaxed text-opus-warm/45">{t.previewFooter}</p>

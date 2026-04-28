@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   appendCollectorTransferListing,
   COLLECTOR_TRANSFER_GENRES,
+  type CollectorTransferAuctionOptions,
   type CollectorTransferListing,
 } from "@/lib/collectorTransferListings";
 import { readActorFromRequest } from "@/lib/authContext";
 import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 
 export const runtime = "nodejs";
+
+const MAX_JPY = 99_999_999 as const;
 
 function requireString(fd: FormData, key: string, maxLen: number): string {
   const v = fd.get(key);
@@ -31,9 +34,26 @@ function requireInt(fd: FormData, key: string, min: number, max: number): number
   return n;
 }
 
+function optionalInt(fd: FormData, key: string, min: number, max: number): number | undefined {
+  const v = fd.get(key);
+  if (typeof v !== "string") return undefined;
+  const t = v.trim();
+  if (!t) return undefined;
+  const n = Number.parseInt(t, 10);
+  if (!Number.isFinite(n) || n < min || n > max) throw new Error(`invalid:${key}`);
+  return n;
+}
+
 function requireBool(fd: FormData, key: string): boolean {
   const v = fd.get(key);
   if (typeof v !== "string") throw new Error(`invalid:${key}`);
+  if (v !== "true" && v !== "false") throw new Error(`invalid:${key}`);
+  return v === "true";
+}
+
+function optionalBool(fd: FormData, key: string): boolean | undefined {
+  const v = fd.get(key);
+  if (typeof v !== "string") return undefined;
   if (v !== "true" && v !== "false") throw new Error(`invalid:${key}`);
   return v === "true";
 }
@@ -66,6 +86,60 @@ function validateYearString(raw: string): string {
   const current = new Date().getFullYear();
   if (!Number.isFinite(y) || y < 1900 || y > current + 1) throw new Error("invalid:year");
   return raw;
+}
+
+function requireFutureIso(fd: FormData, key: string, maxDaysAhead: number): string {
+  const iso = requireString(fd, key, 64);
+  const d = new Date(iso);
+  if (!Number.isFinite(d.getTime())) throw new Error(`invalid:${key}`);
+  const now = Date.now();
+  if (d.getTime() <= now) throw new Error(`invalid:${key}`);
+  const maxMs = maxDaysAhead * 24 * 60 * 60 * 1000;
+  if (d.getTime() - now > maxMs) throw new Error(`invalid:${key}`);
+  return d.toISOString();
+}
+
+function requireAuctionOptions(fd: FormData, priceJpyFallback: number): CollectorTransferAuctionOptions {
+  // ISO 27001 A.14.2.1 (§1) — auction options are untrusted; validate bounds + relations.
+  const endAt = requireFutureIso(fd, "auctionEndAt", 30);
+  const startingBidJpy = optionalInt(fd, "auctionStartingBidJpy", 1, MAX_JPY) ?? priceJpyFallback;
+  const reservePriceJpy = optionalInt(fd, "auctionReservePriceJpy", 1, MAX_JPY);
+  const buyoutPriceJpy = optionalInt(fd, "auctionBuyoutPriceJpy", 1, MAX_JPY);
+  const minIncrementJpy = optionalInt(fd, "auctionMinIncrementJpy", 1, MAX_JPY);
+
+  if (reservePriceJpy !== undefined && reservePriceJpy < startingBidJpy) {
+    throw new Error("invalid:auctionReservePriceJpy");
+  }
+  if (buyoutPriceJpy !== undefined && buyoutPriceJpy <= startingBidJpy) {
+    throw new Error("invalid:auctionBuyoutPriceJpy");
+  }
+
+  const triggerWindowMinutes = optionalInt(fd, "auctionAntiSnipingTriggerMinutes", 1, 30);
+  const extendWindowMinutes = optionalInt(fd, "auctionAntiSnipingExtendMinutes", 1, 30);
+  const antiSniping =
+    triggerWindowMinutes !== undefined || extendWindowMinutes !== undefined
+      ? (() => {
+          const t = triggerWindowMinutes ?? 10;
+          const e = extendWindowMinutes ?? 3;
+          const allowedTrigger = new Set([5, 10, 15]);
+          const allowedExtend = new Set([1, 3, 5]);
+          if (!allowedTrigger.has(t)) throw new Error("invalid:auctionAntiSnipingTriggerMinutes");
+          if (!allowedExtend.has(e)) throw new Error("invalid:auctionAntiSnipingExtendMinutes");
+          return { triggerWindowMinutes: t, extendWindowMinutes: e };
+        })()
+      : undefined;
+
+  const showAuctionSummary = optionalBool(fd, "auctionShowSummary");
+
+  return {
+    endAt,
+    startingBidJpy,
+    ...(reservePriceJpy !== undefined ? { reservePriceJpy } : {}),
+    ...(buyoutPriceJpy !== undefined ? { buyoutPriceJpy } : {}),
+    ...(minIncrementJpy !== undefined ? { minIncrementJpy } : {}),
+    ...(antiSniping ? { antiSniping } : {}),
+    ...(showAuctionSummary !== undefined ? { visibility: { showAuctionSummary } } : {}),
+  };
 }
 
 /**
@@ -105,12 +179,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "submission_required" }, { status: 400 });
     }
 
-    const priceJpy = requireInt(fd, "priceJpy", 1, 99_999_999);
     const saleMode = requireSaleMode(fd);
+    const priceJpy = requireInt(fd, "priceJpy", 1, MAX_JPY);
     const noteRaw = optionalString(fd, "note", 800);
     const note = noteRaw || undefined;
     const rightsConfirmed = requireBool(fd, "rightsConfirmed");
     if (!rightsConfirmed) throw new Error("invalid:rightsConfirmed");
+
+    const auction = saleMode === "auction" ? requireAuctionOptions(fd, priceJpy) : undefined;
 
     let artistPenName: string;
     let artworkTitle: string;
@@ -163,7 +239,9 @@ export async function POST(request: NextRequest) {
       tags,
       editionRef,
       saleMode,
-      priceJpy,
+      // For `auction`, keep `priceJpy` as the starting bid for backward compatibility.
+      priceJpy: saleMode === "auction" ? auction!.startingBidJpy : priceJpy,
+      ...(auction ? { auction } : {}),
       note,
       status: "open",
     };

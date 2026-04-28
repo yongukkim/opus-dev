@@ -843,6 +843,33 @@ export type Messages = {
     priceHintFixed: string;
     priceLabelAuction: string;
     priceHintAuction: string;
+    auctionOptionsTitle: string;
+    auctionEndAtLabel: string;
+    auctionEndAtHint: string;
+    auctionReservePriceLabel: string;
+    auctionReservePriceHint: string;
+    auctionBuyoutPriceLabel: string;
+    auctionBuyoutPriceHint: string;
+    auctionMinIncrementLabel: string;
+    auctionMinIncrementHint: string;
+    auctionAntiSnipingLabel: string;
+    auctionAntiSnipingHint: string;
+    auctionAntiSnipingOptOff: string;
+    auctionAntiSnipingOpt5_1: string;
+    auctionAntiSnipingOpt10_3: string;
+    auctionAntiSnipingOpt15_5: string;
+    /** Uses `{trigger}` and `{extend}` tokens (minutes). */
+    auctionAntiSnipingSummaryTpl: string;
+    auctionVisibilityLabel: string;
+    auctionVisibilityShowSummary: string;
+    auctionVisibilityHint: string;
+    auctionSummaryStarting: string;
+    auctionSummaryReserve: string;
+    auctionSummaryBuyout: string;
+    auctionSummaryMinIncrement: string;
+    auctionSummaryEnds: string;
+    /** Uses `{t}` token (e.g. "3h"). */
+    auctionEndsInShort: string;
     noteLabel: string;
     noteHint: string;
     rightsConfirmLabel: string;

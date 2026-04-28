@@ -77,6 +77,16 @@ function dateLabel(iso: string, locale: string): string {
   return d.toLocaleString(loc, { dateStyle: "medium", timeStyle: "short" });
 }
 
+function remainingLabel(ms: number): string | null {
+  if (!Number.isFinite(ms) || ms <= 0) return null;
+  const totalMinutes = Math.floor(ms / 60_000);
+  if (totalMinutes < 60) return `${totalMinutes}m`;
+  const hours = Math.floor(totalMinutes / 60);
+  if (hours < 48) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: raw, id } = await params;
   const locale = normalizeLocale(raw);
@@ -126,6 +136,11 @@ export default async function ProvenanceDetailPage({ params }: Props) {
     .map((x) => x.trim())
     .filter(Boolean)
     .slice(0, 24);
+
+  const auction = listing.saleMode === "auction" ? listing.auction : undefined;
+  const showAuctionSummary = auction?.visibility?.showAuctionSummary !== false;
+  const endAtMs = auction?.endAt ? new Date(auction.endAt).getTime() : Number.NaN;
+  const endsIn = remainingLabel(endAtMs - Date.now());
 
   const priceAmount = `¥${listing.priceJpy.toLocaleString("ja-JP")}`;
   const saleModeShort =
@@ -256,6 +271,85 @@ export default async function ProvenanceDetailPage({ params }: Props) {
             </p>
           </div>
         </section>
+
+        {listing.saleMode === "auction" && auction && showAuctionSummary ? (
+          <section
+            className="mt-10 rounded-xl border border-white/[0.08] bg-black/15 px-6 py-6 shadow-opus-card"
+            aria-labelledby="provenance-detail-auction"
+          >
+            <h2
+              id="provenance-detail-auction"
+              className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45"
+            >
+              {t.auctionOptionsTitle}
+            </h2>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">
+                  {t.auctionSummaryEnds}
+                </p>
+                <p className="mt-1 text-sm text-opus-warm/80">
+                  {auction.endAt ? dateLabel(auction.endAt, locale) : "—"}
+                  {endsIn ? (
+                    <span className="ml-2 font-mono text-[0.7rem] text-opus-gold/70">
+                      ({t.auctionEndsInShort.replace("{t}", endsIn)})
+                    </span>
+                  ) : null}
+                </p>
+              </div>
+              <div>
+                <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">
+                  {t.auctionSummaryStarting}
+                </p>
+                <p className="mt-1 text-sm text-opus-warm/80">
+                  ¥{auction.startingBidJpy.toLocaleString("ja-JP")}
+                </p>
+              </div>
+              {typeof auction.reservePriceJpy === "number" ? (
+                <div>
+                  <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">
+                    {t.auctionSummaryReserve}
+                  </p>
+                  <p className="mt-1 text-sm text-opus-warm/80">
+                    ¥{auction.reservePriceJpy.toLocaleString("ja-JP")}
+                  </p>
+                </div>
+              ) : null}
+              {typeof auction.buyoutPriceJpy === "number" ? (
+                <div>
+                  <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">
+                    {t.auctionSummaryBuyout}
+                  </p>
+                  <p className="mt-1 text-sm text-opus-warm/80">
+                    ¥{auction.buyoutPriceJpy.toLocaleString("ja-JP")}
+                  </p>
+                </div>
+              ) : null}
+              {typeof auction.minIncrementJpy === "number" ? (
+                <div>
+                  <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">
+                    {t.auctionSummaryMinIncrement}
+                  </p>
+                  <p className="mt-1 text-sm text-opus-warm/80">
+                    +¥{auction.minIncrementJpy.toLocaleString("ja-JP")}
+                  </p>
+                </div>
+              ) : null}
+              {auction.antiSniping ? (
+                <div>
+                  <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">
+                    {t.auctionAntiSnipingLabel}
+                  </p>
+                  <p className="mt-1 text-sm text-opus-warm/80">
+                    {t.auctionAntiSnipingSummaryTpl
+                      .replace("{trigger}", String(auction.antiSniping.triggerWindowMinutes))
+                      .replace("{extend}", String(auction.antiSniping.extendWindowMinutes))}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
 
         {listing.description ? (
           <section

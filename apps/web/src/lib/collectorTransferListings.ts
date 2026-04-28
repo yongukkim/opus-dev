@@ -16,6 +16,23 @@ export const COLLECTOR_TRANSFER_GENRES = new Set([
   "other",
 ]);
 
+export type CollectorTransferAuctionOptions = {
+  /** Auction end time (ISO). */
+  endAt: string;
+  /** Starting bid in JPY. */
+  startingBidJpy: number;
+  /** Optional reserve price in JPY (must be >= startingBidJpy). */
+  reservePriceJpy?: number;
+  /** Optional buyout price in JPY (must be > startingBidJpy). */
+  buyoutPriceJpy?: number;
+  /** Optional minimum increment per bid (JPY). */
+  minIncrementJpy?: number;
+  /** Optional anti-sniping extension policy. */
+  antiSniping?: { triggerWindowMinutes: number; extendWindowMinutes: number };
+  /** Optional visibility preferences (public projection only). */
+  visibility?: { showAuctionSummary: boolean };
+};
+
 /** Stored record; `artistLegalName` is never exposed on the public listings surface (APPI / collector experience). */
 export type CollectorTransferListing = {
   id: string;
@@ -37,6 +54,8 @@ export type CollectorTransferListing = {
   /** `fixed` = holder-set asking amount; `auction` = same field stored as opening/reserve (JPY). */
   saleMode: "fixed" | "auction";
   priceJpy: number;
+  /** Auction-only options. Backward-compatible with legacy `saleMode=auction` rows that only had `priceJpy`. */
+  auction?: CollectorTransferAuctionOptions;
   note?: string;
   status: "open";
 };
@@ -46,12 +65,73 @@ export type CollectorTransferListingPublic = Omit<CollectorTransferListing, "art
 
 function parseListingLine(line: string): CollectorTransferListing | null {
   try {
-    const raw = JSON.parse(line) as Partial<CollectorTransferListing>;
+    const raw = JSON.parse(line) as Partial<CollectorTransferListing> & {
+      auction?: Partial<CollectorTransferAuctionOptions>;
+    };
     if (!raw.id || raw.status !== "open") return null;
     if (typeof raw.sellerId !== "string" || typeof raw.artworkTitle !== "string") return null;
     const priceJpy = typeof raw.priceJpy === "number" ? raw.priceJpy : Number.NaN;
     if (!Number.isFinite(priceJpy) || priceJpy < 1) return null;
     const saleMode = raw.saleMode === "auction" ? "auction" : "fixed";
+    const auction =
+      saleMode === "auction" && raw.auction && typeof raw.auction === "object"
+        ? {
+            endAt:
+              typeof raw.auction.endAt === "string" && raw.auction.endAt.trim()
+                ? raw.auction.endAt.trim()
+                : undefined,
+            startingBidJpy:
+              typeof raw.auction.startingBidJpy === "number" && Number.isFinite(raw.auction.startingBidJpy)
+                ? raw.auction.startingBidJpy
+                : undefined,
+            reservePriceJpy:
+              typeof raw.auction.reservePriceJpy === "number" && Number.isFinite(raw.auction.reservePriceJpy)
+                ? raw.auction.reservePriceJpy
+                : undefined,
+            buyoutPriceJpy:
+              typeof raw.auction.buyoutPriceJpy === "number" && Number.isFinite(raw.auction.buyoutPriceJpy)
+                ? raw.auction.buyoutPriceJpy
+                : undefined,
+            minIncrementJpy:
+              typeof raw.auction.minIncrementJpy === "number" && Number.isFinite(raw.auction.minIncrementJpy)
+                ? raw.auction.minIncrementJpy
+                : undefined,
+            antiSniping:
+              raw.auction.antiSniping &&
+              typeof raw.auction.antiSniping === "object" &&
+              typeof raw.auction.antiSniping.triggerWindowMinutes === "number" &&
+              typeof raw.auction.antiSniping.extendWindowMinutes === "number"
+                ? {
+                    triggerWindowMinutes: raw.auction.antiSniping.triggerWindowMinutes,
+                    extendWindowMinutes: raw.auction.antiSniping.extendWindowMinutes,
+                  }
+                : undefined,
+            visibility:
+              raw.auction.visibility &&
+              typeof raw.auction.visibility === "object" &&
+              typeof raw.auction.visibility.showAuctionSummary === "boolean"
+                ? { showAuctionSummary: raw.auction.visibility.showAuctionSummary }
+                : undefined,
+          }
+        : null;
+    const normalizedAuction: CollectorTransferAuctionOptions | undefined =
+      saleMode !== "auction"
+        ? undefined
+        : auction?.endAt && typeof auction.startingBidJpy === "number" && auction.startingBidJpy >= 1
+          ? {
+              endAt: auction.endAt,
+              startingBidJpy: auction.startingBidJpy,
+              ...(typeof auction.reservePriceJpy === "number" ? { reservePriceJpy: auction.reservePriceJpy } : {}),
+              ...(typeof auction.buyoutPriceJpy === "number" ? { buyoutPriceJpy: auction.buyoutPriceJpy } : {}),
+              ...(typeof auction.minIncrementJpy === "number" ? { minIncrementJpy: auction.minIncrementJpy } : {}),
+              ...(auction.antiSniping ? { antiSniping: auction.antiSniping } : {}),
+              ...(auction.visibility ? { visibility: auction.visibility } : {}),
+            }
+          : {
+              // Back-compat: legacy auction rows stored only `priceJpy` as opening/reserve.
+              endAt: typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString(),
+              startingBidJpy: priceJpy,
+            };
     return {
       id: raw.id,
       createdAt: typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString(),
@@ -71,6 +151,7 @@ function parseListingLine(line: string): CollectorTransferListing | null {
       editionRef: typeof raw.editionRef === "string" ? raw.editionRef.trim() : "",
       saleMode,
       priceJpy,
+      auction: normalizedAuction,
       note: typeof raw.note === "string" && raw.note.trim() ? raw.note.trim() : undefined,
       status: "open",
     };

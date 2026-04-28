@@ -42,6 +42,16 @@ function dateLabel(iso: string, locale: string): string {
   return d.toLocaleString(loc, { dateStyle: "medium", timeStyle: "short" });
 }
 
+function remainingLabel(ms: number): string | null {
+  if (!Number.isFinite(ms) || ms <= 0) return null;
+  const totalMinutes = Math.floor(ms / 60_000);
+  if (totalMinutes < 60) return `${totalMinutes}m`;
+  const hours = Math.floor(totalMinutes / 60);
+  if (hours < 48) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
+}
+
 function transferGenreLabel(ct: Messages["collectorTransfer"], key: string): string {
   const map: Record<string, string> = {
     "digital-painting": ct.genreOptDigitalPainting,
@@ -93,6 +103,28 @@ export default async function CollectorTransferListingsPage({ params, searchPara
                 .map((x) => x.trim())
                 .filter(Boolean)
                 .slice(0, 12);
+              const auction = r.saleMode === "auction" ? r.auction : undefined;
+              const showAuctionSummary = auction?.visibility?.showAuctionSummary !== false;
+              const endAtMs = auction?.endAt ? new Date(auction.endAt).getTime() : Number.NaN;
+              const endsIn = remainingLabel(endAtMs - Date.now());
+              const auctionSummary =
+                r.saleMode === "auction" && auction && showAuctionSummary
+                  ? [
+                      `${t.auctionSummaryStarting} ¥${auction.startingBidJpy.toLocaleString("ja-JP")}`,
+                      typeof auction.reservePriceJpy === "number"
+                        ? `${t.auctionSummaryReserve} ¥${auction.reservePriceJpy.toLocaleString("ja-JP")}`
+                        : "",
+                      typeof auction.buyoutPriceJpy === "number"
+                        ? `${t.auctionSummaryBuyout} ¥${auction.buyoutPriceJpy.toLocaleString("ja-JP")}`
+                        : "",
+                      typeof auction.minIncrementJpy === "number"
+                        ? `${t.auctionSummaryMinIncrement} +¥${auction.minIncrementJpy.toLocaleString("ja-JP")}`
+                        : "",
+                      auction.endAt ? `${t.auctionSummaryEnds} ${dateLabel(auction.endAt, locale)}` : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")
+                  : null;
               return (
                 <li key={r.id}>
                   <Link
@@ -135,6 +167,11 @@ export default async function CollectorTransferListingsPage({ params, searchPara
                         ·{" "}
                         {r.saleMode === "auction" ? t.listingsSaleModeAuction : t.listingsSaleModeFixed}
                       </span>
+                      {r.saleMode === "auction" && endsIn ? (
+                        <span className="ml-2 font-mono text-[0.62rem] tracking-[0.06em] text-opus-gold/65">
+                          · {t.auctionEndsInShort.replace("{t}", endsIn)}
+                        </span>
+                      ) : null}
                     </span>
                     <span className="text-opus-warm/50">
                       <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/35">
@@ -151,6 +188,9 @@ export default async function CollectorTransferListingsPage({ params, searchPara
                   </div>
                   {r.description ? (
                     <p className="mt-3 text-sm leading-relaxed text-opus-warm/55">{r.description}</p>
+                  ) : null}
+                  {auctionSummary ? (
+                    <p className="mt-3 text-xs leading-relaxed text-opus-warm/50">{auctionSummary}</p>
                   ) : null}
                   {tagList.length > 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
