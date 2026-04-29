@@ -27,6 +27,8 @@ This checklist is for production web stabilization on `app.opus-store.com`.
   - included in `ops-web-stability-check.sh`
 - If homepage looks empty, check review status counts:
   - approved items are required for public release surfaces
+- Run release exposure E2E (read-only):
+  - `APP_DIR=/home/ubuntu/opus-dev /home/ubuntu/opus-dev/scripts/ops-release-e2e-check.sh`
 
 ## 4) Incident quick actions
 
