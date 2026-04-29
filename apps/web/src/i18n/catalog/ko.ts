@@ -744,6 +744,8 @@ export const ko: Messages = {
     collectionEmpty: "아직 이 계정으로 소장으로 등록된 작품이 없습니다.",
     collectionTransferCta: "수탁 이전 등록",
     collectionViewDetail: "작품 페이지",
+    collectionViewDetailUnavailableTitle:
+      "신작 공개 페이지는 검수 완료 후에만 열립니다. 작가 본인은 검수 전에는 스튜디오(편집) 화면에서 확인하세요.",
     collectionNotApprovedHint: "운영 검수가 완료되면 다음 수탁자를 찾는 등록을 열 수 있습니다.",
     collectionStatusApproved: "검수 완료",
     collectionStatusPending: "검수 대기",

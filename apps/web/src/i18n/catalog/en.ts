@@ -748,6 +748,8 @@ export const en: Messages = {
     collectionEmpty: "No editions are recorded under this account yet.",
     collectionTransferCta: "Open custody transfer registration",
     collectionViewDetail: "Work page",
+    collectionViewDetailUnavailableTitle:
+      "The public release page opens only after approval. As the artist, use the studio (edit) screen while review is pending.",
     collectionNotApprovedHint: "Once operator review approves the work, you can open the transfer registration.",
     collectionStatusApproved: "Approved",
     collectionStatusPending: "Pending review",

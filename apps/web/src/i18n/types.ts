@@ -755,6 +755,8 @@ export type Messages = {
     /** CTA → `/vault/transfer/register?submissionId=` */
     collectionTransferCta: string;
     collectionViewDetail: string;
+    /** Title on disabled "detail" control when no public PDP exists yet (e.g. collector-held pending). */
+    collectionViewDetailUnavailableTitle: string;
     /** Shown when work is not operator-approved yet (no transfer form link). */
     collectionNotApprovedHint: string;
     collectionStatusApproved: string;

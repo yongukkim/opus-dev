@@ -57,6 +57,8 @@ export default async function VaultCollectionPage({ params }: Props) {
   }
 
   const held = await listSubmissionsHeldByUser(session.user.id);
+  const sessionRole = session.user.role;
+  const sessionUserId = session.user.id;
 
   return (
     <main className="p-6 md:p-10">
@@ -70,7 +72,14 @@ export default async function VaultCollectionPage({ params }: Props) {
           {held.map(({ submission: rec, owner }) => {
             const approved = (rec.reviewStatus ?? "pending_review") === "approved";
             const pen = rec.nickname?.trim() || rec.artistName?.trim() || "—";
-            const detailHref = withLocale(locale, `/releases/submission/${rec.id}`);
+            /** `/releases/submission/[id]` is public PDP and only exists for approved rows. */
+            const artistStudioHref =
+              sessionRole === "artist" && rec.artistId === sessionUserId
+                ? withLocale(locale, `/vault/my-artworks/${encodeURIComponent(rec.id)}/edit`)
+                : null;
+            const detailHref = approved
+              ? withLocale(locale, `/releases/submission/${encodeURIComponent(rec.id)}`)
+              : artistStudioHref;
             const transferHref = withLocale(
               locale,
               `/vault/transfer/register?submissionId=${encodeURIComponent(rec.id)}`,
@@ -120,12 +129,22 @@ export default async function VaultCollectionPage({ params }: Props) {
                     </p>
                   </div>
                   <div className="mt-auto flex flex-col gap-2 pt-1">
-                    <Link
-                      href={detailHref}
-                      className="inline-flex w-full items-center justify-center rounded-md border border-white/[0.14] px-3 py-2 text-center text-xs font-medium text-opus-warm/80 transition hover:border-opus-gold/35 hover:text-opus-gold-light"
-                    >
-                      {v.collectionViewDetail}
-                    </Link>
+                    {detailHref ? (
+                      <Link
+                        href={detailHref}
+                        className="inline-flex w-full items-center justify-center rounded-md border border-white/[0.14] px-3 py-2 text-center text-xs font-medium text-opus-warm/80 transition hover:border-opus-gold/35 hover:text-opus-gold-light"
+                      >
+                        {v.collectionViewDetail}
+                      </Link>
+                    ) : (
+                      <span
+                        className="inline-flex w-full cursor-default items-center justify-center rounded-md border border-white/[0.08] bg-black/20 px-3 py-2 text-center text-xs font-medium text-opus-warm/40"
+                        title={v.collectionViewDetailUnavailableTitle}
+                        aria-label={v.collectionViewDetailUnavailableTitle}
+                      >
+                        {v.collectionViewDetail}
+                      </span>
+                    )}
                     {approved ? (
                       <Link
                         href={transferHref}

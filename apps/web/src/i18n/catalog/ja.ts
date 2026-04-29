@@ -764,6 +764,8 @@ export const ja: Messages = {
     collectionEmpty: "このアカウントで所蔵として記録された作品はまだありません。",
     collectionTransferCta: "所蔵者移転を登録",
     collectionViewDetail: "作品ページ",
+    collectionViewDetailUnavailableTitle:
+      "新作公開ページは審査承認後にのみ開きます。作家本人は審査前にスタジオ（編集）画面で確認してください。",
     collectionNotApprovedHint: "運営審査が承認されると、次の所蔵者を探す登録を開けます。",
     collectionStatusApproved: "審査済み",
     collectionStatusPending: "審査待ち",
