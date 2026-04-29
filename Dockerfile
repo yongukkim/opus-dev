@@ -22,9 +22,6 @@ WORKDIR /app
 # Keep Node heap well under t4g.micro RAM+swap so builds don't OOM.
 ENV NODE_OPTIONS="--max-old-space-size=768"
 ENV NEXT_TELEMETRY_DISABLED=1
-# Auth.js: build-time placeholder only — real AUTH_SECRET / AUTH_URL / OAuth ids are injected at runtime (EC2 env / orchestrator).
-ENV AUTH_SECRET="00000000000000000000000000000000"
-ENV AUTH_URL="http://127.0.0.1:3000"
 # flat node_modules (pnpm 가상 스토어 대신) → 디스크·레이어 사용량 감소, arm64 overlayfs 안정성↑
 ENV NPM_CONFIG_NODE_LINKER=hoisted
 ENV NPM_CONFIG_PREFER_FROZEN_LOCKFILE=true
@@ -46,7 +43,10 @@ COPY --from=pruner /app/out/full/ .
 # JA: Next ビルド前に Prisma クライアントを生成し、API ルートがエンジンを解決できるようにする。
 # EN: Generate the Prisma client before the Next build so runtime API routes can load the engine.
 RUN pnpm --filter @opus/web exec prisma generate
-RUN pnpm exec turbo run build --filter=@opus/web --concurrency=1
+# Auth.js placeholders are provided only for build-time env checks.
+# Real AUTH_SECRET / AUTH_URL are injected at runtime from host env.
+RUN AUTH_SECRET="00000000000000000000000000000000" AUTH_URL="http://127.0.0.1:3000" \
+  pnpm exec turbo run build --filter=@opus/web --concurrency=1
 
 FROM base AS runner
 WORKDIR /app
