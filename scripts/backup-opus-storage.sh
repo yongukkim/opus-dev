@@ -38,7 +38,7 @@ SRC="$(docker inspect "$CID" --format '{{range .Mounts}}{{if eq .Destination "/a
 if [[ -z "${SRC:-}" ]]; then
   die "could not resolve /app/storage mount source from container: $CID"
 fi
-if [[ ! -d "$SRC" ]]; then
+if ! sudo test -d "$SRC"; then
   die "storage source does not exist: $SRC"
 fi
 
