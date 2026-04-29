@@ -71,14 +71,8 @@ export default async function VaultCollectionPage({ params }: Props) {
           {held.map(({ submission: rec, owner }) => {
             const approved = (rec.reviewStatus ?? "pending_review") === "approved";
             const pen = rec.nickname?.trim() || rec.artistName?.trim() || "—";
-            /** `/releases/submission/[id]` is public PDP and only exists for approved rows. */
-            const artistStudioHref =
-              sessionRole === "artist" && rec.artistId === sessionUserId
-                ? withLocale(locale, `/vault/my-artworks/${encodeURIComponent(rec.id)}/edit`)
-                : null;
-            const detailHref = approved
-              ? withLocale(locale, `/releases/submission/${encodeURIComponent(rec.id)}`)
-              : artistStudioHref;
+            const yearLabel = rec.year != null && Number.isFinite(rec.year) ? String(rec.year) : null;
+            const tags = Array.isArray(rec.tags) ? rec.tags.map((x) => x.trim()).filter(Boolean).slice(0, 6) : [];
             const transferHref = withLocale(
               locale,
               `/vault/transfer/register?submissionId=${encodeURIComponent(rec.id)}`,
@@ -86,64 +80,65 @@ export default async function VaultCollectionPage({ params }: Props) {
             return (
               <li
                 key={rec.id}
-                className="flex flex-col overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card"
+                className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card"
               >
-                <div className="relative aspect-[4/3] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
-                  {approved ? (
-                    <>
-                      {/* eslint-disable-next-line @next/next/no-img-element -- dynamic same-origin API WebP; avoids next/image quirks with /api paths */}
-                      <img
-                        src={`/api/artwork-submissions/${encodeURIComponent(rec.id)}/public-preview`}
-                        alt={rec.artworkTitle}
-                        sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 90vw"
-                        loading="lazy"
-                        decoding="async"
-                        className="absolute inset-0 h-full w-full object-cover opacity-95"
-                      />
-                    </>
-                  ) : (
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.12),transparent_55%)]" />
-                  )}
-                  <span className="absolute left-3 top-3 rounded-full border border-white/[0.12] bg-black/45 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-opus-warm/75 backdrop-blur-sm">
-                    {heldBadge(v, owner)}
-                  </span>
-                  <span
-                    className={`absolute right-3 top-3 rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.16em] backdrop-blur-sm ${
-                      approved
-                        ? "border-opus-gold/40 bg-black/50 text-opus-gold-light"
-                        : "border-white/[0.12] bg-black/45 text-opus-warm/60"
-                    }`}
-                  >
-                    {reviewStatusLabel(v, rec)}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col gap-3 p-5">
-                  <div>
-                    <p className="opus-text-metallic line-clamp-2 font-display text-base tracking-wide text-opus-warm">
-                      {rec.artworkTitle}
-                    </p>
-                    <p className="mt-1 text-xs text-opus-warm/55">{pen}</p>
-                    <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">
-                      {transferGenreLabel(ct, rec.genre)} · {editionLine(rec)}
-                    </p>
-                  </div>
-                  <div className="mt-auto flex flex-col gap-2 pt-1">
-                    {detailHref ? (
-                      <Link
-                        href={detailHref}
-                        className="inline-flex w-full items-center justify-center rounded-md border border-white/[0.14] px-3 py-2 text-center text-xs font-medium text-opus-warm/80 transition hover:border-opus-gold/35 hover:text-opus-gold-light"
-                      >
-                        {v.collectionViewDetail}
-                      </Link>
+                <div className="md:flex">
+                  <div className="relative aspect-[4/3] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal md:aspect-auto md:min-h-full md:w-[46%] md:max-w-[18rem]">
+                    {approved ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element -- dynamic same-origin API WebP; avoids next/image quirks with /api paths */}
+                        <img
+                          src={`/api/artwork-submissions/${encodeURIComponent(rec.id)}/public-preview`}
+                          alt={rec.artworkTitle}
+                          sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 90vw"
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 h-full w-full object-cover opacity-95"
+                        />
+                      </>
                     ) : (
-                      <span
-                        className="inline-flex w-full cursor-default items-center justify-center rounded-md border border-white/[0.08] bg-black/20 px-3 py-2 text-center text-xs font-medium text-opus-warm/40"
-                        title={v.collectionViewDetailUnavailableTitle}
-                        aria-label={v.collectionViewDetailUnavailableTitle}
-                      >
-                        {v.collectionViewDetail}
-                      </span>
+                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.12),transparent_55%)]" />
                     )}
+                    <span className="absolute left-3 top-3 rounded-full border border-white/[0.12] bg-black/45 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-opus-warm/75 backdrop-blur-sm">
+                      {heldBadge(v, owner)}
+                    </span>
+                    <span
+                      className={`absolute right-3 top-3 rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.16em] backdrop-blur-sm ${
+                        approved
+                          ? "border-opus-gold/40 bg-black/50 text-opus-gold-light"
+                          : "border-white/[0.12] bg-black/45 text-opus-warm/60"
+                      }`}
+                    >
+                      {reviewStatusLabel(v, rec)}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col gap-3 p-5">
+                    <div>
+                      <p className="opus-text-metallic line-clamp-2 font-display text-base tracking-wide text-opus-warm">
+                        {rec.artworkTitle}
+                      </p>
+                      <p className="mt-1 text-xs text-opus-warm/55">{pen}</p>
+                      <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">
+                        {transferGenreLabel(ct, rec.genre)} · {editionLine(rec)}
+                        {yearLabel ? ` · ${yearLabel}` : ""}
+                      </p>
+                    </div>
+                    {rec.description?.trim() ? (
+                      <p className="line-clamp-3 text-xs leading-relaxed text-opus-warm/55">{rec.description.trim()}</p>
+                    ) : null}
+                    {tags.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="rounded border border-white/[0.08] bg-black/15 px-2 py-0.5 text-[0.65rem] text-opus-warm/60"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  <div className="mt-auto flex flex-col gap-2 pt-1">
                     {approved ? (
                       <Link
                         href={transferHref}
@@ -157,6 +152,7 @@ export default async function VaultCollectionPage({ params }: Props) {
                       </p>
                     )}
                   </div>
+                </div>
                 </div>
               </li>
             );
