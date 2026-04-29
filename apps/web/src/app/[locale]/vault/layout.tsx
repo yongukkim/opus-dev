@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { auth } from "@/auth";
+import { VaultDevSessionUserIdPanel } from "@/components/vault/VaultDevSessionUserIdPanel";
 import { VaultSidebar } from "@/components/vault/VaultSidebar";
 import { getDictionary } from "@/i18n/catalog";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
@@ -23,6 +24,11 @@ export default async function VaultLayout({ children, params }: Props) {
   const isOperator = session?.user?.role === "operator";
   const sessionIsArtist = session?.user?.role === "artist";
 
+  const devPanelUserId = session?.user?.id;
+  const showDevUserIdPanel =
+    Boolean(devPanelUserId) &&
+    (process.env.NODE_ENV !== "production" || process.env["OPUS_SHOW_DEV_USER_ID_PANEL"] === "true");
+
   return (
     <div className="flex min-h-[50vh] flex-col bg-opus-charcoal pt-[var(--opus-header-plus-trust)] md:min-h-[calc(100dvh-12rem)] md:flex-row">
       <VaultSidebar
@@ -33,6 +39,19 @@ export default async function VaultLayout({ children, params }: Props) {
         isOperator={isOperator}
       />
       <div className="flex min-w-0 flex-1 flex-col border-t border-white/[0.05] md:border-l md:border-t-0">
+        {showDevUserIdPanel && devPanelUserId ? (
+          <VaultDevSessionUserIdPanel
+            userId={devPanelUserId}
+            labels={{
+              kicker: m.vault.devSessionUserIdKicker,
+              title: m.vault.devSessionUserIdTitle,
+              body: m.vault.devSessionUserIdBody,
+              copy: m.vault.devSessionUserIdCopy,
+              copied: m.vault.devSessionUserIdCopied,
+              copyFailed: m.vault.devSessionUserIdCopyFailed,
+            }}
+          />
+        ) : null}
         {children}
       </div>
     </div>

@@ -778,6 +778,13 @@ export const en: Messages = {
       "This page is available only while My Page is in artist mode. Use the controls below to switch, then open this page again.",
     demoSwitchArtist: "Artist mode",
     demoSwitchCollector: "Member mode",
+    devSessionUserIdKicker: "Development",
+    devSessionUserIdTitle: "My Prisma user id",
+    devSessionUserIdBody:
+      "Use this to align JSONL ownership seeds with your signed-in account. Hidden in production builds.",
+    devSessionUserIdCopy: "Copy id",
+    devSessionUserIdCopied: "Copied.",
+    devSessionUserIdCopyFailed: "Copy failed — select the id below and copy manually.",
   },
   collectorTransfer: {
     registerKicker: "Collection transfer",

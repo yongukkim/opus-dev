@@ -794,6 +794,13 @@ export const ja: Messages = {
       "この画面はマイページを作家モードにしたときのみ開けます。下の切り替えから作家モードにしてから再度お試しください。",
     demoSwitchArtist: "作家モード",
     demoSwitchCollector: "一般会員モード",
+    devSessionUserIdKicker: "開発用",
+    devSessionUserIdTitle: "Prisma のユーザーID",
+    devSessionUserIdBody:
+      "保管庫・所蔵者移転シード（JSONL）の ownerId と揃えるときに使います。本番ビルドでは表示されません。",
+    devSessionUserIdCopy: "IDをコピー",
+    devSessionUserIdCopied: "コピーしました。",
+    devSessionUserIdCopyFailed: "コピーに失敗しました。下のIDを選択して手動でコピーしてください。",
   },
   collectorTransfer: {
     registerKicker: "コレクター譲渡",

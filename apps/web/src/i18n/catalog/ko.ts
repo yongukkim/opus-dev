@@ -774,6 +774,13 @@ export const ko: Messages = {
       "이 화면은 작가 보기에서만 열 수 있습니다. 아래에서 작가 모드로 바꾼 뒤 다시 시도해 주세요.",
     demoSwitchArtist: "작가 모드",
     demoSwitchCollector: "일반 회원 모드",
+    devSessionUserIdKicker: "개발용",
+    devSessionUserIdTitle: "내 Prisma 사용자 ID",
+    devSessionUserIdBody:
+      "보관함·소장 이전 시드(JSONL)의 ownerId와 맞출 때 사용합니다. 운영 빌드에서는 표시되지 않습니다.",
+    devSessionUserIdCopy: "ID 복사",
+    devSessionUserIdCopied: "복사했습니다.",
+    devSessionUserIdCopyFailed: "복사에 실패했습니다. 아래 ID를 직접 선택해 복사해 주세요.",
   },
   collectorTransfer: {
     registerKicker: "소장 이전",

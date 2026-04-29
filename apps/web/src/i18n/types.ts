@@ -786,6 +786,16 @@ export type Messages = {
     /** Toggle vault UI between artist tools and standard member nav (session must be artist). */
     demoSwitchArtist: string;
     demoSwitchCollector: string;
+    /**
+     * Non-production only: copy Auth.js / Prisma `User.id` for JSONL seed alignment.
+     * Remove this surface before GA (ISO 27001 A.18.1.4 — internal id exposure minimized in prod).
+     */
+    devSessionUserIdKicker: string;
+    devSessionUserIdTitle: string;
+    devSessionUserIdBody: string;
+    devSessionUserIdCopy: string;
+    devSessionUserIdCopied: string;
+    devSessionUserIdCopyFailed: string;
   };
   /** Collector-to-collector edition handoff (no financial-product framing in UI copy). */
   collectorTransfer: {
