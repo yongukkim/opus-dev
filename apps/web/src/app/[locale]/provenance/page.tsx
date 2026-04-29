@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { ProvenanceListingPreviewImage } from "@/components/provenance/ProvenanceListingPreviewImage";
 import { getDictionary } from "@/i18n/catalog";
 import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { listOpenCollectorTransferListings, maskSellerId } from "@/lib/collectorTransferListings";
+import {
+  getPreviewSubmissionIdsForListings,
+  listOpenCollectorTransferListings,
+  maskSellerId,
+} from "@/lib/collectorTransferListings";
 import Link from "next/link";
 
 type Props = {
@@ -79,6 +84,8 @@ export default async function CollectorTransferListingsPage({ params, searchPara
     ? allRows.filter((r) => r.saleMode === saleModeFilter)
     : allRows;
 
+  const previewSubmissionByListingId = await getPreviewSubmissionIdsForListings(rows);
+
   return (
     <main className="min-h-screen px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-3xl">
@@ -129,8 +136,15 @@ export default async function CollectorTransferListingsPage({ params, searchPara
                 <li key={r.id}>
                   <Link
                     href={withLocale(locale, `/provenance/${encodeURIComponent(r.id)}`)}
-                    className="group block rounded-xl border border-white/[0.08] bg-opus-slate/20 px-5 py-4 shadow-opus-card transition hover:border-opus-gold/38"
+                    className="group flex flex-col gap-4 rounded-xl border border-white/[0.08] bg-opus-slate/20 p-5 shadow-opus-card transition hover:border-opus-gold/38 sm:flex-row sm:items-stretch sm:gap-5"
                   >
+                  <ProvenanceListingPreviewImage
+                    submissionId={previewSubmissionByListingId.get(r.id)}
+                    artworkTitle={r.artworkTitle}
+                    frameClassName="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-lg bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal sm:aspect-auto sm:h-[7.5rem] sm:w-[10.5rem]"
+                    sizes="(min-width: 640px) 168px, 90vw"
+                  />
+                  <div className="min-w-0 flex-1">
                   <p className="font-display text-lg text-opus-warm transition group-hover:text-opus-gold-light">{r.artworkTitle}</p>
                   <p className="mt-1 text-sm text-opus-gold/90">
                     <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/35">
@@ -205,6 +219,7 @@ export default async function CollectorTransferListingsPage({ params, searchPara
                     </div>
                   ) : null}
                   {r.note ? <p className="mt-3 text-sm leading-relaxed text-opus-warm/50">{r.note}</p> : null}
+                  </div>
                   </Link>
                 </li>
               );

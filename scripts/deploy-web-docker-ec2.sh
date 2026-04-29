@@ -138,5 +138,8 @@ if [[ "$ok" != 1 ]]; then
   die "앱이 아직 응답하지 않습니다."
 fi
 
+log "스토리지 소유권(nextjs) — root 시드 후 JSONL append 실패 방지"
+APP_DIR="$APP_DIR" bash "$APP_DIR/scripts/ec2-chown-web-storage.sh"
+
 public_ip="$(curl -sSf --max-time 3 https://checkip.amazonaws.com/ || true)"
 log "성공: http://${public_ip:-<인스턴스-퍼블릭-IP>}/  (로케일 경로 예: /ko/, /ja/)"

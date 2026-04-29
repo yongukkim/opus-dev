@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { AUX_LEDGER_FILES } from "@/lib/ledgerStores";
-import { appendJsonl } from "@/lib/privateStorage";
+import { appendJsonl, listSubmissionsHeldByUser, type SubmissionRecord } from "@/lib/privateStorage";
 
 export const COLLECTOR_TRANSFER_LISTINGS_FILE = AUX_LEDGER_FILES.collectorTransferListings;
 
@@ -211,6 +211,75 @@ export async function findOpenCollectorTransferListing(
     if (r?.id === id && r.status === "open") latest = r;
   }
   return latest ? toPublicListing(latest) : null;
+}
+
+function submissionEditionRef(rec: SubmissionRecord): string {
+  return rec.editionMode === "unique" ? "Edition 1/1" : `Edition ${rec.initialMint}/${rec.editionTotal}`;
+}
+
+function submissionPublicPenName(rec: SubmissionRecord): string {
+  return (rec.nickname?.trim() || rec.artistName?.trim() || "—").trim() || "—";
+}
+
+function submissionMatchesListingPreview(
+  rec: SubmissionRecord,
+  listing: Pick<CollectorTransferListingPublic, "artworkTitle" | "editionRef" | "artistPenName">,
+): boolean {
+  if ((rec.reviewStatus ?? "pending_review") !== "approved") return false;
+  if (rec.artworkTitle.trim().toLowerCase() !== listing.artworkTitle.trim().toLowerCase()) return false;
+  if (submissionEditionRef(rec) !== listing.editionRef.trim()) return false;
+  if (submissionPublicPenName(rec).trim().toLowerCase() !== listing.artistPenName.trim().toLowerCase()) {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * ISO 27001 A.14.2.1 (§1) — bounded heuristic only: same `sellerId` held set,
+ * approved submission, strict title + edition line + public pen name match.
+ * KO: 레거시 JSONL 에 `sourceSubmissionId` 가 없을 때 공개 미리보기용 제출 ID 를 제한적으로 역추적한다.
+ * JA: 旧JSONLに sourceSubmissionId が無い場合、公開プレビュー用の提出IDを限定的に逆引きする。
+ * EN: When legacy JSONL rows omit `sourceSubmissionId`, resolve preview ids with a strict same-seller match.
+ */
+export async function getPreviewSubmissionIdsForListings(
+  listings: CollectorTransferListingPublic[],
+): Promise<Map<string, string>> {
+  const out = new Map<string, string>();
+  const heldCache = new Map<string, Awaited<ReturnType<typeof listSubmissionsHeldByUser>>>();
+
+  async function heldFor(uid: string) {
+    const k = uid.trim();
+    if (!k) return [];
+    if (!heldCache.has(k)) {
+      heldCache.set(k, await listSubmissionsHeldByUser(k));
+    }
+    return heldCache.get(k)!;
+  }
+
+  for (const listing of listings) {
+    const sid = listing.sourceSubmissionId?.trim();
+    if (sid) {
+      out.set(listing.id, sid);
+      continue;
+    }
+    const held = await heldFor(listing.sellerId);
+    let best: { id: string; createdAt: string } | null = null;
+    for (const { submission: rec } of held) {
+      if (!submissionMatchesListingPreview(rec, listing)) continue;
+      if (!best || rec.createdAt > best.createdAt) {
+        best = { id: rec.id, createdAt: rec.createdAt };
+      }
+    }
+    if (best) out.set(listing.id, best.id);
+  }
+  return out;
+}
+
+export async function resolvePreviewSubmissionIdForListing(
+  listing: CollectorTransferListingPublic,
+): Promise<string | undefined> {
+  const m = await getPreviewSubmissionIdsForListings([listing]);
+  return m.get(listing.id);
 }
 
 export function maskSellerId(userId: string): string {

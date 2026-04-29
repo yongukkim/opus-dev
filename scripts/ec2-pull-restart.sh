@@ -42,3 +42,6 @@ fi
 
 docker compose -f compose.web.yaml up -d
 docker compose -f compose.web.yaml ps
+
+# Root-owned 시드(JSONL·private) 직후 nextjs 가 append 하지 못하는 문제 방지.
+bash "$APP_DIR/scripts/ec2-chown-web-storage.sh"

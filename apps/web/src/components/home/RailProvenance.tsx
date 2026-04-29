@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { ProvenanceListingPreviewImage } from "@/components/provenance/ProvenanceListingPreviewImage";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import {
+  getPreviewSubmissionIdsForListings,
   listOpenCollectorTransferListings,
   maskSellerId,
 } from "@/lib/collectorTransferListings";
@@ -44,6 +46,7 @@ export async function RailProvenance({
   });
   // Cap to four; auction-mode listings surface first. Full lists: `/provenance`, `?saleMode=auction`.
   const items = sorted.slice(0, 4);
+  const previewSubmissionByListingId = await getPreviewSubmissionIdsForListings(items);
 
   return (
     <section
@@ -92,8 +95,15 @@ export async function RailProvenance({
               <li key={listing.id}>
                 <Link
                   href={withLocale(locale, `/provenance/${encodeURIComponent(listing.id)}`)}
-                  className="group flex h-full flex-col gap-4 overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-opus-slate/30 to-[#161616] p-5 shadow-opus-card transition hover:border-opus-gold/38"
+                  className="group flex h-full flex-col overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-opus-slate/30 to-[#161616] shadow-opus-card transition hover:border-opus-gold/38"
                 >
+                  <ProvenanceListingPreviewImage
+                    submissionId={previewSubmissionByListingId.get(listing.id)}
+                    artworkTitle={listing.artworkTitle}
+                    frameClassName="relative aspect-[4/3] w-full bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
+                    sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+                  />
+                  <div className="flex flex-1 flex-col gap-4 p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="opus-text-metallic line-clamp-2 font-display text-base leading-snug tracking-wide">
@@ -132,6 +142,7 @@ export async function RailProvenance({
                     <p className="font-mono text-[0.62rem] text-opus-warm/45">
                       {maskSellerId(listing.sellerId)}
                     </p>
+                  </div>
                   </div>
                 </Link>
               </li>

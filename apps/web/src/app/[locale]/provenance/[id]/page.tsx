@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProvenanceListingPreviewImage } from "@/components/provenance/ProvenanceListingPreviewImage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/catalog";
 import type { Messages } from "@/i18n/types";
@@ -9,6 +10,7 @@ import { findArtistByPenName } from "@/lib/artistsCatalog";
 import {
   findOpenCollectorTransferListing,
   maskSellerId,
+  resolvePreviewSubmissionIdForListing,
 } from "@/lib/collectorTransferListings";
 import { buildProvenanceListingJsonLd } from "@/lib/jsonLdPdp";
 
@@ -117,6 +119,8 @@ export default async function ProvenanceDetailPage({ params }: Props) {
   const listing = await findOpenCollectorTransferListing(id);
   if (!listing) notFound();
 
+  const previewSubmissionId = await resolvePreviewSubmissionIdForListing(listing);
+
   // Reverse-lookup the pen name against the featured-artist set. If
   // it matches, we wrap the artist field in a link into the artist
   // page. If not, we render plain text — listings can carry pen
@@ -187,6 +191,15 @@ export default async function ProvenanceDetailPage({ params }: Props) {
             </li>
           </ol>
         </nav>
+
+        <div className="mt-8">
+          <ProvenanceListingPreviewImage
+            submissionId={previewSubmissionId}
+            artworkTitle={listing.artworkTitle}
+            frameClassName="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/[0.08] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
+            sizes="(min-width: 768px) 42rem, 100vw"
+          />
+        </div>
 
         <header className="mt-8 flex flex-col gap-4 border-t border-white/[0.06] pt-8 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">

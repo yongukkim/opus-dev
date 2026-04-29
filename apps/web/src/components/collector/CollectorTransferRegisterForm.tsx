@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useId, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
@@ -149,6 +149,11 @@ export function CollectorTransferRegisterForm({
   const [banner, setBanner] = useState<"ok" | "err" | string | null>(null);
   const [errorModalMessage, setErrorModalMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [previewThumbFailed, setPreviewThumbFailed] = useState(false);
+
+  useEffect(() => {
+    setPreviewThumbFailed(false);
+  }, [lockedWork?.submissionId]);
 
   function mapClientValidationError(
     errs: Partial<Record<keyof Draft, string>>,
@@ -907,6 +912,20 @@ export function CollectorTransferRegisterForm({
       <aside className="rounded-xl border border-white/[0.08] bg-opus-slate/15 p-5 md:p-6">
         <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">{t.previewTitle}</p>
         <p className="mt-2 text-xs leading-relaxed text-opus-gold/70">{t.previewPublicOnly}</p>
+        {lockedWork?.submissionId && !previewThumbFailed ? (
+          <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
+            {/* eslint-disable-next-line @next/next/no-img-element -- same-origin public-preview WebP */}
+            <img
+              src={`/api/artwork-submissions/${encodeURIComponent(lockedWork.submissionId)}/public-preview`}
+              alt={preview.title}
+              sizes="(min-width: 768px) 320px, 90vw"
+              loading="eager"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover opacity-95"
+              onError={() => setPreviewThumbFailed(true)}
+            />
+          </div>
+        ) : null}
         <div className="mt-4 space-y-3 text-sm text-opus-warm/70">
           <div className="rounded-lg border border-white/[0.06] bg-black/15 p-4">
             <p className="font-display text-base text-opus-warm">{preview.title}</p>

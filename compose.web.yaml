@@ -62,4 +62,5 @@ volumes:
   caddy_data:
   caddy_config:
   # 작품 원본/파생 파일·jsonl 저장소. 웹 컨테이너 재배포 후에도 보존.
+  # 호스트에서 root 로 시드한 뒤 append 가 막히면 `scripts/ec2-chown-web-storage.sh` 실행.
   opus_storage:
