@@ -28,11 +28,10 @@ function transferGenreLabel(ct: Messages["collectorTransfer"], key: string): str
   return map[key] || key || "—";
 }
 
+/** Collection chip: only “approved” vs “not released yet” (검수 대기). */
 function reviewStatusLabel(m: Messages["vault"], rec: SubmissionRecord): string {
-  const s = rec.reviewStatus ?? "pending_review";
-  if (s === "approved") return m.collectionStatusApproved;
-  if (s === "pending_review") return m.collectionStatusPending;
-  return m.collectionStatusOther;
+  if ((rec.reviewStatus ?? "pending_review") === "approved") return m.collectionStatusApproved;
+  return m.collectionStatusPending;
 }
 
 function editionLine(rec: SubmissionRecord): string {
