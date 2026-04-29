@@ -6,6 +6,21 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
 BRANCH="${BRANCH:-main}"
 OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-ghcr.io/yongukkim/opus-web:latest}"
+BASE_URL="${BASE_URL:-https://app.opus-store.com}"
+OPUS_ALERT_WEBHOOK="${OPUS_ALERT_WEBHOOK:-}"
+
+notify() {
+  local level="$1"
+  local msg="$2"
+  if [[ -z "$OPUS_ALERT_WEBHOOK" ]]; then
+    return 0
+  fi
+  curl -sS -X POST "$OPUS_ALERT_WEBHOOK" \
+    -H "Content-Type: application/json" \
+    -d "{\"text\":\"[opus-deploy][$level] $msg\"}" >/dev/null || true
+}
+
+trap 'notify "fail" "branch=$BRANCH image=$OPUS_WEB_IMAGE host=$(hostname)"; exit 1' ERR
 
 if [[ ! -d "$APP_DIR/.git" ]]; then
   git clone --depth 1 --branch "$BRANCH" https://github.com/yongukkim/opus-dev.git "$APP_DIR"
@@ -52,3 +67,20 @@ docker compose -f compose.web.yaml ps
 
 # Root-owned 시드(JSONL·private) 직후 nextjs 가 append 하지 못하는 문제 방지.
 bash "$APP_DIR/scripts/ec2-chown-web-storage.sh"
+
+# Post-deploy production smoke checks (fail-fast on boundary regressions).
+if [[ -x "$APP_DIR/scripts/ops-web-stability-check.sh" ]]; then
+  APP_DIR="$APP_DIR" COMPOSE_FILE="compose.web.yaml" BASE_URL="$BASE_URL" \
+    bash "$APP_DIR/scripts/ops-web-stability-check.sh"
+else
+  echo "[ec2-pull-restart] WARN: ops-web-stability-check.sh missing or not executable" >&2
+fi
+
+if [[ -x "$APP_DIR/scripts/ops-release-e2e-check.sh" ]]; then
+  APP_DIR="$APP_DIR" COMPOSE_FILE="compose.web.yaml" BASE_URL="$BASE_URL" \
+    bash "$APP_DIR/scripts/ops-release-e2e-check.sh"
+else
+  echo "[ec2-pull-restart] WARN: ops-release-e2e-check.sh missing or not executable" >&2
+fi
+
+notify "ok" "branch=$BRANCH image=$OPUS_WEB_IMAGE host=$(hostname) base=$BASE_URL"

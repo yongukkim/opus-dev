@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 
 export type MobileAssetLeaseTokenV1 = {
   v: 1;
+  jti: string;
   userId: string;
   deviceId: string;
   artworkSlug: string;
@@ -44,7 +45,7 @@ export function verifyMobileAssetLeaseTokenV1(token: string): MobileAssetLeaseTo
   try {
     const parsed = JSON.parse(data.toString("utf8")) as MobileAssetLeaseTokenV1;
     if (parsed?.v !== 1) return null;
-    if (!parsed.userId || !parsed.artworkSlug || !parsed.expiresAt) return null;
+    if (!parsed.jti || !parsed.userId || !parsed.artworkSlug || !parsed.expiresAt) return null;
     const exp = new Date(parsed.expiresAt);
     if (Number.isNaN(exp.getTime())) return null;
     if (Date.now() >= exp.getTime()) return null;

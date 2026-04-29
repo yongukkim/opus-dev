@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
 import { verifyMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
+import { consumeMobileLeaseJtiOnce } from "@/lib/mobileLeaseReplayStore";
 import { readActorFromRequest } from "@/lib/authContext";
 import { getActiveDeviceState } from "@/lib/deviceBinding";
 import { getCurrentOwner, getSubmissionByStoredFilename } from "@/lib/privateStorage";
@@ -31,9 +32,9 @@ function allowRequest(key: string, limit: number, windowMs: number): boolean {
  *
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.4.2 (§2) Strong authentication & session
- *   KO: 다운로드는 lease 토큰 검증 후에만 허용되며, 만료(7일) 시 재발급이 필요합니다.
- *   JA: ダウンロードはleaseトークン検証後のみ許可し、期限(7日)後は再発行が必要です。
- *   EN: Downloads require a valid lease token; expiry (7 days) forces re-issuance.
+ *   KO: 다운로드는 lease 토큰 검증 후에만 허용되며, 단기 만료 후 재발급이 필요합니다.
+ *   JA: ダウンロードはleaseトークン検証後のみ許可し、短期期限後は再発行が必要です。
+ *   EN: Downloads require a valid lease token and re-issuance after short expiry.
  * - A.9.2.1 (§4) Least Privilege RBAC
  *   KO: 토큰의 userId와 요청 actor userId를 일치시켜 타 사용자 전송을 제한합니다.
  *   JA: トークンのuserIdとリクエストactor userIdを一致させ、他者への転送を制限します。
@@ -46,6 +47,10 @@ function allowRequest(key: string, limit: number, windowMs: number): boolean {
  *   KO: 대량 다운로드 남용을 줄이기 위해 단순 rate limit(메모리)을 적용합니다(운영 시 게이트웨이로 대체).
  *   JA: 大量ダウンロードの濫用を抑えるため簡易レート制限（メモリ）を適用します（本番はゲートウェイで代替）。
  *   EN: Apply a simple in-memory rate limit to reduce abuse (production should use a gateway/WAF).
+ * - A.13.1.3 (§6) API Security (replay mitigation)
+ *   KO: lease 토큰의 jti를 1회 소비해 재사용(리플레이) 요청을 차단합니다.
+ *   JA: leaseトークンのjtiを1回消費し、再利用（リプレイ）要求を遮断します。
+ *   EN: Consume lease jti once to block token replay reuse.
  */
 export async function GET(
   request: NextRequest,
@@ -74,6 +79,16 @@ export async function GET(
   const verified = token ? verifyMobileAssetLeaseTokenV1(token) : null;
   if (!verified || verified.userId !== actor.userId || verified.deviceId !== deviceId || verified.artworkSlug !== slug) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  const consumed = await consumeMobileLeaseJtiOnce({
+    jti: verified.jti,
+    userId: verified.userId,
+    deviceId: verified.deviceId,
+    artworkSlug: verified.artworkSlug,
+    expiresAt: verified.expiresAt,
+  });
+  if (!consumed) {
+    return NextResponse.json({ ok: false, error: "replayed_token" }, { status: 401 });
   }
 
   const resolved = await resolveArtworkBySlug(slug);

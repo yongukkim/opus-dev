@@ -14,6 +14,8 @@ on:
       - "compose.web.yaml"
       - "scripts/ec2-pull-restart.sh"
       - "scripts/ec2-chown-web-storage.sh"
+      - "scripts/ops-web-stability-check.sh"
+      - "scripts/ops-release-e2e-check.sh"
       - ".github/workflows/build-web-image.yml"
   workflow_dispatch: {}
 

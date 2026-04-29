@@ -3,10 +3,12 @@ import { auth } from "@/auth";
 import { readActorFromRequest } from "@/lib/authContext";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
 import { signMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
+import { createMobileLeaseJti } from "@/lib/mobileLeaseReplayStore";
 import { getActiveDeviceState } from "@/lib/deviceBinding";
 import { getCurrentOwner, getSubmissionByStoredFilename } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
+const LEASE_TTL_MS = Number.parseInt(process.env["OPUS_MOBILE_LEASE_TTL_MS"] ?? "1800000", 10);
 
 type Bucket = { count: number; resetAt: number };
 const buckets = new Map<string, Bucket>();
@@ -30,9 +32,9 @@ function allowRequest(key: string, limit: number, windowMs: number): boolean {
  *
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.4.2 (§2) Strong authentication & session
- *   KO: 모바일 고화질 자산은 세션/토큰 기반으로만 접근 가능하며, 7일 TTL lease로 재검증을 강제합니다.
- *   JA: モバイル高画質資産はセッション/トークンでのみアクセス可能とし、7日TTLのleaseで再検証を強制します。
- *   EN: Mobile high-fidelity assets require session/token access; a 7-day TTL lease enforces revalidation.
+ *   KO: 모바일 고화질 자산은 세션/토큰 기반으로만 접근 가능하며, 단기 TTL lease(기본 30분)로 재검증을 강제합니다.
+ *   JA: モバイル高画質資産はセッション/トークンでのみアクセス可能とし、短期TTL lease（既定30分）で再検証を強制します。
+ *   EN: Mobile high-fidelity assets require session/token access; a short TTL lease (30m default) enforces revalidation.
  * - A.9.2.1 (§4) Least Privilege / ownership
  *   KO: 발급은 소유자(collector)만 허용하는 것을 전제로 하며, 데모에서는 최소 권한 역할을 검증합니다.
  *   JA: 発行は所有者（collector）のみを前提とし、デモでは最小権限の役割を検証します。
@@ -90,9 +92,11 @@ export async function POST(
     return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
   }
 
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const ttlMs = Number.isFinite(LEASE_TTL_MS) && LEASE_TTL_MS > 0 ? LEASE_TTL_MS : 1_800_000;
+  const expiresAt = new Date(Date.now() + ttlMs).toISOString();
   const token = signMobileAssetLeaseTokenV1({
     v: 1,
+    jti: createMobileLeaseJti(),
     userId: actor.userId,
     deviceId,
     artworkSlug: slug,

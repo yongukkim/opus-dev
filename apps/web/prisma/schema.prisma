@@ -92,6 +92,8 @@ model User {
   artworksAsArtist        Artwork[]        @relation("ArtistArtworks")
   ownedEditions           Edition[]        @relation("CurrentEditionOwner")
   listings                Listing[]        @relation("SellerListings")
+  buyerOrders             Order[]          @relation("OrderBuyer")
+  sellerOrders            Order[]          @relation("OrderSeller")
   chronicleSentEvents     ChronicleEntry[] @relation("ChronicleFrom")
   chronicleReceivedEvents ChronicleEntry[] @relation("ChronicleTo")
   reviewedArtworks        Artwork[]        @relation("ArtworkReviewer")
@@ -402,4 +404,119 @@ model ArtworkTag {
   @@unique([artworkId, tag])
   @@index([tag])
   @@map("artwork_tags")
+}
+
+enum PaymentProvider {
+  MOCK
+  STRIPE
+  PAYJP
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  REQUIRES_ACTION
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentEventType {
+  PAYMENT_INTENT_SUCCEEDED
+  PAYMENT_INTENT_FAILED
+  PAYMENT_REFUNDED
+  PAYMENT_CANCELLED
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  /// Stable client/server idempotency key for checkout creation attempts.
+  idempotencyKey String  @unique @map("idempotency_key") @db.VarChar(128)
+  artworkId       String? @map("artwork_id")
+  editionId       String? @map("edition_id")
+  buyerUserId     String? @map("buyer_user_id")
+  sellerUserId    String? @map("seller_user_id")
+
+  /// Presentation-safe order title for operator reconciliation; no legal-name duplication.
+  title String @db.VarChar(256)
+
+  currency  String      @default("JPY") @db.VarChar(8)
+  amountJpy Int         @map("amount_jpy")
+  status    OrderStatus @default(PENDING)
+
+  provider             PaymentProvider @default(MOCK)
+  providerReference    String?         @map("provider_reference") @db.VarChar(191)
+  checkoutRequestedAt  DateTime        @default(now()) @map("checkout_requested_at")
+  paidAt               DateTime?       @map("paid_at")
+  failedAt             DateTime?       @map("failed_at")
+  cancelledAt          DateTime?       @map("cancelled_at")
+  refundedAt           DateTime?       @map("refunded_at")
+  failureCode          String?         @map("failure_code") @db.VarChar(128)
+  failureReasonMasked  String?         @map("failure_reason_masked") @db.VarChar(512)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  buyer    User?     @relation("OrderBuyer", fields: [buyerUserId], references: [id])
+  seller   User?     @relation("OrderSeller", fields: [sellerUserId], references: [id])
+  payments Payment[]
+
+  @@index([status, createdAt])
+  @@index([provider, providerReference])
+  @@index([buyerUserId, createdAt])
+  @@map("orders")
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  orderId   String @map("order_id")
+  provider  PaymentProvider
+  status    PaymentStatus @default(REQUIRES_ACTION)
+  amountJpy Int           @map("amount_jpy")
+  currency  String        @default("JPY") @db.VarChar(8)
+
+  providerPaymentId String? @map("provider_payment_id") @db.VarChar(191)
+  capturedAt        DateTime? @map("captured_at")
+  failedAt          DateTime? @map("failed_at")
+  failureCode       String?   @map("failure_code") @db.VarChar(128)
+  failureReasonMasked String? @map("failure_reason_masked") @db.VarChar(512)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  order  Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  events PaymentEvent[]
+
+  @@index([orderId, createdAt])
+  @@index([provider, providerPaymentId])
+  @@map("payments")
+}
+
+model PaymentEvent {
+  id String @id @default(cuid())
+
+  paymentId String @map("payment_id")
+  provider  PaymentProvider
+  eventType PaymentEventType @map("event_type")
+
+  /// Idempotency key from provider webhook (e.g., event id).
+  providerEventId String @map("provider_event_id") @db.VarChar(191)
+  /// Masked/minimized payload for audit; never raw card or full PII.
+  payloadMasked Json @map("payload_masked")
+  receivedAt    DateTime @default(now()) @map("received_at")
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerEventId])
+  @@index([paymentId, receivedAt])
+  @@map("payment_events")
 }
