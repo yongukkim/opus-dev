@@ -59,7 +59,7 @@ run_container_checks() {
 
 run_backup_checks() {
   log "Backup artifact checks"
-  latest="$(sudo ls -1t /var/backups/opus-storage/opus-storage-*.tgz 2>/dev/null | head -n 1 || true)"
+  latest="$(sudo bash -lc 'ls -1t /var/backups/opus-storage/opus-storage-*.tgz 2>/dev/null | head -n 1' || true)"
   if [[ -z "$latest" ]]; then
     fail "no backup archive found in /var/backups/opus-storage"
     return
