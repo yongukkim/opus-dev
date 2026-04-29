@@ -2,6 +2,7 @@ import {
   loadCatalogFiles,
   parseTitleArtist,
 } from "@/lib/artworksCatalog";
+import { listAllSubmissions } from "@/lib/privateStorage";
 import {
   FEATURED_ARTIST_PICKS,
   type FeaturedArtistPick,
@@ -98,6 +99,7 @@ function mergeOperatorPicks(
   groupedMap: Map<string, ArtistEntry>,
   picks: readonly FeaturedArtistPick[],
   catalogFiles: readonly string[],
+  latestReleaseByArtistKey: ReadonlyMap<string, number>,
 ): ArtistEntry[] {
   const indexByFile = new Map<string, number>();
   for (let i = 0; i < catalogFiles.length; i++) indexByFile.set(catalogFiles[i]!, i);
@@ -132,18 +134,40 @@ function mergeOperatorPicks(
   const grouped = [...groupedMap.values()].filter(
     (e) => e.works.length >= MIN_WORKS_FOR_GROUPED_ARTIST,
   );
-  // Picks first, then grouped (sorted by works count desc, name asc).
-  grouped.sort(
-    (a, b) => b.works.length - a.works.length || a.penName.localeCompare(b.penName),
-  );
-  return [...pickEntries, ...grouped];
+  const all = [...pickEntries, ...grouped];
+  all.sort((a, b) => {
+    const latestA = latestReleaseByArtistKey.get(a.key) ?? 0;
+    const latestB = latestReleaseByArtistKey.get(b.key) ?? 0;
+    return (
+      latestB - latestA ||
+      b.works.length - a.works.length ||
+      a.penName.localeCompare(b.penName)
+    );
+  });
+  return all;
+}
+
+async function loadLatestReleaseByArtistKey(): Promise<Map<string, number>> {
+  const out = new Map<string, number>();
+  const submissions = await listAllSubmissions();
+  for (const rec of submissions) {
+    if ((rec.reviewStatus ?? "pending_review") !== "approved") continue;
+    const penName = (rec.nickname || rec.artistName || "").trim().toLowerCase();
+    if (!penName) continue;
+    const ts = Date.parse(rec.createdAt);
+    if (!Number.isFinite(ts)) continue;
+    const prev = out.get(penName) ?? 0;
+    if (ts > prev) out.set(penName, ts);
+  }
+  return out;
 }
 
 /** All eligible artists (operator picks + ≥ 2 works grouping). */
 export async function loadArtists(): Promise<ArtistEntry[]> {
   const { files } = await loadCatalogFiles();
   const grouped = groupCatalog(files);
-  return mergeOperatorPicks(grouped, FEATURED_ARTIST_PICKS, files);
+  const latestReleaseByArtistKey = await loadLatestReleaseByArtistKey();
+  return mergeOperatorPicks(grouped, FEATURED_ARTIST_PICKS, files, latestReleaseByArtistKey);
 }
 
 /** Single artist by URL slug, or null if the slug doesn't resolve. */

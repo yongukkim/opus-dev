@@ -18,7 +18,7 @@ export const en: Messages = {
     curationIndexTitle: "Curated shelves",
     curationIndexDescription:
       "Operator-curated shelves grouping OPUS works by theme. A second reading of the archive.",
-    featuredArtistsTitle: "Featured artists",
+    featuredArtistsTitle: "Artist list",
     featuredArtistsDescription:
       "Artists currently active in the OPUS archive, collected in one surface.",
     artistTitleTpl: "{name} — Featured artist",
@@ -98,8 +98,8 @@ export const en: Messages = {
   featuredArtists: {
     kicker: "Artists",
     breadcrumbHome: "Home",
-    breadcrumbIndex: "Featured artists",
-    indexHeading: "Featured artists",
+    breadcrumbIndex: "Artist list",
+    indexHeading: "Artist list",
     indexLead: "Every artist actively releasing new work, on a single page.",
     indexEmpty: "No featured artists are surfaced right now.",
     worksCount: "{n} works",
@@ -134,7 +134,7 @@ export const en: Messages = {
     backToReleases: "Back to releases",
     notFoundTitle: "Artist not found",
     notFoundBody: "This artist may have been retired from public surfaces, or the URL has changed.",
-    notFoundCta: "Browse featured artists",
+    notFoundCta: "Browse artist list",
     shelves: {
       heading: "Appears on these shelves",
       lead: "Operator-curated shelves that include this artist's work.",
@@ -572,11 +572,11 @@ export const en: Messages = {
       registerCta: "Register a transfer",
     },
     railFeaturedArtists: {
-      title: "Featured artists",
+      title: "Artist list",
       body: "Artists actively releasing new work.",
       viewWorks: "View works by this artist",
       worksCount: "{n} works",
-      empty: "Featured artists arriving soon.",
+      empty: "Artist list arriving soon.",
       viewAll: "Browse all artists",
     },
     railCuration: {

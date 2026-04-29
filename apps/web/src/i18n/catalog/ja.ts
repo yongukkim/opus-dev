@@ -18,7 +18,7 @@ export const ja: Messages = {
     curationIndexTitle: "キュレーションシェルフ",
     curationIndexDescription:
       "運営チームがテーマ別にまとめたキュレーションシェルフの一覧です。OPUSの作品を新しい切り口で。",
-    featuredArtistsTitle: "作家シェルフ",
+    featuredArtistsTitle: "作家一覧",
     featuredArtistsDescription:
       "OPUSアーカイブで活動中の作家をまとめて確認できます。",
     artistTitleTpl: "{name} — 作家紹介",
@@ -98,8 +98,8 @@ export const ja: Messages = {
   featuredArtists: {
     kicker: "作家",
     breadcrumbHome: "ホーム",
-    breadcrumbIndex: "作家のシェルフ",
-    indexHeading: "作家のシェルフ",
+    breadcrumbIndex: "作家一覧",
+    indexHeading: "作家一覧",
     indexLead: "活発に作品を公開している作家の一覧です。",
     indexEmpty: "現在公開中の作家はいません。",
     worksCount: "作品 {n}点",
@@ -134,7 +134,7 @@ export const ja: Messages = {
     backToReleases: "新作公開に戻る",
     notFoundTitle: "作家が見つかりません",
     notFoundBody: "ご指定の作家は公開を終了したか、URL が変更された可能性があります。",
-    notFoundCta: "作家のシェルフを見る",
+    notFoundCta: "作家一覧を見る",
     shelves: {
       heading: "登場シェルフ",
       lead: "運営チームがこの作家の作品をまとめたシェルフです。",
@@ -584,11 +584,11 @@ export const ja: Messages = {
       registerCta: "所蔵者移転を登録",
     },
     railFeaturedArtists: {
-      title: "作家のシェルフ",
+      title: "作家一覧",
       body: "活発に作品を公開している作家です。",
       viewWorks: "この作家の作品を見る",
       worksCount: "作品 {n}点",
-      empty: "近日、作家のシェルフを公開します。",
+      empty: "近日、作家一覧を公開します。",
       viewAll: "作家を全て見る",
     },
     railCuration: {

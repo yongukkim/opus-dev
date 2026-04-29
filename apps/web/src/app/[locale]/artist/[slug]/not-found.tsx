@@ -31,10 +31,10 @@ export default function ArtistNotFound() {
 
   const cta =
     locale === "ja"
-      ? "← 作家のシェルフへ"
+      ? "← 作家一覧へ"
       : locale === "en"
-        ? "← Browse featured artists"
-        : "← 작가 셸프 다시 보기";
+        ? "← Browse artist list"
+        : "← 작가목록 다시 보기";
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">

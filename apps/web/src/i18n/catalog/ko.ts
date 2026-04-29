@@ -18,7 +18,7 @@ export const ko: Messages = {
     curationIndexTitle: "큐레이션 셸프",
     curationIndexDescription:
       "운영팀이 주제별로 엮은 큐레이션 셸프 모음입니다. OPUS의 작품을 새로운 시선으로 만나보세요.",
-    featuredArtistsTitle: "작가 셸프",
+    featuredArtistsTitle: "작가목록",
     featuredArtistsDescription:
       "OPUS 아카이브에서 활동 중인 작가들을 한 곳에서 확인합니다.",
     artistTitleTpl: "{name} — 작가 소개",
@@ -98,8 +98,8 @@ export const ko: Messages = {
   featuredArtists: {
     kicker: "작가",
     breadcrumbHome: "홈",
-    breadcrumbIndex: "작가 셸프",
-    indexHeading: "작가 셸프",
+    breadcrumbIndex: "작가목록",
+    indexHeading: "작가목록",
     indexLead: "활발하게 작품을 공개하는 작가들의 전체 목록입니다.",
     indexEmpty: "지금은 공개된 작가가 없습니다.",
     worksCount: "작품 {n}점",
@@ -134,7 +134,7 @@ export const ko: Messages = {
     backToReleases: "신작 공개로 돌아가기",
     notFoundTitle: "작가를 찾을 수 없습니다",
     notFoundBody: "요청하신 작가는 더 이상 공개되지 않았거나 주소가 변경되었습니다.",
-    notFoundCta: "작가 셸프 다시 보기",
+    notFoundCta: "작가목록 다시 보기",
     shelves: {
       heading: "등장 셸프",
       lead: "운영팀이 이 작가의 작품을 함께 엮어둔 셸프입니다.",
@@ -570,11 +570,11 @@ export const ko: Messages = {
       registerCta: "수탁 이전 등록",
     },
     railFeaturedArtists: {
-      title: "작가 셸프",
+      title: "작가목록",
       body: "활발하게 작품을 공개하는 작가들입니다.",
       viewWorks: "이 작가의 작품 보기",
       worksCount: "작품 {n}점",
-      empty: "곧 작가 셸프를 공개합니다.",
+      empty: "곧 작가목록을 공개합니다.",
       viewAll: "작가 전체 보기",
     },
     railCuration: {
