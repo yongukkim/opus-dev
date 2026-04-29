@@ -9,7 +9,6 @@ import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedW
 import { listSubmissionsHeldByUser } from "@/lib/privateStorage";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
-import Image from "next/image";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -133,13 +132,14 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
                     className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card"
                   >
                     <div className="relative aspect-[4/3] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
-                      <Image
-                        src={`/api/artwork-submissions/${rec.id}/public-preview`}
+                      {/* eslint-disable-next-line @next/next/no-img-element -- dynamic same-origin API WebP */}
+                      <img
+                        src={`/api/artwork-submissions/${encodeURIComponent(rec.id)}/public-preview`}
                         alt={rec.artworkTitle}
-                        fill
                         sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 90vw"
-                        unoptimized
-                        className="object-cover opacity-95"
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover opacity-95"
                       />
                     </div>
                     <div className="space-y-2 p-4">

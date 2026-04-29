@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -83,14 +82,17 @@ export default async function VaultCollectionPage({ params }: Props) {
               >
                 <div className="relative aspect-[4/3] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
                   {approved ? (
-                    <Image
-                      src={`/api/artwork-submissions/${rec.id}/public-preview`}
-                      alt={rec.artworkTitle}
-                      fill
-                      sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 90vw"
-                      unoptimized
-                      className="object-cover opacity-95"
-                    />
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element -- dynamic same-origin API WebP; avoids next/image quirks with /api paths */}
+                      <img
+                        src={`/api/artwork-submissions/${encodeURIComponent(rec.id)}/public-preview`}
+                        alt={rec.artworkTitle}
+                        sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 90vw"
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover opacity-95"
+                      />
+                    </>
                   ) : (
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(222,184,146,0.12),transparent_55%)]" />
                   )}
