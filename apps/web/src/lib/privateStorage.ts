@@ -245,6 +245,17 @@ export function canAccessSubmission(actor: Actor, submission: SubmissionRecord, 
   return false;
 }
 
+/** True once ownership has ever moved to any collector for this submission. */
+export async function hasCollectorOwnershipEvent(submissionId: string): Promise<boolean> {
+  const id = submissionId.trim();
+  if (!id) return false;
+  const events = await readJsonl<OwnershipState>(OWNERSHIP_FILE);
+  for (const ev of events) {
+    if (ev?.submissionId === id && ev.ownerType === "collector") return true;
+  }
+  return false;
+}
+
 /** Latest record per submission id (jsonl append order). */
 export async function listArtistSubmissions(artistId: string): Promise<SubmissionRecord[]> {
   if (!artistId.trim()) return [];

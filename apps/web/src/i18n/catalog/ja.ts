@@ -743,6 +743,7 @@ export const ja: Messages = {
       "審査待ち・修正依頼の状態でのみ変更できます。保存すると履歴に新しいレコードが追加されます。",
     editionLockedTitle: "この段階では変更できません",
     editionLockedBody: "審査完了または終了した提出は、エディション項目を変更できません。",
+    editionLockedAfterSaleBody: "エディションが1点でも販売されると、以後は全エディション設定を変更できません。",
     backToMyArtworks: "← マイ作品一覧へ",
     operatorFeedbackLabel: "運営からの案内",
     editionSaveCta: "保存",
@@ -750,6 +751,9 @@ export const ja: Messages = {
     editionSaveError: "保存に失敗しました。しばらくしてから再度お試しください。",
     editionSaveConflict:
       "現在の状態では保存できません。一覧を更新し、ステータスをご確認ください。",
+    editionSaveSaleLockNotice: "保存後に販売が発生すると、以後は編集できません。",
+    editionSaveConfirmPrompt:
+      "エディションが1点でも販売されると、全エディション設定の変更ができなくなります。保存しますか？",
   },
   vault: {
     overviewKicker: "マイページ",

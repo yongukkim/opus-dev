@@ -724,12 +724,16 @@ export const ko: Messages = {
     editEditionBody: "검수 대기·수정 요청 상태에서만 변경할 수 있습니다. 저장 시 이력에 새 상태가 추가됩니다.",
     editionLockedTitle: "이 단계에서는 수정할 수 없습니다",
     editionLockedBody: "검수가 완료되었거나 종료된 제출은 에디션 필드를 바꿀 수 없습니다.",
+    editionLockedAfterSaleBody: "에디션이 1개라도 판매된 작품은 이후 에디션 전체를 수정할 수 없습니다.",
     backToMyArtworks: "← 내 작품 목록",
     operatorFeedbackLabel: "운영자 안내",
     editionSaveCta: "저장",
     editionSaving: "저장 중…",
     editionSaveError: "저장에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     editionSaveConflict: "현재 상태에서는 저장할 수 없습니다. 목록을 새로고침한 뒤 다시 확인해 주세요.",
+    editionSaveSaleLockNotice: "저장 후 판매가 이루어지면 수정이 불가합니다.",
+    editionSaveConfirmPrompt:
+      "작품 에디션이 1개라도 판매가 된다면 에디션 전체에 대한 수정이 불가합니다. 저장 하시겠습니까?",
   },
   vault: {
     overviewKicker: "마이페이지",

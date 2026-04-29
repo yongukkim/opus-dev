@@ -728,12 +728,16 @@ export const en: Messages = {
       "You can change these fields only while the submission is pending review or changes have been requested. Saving appends a new record to the history.",
     editionLockedTitle: "Edition fields cannot be changed now",
     editionLockedBody: "Approved or closed submissions cannot have their edition fields updated.",
+    editionLockedAfterSaleBody: "Once any edition is sold, all edition settings become non-editable.",
     backToMyArtworks: "← Back to my works",
     operatorFeedbackLabel: "Operator guidance",
     editionSaveCta: "Save",
     editionSaving: "Saving…",
     editionSaveError: "Could not save. Please try again shortly.",
     editionSaveConflict: "This submission can no longer be edited from this screen. Refresh the list and check its status.",
+    editionSaveSaleLockNotice: "After you save, any sale will permanently lock edition edits.",
+    editionSaveConfirmPrompt:
+      "If even one edition is sold, all edition settings become locked. Save these changes now?",
   },
   vault: {
     overviewKicker: "My Page",

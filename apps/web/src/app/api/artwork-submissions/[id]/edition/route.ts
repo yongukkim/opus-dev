@@ -4,6 +4,7 @@ import { parseEditionObject } from "@/lib/editionFields";
 import {
   appendSubmission,
   getSubmissionById,
+  hasCollectorOwnershipEvent,
   type SubmissionRecord,
 } from "@/lib/privateStorage";
 
@@ -12,9 +13,9 @@ export const runtime = "nodejs";
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.2.1 (§4) Least Privilege RBAC
- *   KO: 에디션 필드 갱신은 해당 제출의 작가 세션만 허용하고, 검수 승인·거절 후에는 변경할 수 없게 합니다.
- *   JA: エディション更新は当該提出の作家セッションのみ許可し、審査承認・却下後は変更不可とします。
- *   EN: Edition updates are allowed only for the owning artist session and are blocked after approval or rejection.
+ *   KO: 에디션 필드 갱신은 해당 제출의 작가 세션만 허용하고, 검수 승인·거절 후 또는 컬렉터 소유 이력이 1회라도 생기면 변경을 차단합니다.
+ *   JA: エディション更新は当該提出の作家セッションのみ許可し、審査承認・却下後またはコレクター所蔵履歴が1回でもある場合は変更を禁止します。
+ *   EN: Edition updates are allowed only for the owning artist session and are blocked after approval/rejection or any collector ownership event.
  *
  * - A.14.2.1 (§1) Input Validation & Sanitization
  *   KO: JSON 본문의 에디션 필드는 열거·범위(총수 ≤ 20, unique 시 1/1)를 화이트리스트로 검증합니다.
@@ -43,6 +44,9 @@ export async function PATCH(
     submission.reviewStatus ?? "pending_review";
   if (status !== "pending_review" && status !== "changes_requested") {
     return NextResponse.json({ ok: false, error: "edition_locked" }, { status: 409 });
+  }
+  if (await hasCollectorOwnershipEvent(submission.id)) {
+    return NextResponse.json({ ok: false, error: "edition_locked_after_sale" }, { status: 409 });
   }
 
   let body: unknown;

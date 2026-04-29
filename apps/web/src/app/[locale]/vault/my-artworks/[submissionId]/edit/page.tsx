@@ -5,7 +5,7 @@ import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
 import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { getSubmissionById } from "@/lib/privateStorage";
+import { getSubmissionById, hasCollectorOwnershipEvent } from "@/lib/privateStorage";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { cookies } from "next/headers";
 
@@ -54,7 +54,10 @@ export default async function VaultMyArtworkEditionEditPage({ params }: Props) {
   }
 
   const reviewStatus = submission.reviewStatus ?? "pending_review";
-  const editionEditable = reviewStatus === "pending_review" || reviewStatus === "changes_requested";
+  const soldAtLeastOneEdition = await hasCollectorOwnershipEvent(submission.id);
+  const editionEditable =
+    (reviewStatus === "pending_review" || reviewStatus === "changes_requested") &&
+    !soldAtLeastOneEdition;
 
   const listBackHref = `${withLocale(locale, "/vault/my-artworks")}?artist=${encodeURIComponent(artistId)}`;
 
@@ -68,7 +71,9 @@ export default async function VaultMyArtworkEditionEditPage({ params }: Props) {
         {!editionEditable ? (
           <div className="mx-auto mt-10 max-w-lg rounded-lg border border-white/[0.1] bg-opus-slate/25 p-6 text-center">
             <p className="font-display text-lg text-opus-warm/90">{aa.editionLockedTitle}</p>
-            <p className="mt-2 text-sm text-opus-warm/60">{aa.editionLockedBody}</p>
+            <p className="mt-2 text-sm text-opus-warm/60">
+              {soldAtLeastOneEdition ? aa.editionLockedAfterSaleBody : aa.editionLockedBody}
+            </p>
             {submission.reviewNote?.trim() ? (
               <div className="mt-5 rounded-md border border-opus-gold/20 bg-opus-gold/[0.06] p-4 text-left">
                 <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/50">

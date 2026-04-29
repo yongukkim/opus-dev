@@ -679,6 +679,7 @@ export type Messages = {
     editEditionBody: string;
     editionLockedTitle: string;
     editionLockedBody: string;
+    editionLockedAfterSaleBody: string;
     backToMyArtworks: string;
     /** Shown when operator left a review note (changes requested / rejected). */
     operatorFeedbackLabel: string;
@@ -686,6 +687,8 @@ export type Messages = {
     editionSaving: string;
     editionSaveError: string;
     editionSaveConflict: string;
+    editionSaveSaleLockNotice: string;
+    editionSaveConfirmPrompt: string;
   };
   submitArtwork: {
     kicker: string;

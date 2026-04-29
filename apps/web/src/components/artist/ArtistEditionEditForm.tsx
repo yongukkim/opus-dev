@@ -161,6 +161,7 @@ export function ArtistEditionEditForm({
       lockEdition: true,
     });
     if (Object.keys(editionDraftErrors(draft)).length > 0) return;
+    if (!window.confirm(aa.editionSaveConfirmPrompt)) return;
 
     setSubmitting(true);
     setServerError(null);
@@ -314,6 +315,7 @@ export function ArtistEditionEditForm({
           {aa.backToMyArtworks}
         </Link>
       </div>
+      <p className="text-xs leading-relaxed text-opus-warm/50">{aa.editionSaveSaleLockNotice}</p>
     </form>
   );
 }
