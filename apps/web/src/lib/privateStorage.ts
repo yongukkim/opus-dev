@@ -50,6 +50,7 @@ export type OwnershipState = {
 
 const SUBMISSIONS_FILE = LEDGER_FILES.submissions;
 const OWNERSHIP_FILE = LEDGER_FILES.ownershipEvents;
+const MASTER_ROOT = path.join(PRIVATE_ROOT, "master");
 
 export function safeSlug(value: string): string {
   return value
@@ -60,19 +61,19 @@ export function safeSlug(value: string): string {
 }
 
 export function buildArtistWorkDir(artistId: string, submissionId: string): string {
-  return path.join(PRIVATE_ROOT, "artists", artistId, "works", submissionId);
+  return path.join(MASTER_ROOT, "artists", artistId, "works", submissionId);
 }
 
 export function buildCollectorWorkDir(collectorId: string, submissionId: string): string {
-  return path.join(PRIVATE_ROOT, "collectors", collectorId, "works", submissionId);
+  return path.join(MASTER_ROOT, "collectors", collectorId, "works", submissionId);
 }
 
 export function buildArtistCollectedWorkDir(artistId: string, submissionId: string): string {
-  return path.join(PRIVATE_ROOT, "artists", artistId, "collected", submissionId);
+  return path.join(MASTER_ROOT, "artists", artistId, "collected", submissionId);
 }
 
 export async function ensureStorage(): Promise<void> {
-  await mkdir(PRIVATE_ROOT, { recursive: true });
+  await mkdir(MASTER_ROOT, { recursive: true });
 }
 
 export async function appendJsonl(filePath: string, obj: unknown): Promise<void> {

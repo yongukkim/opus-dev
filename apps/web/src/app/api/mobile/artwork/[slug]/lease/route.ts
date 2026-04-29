@@ -4,6 +4,7 @@ import { readActorFromRequest } from "@/lib/authContext";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
 import { signMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
 import { getActiveDeviceState } from "@/lib/deviceBinding";
+import { getCurrentOwner, getSubmissionByStoredFilename } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
 
@@ -80,7 +81,15 @@ export async function POST(
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
   }
 
-  // TODO(Chronicle): enforce edition ownership for actor.userId here.
+  const submission = await getSubmissionByStoredFilename(resolved.file);
+  if (!submission || (submission.reviewStatus ?? "pending_review") !== "approved") {
+    return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+  }
+  const owner = await getCurrentOwner(submission.id, submission.artistId);
+  if (owner.ownerType !== "collector" || owner.ownerId !== actor.userId) {
+    return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
+  }
+
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
   const token = signMobileAssetLeaseTokenV1({
     v: 1,

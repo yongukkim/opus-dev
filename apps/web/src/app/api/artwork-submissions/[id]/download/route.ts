@@ -12,6 +12,10 @@ export const runtime = "nodejs";
  *   KO: 다운로드는 권한 검증 후에만 허용하며(작가 본인/운영자/구매자), 실패 시 내부 경로·시스템 정보를 노출하지 않습니다.
  *   JA: ダウンロードは権限検証後のみ許可し（本人作家/運営者/購入者）、失敗時に内部パスやシステム情報を露出しません。
  *   EN: Downloads require authorization (artist self/operator/current buyer); failures never disclose internal paths or system details.
+ * - A.9.1.2 (§4), A.13.1.3 (§6)
+ *   KO: 소장자(collector)의 원본 바이트 열람은 앱 전용 경로로 제한하고, 웹 경로에서는 차단해 고화질 자산 노출면을 최소화합니다.
+ *   JA: コレクターの原本バイト閲覧はアプリ専用経路に限定し、Web経路では遮断して高解像資産の露出面を最小化します。
+ *   EN: Collector raw-byte access is restricted to app-only paths; web download routes are blocked to minimize high-fidelity exposure.
  */
 export async function GET(
   request: NextRequest,
@@ -27,6 +31,9 @@ export async function GET(
   const owner = await getCurrentOwner(submission.id, submission.artistId);
   if (!canAccessSubmission(actor, submission, owner)) {
     return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
+  }
+  if (actor.role === "collector") {
+    return NextResponse.json({ ok: false, error: "app_only" }, { status: 403 });
   }
 
   try {

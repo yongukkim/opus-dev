@@ -138,10 +138,74 @@ PY
   fi
 }
 
+run_exposure_boundary_checks() {
+  if [[ ! -d "$APP_DIR" || ! -f "$APP_DIR/$COMPOSE_FILE" ]]; then
+    warn "skip exposure boundary checks (APP_DIR/compose missing): $APP_DIR/$COMPOSE_FILE"
+    return
+  fi
+
+  cd "$APP_DIR" || return
+  cid="$(dc -f "$COMPOSE_FILE" ps -q opus-web 2>/dev/null || true)"
+  if [[ -z "$cid" ]]; then
+    warn "skip exposure boundary checks (opus-web container id not found)"
+    return
+  fi
+  src="$(docker inspect "$cid" --format '{{range .Mounts}}{{if eq .Destination "/app/storage"}}{{.Source}}{{end}}{{end}}' 2>/dev/null || true)"
+  if [[ -z "$src" ]]; then
+    warn "skip exposure boundary checks (could not resolve /app/storage source mount)"
+    return
+  fi
+  submissions="$src/submissions.jsonl"
+  if ! sudo test -f "$submissions"; then
+    warn "skip exposure boundary checks (missing submissions file: $submissions)"
+    return
+  fi
+
+  approved_id="$(
+    sudo python3 - "$submissions" <<'PY'
+import json
+import sys
+path = sys.argv[1]
+latest = None
+with open(path, "r", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except Exception:
+            continue
+        if (row.get("reviewStatus") or "pending_review") != "approved":
+            continue
+        if not row.get("id"):
+            continue
+        if latest is None or row.get("createdAt", "") > latest.get("createdAt", ""):
+            latest = row
+if latest:
+    print(latest["id"])
+PY
+  )"
+
+  if [[ -z "$approved_id" ]]; then
+    warn "skip exposure boundary checks (no approved submission)"
+    return
+  fi
+
+  log "Exposure boundary checks (web route must not return raw original)"
+  code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 "${BASE_URL}/api/artwork-submissions/${approved_id}/download" || true)"
+  if [[ "$code" =~ ^[23][0-9][0-9]$ ]]; then
+    fail "raw download endpoint is publicly reachable for approved submission: HTTP ${code}"
+  else
+    ok "raw download endpoint blocked for anonymous web request: HTTP ${code:-n/a}"
+  fi
+}
+
 run_http_checks
 run_container_checks
 run_backup_checks
 run_storage_checks
+run_exposure_boundary_checks
 
 printf '\n[ops-web-check] done: fails=%d warns=%d\n' "$FAILS" "$WARNS"
 if [[ "$FAILS" -gt 0 ]]; then

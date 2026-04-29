@@ -1,10 +1,11 @@
 import { readFile } from "node:fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { resolveArtworkBySlug } from "@/lib/artworksCatalog";
-import { resolvePublicArtworkPath } from "@/lib/catalogImageServe";
 import { verifyMobileAssetLeaseTokenV1 } from "@/lib/mobileAssetLease";
 import { readActorFromRequest } from "@/lib/authContext";
 import { getActiveDeviceState } from "@/lib/deviceBinding";
+import { getCurrentOwner, getSubmissionByStoredFilename } from "@/lib/privateStorage";
+import { resolveStorageRelativeFile } from "@/lib/ledgerStores";
 
 export const runtime = "nodejs";
 
@@ -79,11 +80,18 @@ export async function GET(
   if (!resolved) {
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
   }
+  const submission = await getSubmissionByStoredFilename(resolved.file);
+  if (!submission || (submission.reviewStatus ?? "pending_review") !== "approved") {
+    return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+  }
+  const owner = await getCurrentOwner(submission.id, submission.artistId);
+  if (owner.ownerType !== "collector" || owner.ownerId !== actor.userId) {
+    return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
+  }
 
-  // TODO: replace with protected original storage (not public/) once mobile pipeline is ready.
   let absPath: string;
   try {
-    absPath = resolvePublicArtworkPath(resolved.base, resolved.file);
+    absPath = resolveStorageRelativeFile(submission.storedFile.relativePath);
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_path" }, { status: 400 });
   }
