@@ -18,6 +18,13 @@ fi
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
 
+# Always take a point-in-time storage backup before rollout.
+if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then
+  APP_DIR="$APP_DIR" COMPOSE_FILE="compose.web.yaml" "$APP_DIR/scripts/backup-opus-storage.sh"
+else
+  echo "[ec2-pull-restart] WARN: backup-opus-storage.sh missing or not executable" >&2
+fi
+
 # On small EC2 disks, stale layers from previous deploys can block new pulls.
 # Best-effort cleanup keeps deploy automation resilient to "no space left on device".
 docker image prune -af || true
