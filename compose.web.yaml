@@ -28,6 +28,7 @@ services:
         required: false
     volumes:
       - opus_storage:/app/storage
+      - opus_storage:/app/apps/web/storage
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
