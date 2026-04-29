@@ -23,7 +23,6 @@ type ArtistNameVisibility = "public" | "private";
 
 type Draft = {
   actorUserId: string;
-  actorRole: "artist" | "operator";
   artistName: string;
   artistNameVisibility: ArtistNameVisibility;
   nickname: string;
@@ -93,7 +92,6 @@ export function ArtworkSubmissionForm({
 
   const [draft, setDraft] = useState<Draft>({
     actorUserId: "artist-demo-001",
-    actorRole: "artist",
     artistName: artistLegalName.trim(),
     artistNameVisibility: "private",
     nickname: "",
@@ -288,7 +286,7 @@ export function ArtworkSubmissionForm({
           body: fd,
           headers: {
             "x-opus-user-id": draft.actorUserId.trim(),
-            "x-opus-role": draft.actorRole,
+            "x-opus-role": "artist",
           },
         });
         if (!res.ok) throw new Error("bad_status");
@@ -381,7 +379,7 @@ export function ArtworkSubmissionForm({
           </div>
         ) : null}
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-1">
           <div>
             <p className={labelClass()}>Actor userId (dev)</p>
             <input
@@ -391,13 +389,6 @@ export function ArtworkSubmissionForm({
               className={inputClass(false)}
               autoComplete="off"
             />
-          </div>
-          <div>
-            <p className={labelClass()}>Actor role (dev)</p>
-            <select name="actorRole" value={draft.actorRole} onChange={onText} className={inputClass(false)}>
-              <option value="artist">artist</option>
-              <option value="operator">operator</option>
-            </select>
           </div>
         </div>
 

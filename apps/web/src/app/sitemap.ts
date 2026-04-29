@@ -8,7 +8,6 @@ import {
   COLLECTOR_TRANSFER_LISTINGS_FILE,
   listOpenCollectorTransferListings,
 } from "@/lib/collectorTransferListings";
-import { loadShelves } from "@/lib/curationCatalog";
 import { LEDGER_FILES } from "@/lib/ledgerStores";
 import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
 
@@ -116,7 +115,6 @@ const STATIC_ROUTES: readonly RouteSpec[] = [
   { path: "/releases", changeFrequency: "weekly", priority: 0.8 },
   { path: "/provenance", changeFrequency: "weekly", priority: 0.8 },
   { path: "/chronicle", changeFrequency: "weekly", priority: 0.65 },
-  { path: "/curation", changeFrequency: "weekly", priority: 0.8 },
   { path: "/featured-artists", changeFrequency: "weekly", priority: 0.8 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
@@ -158,10 +156,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // and already used elsewhere; they guarantee a pen-name-shaped
   // public surface (legal name stripped at the lib boundary — PII
   // never reaches the sitemap).
-  const [{ files, useLocal }, artists, shelves, listings] = await Promise.all([
+  const [{ files, useLocal }, artists, listings] = await Promise.all([
     loadCatalogFiles(),
     loadArtists(),
-    loadShelves(),
     listOpenCollectorTransferListings(),
   ]);
 
@@ -213,25 +210,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
   });
 
-  // Mirror the omni-search contract (PR-14): shelves with zero
-  // resolved items are excluded — an empty shelf is a dead-end.
-  const shelfEntries: MetadataRoute.Sitemap = shelves
-    .filter((s) => s.itemCount > 0)
-    .flatMap((s) => {
-      const lastModified = maxDate([
-        ...s.items.map((i) => catalogMtimes.get(i.file)),
-        curationDataMtime,
-      ]);
-      return buildEntries(
-        {
-          path: `/curation/${encodeURIComponent(s.id)}`,
-          changeFrequency: "monthly",
-          priority: 0.6,
-        },
-        lastModified,
-      );
-    });
-
   const listingEntries: MetadataRoute.Sitemap = listings.flatMap((r) => {
     const fromIso = new Date(r.createdAt);
     const lastModified = Number.isNaN(fromIso.getTime())
@@ -251,7 +229,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticEntries,
     ...releaseEntries,
     ...artistEntries,
-    ...shelfEntries,
     ...listingEntries,
   ];
 }

@@ -99,9 +99,6 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
               <Link href={withLocale(locale, "/releases")} className={linkClass}>
                 {m.footer.releases}
               </Link>
-              <Link href={withLocale(locale, "/curation")} className={linkClass}>
-                {m.nav.curation}
-              </Link>
               <Link href={withLocale(locale, "/featured-artists")} className={linkClass}>
                 {m.nav.artists}
               </Link>

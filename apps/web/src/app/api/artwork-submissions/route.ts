@@ -76,7 +76,7 @@ function parseTags(value: string | undefined): string[] {
 export async function POST(request: NextRequest) {
   try {
     const actor = await readActorFromRequest(request);
-    if (!actor || (actor.role !== "artist" && actor.role !== "operator")) {
+    if (!actor || actor.role !== "artist") {
       return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }
 
@@ -84,8 +84,7 @@ export async function POST(request: NextRequest) {
 
     const artistNameVisibility = requireEnum(fd, "artistNameVisibility", ["public", "private"] as const);
     const session = await auth();
-    const artistName =
-      session?.user?.name?.trim() || (actor.role === "operator" ? requireString(fd, "artistName") : "");
+    const artistName = session?.user?.name?.trim() ?? "";
     if (!artistName) throw new Error("invalid:artistName");
     const nickname = requireString(fd, "nickname");
     const artworkTitle = requireString(fd, "artworkTitle", 200);

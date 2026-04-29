@@ -1,6 +1,5 @@
 import { Hero } from "@/components/Hero";
 import { ChroniclePreview } from "@/components/home/ChroniclePreview";
-import { RailCuration } from "@/components/home/RailCuration";
 import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
@@ -79,14 +78,6 @@ export default async function HomePage({ params }: Props) {
           /artist/[slug] ships in a follow-up PR.
         */}
         <RailFeaturedArtists locale={locale} m={m} />
-
-        {/*
-          Rail D · Operator-curated shelves. Wired in PR-7 (spec §3.6) from
-          the static data/curation.ts catalog. The "Browse other shelves"
-          CTA temporarily targets /releases until the dedicated /curation
-          index page ships in a follow-up PR (spec §8.2).
-        */}
-        <RailCuration locale={locale} m={m} />
 
         <ChroniclePreview locale={locale} m={m} rows={chronicleRows} />
       </main>

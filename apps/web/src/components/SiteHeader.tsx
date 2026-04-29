@@ -66,15 +66,9 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             className="flex w-full flex-wrap justify-center gap-x-2 gap-y-1.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-x-3 md:max-w-[min(100%,calc(100vw-11rem))] md:flex-nowrap md:justify-end md:gap-5 md:overflow-x-auto md:py-1 lg:gap-8 lg:gap-10 [&::-webkit-scrollbar]:hidden"
             aria-label={m.a11y.primaryNav}
           >
-            {/*
-              Primary nav: Releases → Curation → Artists → Chronicle (issuance)
-              → Provenance → auction-mode provenance index.
-            */}
+            {/* Primary nav: Releases → Artists → Chronicle → Provenance. */}
             <Link href={withLocale(locale, "/releases")} className={navItemClass}>
               {m.nav.releases}
-            </Link>
-            <Link href={withLocale(locale, "/curation")} className={navItemClass}>
-              {m.nav.curation}
             </Link>
             <Link href={withLocale(locale, "/featured-artists")} className={navItemClass}>
               {m.nav.artists}
