@@ -27,10 +27,10 @@ export const ko: Messages = {
     releasesIndexTitle: "신작 공개",
     releasesIndexDescription:
       "OPUS 작가들이 최초로 공개하는 1차 에디션 아카이브입니다. 복제 불가 디지털 아트의 인증·소장·감상 경험을 위한 신작 목록을 확인하세요.",
-    provenanceIndexTitle: "소장계보(소장품)",
+    provenanceIndexTitle: "소장품",
     provenanceIndexDescription:
       "소장자가 다음 수탁자를 찾는 来歴 리스팅 모음입니다. 작가 본명·연락처는 공개되지 않으며 판매자 식별자는 마스킹되어 표시됩니다.",
-    provenanceAuctionIndexTitle: "소장계보(소장품) · 경매",
+    provenanceAuctionIndexTitle: "소장품 · 경매",
     provenanceAuctionIndexDescription:
       "다음 수탁자를 찾기 위해 등록된 항목 중, 경매 방식으로만 표시합니다. 본명·연락처는 공개되지 않습니다.",
     chronicleIndexTitle: "The Chronicle",
@@ -43,7 +43,7 @@ export const ko: Messages = {
   a11y: {
     primaryNav: "주요 메뉴",
     utilityNav: "보조 링크",
-    trustStripNav: "The Chronicle · 소장계보(소장품) · 마이페이지 바로가기",
+    trustStripNav: "The Chronicle · 소장품 · 마이페이지 바로가기",
     language: "언어",
     vaultNav: "마이페이지 메뉴",
     designPhilosophy: "디자인 철학",
@@ -56,7 +56,7 @@ export const ko: Messages = {
     vault: "마이페이지",
     legal: "법적 고지",
     chronicle: "The Chronicle",
-    provenance: "소장계보(소장품)",
+    provenance: "소장품",
     provenanceAuctions: "경매중",
     curation: "큐레이션",
     artists: "작가",
@@ -85,7 +85,7 @@ export const ko: Messages = {
     empty: "일치하는 결과가 없습니다",
     viewAllReleases: "신작 공개 전체 보기",
     viewAllChronicle: "The Chronicle 보기",
-    viewAllProvenance: "소장계보(소장품) 전체 보기",
+    viewAllProvenance: "소장품 전체 보기",
     hintCardPrompt: "작품·작가·에디션을 찾아보세요",
     hintCardAriaLabel: "검색 열기. 작품·작가·리스팅·셸프를 키워드로 찾을 수 있습니다",
     loading: "검색 인덱스를 불러오는 중…",
@@ -222,7 +222,7 @@ export const ko: Messages = {
     design:
       "디자인: Classic Luxury — near-black 차콜, 샴페인 브라스(그라데이션 금속), 웜 화이트, 절제된 장식. 투자·실물자산 상품이 아닙니다.",
     releases: "신작 공개",
-    provenance: "소장계보(소장품)",
+    provenance: "소장품",
     vault: "마이페이지",
     chronicleIssuanceLog: "The Chronicle",
     legal: "특정상거래법 표시",
@@ -538,7 +538,7 @@ export const ko: Messages = {
     line2:
       "",
     openReleases: "신작공개",
-    openProvenance: "소장계보(소장품)",
+    openProvenance: "소장품",
     searchHint: "검색",
   },
   design: {
@@ -563,20 +563,20 @@ export const ko: Messages = {
     comingSoon: "곧 공개",
     railReleases: {
       title: "신작공개 · 최신 1차 에디션",
-      body: "검수 승인된 작가 등록분 중, 작가 계정이 아직 소장 중인 1차 한정 에디션입니다. 다음 수탁자를 찾는 공개 안내는 소장계보에서 보실 수 있습니다.",
+      body: "검수 승인된 작가 등록분 중, 작가 계정이 아직 소장 중인 1차 한정 에디션입니다. 다음 수탁자를 찾는 공개 안내는 소장품에서 보실 수 있습니다.",
       viewAll: "전체 보기",
       empty:
-        "표시할 1차 신작이 없습니다. 작가 제출이 승인되고 작가가 소장 중이며, 소장계보에 열린 이전 등록에 묶이지 않은 항목이 여기에 나타납니다.",
+        "표시할 1차 신작이 없습니다. 작가 제출이 승인되고 작가가 소장 중이며, 소장품에 열린 이전 등록에 묶이지 않은 항목이 여기에 나타납니다.",
     },
     railProvenanceFixed: {
-      title: "소장계보(소장품 판매)",
+      title: "소장품 판매",
       body: "운영 검토를 통과한 활성 일반 판매 이전입니다.",
       viewAll: "전체 보기",
       empty: "지금은 진행 중인 일반 판매 이전이 없습니다.",
       registerCta: "수탁 이전 등록",
     },
     railProvenanceAuction: {
-      title: "소장계보(소장품 경매)",
+      title: "소장품 경매",
       body: "운영 검토를 통과한 활성 경매 이전입니다.",
       viewAll: "전체 보기",
       empty: "지금은 진행 중인 경매 이전이 없습니다.",
@@ -630,7 +630,7 @@ export const ko: Messages = {
       "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
     openVault: "마이페이지 열기",
-    openProvenance: "소장계보(소장품) 둘러보기",
+    openProvenance: "소장품 둘러보기",
   },
   artworks: {
     kicker: "Releases · 신작 공개",
@@ -824,10 +824,10 @@ export const ko: Messages = {
       "해당 작품을 찾을 수 없거나, 아직 승인되지 않았거나, 현재 계정이 소장자로 등록되어 있지 않습니다.",
     transferRegisterArtistPrimaryModeTitle: "작가 등록분 (스튜디오 보유)",
     transferRegisterArtistPrimaryModeBody:
-      "이 에디션은 최초 등록·검수 승인 뒤 작가 계정이 소장 중인 신작 공개 항목입니다. 다음 수탁자를 찾는 공개 안내는 다른 이용자에게 소장이 이전된 뒤 소장계보에서 진행합니다. 표시·에디션 설정은 「내 작품」에서 다룹니다.",
+      "이 에디션은 최초 등록·검수 승인 뒤 작가 계정이 소장 중인 신작 공개 항목입니다. 다음 수탁자를 찾는 공개 안내는 다른 이용자에게 소장이 이전된 뒤 소장품에서 진행합니다. 표시·에디션 설정은 「내 작품」에서 다룹니다.",
     transferRegisterArtistPrimaryEditionCta: "에디션 설정",
     transferRegisterApiOwnPrimaryInventory:
-      "작가 본인이 등록·소장 중인 1차 항목은 이 경로에서 공개 이전 등록을 만들 수 없습니다. 소장계보는 소장이 이전된 뒤 이용해 주세요.",
+      "작가 본인이 등록·소장 중인 1차 항목은 이 경로에서 공개 이전 등록을 만들 수 없습니다. 소장품은 소장이 이전된 뒤 이용해 주세요.",
     transferRegisterWorkLockedHint:
       "아래 작가 표기·작품 정보는 작가가 최초 등록한 내용이며 변경할 수 없습니다. 가격·판매 방식·비고만 수정할 수 있습니다.",
     artistLegalNameRedactedHint: "작가가 비공개로 둔 본명입니다.",
@@ -923,9 +923,9 @@ export const ko: Messages = {
     devPreviewLink: "로그인 없이 화면만 보기 (로컬 개발)",
     devPreviewBanner:
       "로컬 개발 미리보기입니다. 데모 로그인 쿠키 없이 등록 화면 레이아웃만 확인합니다. 실제 마이페이지 게이트와 동일한 폼이며, 제출은 헤더의 데모 회원 ID로 API에 전달됩니다.",
-    listingsTitle: "소장계보(소장품) · Provenance",
+    listingsTitle: "소장품 · Provenance",
     listingsSubtitle:
-      "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장계보를 잇는 경로로 설계되었습니다.",
+      "이전 소장자가 다음 수탁자를 찾기 위해 등록한 에디션입니다. OPUS는 소장의 이력을 The Chronicle에 기록하며, 작가 표시는 필명만 공개합니다. 수익을 목적으로 한 거래 시장이 아니라, 디지털 아트의 소장품 이력을 잇는 경로로 설계되었습니다.",
     listingsEmpty: "등록된 항목이 없습니다.",
     listingsEmptyAuctionFilter: "경매 방식으로 등록된 진행 항목이 없습니다.",
     listingsAuctionFilterHint: "경매 방식으로 등록된 항목만 표시합니다.",

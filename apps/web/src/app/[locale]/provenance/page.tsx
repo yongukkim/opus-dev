@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
  * PR-19 — fills the metadata gap PR-16 left for `/provenance`. Static
  * copy; the detail page (`/provenance/[id]`, PR-18) already owns per-
  * listing titles/descriptions. Vocabulary follows the provenance /
- * 来歴 / 소장 계보 contract in `.cursorrules` §2.
+ * 来歴 / 소장품 contract in `.cursorrules` §2.
  */
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { locale: raw } = await params;

@@ -8,7 +8,7 @@ import {
 
 /**
  * ISO 27001 A.9.2.1 (§4) — public “primary release” rail is not mixed with open custody-transfer listings.
- * KO: 신작(1차) 레일은 작가가 아직 소유한 승인 제출만 포함하고, 소장계보에 열린 리스팅에 묶인 제출·타 소유는 제외합니다.
+ * KO: 신작(1차) 레일은 작가가 아직 소유한 승인 제출만 포함하고, 소장품에 열린 리스팅에 묶인 제출·타 소유는 제외합니다.
  * JA: 新作レールは作家がまだ保有する承認済み提出のみとし、来歴側の公開リスティングに紐づく提出は除外します。
  * EN: Primary-release rail keeps artist-held approved submissions only; excludes rows tied to open provenance listings or non–studio-hold.
  */

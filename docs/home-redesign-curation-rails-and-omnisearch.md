@@ -16,7 +16,7 @@
 ## 1. 목표 / 비목표
 
 ### 목표
-- 홈 첫 화면에서 **1차(신작 공개)와 2차(소장 계보) 두 갈래**가 시각적으로 동등하게 드러나야 한다.
+- 홈 첫 화면에서 **1차(신작 공개)와 2차(소장품) 두 갈래**가 시각적으로 동등하게 드러나야 한다.
 - **큐레이션 레일** 4개로 발견성을 늘린다 — 단순 그리드 이상의 편집 의도 표현.
 - ⌘K **전역 검색**으로 작품·작가·에디션·리스팅에 즉시 도달 가능하게 한다.
 - 모든 변경은 KO/JA/EN 카피·라벨이 동시에 들어간 상태로 머지된다.
@@ -61,7 +61,7 @@ Hero (CTA × 2 → /releases · /provenance, 동등 비중)  ← 변경
 - **변경**:
   - CTA 두 개를 **시각적으로 동등한 비중**으로 분리.
     - Primary: `withLocale(locale, "/releases")` — 「新作公開 · Releases · 신작 공개」
-    - Secondary: `withLocale(locale, "/provenance")` — 「来歴 · Provenance · 소장 계보」
+    - Secondary: `withLocale(locale, "/provenance")` — 「来歴 · Provenance · 소장품」
     - 둘 다 동일한 metallic 표면을 쓰되 secondary는 outline 변형.
   - 작은 보조 텍스트: 「⌘K で探索 · ⌘K to search · ⌘K로 탐색」 — ⌘K가 무엇인지 첫 화면에서 학습시킴.
 - **카피**: 기존 `m.hero.exploreArchive`, `m.hero.viewPremieres`를 1차/2차 분리에 맞게 의미 재배치 (`m.hero.openReleases`, `m.hero.openProvenance` 신설; 구 키는 deprecate).
@@ -195,10 +195,10 @@ Hero (CTA × 2 → /releases · /provenance, 동등 비중)  ← 변경
 | 키 | KO | JA | EN |
 |---|---|---|---|
 | `hero.openReleases` | 신작 공개 | 新作公開 | Releases |
-| `hero.openProvenance` | 소장 계보 | 来歴 | Provenance |
+| `hero.openProvenance` | 소장품 | 来歴 | Provenance |
 | `home.searchHint` | 작품·작가·에디션을 찾아보세요 | 作品・作家・エディションを検索 | Search artworks, artists, editions |
 | `home.railA.title` | 新作 공개 · 최신 1차 에디션 | 新作公開・最新の一次エディション | Releases — latest primary editions |
-| `home.railB.title` | 소장 계보 · 진행 중인 수탁 이전 | 来歴・現在の所蔵者移転 | Provenance — open custody transfers |
+| `home.railB.title` | 소장품 · 진행 중인 수탁 이전 | 来歴・現在の所蔵者移転 | Provenance — open custody transfers |
 | `home.railC.title` | 작가 셸프 | 作家のシェルフ | Featured artists |
 | `home.railD.title` | 큐레이션 | キュレーション | Curation |
 | `home.chroniclePreview.title` | The Chronicle 최근 기록 | The Chronicle 最近の記録 | The Chronicle — recent entries |
