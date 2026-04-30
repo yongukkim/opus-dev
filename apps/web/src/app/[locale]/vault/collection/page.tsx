@@ -145,7 +145,7 @@ export default async function VaultCollectionPage({ params }: Props) {
                           href={withLocale(locale, "/vault/my-artworks")}
                           className="inline-flex w-full items-center justify-center rounded-md border border-opus-gold/30 bg-opus-gold/10 px-3 py-2 text-center text-xs font-semibold text-opus-gold-light transition hover:border-opus-gold/50 hover:bg-opus-gold/[0.14]"
                         >
-                          {m.nav.myArtworks}
+                          {m.vaultNav.myArtworks}
                         </Link>
                       ) : (
                         <Link

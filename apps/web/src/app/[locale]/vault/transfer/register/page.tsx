@@ -179,7 +179,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
             href={withLocale(locale, "/vault/my-artworks")}
             className="mt-4 inline-block text-opus-gold underline-offset-4 hover:underline"
           >
-            {m.nav.myArtworks} →
+            {m.vaultNav.myArtworks} →
           </Link>
           <Link
             href={withLocale(locale, "/vault")}
