@@ -65,6 +65,7 @@ export const AUX_LEDGER_FILES = {
   collectorTransferListings: path.join(STORAGE_ROOT, "collector-transfer-listings.jsonl"),
   mobileLeaseUses: path.join(STORAGE_ROOT, "mobile-lease-uses.jsonl"),
   artistPublicProfiles: path.join(STORAGE_ROOT, "artist-public-profiles.jsonl"),
+  artistPayoutProfiles: path.join(STORAGE_ROOT, "artist-payout-profiles.jsonl"),
 } as const;
 
 /** Bounded exponential backoff for mint worker (operator-triggered or future cron). */

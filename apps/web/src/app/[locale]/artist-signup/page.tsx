@@ -15,7 +15,7 @@ export default async function ArtistSignupPage({
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const s = m.artistSignup ?? m.signup;
-  const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/artist/kyc/consent"));
+  const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/artist/onboarding/profile"));
   const loginHref = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(returnTo)}`;
   const googleOAuthConfigured = Boolean(
     process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),

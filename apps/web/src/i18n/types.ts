@@ -620,6 +620,28 @@ export type Messages = {
     startNotReadyAlert: string;
     backToVault: string;
   };
+  artistOnboarding: {
+    title: string;
+    subtitle: string;
+    heading: string;
+    body: string;
+    displayNameLabel: string;
+    displayNamePlaceholder: string;
+    displayNameLockedHint: string;
+    displayNameSetupHint: string;
+    bankNameLabel: string;
+    bankNamePlaceholder: string;
+    accountHolderLabel: string;
+    accountHolderPlaceholder: string;
+    accountNumberLabel: string;
+    accountNumberPlaceholder: string;
+    accountNumberHint: string;
+    saveAndContinueCta: string;
+    savingCta: string;
+    saveFailedBanner: string;
+    penNameLockedError: string;
+    backToHome: string;
+  };
   payouts: {
     title: string;
     subtitle: string;
