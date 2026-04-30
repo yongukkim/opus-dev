@@ -556,10 +556,10 @@ export const ko: Messages = {
     comingSoon: "곧 공개",
     railReleases: {
       title: "신작공개 · 최신 1차 에디션",
-      body: "검증된 작가의 한정 에디션입니다.",
+      body: "검수 승인된 작가 등록분 중, 작가 계정이 아직 소장 중인 1차 한정 에디션입니다. 다음 수탁자를 찾는 공개 안내는 소장계보에서 보실 수 있습니다.",
       viewAll: "전체 보기",
       empty:
-        "검수 완료되어 공개된 작품이 아직 없습니다. 작가 제출이 승인되면 로그인 여부와 관계없이 여기에 표시됩니다.",
+        "표시할 1차 신작이 없습니다. 작가 제출이 승인되고 작가가 소장 중이며, 소장계보에 열린 이전 등록에 묶이지 않은 항목이 여기에 나타납니다.",
     },
     railProvenance: {
       title: "소장계보",
@@ -809,8 +809,12 @@ export const ko: Messages = {
       "마이페이지 컬렉션에서 해당 작품의 「수탁 이전 등록」을 누르거나, 주소에 `?submissionId=`(승인된 제출 ID)를 붙여 접근해 주세요.",
     transferRegisterInvalidSubmission:
       "해당 작품을 찾을 수 없거나, 아직 승인되지 않았거나, 현재 계정이 소장자로 등록되어 있지 않습니다.",
-    transferRegisterOwnRegistrationBlocked:
-      "본인이 작가로 등록·제출한 작품에 대해 소장자 이전(다음 수탁자) 등록을 열 수 없습니다. 제출·에디션은 「내 작품」에서 확인하세요. 이 화면은 인수·소장한 다른 작가 작품에만 쓰입니다.",
+    transferRegisterArtistPrimaryModeTitle: "작가 등록분 (스튜디오 보유)",
+    transferRegisterArtistPrimaryModeBody:
+      "이 에디션은 최초 등록·검수 승인 뒤 작가 계정이 소장 중인 신작 공개 항목입니다. 다음 수탁자를 찾는 공개 안내는 다른 이용자에게 소장이 이전된 뒤 소장계보에서 진행합니다. 표시·에디션 설정은 「내 작품」에서 다룹니다.",
+    transferRegisterArtistPrimaryEditionCta: "에디션 설정",
+    transferRegisterApiOwnPrimaryInventory:
+      "작가 본인이 등록·소장 중인 1차 항목은 이 경로에서 공개 이전 등록을 만들 수 없습니다. 소장계보는 소장이 이전된 뒤 이용해 주세요.",
     transferRegisterWorkLockedHint:
       "아래 작가 표기·작품 정보는 작가가 최초 등록한 내용이며 변경할 수 없습니다. 가격·판매 방식·비고만 수정할 수 있습니다.",
     artistLegalNameRedactedHint: "작가가 비공개로 둔 본명입니다.",

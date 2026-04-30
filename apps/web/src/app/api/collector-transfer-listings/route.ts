@@ -7,6 +7,7 @@ import {
 } from "@/lib/collectorTransferListings";
 import { readActorFromRequest } from "@/lib/authContext";
 import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
+import { getSubmissionById } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
 
@@ -172,6 +173,12 @@ export async function POST(request: NextRequest) {
       submissionIdRaw.length > 0
         ? await resolveTransferRegisterLockedWork(submissionIdRaw, actor.userId)
         : null;
+    if (locked) {
+      const src = await getSubmissionById(locked.submissionId);
+      if (src && src.artistId === actor.userId) {
+        return NextResponse.json({ ok: false, error: "own_primary_inventory" }, { status: 403 });
+      }
+    }
     if (submissionIdRaw && !locked) {
       return NextResponse.json({ ok: false, error: "forbidden_submission" }, { status: 403 });
     }

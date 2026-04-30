@@ -558,10 +558,10 @@ export const en: Messages = {
     comingSoon: "Coming soon",
     railReleases: {
       title: "Releases — latest primary editions",
-      body: "Limited editions from verified artists.",
+      body: "Approved artist registrations still held in the artist account as primary inventory. Next-custodian listings appear under Provenance.",
       viewAll: "View all",
       empty:
-        "No operator-approved releases are published yet. Approved artist uploads appear here for everyone, including signed-out visitors.",
+        "No primary releases to show yet. Items appear here when approved, still artist-held, and not tied to an open provenance listing.",
     },
     railProvenance: {
       title: "Provenance",
@@ -813,8 +813,12 @@ export const en: Messages = {
       "Use “Open custody transfer registration” on My Page → Collection for an approved work you hold, or open this URL with `?submissionId=` set to that submission’s id.",
     transferRegisterInvalidSubmission:
       "That work could not be loaded, is not approved yet, or is not held under your signed-in account.",
-    transferRegisterOwnRegistrationBlocked:
-      "You cannot open a next-custodian transfer listing for a work you registered as the artist. Manage submission and edition details in My Artworks. This page is for editions you acquired and hold from other artists.",
+    transferRegisterArtistPrimaryModeTitle: "Artist registration (studio hold)",
+    transferRegisterArtistPrimaryModeBody:
+      "This edition is still held under your artist account after approval. Public next-custodian listings belong on Provenance once custody has moved to another account. Use My Artworks for edition settings.",
+    transferRegisterArtistPrimaryEditionCta: "Edition settings",
+    transferRegisterApiOwnPrimaryInventory:
+      "You cannot publish a provenance listing from here for an edition you registered and still hold as primary inventory. Use Provenance after custody has transferred.",
     transferRegisterWorkLockedHint:
       "Artist attribution and work details come from the artist’s first registration and cannot be edited here. Only price, listing mode, and notes can be changed.",
     artistLegalNameRedactedHint: "The artist kept their legal name private on the original registration.",

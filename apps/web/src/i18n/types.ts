@@ -823,8 +823,11 @@ export type Messages = {
     transferRegisterMissingSubmission: string;
     transferRegisterMissingSubmissionHint: string;
     transferRegisterInvalidSubmission: string;
-    /** When the holder is the original registering artist; transfer form is for acquired editions. */
-    transferRegisterOwnRegistrationBlocked: string;
+    /** Registering artist studio-held view on transfer page (no public listing from here). */
+    transferRegisterArtistPrimaryModeTitle: string;
+    transferRegisterArtistPrimaryModeBody: string;
+    transferRegisterArtistPrimaryEditionCta: string;
+    transferRegisterApiOwnPrimaryInventory: string;
     /** Shown above read-only artist/work fields when bound to a submission. */
     transferRegisterWorkLockedHint: string;
     /** Placeholder when artist legal name was private on the original registration. */

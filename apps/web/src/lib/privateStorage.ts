@@ -89,6 +89,16 @@ export async function appendOwnershipEvent(state: OwnershipState): Promise<void>
   await appendJsonl(OWNERSHIP_FILE, state);
 }
 
+/** Latest ownership row per submission (append order), for batch filters without re-reading JSONL per id. */
+export async function getLatestOwnershipBySubmissionMap(): Promise<Map<string, OwnershipState>> {
+  const events = await readJsonl<OwnershipState>(OWNERSHIP_FILE);
+  const ownerBySubmission = new Map<string, OwnershipState>();
+  for (const ev of events) {
+    if (ev?.submissionId) ownerBySubmission.set(ev.submissionId, ev);
+  }
+  return ownerBySubmission;
+}
+
 async function readJsonl<T>(filePath: string): Promise<T[]> {
   try {
     const raw = await readFile(filePath, "utf8");

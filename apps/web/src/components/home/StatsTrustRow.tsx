@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Messages } from "@/i18n/types";
 import { listLocalArtworks } from "@/lib/artworksCatalog";
 import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
-import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
+import { listApprovedPrimaryReleasesForRail } from "@/lib/primaryReleasesForRail";
 
 const TAGS = ["WEEK", "MON", "YEAR"] as const;
 
@@ -13,7 +13,7 @@ const TAGS = ["WEEK", "MON", "YEAR"] as const;
  */
 export async function StatsTrustRow({ m }: { m: Messages }) {
   const s = m.stats;
-  const approved = await listApprovedArtistSubmissions(3);
+  const approved = await listApprovedPrimaryReleasesForRail(3);
   const local = await listLocalArtworks();
 
   type Pick = { label: string; tag: string; imageSrc: string };

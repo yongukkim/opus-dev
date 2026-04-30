@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
 import { getDictionary } from "@/i18n/catalog";
@@ -40,6 +41,13 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
   const submission = await getSubmissionById(id);
   if (!submission || (submission.reviewStatus ?? "pending_review") !== "approved") {
     notFound();
+  }
+
+  const session = await auth();
+  if (session?.user?.id && session.user.id === submission.artistId) {
+    redirect(
+      withLocale(locale, `/vault/transfer/register?submissionId=${encodeURIComponent(submission.id)}`),
+    );
   }
 
   const title = submission.artworkTitle;

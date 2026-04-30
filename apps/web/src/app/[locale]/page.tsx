@@ -58,8 +58,8 @@ export default async function HomePage({ params }: Props) {
         className="border-t border-opus-gold/10 bg-gradient-to-b from-opus-charcoal via-[#141414] to-opus-charcoal"
       >
         {/*
-          Rail A · Releases — operator-approved artist submissions only
-          (`RailReleases` → `listApprovedArtistSubmissions`).
+          Rail A · Releases — primary (artist-held) approved submissions only
+          (`RailReleases` → `listApprovedPrimaryReleasesForRail`).
         */}
         <RailReleases locale={locale} m={m} />
 

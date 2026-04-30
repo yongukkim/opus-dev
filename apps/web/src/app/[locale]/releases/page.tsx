@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { PAGE_SIZE } from "@/lib/artworksCatalog";
-import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
+import { listApprovedPrimaryReleasesForRail } from "@/lib/primaryReleasesForRail";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,6 +25,17 @@ function parsePage(value: string | undefined): number {
 
 function parseView(value: string | undefined): CatalogView {
   return value === "list" ? "list" : "grid";
+}
+
+function submissionDetailHref(
+  locale: ReturnType<typeof normalizeLocale>,
+  entry: { id: string; artistId: string },
+  sessionUserId: string,
+): string {
+  if (sessionUserId && entry.artistId === sessionUserId) {
+    return withLocale(locale, `/vault/transfer/register?submissionId=${encodeURIComponent(entry.id)}`);
+  }
+  return withLocale(locale, `/releases/submission/${entry.id}`);
 }
 
 function artworksHref(
@@ -60,7 +72,9 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const a = m.artworks;
-  const approved = await listApprovedArtistSubmissions(200);
+  const session = await auth();
+  const sessionUserId = session?.user?.id?.trim() ?? "";
+  const approved = await listApprovedPrimaryReleasesForRail();
   const totalItems = approved.length;
   const totalPages = totalItems === 0 ? 1 : Math.ceil(totalItems / PAGE_SIZE);
   const requestedPage = parsePage(pageParam);
@@ -118,7 +132,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
               const title = entry.artworkTitle;
               const artist = entry.nickname || entry.artistName;
               const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
-              const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
+              const detailHref = submissionDetailHref(locale, entry, sessionUserId);
               const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
               return (
                 <li key={entry.id}>
@@ -168,7 +182,7 @@ export default async function ArtworksPage({ params, searchParams }: Props) {
               const title = entry.artworkTitle;
               const artist = entry.nickname || entry.artistName;
               const edition = `${a.editionLabel} 1/${entry.editionTotal}`;
-              const detailHref = withLocale(locale, `/releases/submission/${entry.id}`);
+              const detailHref = submissionDetailHref(locale, entry, sessionUserId);
               const imageSrc = `/api/artwork-submissions/${entry.id}/public-preview`;
               return (
                 <li key={entry.id}>

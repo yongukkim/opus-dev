@@ -5,10 +5,7 @@ import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { auth } from "@/auth";
 import { cookies, headers } from "next/headers";
 import { getVaultUiRoleFromCookies, type VaultUiRole } from "@/lib/vaultRole";
-import {
-  isHeldApprovedOwnArtistRegistration,
-  resolveTransferRegisterLockedWork,
-} from "@/lib/transferRegisterLockedWork";
+import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 import { listSubmissionsHeldByUser } from "@/lib/privateStorage";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
@@ -62,31 +59,18 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
     vaultRole = getVaultUiRoleFromCookies(cookieStore);
   }
 
-  type Gate = "invalid_submission" | "own_submission" | null;
+  type Gate = "invalid_submission" | null;
   let submissionGate: Gate = null;
   let lockedWork: Awaited<ReturnType<typeof resolveTransferRegisterLockedWork>> = null;
 
-  if (hasSession && session?.user?.id) {
-    const uid = session.user.id;
-    const role = session.user.role;
-    if (role === "collector") {
-      if (submissionIdParam) {
-        lockedWork = await resolveTransferRegisterLockedWork(submissionIdParam, uid);
-        if (!lockedWork) {
-          submissionGate = (await isHeldApprovedOwnArtistRegistration(submissionIdParam, uid))
-            ? "own_submission"
-            : "invalid_submission";
-        }
-      }
-    } else if (role === "artist" && submissionIdParam) {
-      lockedWork = await resolveTransferRegisterLockedWork(submissionIdParam, uid);
-      if (!lockedWork) {
-        submissionGate = (await isHeldApprovedOwnArtistRegistration(submissionIdParam, uid))
-          ? "own_submission"
-          : "invalid_submission";
-      }
-    }
+  if (hasSession && session?.user?.id && submissionIdParam) {
+    lockedWork = await resolveTransferRegisterLockedWork(submissionIdParam, session.user.id);
+    if (!lockedWork) submissionGate = "invalid_submission";
   }
+
+  const artistPrimaryInventory = Boolean(
+    lockedWork && session?.user?.id && lockedWork.registeringArtistId === session.user.id,
+  );
 
   if (!devPreviewActive && !hasSession) {
     return (
@@ -172,23 +156,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
           )}
         </section>
       ) : null}
-      {submissionGate === "own_submission" ? (
-        <div className="mt-10 max-w-xl rounded-xl border border-amber-400/20 bg-amber-500/10 p-6 text-sm leading-relaxed text-amber-100/90">
-          <p>{t.transferRegisterOwnRegistrationBlocked}</p>
-          <Link
-            href={withLocale(locale, "/vault/my-artworks")}
-            className="mt-4 inline-block text-opus-gold underline-offset-4 hover:underline"
-          >
-            {m.vaultNav.myArtworks} →
-          </Link>
-          <Link
-            href={withLocale(locale, "/vault")}
-            className="mt-3 block text-sm text-opus-warm/55 hover:text-opus-warm/75"
-          >
-            ← {m.nav.vault}
-          </Link>
-        </div>
-      ) : submissionGate === "invalid_submission" ? (
+      {submissionGate === "invalid_submission" ? (
         <div className="mt-10 max-w-xl rounded-xl border border-red-400/25 bg-red-500/10 p-6 text-sm text-red-100/90">
           <p>{t.transferRegisterInvalidSubmission}</p>
           <Link
@@ -205,6 +173,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
           vaultRole={vaultRole}
           lockedWork={lockedWork}
           sessionUserId={session?.user?.id}
+          artistPrimaryInventory={artistPrimaryInventory}
         />
       ) : null}
       <div className="mt-10 flex flex-wrap gap-4 text-sm">

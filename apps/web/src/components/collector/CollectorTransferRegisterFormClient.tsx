@@ -39,6 +39,8 @@ export function CollectorTransferRegisterFormClient(props: {
   vaultRole: VaultUiRole;
   lockedWork?: TransferRegisterLockedWork | null;
   sessionUserId?: string;
+  /** Registering artist viewing their own studio-held edition — offer UI hidden. */
+  artistPrimaryInventory?: boolean;
 }) {
   return <Inner {...props} />;
 }

@@ -3,7 +3,8 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
-import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
+import { auth } from "@/auth";
+import { listApprovedPrimaryReleasesForRail } from "@/lib/primaryReleasesForRail";
 
 /**
  * Rail A · Releases — PR-5 of the home redesign series.
@@ -24,9 +25,10 @@ import { listApprovedArtistSubmissions } from "@/lib/privateStorage";
  * (PR-4); together they make spec §3.4's channel separation visible at a
  * glance — same component contract from `m.badge.*` (ISO 27001 A.5.1.1).
  *
- * Data source: `listApprovedArtistSubmissions()` (operator-approved artist
- * uploads). Thumbnails use `/api/artwork-submissions/[id]/public-preview`
- * (watermarked; no login required). No demo catalog fallback.
+ * Data source: `listApprovedPrimaryReleasesForRail()` — operator-approved
+ * submissions still held as the registering artist’s studio inventory, and
+ * not tied to an open custody-transfer listing (those appear under Provenance).
+ * Thumbnails use `/api/artwork-submissions/[id]/public-preview` (watermarked).
  */
 const HOME_RAIL_LIMIT = 8;
 
@@ -38,10 +40,15 @@ export async function RailReleases({
   m: Messages;
 }) {
   const r = m.home.railReleases;
-  const approved = await listApprovedArtistSubmissions(HOME_RAIL_LIMIT);
+  const session = await auth();
+  const sessionUserId = session?.user?.id?.trim() ?? "";
+  const approved = await listApprovedPrimaryReleasesForRail(HOME_RAIL_LIMIT);
   const items = approved.map((rec) => ({
     key: rec.id,
-    href: withLocale(locale, `/releases/submission/${rec.id}`),
+    href:
+      sessionUserId && rec.artistId === sessionUserId
+        ? withLocale(locale, `/vault/transfer/register?submissionId=${encodeURIComponent(rec.id)}`)
+        : withLocale(locale, `/releases/submission/${rec.id}`),
     title: rec.artworkTitle,
     artist: rec.nickname || rec.artistName,
     meta: `Edition 1 / ${rec.editionTotal}`,

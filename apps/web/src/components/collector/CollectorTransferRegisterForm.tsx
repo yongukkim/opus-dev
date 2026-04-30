@@ -129,12 +129,14 @@ export function CollectorTransferRegisterForm({
   vaultRole,
   lockedWork = null,
   sessionUserId,
+  artistPrimaryInventory = false,
 }: {
   locale: Locale;
   m: Messages;
   vaultRole: VaultUiRole;
   lockedWork?: TransferRegisterLockedWork | null;
   sessionUserId?: string;
+  artistPrimaryInventory?: boolean;
 }) {
   const t = m.collectorTransfer;
   const apiRole = vaultRole === "artist" ? "artist" : "collector";
@@ -171,6 +173,7 @@ export function CollectorTransferRegisterForm({
     if (!error) return t.errorBanner;
     if (error === "submission_required") return t.transferRegisterApiSubmissionRequired;
     if (error === "forbidden_submission") return t.transferRegisterApiForbiddenSubmission;
+    if (error === "own_primary_inventory") return t.transferRegisterApiOwnPrimaryInventory;
     if (error === "unauthorized") return "로그인이 만료되었습니다. 다시 로그인해 주세요.";
     if (error === "invalid_request") return "요청 형식 검증에 실패했습니다. 입력값을 다시 확인해 주세요.";
     if (error === "invalid:auctionEndAt") return t.transferRegisterApiInvalidAuctionEndAt;
@@ -186,6 +189,7 @@ export function CollectorTransferRegisterForm({
   }
 
   const errors = useMemo(() => {
+    if (artistPrimaryInventory) return {};
     const e: Partial<Record<keyof Draft, string>> = {};
     if (!artworkLocked) {
       if (!draft.artistPenName.trim()) e.artistPenName = "Required";
@@ -238,7 +242,7 @@ export function CollectorTransferRegisterForm({
     if (!draft.rightsConfirmed) e.rightsConfirmed = "Confirm required";
 
     return e;
-  }, [draft, artworkLocked, saleMode]);
+  }, [draft, artworkLocked, saleMode, artistPrimaryInventory]);
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -366,6 +370,7 @@ export function CollectorTransferRegisterForm({
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (artistPrimaryInventory) return;
 
     /**
      * ISO 27001 A.14.2.1 (§1)
@@ -543,6 +548,32 @@ export function CollectorTransferRegisterForm({
           </div>
         ) : null}
 
+        {artistPrimaryInventory && lockedWork ? (
+          <div className="mb-6 rounded-lg border border-opus-gold/22 bg-opus-gold/[0.07] px-4 py-5 text-sm leading-relaxed text-opus-warm/80">
+            <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-gold/90">
+              {t.transferRegisterArtistPrimaryModeTitle}
+            </p>
+            <p className="mt-3">{t.transferRegisterArtistPrimaryModeBody}</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href={withLocale(locale, "/vault/my-artworks")}
+                className="opus-surface-metallic inline-flex items-center justify-center rounded-md px-4 py-2 text-xs font-semibold text-opus-charcoal transition hover:opacity-95"
+              >
+                {m.vaultNav.myArtworks}
+              </Link>
+              <Link
+                href={withLocale(locale, `/vault/my-artworks/${encodeURIComponent(lockedWork.submissionId)}/edit`)}
+                className="inline-flex items-center justify-center rounded-md border border-opus-gold/40 px-4 py-2 text-xs font-semibold text-opus-gold-light transition hover:border-opus-gold-light/60 hover:bg-opus-gold/10"
+              >
+                {t.transferRegisterArtistPrimaryEditionCta}
+              </Link>
+            </div>
+            <p className="mt-4 text-xs text-opus-warm/50">{t.transferRegisterWorkLockedHint}</p>
+          </div>
+        ) : null}
+
+        {!artistPrimaryInventory ? (
+          <>
         {sectionRule(t.sectionSaleMode)}
         <div className="mt-4" role="radiogroup" aria-label={t.sectionSaleMode}>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -907,6 +938,8 @@ export function CollectorTransferRegisterForm({
             {pending ? "…" : t.submitCta}
           </button>
         </div>
+          </>
+        ) : null}
       </form>
 
       <aside className="rounded-xl border border-white/[0.08] bg-opus-slate/15 p-5 md:p-6">

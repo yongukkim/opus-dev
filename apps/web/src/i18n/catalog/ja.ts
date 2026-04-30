@@ -570,10 +570,10 @@ export const ja: Messages = {
     comingSoon: "近日公開",
     railReleases: {
       title: "新作公開・最新の一次エディション",
-      body: "認証された作家の限定エディションです。",
+      body: "審査承認済みで、作家アカウントがまだ所蔵する一次の限定エディションです。次の所蔵者を求める公開は来歴でご覧いただけます。",
       viewAll: "すべて見る",
       empty:
-        "運営審査を完了して公開された作品はまだありません。作家提出が承認されると、ログインの有無にかかわらずここに表示されます。",
+        "表示できる一次新作がありません。承認済み・作家保有・公開中の来歴リスティングに紐づいていない提出がここに表示されます。",
     },
     railProvenance: {
       title: "来歴",
@@ -829,8 +829,12 @@ export const ja: Messages = {
       "マイページのコレクションから該当作品の「所蔵者移転を登録」を押すか、URL に `?submissionId=`（承認済み提出ID）を付けて開いてください。",
     transferRegisterInvalidSubmission:
       "該当作品が見つからないか、未承認か、またはサインイン中のアカウントが所蔵者として登録されていません。",
-    transferRegisterOwnRegistrationBlocked:
-      "ご自身が作家として提出・登録した作品の所蔵者譲渡登録（次の所蔵者候補の提示）はここでは開けません。提出内容・エディションは「マイ作品」で扱います。本画面は、他の作家の作品を取得し所蔵した場合に用います。",
+    transferRegisterArtistPrimaryModeTitle: "作家登録分（スタジオ保有）",
+    transferRegisterArtistPrimaryModeBody:
+      "本エディションは審査承認後も作家アカウントが所蔵する一次公開の作品です。次の所蔵者を求める公開の案内は、他者へ所蔵が移った後に来歴（プロビナンス）で行います。表示・エディション設定は「マイ作品」で扱います。",
+    transferRegisterArtistPrimaryEditionCta: "エディション設定",
+    transferRegisterApiOwnPrimaryInventory:
+      "作家本人が登録・保有する一次作品は、この経路から公開の譲渡登録を作成できません。所蔵移転後に来歴をご利用ください。",
     transferRegisterWorkLockedHint:
       "以下の作家表記・作品情報は作家の初回登録内容であり変更できません。金額・販売方式・備考のみ変更できます。",
     artistLegalNameRedactedHint: "作家が非公開にした本名です。",
