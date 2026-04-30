@@ -1,6 +1,5 @@
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
-import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
 
 /** Canonical absolute URL for a locale-prefixed path (no trailing slash on origin). */
@@ -58,17 +57,19 @@ export function buildArtistJsonLd(input: {
   locale: Locale;
   slug: string;
   penName: string;
-  firstWorkFile?: string;
+  firstWorkSubmissionId?: string;
 }): Record<string, unknown> {
   const pageUrl = absolutePageUrl(input.locale, `/artist/${input.slug}`);
-  if (input.firstWorkFile) {
+  if (input.firstWorkSubmissionId) {
     return {
       "@context": CTX,
       "@type": "Person",
       "@id": pageUrl,
       url: pageUrl,
       name: input.penName,
-      image: absoluteFromPath(catalogImageSrcFromFile(input.firstWorkFile, "thumb")),
+      image: absoluteFromPath(
+        `/api/artwork-submissions/${encodeURIComponent(input.firstWorkSubmissionId)}/public-preview`,
+      ),
     };
   }
   return {

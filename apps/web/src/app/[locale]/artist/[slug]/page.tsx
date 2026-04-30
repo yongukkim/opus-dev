@@ -6,8 +6,6 @@ import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { resolveArtistBySlug } from "@/lib/artistsCatalog";
-import { encodeArtworkSlug, parseTitleArtist } from "@/lib/artworksCatalog";
-import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { loadShelvesForArtistKey } from "@/lib/curationCatalog";
 import { buildArtistJsonLd } from "@/lib/jsonLdPdp";
 
@@ -66,10 +64,10 @@ export default async function ArtistPage({ params }: Props) {
   const archiveHref = withLocale(locale, "/releases");
   const worksLabel = t.worksCount.replace("{n}", String(artist.works.length));
 
-  const items = artist.works.map((w) => {
-    const { title } = parseTitleArtist(w.file, w.globalIndex);
-    return { file: w.file, slug: encodeArtworkSlug(w.file), title };
-  });
+  const items = artist.works.map((w) => ({
+    submissionId: w.submissionId,
+    title: w.title,
+  }));
 
   // PR-15: surface operator-curated shelves that include this artist.
   // `loadShelvesForArtistKey` runs the same resolution as Rail D and
@@ -77,7 +75,7 @@ export default async function ArtistPage({ params }: Props) {
   // catalog won't render here either.
   const relatedShelves = await loadShelvesForArtistKey(artist.key);
   const ts = t.shelves;
-  const firstWorkFile = artist.works[0]?.file;
+  const firstWorkSubmissionId = artist.works[0]?.submissionId;
 
   return (
     <>
@@ -86,7 +84,7 @@ export default async function ArtistPage({ params }: Props) {
           locale,
           slug,
           penName: artist.penName,
-          firstWorkFile,
+          firstWorkSubmissionId,
         })}
       />
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -146,14 +144,17 @@ export default async function ArtistPage({ params }: Props) {
           ) : (
             <ul className={WORK_GRID}>
               {items.map((item) => (
-                <li key={item.file}>
+                <li key={item.submissionId}>
                   <Link
-                    href={withLocale(locale, `/releases/${item.slug}`)}
+                    href={withLocale(
+                      locale,
+                      `/releases/submission/${encodeURIComponent(item.submissionId)}`,
+                    )}
                     className="group block overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card transition hover:border-opus-gold/38"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal">
                       <Image
-                        src={catalogImageSrcFromFile(item.file, "thumb")}
+                        src={`/api/artwork-submissions/${encodeURIComponent(item.submissionId)}/public-preview`}
                         alt={`${item.title} — ${artist.penName}`}
                         fill
                         sizes="(min-width: 1024px) 220px, (min-width: 640px) 45vw, 90vw"

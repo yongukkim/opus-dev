@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
-import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { loadArtists } from "@/lib/artistsCatalog";
 
 /**
@@ -126,11 +125,11 @@ export default async function FeaturedArtistsIndexPage({ params }: Props) {
                     <div className="grid grid-cols-3 gap-1.5" aria-hidden>
                       {thumbs.map((w) => (
                         <div
-                          key={w.file}
+                          key={w.submissionId}
                           className="relative aspect-square overflow-hidden rounded border border-white/[0.06] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal"
                         >
                           <Image
-                            src={catalogImageSrcFromFile(w.file, "thumb")}
+                            src={`/api/artwork-submissions/${encodeURIComponent(w.submissionId)}/public-preview`}
                             alt=""
                             fill
                             sizes="(min-width: 1024px) 90px, (min-width: 640px) 22vw, 30vw"

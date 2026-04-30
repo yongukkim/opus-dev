@@ -1,5 +1,4 @@
 import {
-  loadCatalogFiles,
   parseTitleArtist,
 } from "@/lib/artworksCatalog";
 import { listAllSubmissions } from "@/lib/privateStorage";
@@ -35,12 +34,12 @@ import { prisma } from "@/lib/prisma";
  *     all locales). The decoded value is range-checked the same way.
  */
 
-const MIN_WORKS_FOR_GROUPED_ARTIST = 2;
+const MIN_WORKS_FOR_GROUPED_ARTIST = 1;
 
 export type ArtistWork = {
-  file: string;
-  /** Position of `file` inside `loadCatalogFiles().files` (for slug + idx). */
-  globalIndex: number;
+  submissionId: string;
+  title: string;
+  createdAt: string;
 };
 
 export type ArtistEntry = {
@@ -75,63 +74,66 @@ export function decodeArtistSlug(slug: string): string | null {
   }
 }
 
-function groupCatalog(catalogFiles: readonly string[]): Map<string, ArtistEntry> {
+function groupApprovedSubmissions(): Promise<Map<string, ArtistEntry>> {
+  return listAllSubmissions().then((submissions) => {
   const map = new Map<string, ArtistEntry>();
-  for (let i = 0; i < catalogFiles.length; i++) {
-    const file = catalogFiles[i]!;
-    const { artist } = parseTitleArtist(file, i);
-    // `Unknown` is the explicit fallback; never surface it as a pen name.
-    if (!artist || artist === "Unknown") continue;
-    const key = artist.toLowerCase();
-    const prev = map.get(key);
-    if (prev) {
-      prev.works.push({ file, globalIndex: i });
-    } else {
-      map.set(key, {
-        slug: encodeArtistSlug(artist),
-        key,
-        penName: artist,
-        works: [{ file, globalIndex: i }],
-        isOperatorPick: false,
-      });
+    for (const rec of submissions) {
+      if ((rec.reviewStatus ?? "pending_review") !== "approved") continue;
+      const penName = (rec.nickname || rec.artistName || "").trim();
+      if (!penName) continue;
+      const key = penName.toLowerCase();
+      const work: ArtistWork = {
+        submissionId: rec.id,
+        title: rec.artworkTitle || parseTitleArtist(rec.storedFile.filename, 0).title,
+        createdAt: rec.createdAt,
+      };
+      const prev = map.get(key);
+      if (prev) {
+        prev.works.push(work);
+      } else {
+        map.set(key, {
+          slug: encodeArtistSlug(penName),
+          key,
+          penName,
+          works: [work],
+          isOperatorPick: false,
+        });
+      }
     }
-  }
-  return map;
+    for (const row of map.values()) {
+      row.works.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    }
+    return map;
+  });
 }
 
 function mergeOperatorPicks(
   groupedMap: Map<string, ArtistEntry>,
   picks: readonly FeaturedArtistPick[],
-  catalogFiles: readonly string[],
-  latestReleaseByArtistKey: ReadonlyMap<string, number>,
 ): ArtistEntry[] {
-  const indexByFile = new Map<string, number>();
-  for (let i = 0; i < catalogFiles.length; i++) indexByFile.set(catalogFiles[i]!, i);
-
   const pickEntries: ArtistEntry[] = [];
   for (const pick of picks) {
     const key = pick.penName.toLowerCase();
-    const validWorks: ArtistWork[] = [];
-    for (const f of pick.artworkFiles) {
-      const idx = indexByFile.get(f);
-      if (idx === undefined) continue;
-      validWorks.push({ file: f, globalIndex: idx });
-    }
-    if (validWorks.length === 0) continue;
-    const existing = groupedMap.get(key);
-    if (existing) {
-      existing.isOperatorPick = true;
-      // Operator picks dictate display order; we'll move it to the front.
+    const prev = groupedMap.get(key);
+    if (prev && prev.works.length > 0) {
+      prev.isOperatorPick = true;
       groupedMap.delete(key);
-      pickEntries.push(existing);
+      pickEntries.push(prev);
     } else {
-      pickEntries.push({
-        slug: encodeArtistSlug(pick.penName),
-        key,
-        penName: pick.penName,
-        works: validWorks,
-        isOperatorPick: true,
-      });
+      const syntheticWorks = pick.artworkFiles.map((f, i) => ({
+        submissionId: `pick:${pick.penName}:${i}`,
+        title: parseTitleArtist(f, i).title,
+        createdAt: new Date(0).toISOString(),
+      }));
+      if (syntheticWorks.length > 0) {
+        pickEntries.push({
+          slug: encodeArtistSlug(pick.penName),
+          key,
+          penName: pick.penName,
+          works: syntheticWorks,
+          isOperatorPick: true,
+        });
+      }
     }
   }
 
@@ -139,6 +141,14 @@ function mergeOperatorPicks(
     (e) => e.works.length >= MIN_WORKS_FOR_GROUPED_ARTIST,
   );
   const all = [...pickEntries, ...grouped];
+  return all;
+}
+
+function sortArtists(
+  entries: ArtistEntry[],
+  latestReleaseByArtistKey: ReadonlyMap<string, number>,
+): ArtistEntry[] {
+  const all = [...entries];
   all.sort((a, b) => {
     const latestA = latestReleaseByArtistKey.get(a.key) ?? 0;
     const latestB = latestReleaseByArtistKey.get(b.key) ?? 0;
@@ -221,11 +231,13 @@ async function attachArtistProfileImages(entries: ArtistEntry[]): Promise<Artist
 
 /** All eligible artists (operator picks + ≥ 2 works grouping). */
 export async function loadArtists(): Promise<ArtistEntry[]> {
-  const { files } = await loadCatalogFiles();
-  const grouped = groupCatalog(files);
-  const latestReleaseByArtistKey = await loadLatestReleaseByArtistKey();
-  const merged = mergeOperatorPicks(grouped, FEATURED_ARTIST_PICKS, files, latestReleaseByArtistKey);
-  return attachArtistProfileImages(merged);
+  const [grouped, latestReleaseByArtistKey] = await Promise.all([
+    groupApprovedSubmissions(),
+    loadLatestReleaseByArtistKey(),
+  ]);
+  const merged = mergeOperatorPicks(grouped, FEATURED_ARTIST_PICKS);
+  const sorted = sortArtists(merged, latestReleaseByArtistKey);
+  return attachArtistProfileImages(sorted);
 }
 
 /** Single artist by URL slug, or null if the slug doesn't resolve. */
