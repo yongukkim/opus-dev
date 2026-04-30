@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
+import { catalogImageSrcFromFile } from "@/lib/catalogImageUrl";
 import { getPublicSiteUrl } from "@/lib/publicSiteUrl";
 
 /** Canonical absolute URL for a locale-prefixed path (no trailing slash on origin). */
