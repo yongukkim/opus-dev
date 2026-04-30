@@ -570,12 +570,18 @@ export const en: Messages = {
       empty:
         "No primary releases to show yet. Items appear here when approved, still artist-held, and not tied to an open provenance listing.",
     },
-    railProvenance: {
-      title: "Provenance",
-      body: "Open custody transfers cleared by operator review.",
-      viewAuctions: "Live auctions",
+    railProvenanceFixed: {
+      title: "Provenance - Fixed",
+      body: "Open fixed-price custody transfers cleared by operator review.",
       viewAll: "View all",
-      empty: "No open custody transfers right now.",
+      empty: "No open fixed-price custody transfers right now.",
+      registerCta: "Register a transfer",
+    },
+    railProvenanceAuction: {
+      title: "Provenance - Auction",
+      body: "Open auction-mode custody transfers cleared by operator review.",
+      viewAll: "View all",
+      empty: "No open auction custody transfers right now.",
       registerCta: "Register a transfer",
     },
     railFeaturedArtists: {

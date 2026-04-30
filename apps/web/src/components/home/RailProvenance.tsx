@@ -32,19 +32,20 @@ import {
 export async function RailProvenance({
   locale,
   m,
+  saleMode,
 }: {
   locale: Locale;
   m: Messages;
+  saleMode: "fixed" | "auction";
 }) {
-  const r = m.home.railProvenance;
+  const r =
+    saleMode === "auction"
+      ? m.home.railProvenanceAuction
+      : m.home.railProvenanceFixed;
   const all = await listOpenCollectorTransferListings();
-  const sorted = [...all].sort((a, b) => {
-    const pa = a.saleMode === "auction" ? 0 : 1;
-    const pb = b.saleMode === "auction" ? 0 : 1;
-    if (pa !== pb) return pa - pb;
-    return a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0;
-  });
-  // Cap to four; auction-mode listings surface first. Full lists: `/provenance`, `?saleMode=auction`.
+  const sorted = [...all]
+    .filter((x) => (x.saleMode ?? "fixed") === saleMode)
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0));
   const items = sorted.slice(0, 4);
   const previewSubmissionByListingId = await getPreviewSubmissionIdsForListings(items);
 
@@ -63,20 +64,16 @@ export async function RailProvenance({
               {r.body}
             </p>
           </div>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 sm:gap-3">
-            <Link
-              href={withLocale(locale, "/provenance?saleMode=auction")}
-              className="border border-opus-gold/42 px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-gold transition hover:border-opus-gold-light/55 hover:bg-opus-gold/10"
-            >
-              {r.viewAuctions}
-            </Link>
-            <Link
-              href={withLocale(locale, "/provenance")}
-              className="border border-white/[0.12] px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/70 transition hover:border-opus-gold/35 hover:text-opus-gold"
-            >
-              {r.viewAll}
-            </Link>
-          </div>
+          <Link
+            href={
+              saleMode === "auction"
+                ? withLocale(locale, "/provenance?saleMode=auction")
+                : withLocale(locale, "/provenance")
+            }
+            className="border border-white/[0.12] px-5 py-2.5 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/70 transition hover:border-opus-gold/35 hover:text-opus-gold"
+          >
+            {r.viewAll}
+          </Link>
         </div>
 
         {items.length === 0 ? (

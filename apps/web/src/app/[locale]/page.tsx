@@ -1,11 +1,9 @@
 import { Hero } from "@/components/Hero";
-import { ChroniclePreview } from "@/components/home/ChroniclePreview";
 import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
 import { OmniSearchHintCard } from "@/components/search/OmniSearchHintCard";
 import { getDictionary } from "@/i18n/catalog";
-import { listPublicChroniclePreviewRows } from "@/lib/chronicleLedger";
 import { normalizeLocale } from "@/i18n/paths";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -42,7 +40,6 @@ export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
-  const chronicleRows = await listPublicChroniclePreviewRows(5);
 
   return (
     <>
@@ -68,7 +65,8 @@ export default async function HomePage({ params }: Props) {
           via listOpenCollectorTransferListings(). Placeholder swap-in per
           spec §3.4 / §8 — no IA shift; same slot the placeholder occupied.
         */}
-        <RailProvenance locale={locale} m={m} />
+        <RailProvenance locale={locale} m={m} saleMode="fixed" />
+        <RailProvenance locale={locale} m={m} saleMode="auction" />
 
         {/*
           Rail C · Featured artists. Wired in PR-6 (spec §3.5):
@@ -79,7 +77,6 @@ export default async function HomePage({ params }: Props) {
         */}
         <RailFeaturedArtists locale={locale} m={m} />
 
-        <ChroniclePreview locale={locale} m={m} rows={chronicleRows} />
       </main>
     </>
   );

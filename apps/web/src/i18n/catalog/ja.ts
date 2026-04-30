@@ -582,12 +582,18 @@ export const ja: Messages = {
       empty:
         "表示できる一次新作がありません。承認済み・作家保有・公開中の来歴リスティングに紐づいていない提出がここに表示されます。",
     },
-    railProvenance: {
-      title: "来歴",
-      body: "運営審査を通過した稼働中の所蔵者移転です。",
-      viewAuctions: "オークション中",
+    railProvenanceFixed: {
+      title: "来歴 - 定額",
+      body: "運営審査を通過した稼働中の定額所蔵者移転です。",
       viewAll: "すべて見る",
-      empty: "現在進行中の所蔵者移転はありません。",
+      empty: "現在進行中の定額所蔵者移転はありません。",
+      registerCta: "所蔵者移転を登録",
+    },
+    railProvenanceAuction: {
+      title: "来歴 - オークション",
+      body: "運営審査を通過した稼働中のオークション所蔵者移転です。",
+      viewAll: "すべて見る",
+      empty: "現在進行中のオークション所蔵者移転はありません。",
       registerCta: "所蔵者移転を登録",
     },
     railFeaturedArtists: {

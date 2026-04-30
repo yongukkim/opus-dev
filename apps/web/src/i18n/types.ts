@@ -421,14 +421,22 @@ export type Messages = {
       /** Home rail when no approved artist submissions are published yet. */
       empty: string;
     };
-    railProvenance: {
+    railProvenanceFixed: {
       title: string;
       body: string;
-      /** Header link → /provenance?saleMode=auction (auction-mode listings only). */
-      viewAuctions: string;
       /** Header link → /provenance full list. Wired in PR-4. */
       viewAll: string;
       /** Empty state when there are no open custody transfers. */
+      empty: string;
+      /** Empty-state CTA → /vault/collection (pick a held work, then transfer). */
+      registerCta: string;
+    };
+    railProvenanceAuction: {
+      title: string;
+      body: string;
+      /** Header link → /provenance?saleMode=auction full list. */
+      viewAll: string;
+      /** Empty state when there are no open auction-mode custody transfers. */
       empty: string;
       /** Empty-state CTA → /vault/collection (pick a held work, then transfer). */
       registerCta: string;
