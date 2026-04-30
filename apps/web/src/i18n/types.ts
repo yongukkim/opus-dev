@@ -534,7 +534,13 @@ export type Messages = {
     detailBreadcrumbHome: string;
     detailBreadcrumbArchive: string;
     detailArtistLabel: string;
+    /** When locale shows KRW/USD, optional line with `{yen}` — JPY list basis. Empty in JA. */
+    detailPriceListBasis: string;
     detailPriceTaxNote: string;
+    /** Footer disclaimer: display FX vs JPY registration/settlement basis. */
+    detailPriceFxFooter: string;
+    /** Short name for the footer `<aside>` (a11y region label). */
+    detailPriceFxFooterRegionLabel: string;
     detailStockNote: string;
     detailSpecArtist: string;
     detailSpecEdition: string;
@@ -566,8 +572,10 @@ export type Messages = {
     summaryLabel: string;
     summaryArtwork: string;
     summaryFallback: string;
-    /** Placeholder `{price}` — e.g. formatted JPY. */
+    /** Placeholder `{price}` — locale-formatted list amount. */
     summaryPrice: string;
+    /** KO/EN: JPY registration basis `{yen}`. Empty in JA. */
+    summaryPriceBasis: string;
     payCta: string;
     note: string;
     appRequiredTitle: string;

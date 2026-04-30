@@ -1,5 +1,6 @@
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { formatListPriceForLocale } from "@/lib/localePriceFromJpy";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 
@@ -16,9 +17,9 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
 
   const artwork = (artworkParam ?? "").trim();
   const priceParsed = Number.parseInt((priceJpyParam ?? "").trim(), 10);
-  const priceDisplay =
+  const priceParts =
     Number.isFinite(priceParsed) && priceParsed > 0
-      ? `¥${priceParsed.toLocaleString("ja-JP")}`
+      ? formatListPriceForLocale(locale, priceParsed)
       : null;
 
   const safeReturn = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
@@ -43,10 +44,17 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
             <p className="mt-3 font-sans text-sm text-opus-warm/80">
               {artwork ? m.checkout.summaryArtwork.replace("{artwork}", artwork) : m.checkout.summaryFallback}
             </p>
-            {priceDisplay ? (
-              <p className="mt-2 font-mono text-sm text-opus-warm/65">
-                {m.checkout.summaryPrice.replace("{price}", priceDisplay)}
-              </p>
+            {priceParts?.primary ? (
+              <div className="mt-2 space-y-1">
+                <p className="font-mono text-sm text-opus-warm/65">
+                  {m.checkout.summaryPrice.replace("{price}", priceParts.primary)}
+                </p>
+                {priceParts.showListBasis && m.checkout.summaryPriceBasis.trim() ? (
+                  <p className="text-[0.65rem] leading-snug text-opus-warm/45">
+                    {m.checkout.summaryPriceBasis.replace("{yen}", priceParts.listYenFormatted)}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
           </div>
           <div className="px-6 py-6">

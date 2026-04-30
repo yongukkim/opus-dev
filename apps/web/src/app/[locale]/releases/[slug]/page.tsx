@@ -19,6 +19,7 @@ import {
   TOTAL_EDITIONS,
 } from "@/lib/artworksCatalog";
 import { buildReleaseJsonLd } from "@/lib/jsonLdPdp";
+import { formatListPriceForLocale } from "@/lib/localePriceFromJpy";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -79,7 +80,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const editionFraction = `${resolved.globalIndex + 1}/${TOTAL_EDITIONS}`;
   const editionLine = `${a.editionLabel} ${editionFraction}`;
   const priceJpy = demoListPriceJpy(resolved.globalIndex);
-  const priceFmt = `¥${priceJpy.toLocaleString("ja-JP")}`;
+  const priceParts = formatListPriceForLocale(locale, priceJpy);
 
   const submission = await getSubmissionByStoredFilename(resolved.file);
   const audienceTone = submission?.audienceCategory ?? demoAudienceTone(resolved.globalIndex);
@@ -173,9 +174,18 @@ export default async function ArtworkDetailPage({ params }: Props) {
             </p>
 
             <ul className="mt-5 space-y-2 border-b border-white/[0.06] pb-5">
-              <li className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="font-display text-2xl text-opus-gold-light md:text-[1.65rem]">{priceFmt}</span>
-                <span className="text-[0.7rem] text-opus-warm/45">{a.detailPriceTaxNote}</span>
+              <li className="space-y-1">
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <span className="font-display text-2xl text-opus-gold-light md:text-[1.65rem]">
+                    {priceParts.primary}
+                  </span>
+                  <span className="text-[0.7rem] text-opus-warm/45">{a.detailPriceTaxNote}</span>
+                </div>
+                {priceParts.showListBasis && a.detailPriceListBasis.trim() ? (
+                  <p className="text-[0.65rem] leading-snug text-opus-warm/42">
+                    {a.detailPriceListBasis.replace("{yen}", priceParts.listYenFormatted)}
+                  </p>
+                ) : null}
               </li>
               <li className="font-mono text-[0.7rem] text-opus-warm/50">{a.detailStockNote}</li>
               <li className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-opus-warm/45">{editionLine}</li>
@@ -310,7 +320,14 @@ export default async function ArtworkDetailPage({ params }: Props) {
           </div>
         </section>
 
-        <div className="mt-12 border-t border-white/[0.06] pt-8">
+        <aside
+          className="mt-12 border-t border-white/[0.06] pt-6"
+          aria-label={a.detailPriceFxFooterRegionLabel}
+        >
+          <p className="max-w-3xl text-[0.7rem] leading-relaxed text-opus-warm/38">{a.detailPriceFxFooter}</p>
+        </aside>
+
+        <div className="mt-8 border-t border-white/[0.06] pt-8">
           <Link
             href={archiveHref}
             className="text-sm text-opus-gold/80 underline-offset-4 hover:text-opus-gold-light hover:underline"

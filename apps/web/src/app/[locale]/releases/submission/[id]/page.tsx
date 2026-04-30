@@ -5,6 +5,7 @@ import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { formatListPriceForLocale } from "@/lib/localePriceFromJpy";
 import { getSubmissionById } from "@/lib/privateStorage";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
@@ -44,7 +45,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
   const title = submission.artworkTitle;
   const artist = submission.nickname || submission.artistName;
   const priceJpy = submission.priceJpy ?? 0;
-  const priceFmt = `¥${priceJpy.toLocaleString("ja-JP")}`;
+  const priceParts = formatListPriceForLocale(locale, priceJpy);
   const editionLine = `${a.editionLabel} 1/${submission.editionTotal}`;
 
   const homeHref = withLocale(locale, "/");
@@ -99,9 +100,18 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
               <span className="text-opus-warm/75">{artist}</span>
             </p>
             <ul className="mt-5 space-y-2 border-b border-white/[0.06] pb-5">
-              <li className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="font-display text-2xl text-opus-gold-light md:text-[1.65rem]">{priceFmt}</span>
-                <span className="text-[0.7rem] text-opus-warm/45">{a.detailPriceTaxNote}</span>
+              <li className="space-y-1">
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <span className="font-display text-2xl text-opus-gold-light md:text-[1.65rem]">
+                    {priceParts.primary}
+                  </span>
+                  <span className="text-[0.7rem] text-opus-warm/45">{a.detailPriceTaxNote}</span>
+                </div>
+                {priceParts.showListBasis && a.detailPriceListBasis.trim() ? (
+                  <p className="text-[0.65rem] leading-snug text-opus-warm/42">
+                    {a.detailPriceListBasis.replace("{yen}", priceParts.listYenFormatted)}
+                  </p>
+                ) : null}
               </li>
               <li className="font-mono text-[0.7rem] text-opus-warm/50">{a.detailStockNote}</li>
               <li className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-opus-warm/45">{editionLine}</li>
@@ -140,7 +150,14 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/[0.06] pt-8">
+        <aside
+          className="mt-12 border-t border-white/[0.06] pt-6"
+          aria-label={a.detailPriceFxFooterRegionLabel}
+        >
+          <p className="max-w-3xl text-[0.7rem] leading-relaxed text-opus-warm/38">{a.detailPriceFxFooter}</p>
+        </aside>
+
+        <div className="mt-8 border-t border-white/[0.06] pt-8">
           <Link
             href={archiveHref}
             className="text-sm text-opus-gold/80 underline-offset-4 hover:text-opus-gold-light hover:underline"
