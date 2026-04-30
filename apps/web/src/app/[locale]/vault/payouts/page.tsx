@@ -1,8 +1,8 @@
-import { VaultArtistGate } from "@/components/vault/VaultArtistGate";
 import { VaultArtistKycGate } from "@/components/vault/VaultArtistKycGate";
 import { VaultAuthGate } from "@/components/vault/VaultAuthGate";
 import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
+import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { getArtistKycFromCookies } from "@/lib/artistKyc";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
@@ -10,6 +10,42 @@ import { cookies } from "next/headers";
 import { PayoutBankAccountForm } from "@/components/account/PayoutBankAccountForm";
 
 type Props = { params: Promise<{ locale: string }> };
+
+function CollectorPayoutsShell({ m }: { m: Messages }) {
+  return (
+    <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
+      <div className="mx-auto max-w-3xl">
+        <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
+          {m.vault.overviewKicker}
+        </p>
+        <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{m.payouts.collectorPageTitle}</h1>
+        <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">
+          {m.payouts.collectorPageSubtitle}
+        </p>
+        <div className="mt-10">
+          <PayoutBankAccountForm m={m} variant="payoutsCollector" />
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function ArtistPayoutsShell({ m }: { m: Messages }) {
+  return (
+    <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
+      <div className="mx-auto max-w-3xl">
+        <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
+          {m.vault.overviewKicker}
+        </p>
+        <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{m.payouts.title}</h1>
+        <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">{m.payouts.subtitle}</p>
+        <div className="mt-10">
+          <PayoutBankAccountForm m={m} variant="payoutsArtist" />
+        </div>
+      </div>
+    </main>
+  );
+}
 
 export default async function VaultPayoutsPage({ params }: Props) {
   const { locale: raw } = await params;
@@ -24,35 +60,19 @@ export default async function VaultPayoutsPage({ params }: Props) {
   const cookieStore = await cookies();
   const cookieRole = getVaultUiRoleFromCookies(cookieStore);
 
-  if (session.user.role !== "artist") {
-    return (
-      <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
-        <div className="mx-auto max-w-3xl">
-          <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
-            {m.vault.overviewKicker}
-          </p>
-          <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{m.payouts.collectorPageTitle}</h1>
-          <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">
-            {m.payouts.collectorPageSubtitle}
-          </p>
-          <div className="mt-10">
-            <PayoutBankAccountForm m={m} variant="payoutsCollector" />
-          </div>
-        </div>
-      </main>
-    );
+  const isDbArtist = session.user.role === "artist";
+  const isArtistUi = cookieRole === "artist";
+
+  if (!isDbArtist) {
+    return <CollectorPayoutsShell m={m} />;
   }
 
-  if (cookieRole !== "artist") {
-    return (
-      <VaultArtistGate
-        variant="payouts"
-        gateReason="needArtistUiMode"
-        locale={locale}
-        vault={m.vault}
-        currentRole={cookieRole}
-      />
-    );
+  /**
+   * Artist account in collector UI mode still needs the same receiving account
+   * (e.g. custody transfer settlement). Do not block with VaultArtistGate.
+   */
+  if (!isArtistUi) {
+    return <CollectorPayoutsShell m={m} />;
   }
 
   const kyc = getArtistKycFromCookies(cookieStore);
@@ -60,19 +80,5 @@ export default async function VaultPayoutsPage({ params }: Props) {
     return <VaultArtistKycGate locale={locale} m={m} returnTo={withLocale(locale, "/vault/payouts")} />;
   }
 
-  return (
-    <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
-      <div className="mx-auto max-w-3xl">
-        <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">
-          {m.vault.overviewKicker}
-        </p>
-        <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{m.payouts.title}</h1>
-        <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">{m.payouts.subtitle}</p>
-
-        <div className="mt-10">
-          <PayoutBankAccountForm m={m} variant="payoutsArtist" />
-        </div>
-      </div>
-    </main>
-  );
+  return <ArtistPayoutsShell m={m} />;
 }
