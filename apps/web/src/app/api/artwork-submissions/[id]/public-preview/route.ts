@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
-import { renderCatalogPublicPreviewWatermarked } from "@/lib/catalogImageServe";
+import { renderSubmissionPublicPreviewWatermarked } from "@/lib/catalogImageServe";
 import { resolveStorageRelativeFile } from "@/lib/ledgerStores";
 import { getSubmissionById } from "@/lib/privateStorage";
 
@@ -31,7 +31,7 @@ export async function GET(
   }
 
   try {
-    const body = await renderCatalogPublicPreviewWatermarked(absPath);
+    const body = await renderSubmissionPublicPreviewWatermarked(absPath, submission.storedFile.mime);
     return new NextResponse(new Uint8Array(body), {
       status: 200,
       headers: {

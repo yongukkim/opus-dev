@@ -70,6 +70,55 @@ export async function renderCatalogThumb(absPath: string): Promise<Buffer> {
     .toBuffer();
 }
 
+const VIDEO_PREVIEW_EXT = new Set([".mp4", ".webm"]);
+
+/**
+ * ISO 27001 A.14.2.1 (§1) — treat non-raster masters predictably for public derivatives.
+ * KO: 동영상 원본은 공개 파생 WebP로 직접 변환하지 않고, 동일 정책의 워터마크 플레이스홀더만 제공합니다.
+ * JA: 動画原本は公開派生WebPへ直接変換せず、同一方針の透かしプレースホルダのみ提供します。
+ * EN: Video masters do not transcode to public WebP; only a watermarked placeholder under the same policy.
+ */
+export function isVideoSubmissionMaster(absPath: string, mime?: string): boolean {
+  const ext = path.extname(absPath).toLowerCase();
+  if (VIDEO_PREVIEW_EXT.has(ext)) return true;
+  const m = (mime ?? "").trim().toLowerCase();
+  return m.startsWith("video/");
+}
+
+/** Watermarked WebP for approved submission public preview (raster or video placeholder). */
+export async function renderSubmissionPublicPreviewWatermarked(absPath: string, mime?: string): Promise<Buffer> {
+  if (isVideoSubmissionMaster(absPath, mime)) {
+    const w = PUBLIC_PREVIEW_MAX_PX;
+    const h = Math.round((w * 5) / 4);
+    const base = await sharp({
+      create: {
+        width: w,
+        height: h,
+        channels: 3,
+        background: { r: 22, g: 22, b: 24 },
+      },
+    })
+      .png()
+      .toBuffer();
+    const caption = Buffer.from(
+      `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <text x="${Math.round(w / 2)}" y="${h - 36}" font-family="Georgia, 'Times New Roman', serif" font-size="13" font-weight="600"
+    text-anchor="middle" fill="rgba(246,244,240,0.45)">Motion</text>
+</svg>`,
+      "utf8",
+    );
+    return sharp(base)
+      .composite([
+        { input: watermarkSvg(w, h, "public"), blend: "over" },
+        { input: caption, blend: "over" },
+      ])
+      .webp({ quality: PUBLIC_PREVIEW_WEBP_QUALITY, effort: 4 })
+      .toBuffer();
+  }
+  return renderCatalogPublicPreviewWatermarked(absPath);
+}
+
 /** Logged-out PDP / crawlers: low-res + stronger watermark (what may leak to image search). */
 export async function renderCatalogPublicPreviewWatermarked(absPath: string): Promise<Buffer> {
   const resized = await sharp(absPath)

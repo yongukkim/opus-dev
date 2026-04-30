@@ -61,6 +61,9 @@ apps/web/storage/
 # Coverage
 coverage
 
+# One-off local venv (e.g. xlsx generation scripts)
+.venv-xlsx-gen/
+
 # Terraform (state may contain secrets; keep local/backend out of VCS)
 **/.terraform/
 *.tfstate
