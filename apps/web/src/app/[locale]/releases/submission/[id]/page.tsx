@@ -45,9 +45,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
 
   const session = await auth();
   if (session?.user?.id && session.user.id === submission.artistId) {
-    redirect(
-      withLocale(locale, `/vault/transfer/register?submissionId=${encodeURIComponent(submission.id)}`),
-    );
+    redirect(withLocale(locale, "/vault/my-artworks"));
   }
 
   const title = submission.artworkTitle;

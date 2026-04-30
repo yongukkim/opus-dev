@@ -33,7 +33,7 @@ function submissionDetailHref(
   sessionUserId: string,
 ): string {
   if (sessionUserId && entry.artistId === sessionUserId) {
-    return withLocale(locale, `/vault/transfer/register?submissionId=${encodeURIComponent(entry.id)}`);
+    return withLocale(locale, "/vault/my-artworks");
   }
   return withLocale(locale, `/releases/submission/${entry.id}`);
 }

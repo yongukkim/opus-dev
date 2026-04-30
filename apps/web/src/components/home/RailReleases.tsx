@@ -47,7 +47,7 @@ export async function RailReleases({
     key: rec.id,
     href:
       sessionUserId && rec.artistId === sessionUserId
-        ? withLocale(locale, `/vault/transfer/register?submissionId=${encodeURIComponent(rec.id)}`)
+        ? withLocale(locale, "/vault/my-artworks")
         : withLocale(locale, `/releases/submission/${rec.id}`),
     title: rec.artworkTitle,
     artist: rec.nickname || rec.artistName,
