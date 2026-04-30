@@ -198,7 +198,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const artistEntries: MetadataRoute.Sitemap = artists.flatMap((a) => {
     const lastModified = maxDate(
-      a.works.map((w) => catalogMtimes.get(w.file)),
+      a.works.map((w) => {
+        const d = new Date(w.createdAt);
+        return Number.isNaN(d.getTime()) ? null : d;
+      }),
     );
     return buildEntries(
       {
