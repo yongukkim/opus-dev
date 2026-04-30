@@ -25,7 +25,6 @@ type Draft = {
   actorUserId: string;
   artistName: string;
   artistNameVisibility: ArtistNameVisibility;
-  nickname: string;
   artworkTitle: string;
   genre: Genre;
   audienceCategory: AudienceCategory;
@@ -83,10 +82,12 @@ export function ArtworkSubmissionForm({
   locale,
   m,
   artistLegalName,
+  artistPenName,
 }: {
   locale: Locale;
   m: Messages;
   artistLegalName: string;
+  artistPenName: string;
 }) {
   const s = m.submitArtwork;
 
@@ -94,7 +95,6 @@ export function ArtworkSubmissionForm({
     actorUserId: "artist-demo-001",
     artistName: artistLegalName.trim(),
     artistNameVisibility: "private",
-    nickname: "",
     artworkTitle: "",
     genre: "",
     audienceCategory: "none",
@@ -124,7 +124,6 @@ export function ArtworkSubmissionForm({
     const trim = (v: string) => v.trim();
 
     if (!trim(draft.artistName)) e["artistName"] = "Required";
-    if (!trim(draft.nickname)) e["nickname"] = "Required";
     if (!trim(draft.artworkTitle)) e["artworkTitle"] = "Required";
     if (!draft.genre) e["genre"] = "Required";
     if (!draft.audienceCategory) e["audienceCategory"] = "Required";
@@ -238,7 +237,6 @@ export function ArtworkSubmissionForm({
     setTouched({
       artistName: true,
       artistNameVisibility: true,
-      nickname: true,
       artworkTitle: true,
       genre: true,
       audienceCategory: true,
@@ -265,7 +263,6 @@ export function ArtworkSubmissionForm({
         const fd = new FormData();
         fd.set("artistName", draft.artistName);
         fd.set("artistNameVisibility", draft.artistNameVisibility);
-        fd.set("nickname", draft.nickname);
         fd.set("artworkTitle", draft.artworkTitle);
         fd.set("genre", draft.genre);
         fd.set("audienceCategory", draft.audienceCategory);
@@ -294,7 +291,7 @@ export function ArtworkSubmissionForm({
 
         setBanner(s.apiSaveOk);
         const uid = json.artistId?.trim() || draft.actorUserId.trim();
-        const displayName = draft.nickname.trim() || draft.artistName.trim();
+        const displayName = artistPenName.trim() || draft.artistName.trim();
         const q = new URLSearchParams();
         if (uid) q.set("artist", uid);
         if (displayName) q.set("name", displayName);
@@ -337,7 +334,7 @@ export function ArtworkSubmissionForm({
     const artistNameDisplay = draft.artistNameVisibility === "public" ? safe(draft.artistName) : "Private";
     return {
       artistName: artistNameDisplay,
-      nickname: safe(draft.nickname),
+      nickname: safe(artistPenName),
       artworkTitle: safe(draft.artworkTitle),
       genre,
       audienceDisplay,
@@ -349,7 +346,7 @@ export function ArtworkSubmissionForm({
       editionMode,
       tags,
     };
-  }, [draft, s]);
+  }, [artistPenName, draft, s]);
 
   const editionPreview = useMemo(() => {
     const total = Number.parseInt(draft.editionTotal || "0", 10);
@@ -437,12 +434,11 @@ export function ArtworkSubmissionForm({
           <div>
             <p className={labelClass()}>{s.nicknameLabel}</p>
             <input
-              name="nickname"
-              value={draft.nickname}
-              onChange={onText}
-              onBlur={() => markTouched("nickname")}
-              className={inputClass(invalid("nickname"))}
+              value={artistPenName}
+              readOnly
+              className={`${inputClass(false)} bg-black/35 text-opus-warm/70`}
             />
+            <p className={hintClass()}>{s.nicknameAutoHint}</p>
           </div>
         </div>
 

@@ -643,6 +643,9 @@ export type Messages = {
     body: string;
     displayNameLabel: string;
     displayNamePlaceholder: string;
+    displayNameLockedHint: string;
+    displayNameSetupHint: string;
+    penNameLockedBanner: string;
     bioLabel: string;
     bioPlaceholder: string;
     ssoImageTitle: string;
@@ -723,6 +726,10 @@ export type Messages = {
     artistNameVisibilityPrivate: string;
     /** Pen name on artwork form (KO: 필명, JA: 筆名). */
     nicknameLabel: string;
+    nicknameAutoHint: string;
+    penNameRequiredTitle: string;
+    penNameRequiredBody: string;
+    penNameRequiredCta: string;
     artworkTitleLabel: string;
     genreLabel: string;
     genrePlaceholder: string;

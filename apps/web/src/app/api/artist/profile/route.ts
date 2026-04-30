@@ -70,10 +70,28 @@ export async function POST(request: NextRequest) {
   const useSsoImage = normalizeUseSsoImage(payload["useSsoImage"]);
 
   try {
-    await prisma.user.update({
+    const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      data: { name: displayName || null },
+      select: { name: true },
     });
+    const existingPenName = currentUser?.name?.trim() ?? "";
+
+    let finalDisplayName = existingPenName;
+    if (existingPenName) {
+      if (displayName && displayName !== existingPenName) {
+        return NextResponse.json({ ok: false, error: "pen_name_locked" }, { status: 409 });
+      }
+    } else {
+      if (!displayName) {
+        return NextResponse.json({ ok: false, error: "display_name_required" }, { status: 400 });
+      }
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { name: displayName },
+      });
+      finalDisplayName = displayName;
+    }
+
     const profile = await saveArtistPublicProfile({
       artistId: session.user.id,
       bio,
@@ -82,7 +100,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       profile: {
-        displayName,
+        displayName: finalDisplayName,
         bio: profile.bio,
         useSsoImage: profile.useSsoImage,
         ssoImageUrl: session.user.image ?? "",

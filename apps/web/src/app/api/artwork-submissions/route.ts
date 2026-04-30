@@ -86,7 +86,8 @@ export async function POST(request: NextRequest) {
     const session = await auth();
     const artistName = session?.user?.name?.trim() ?? "";
     if (!artistName) throw new Error("invalid:artistName");
-    const nickname = requireString(fd, "nickname");
+    const nickname = session?.user?.name?.trim() ?? "";
+    if (!nickname) throw new Error("invalid:nickname");
     const artworkTitle = requireString(fd, "artworkTitle", 200);
     const genre = requireString(fd, "genre", 40);
     const audienceCategory = requireEnum(fd, "audienceCategory", ["male", "female", "none"] as const);

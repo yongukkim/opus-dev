@@ -68,6 +68,7 @@ export default async function VaultArtistProfilePage({ params }: Props) {
           <ArtistProfileForm
             m={m}
             initialDisplayName={session.user.name ?? ""}
+            displayNameLocked={Boolean(session.user.name?.trim())}
             initialBio={profile?.bio ?? ""}
             initialUseSsoImage={profile?.useSsoImage ?? false}
             initialSsoImageUrl={session.user.image ?? ""}
