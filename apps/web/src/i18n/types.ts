@@ -655,7 +655,13 @@ export type Messages = {
     accountNumberPlaceholder: string;
     accountNumberHint: string;
     saveCta: string;
+    savingCta: string;
     savedBanner: string;
+    saveFailedBanner: string;
+    loadFailedBanner: string;
+    collectorPageTitle: string;
+    collectorPageSubtitle: string;
+    collectorCardBody: string;
     note: string;
   };
   artistProfile: {
@@ -665,9 +671,7 @@ export type Messages = {
     body: string;
     displayNameLabel: string;
     displayNamePlaceholder: string;
-    displayNameLockedHint: string;
-    displayNameSetupHint: string;
-    penNameLockedBanner: string;
+    displayNameHint: string;
     bioLabel: string;
     bioPlaceholder: string;
     ssoImageTitle: string;

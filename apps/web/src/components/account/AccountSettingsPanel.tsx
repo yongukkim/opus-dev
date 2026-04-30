@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
+import { PayoutBankAccountForm } from "@/components/account/PayoutBankAccountForm";
 
 function labelClass(): string {
   return "block font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45";
@@ -42,14 +43,6 @@ export function AccountSettingsPanel({
   const [withdrawing, setWithdrawing] = useState(false);
   const [withdrawError, setWithdrawError] = useState("");
 
-  const [bankName, setBankName] = useState("");
-  const [accountHolder, setAccountHolder] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [payoutBankSaving, setPayoutBankSaving] = useState(false);
-  const [payoutBankError, setPayoutBankError] = useState("");
-  const [payoutBankSuccess, setPayoutBankSuccess] = useState(false);
-  const [payoutBankLoadError, setPayoutBankLoadError] = useState("");
-
   const [cardholderName, setCardholderName] = useState("");
   const [cardBrand, setCardBrand] = useState("visa");
   const [cardLast4, setCardLast4] = useState("");
@@ -63,27 +56,10 @@ export function AccountSettingsPanel({
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      setPayoutBankLoadError("");
       setPaymentLoadError("");
       try {
-        const [bankRes, payRes] = await Promise.all([
-          fetch("/api/account/payout-bank", { method: "GET" }),
-          fetch("/api/account/payment-method", { method: "GET" }),
-        ]);
+        const payRes = await fetch("/api/account/payment-method", { method: "GET" });
         if (cancelled) return;
-        if (bankRes.ok) {
-          const j = (await bankRes.json()) as {
-            ok?: boolean;
-            bank?: { bankName?: string; accountHolder?: string; accountNumber?: string };
-          };
-          if (j.bank) {
-            setBankName(j.bank.bankName ?? "");
-            setAccountHolder(j.bank.accountHolder ?? "");
-            setAccountNumber(j.bank.accountNumber ?? "");
-          }
-        } else {
-          setPayoutBankLoadError(s.payoutBankLoadError);
-        }
         if (payRes.ok) {
           const j = (await payRes.json()) as {
             ok?: boolean;
@@ -107,7 +83,6 @@ export function AccountSettingsPanel({
         }
       } catch {
         if (!cancelled) {
-          setPayoutBankLoadError(s.payoutBankLoadError);
           setPaymentLoadError(s.paymentMethodLoadError);
         }
       }
@@ -115,7 +90,7 @@ export function AccountSettingsPanel({
     return () => {
       cancelled = true;
     };
-  }, [locale, s.payoutBankLoadError, s.paymentMethodLoadError]);
+  }, [locale, s.paymentMethodLoadError]);
 
   return (
     <div className="space-y-6">
@@ -232,99 +207,7 @@ export function AccountSettingsPanel({
         </form>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card">
-        <div className="border-b border-white/[0.06] px-6 py-6">
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/45">
-            {s.payoutBankHeading}
-          </p>
-          <p className="mt-4 text-sm leading-relaxed text-opus-warm/60">{s.payoutBankBody}</p>
-        </div>
-        <form
-          className="space-y-4 px-6 py-6"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (payoutBankSaving) return;
-            setPayoutBankError("");
-            setPayoutBankSuccess(false);
-            setPayoutBankSaving(true);
-            try {
-              const res = await fetch("/api/account/payout-bank", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  bankName: bankName.trim(),
-                  accountHolder: accountHolder.trim(),
-                  accountNumber: accountNumber.replace(/\D/g, ""),
-                }),
-              });
-              if (!res.ok) {
-                setPayoutBankError(s.payoutBankError);
-                return;
-              }
-              const j = (await res.json()) as {
-                bank?: { bankName?: string; accountHolder?: string; accountNumber?: string };
-              };
-              if (j.bank) {
-                setBankName(j.bank.bankName ?? "");
-                setAccountHolder(j.bank.accountHolder ?? "");
-                setAccountNumber(j.bank.accountNumber ?? "");
-              }
-              setPayoutBankSuccess(true);
-              window.setTimeout(() => setPayoutBankSuccess(false), 2800);
-            } catch {
-              setPayoutBankError(s.payoutBankError);
-            } finally {
-              setPayoutBankSaving(false);
-            }
-          }}
-        >
-          {payoutBankLoadError ? (
-            <p className="text-xs text-amber-200/80">{payoutBankLoadError}</p>
-          ) : null}
-          {payoutBankSuccess ? (
-            <p className="text-xs text-emerald-200/85">{s.payoutBankSaved}</p>
-          ) : null}
-          <label className="block">
-            <span className={labelClass()}>{s.bankNameLabel}</span>
-            <input
-              value={bankName}
-              onChange={(e) => setBankName(e.target.value)}
-              className={inputClass()}
-              placeholder={s.bankNamePlaceholder}
-              autoComplete="organization"
-            />
-          </label>
-          <label className="block">
-            <span className={labelClass()}>{s.accountHolderLabel}</span>
-            <input
-              value={accountHolder}
-              onChange={(e) => setAccountHolder(e.target.value)}
-              className={inputClass()}
-              placeholder={s.accountHolderPlaceholder}
-              autoComplete="name"
-            />
-          </label>
-          <label className="block">
-            <span className={labelClass()}>{s.accountNumberLabel}</span>
-            <input
-              value={accountNumber}
-              onChange={(e) => setAccountNumber(e.target.value)}
-              className={inputClass()}
-              placeholder={s.accountNumberPlaceholder}
-              autoComplete="off"
-              inputMode="numeric"
-            />
-          </label>
-          {payoutBankError ? <p className="text-xs text-red-200/85">{payoutBankError}</p> : null}
-          <button
-            type="submit"
-            disabled={payoutBankSaving}
-            className="opus-surface-metallic inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold tracking-[0.12em] text-black transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {payoutBankSaving ? s.payoutBankSavingCta : s.payoutBankSaveCta}
-          </button>
-        </form>
-      </section>
+      <PayoutBankAccountForm m={m} variant="accountSettings" />
 
       <section className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card">
         <div className="border-b border-white/[0.06] px-6 py-6">

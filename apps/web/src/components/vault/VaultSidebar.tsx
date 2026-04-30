@@ -11,12 +11,7 @@ import { VaultRoleDemoSwitch } from "./VaultRoleDemoSwitch";
 /**
  * Account sidebar (pattern: Web_Template 2135_mini_finance dashboard nav).
  */
-const ARTIST_ONLY_PATHS = [
-  "/vault/submit",
-  "/vault/my-artworks",
-  "/vault/payouts",
-  "/vault/artist-profile",
-] as const;
+const ARTIST_ONLY_PATHS = ["/vault/submit", "/vault/my-artworks", "/vault/artist-profile"] as const;
 const OPERATOR_ONLY_PATHS = ["/vault/authority"] as const;
 
 export function VaultSidebar({

@@ -6,9 +6,9 @@ export const runtime = "nodejs";
 
 /**
  * ISO 27001 A.9.2.1 (§4), A.14.2.1 (§1), A.18.1.4 (§7)
- * KO: 로그인한 본인만 정산 계좌 메타를 읽고 갱신하며, 길이·형식을 검증해 과다 수집과 오입력을 줄입니다.
- * JA: ログイン本人のみが精算口座メタを読み書きし、長さ・形式を検証して過剰収集と誤入力を抑えます。
- * EN: Only the signed-in user may read/update payout bank metadata; validate lengths and formats.
+ * KO: 작가·소장자 등 로그인 본인만 정산 계좌 메타를 읽고 갱신하며, 길이·형식을 검증해 과다 수집과 오입력을 줄입니다.
+ * JA: 作家・所蔵者などログイン本人のみが精算口座メタを読み書きし、長さ・形式を検証して過剰収集と誤入力を抑えます。
+ * EN: Only the signed-in user (artist or collector) may read/update payout bank metadata; validate lengths and formats.
  */
 export async function GET() {
   const session = await auth();

@@ -6,7 +6,6 @@ import type { Messages } from "@/i18n/types";
 type Props = {
   m: Messages;
   initialDisplayName: string;
-  displayNameLocked: boolean;
   initialBio: string;
   initialUseSsoImage: boolean;
   initialSsoImageUrl: string;
@@ -15,7 +14,6 @@ type Props = {
 export function ArtistProfileForm({
   m,
   initialDisplayName,
-  displayNameLocked,
   initialBio,
   initialUseSsoImage,
   initialSsoImageUrl,
@@ -49,12 +47,12 @@ export function ArtistProfileForm({
               body: JSON.stringify({ displayName, bio, useSsoImage }),
             });
             if (!res.ok) {
-              if (res.status === 409) {
-                setError(a.penNameLockedBanner);
-                return;
-              }
               setError(a.saveFailedBanner);
               return;
+            }
+            const j = (await res.json()) as { profile?: { displayName?: string } };
+            if (typeof j.profile?.displayName === "string") {
+              setDisplayName(j.profile.displayName);
             }
             setSaved(true);
             window.setTimeout(() => setSaved(false), 2000);
@@ -83,13 +81,11 @@ export function ArtistProfileForm({
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            disabled={displayNameLocked}
             className="mt-2 w-full rounded-xl border border-white/[0.12] bg-black/25 px-4 py-3 text-sm text-opus-warm/85 outline-none transition focus:border-opus-gold/45 focus:ring-2 focus:ring-opus-gold/20"
             placeholder={a.displayNamePlaceholder}
+            autoComplete="nickname"
           />
-          <p className="mt-2 text-xs text-opus-warm/50">
-            {displayNameLocked ? a.displayNameLockedHint : a.displayNameSetupHint}
-          </p>
+          <p className="mt-2 text-xs text-opus-warm/50">{a.displayNameHint}</p>
         </label>
 
         <label className="block">
