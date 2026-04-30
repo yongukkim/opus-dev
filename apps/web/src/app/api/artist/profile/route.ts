@@ -65,9 +65,9 @@ export async function POST(request: NextRequest) {
   }
 
   const payload = body as Record<string, unknown>;
-  const displayName = normalizeDisplayName(payload.displayName);
-  const bio = normalizeBio(payload.bio);
-  const useSsoImage = normalizeUseSsoImage(payload.useSsoImage);
+  const displayName = normalizeDisplayName(payload["displayName"]);
+  const bio = normalizeBio(payload["bio"]);
+  const useSsoImage = normalizeUseSsoImage(payload["useSsoImage"]);
 
   try {
     await prisma.user.update({
