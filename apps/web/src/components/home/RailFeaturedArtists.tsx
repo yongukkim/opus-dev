@@ -76,9 +76,21 @@ export async function RailFeaturedArtists({
                     className="group flex h-full flex-col gap-4 overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-opus-slate/30 to-[#161616] p-5 shadow-opus-card transition hover:border-opus-gold/38"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <p className="opus-text-metallic line-clamp-1 font-display text-base tracking-wide">
-                        {entry.penName}
-                      </p>
+                      <div className="flex min-w-0 items-center gap-2">
+                        {entry.profileImageUrl ? (
+                          <Image
+                            src={entry.profileImageUrl}
+                            alt=""
+                            width={28}
+                            height={28}
+                            className="h-7 w-7 rounded-full border border-white/[0.16] object-cover"
+                            unoptimized
+                          />
+                        ) : null}
+                        <p className="opus-text-metallic line-clamp-1 font-display text-base tracking-wide">
+                          {entry.penName}
+                        </p>
+                      </div>
                       <span className="shrink-0 rounded-full border border-white/[0.12] px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.2em] text-opus-warm/55">
                         {worksLabel}
                       </span>

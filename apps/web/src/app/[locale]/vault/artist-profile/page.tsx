@@ -7,6 +7,7 @@ import { getArtistKycFromCookies } from "@/lib/artistKyc";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { cookies } from "next/headers";
 import { ArtistProfileForm } from "@/components/artist/ArtistProfileForm";
+import { getArtistPublicProfile } from "@/lib/artistPublicProfile";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -50,6 +51,8 @@ export default async function VaultArtistProfilePage({ params }: Props) {
     );
   }
 
+  const profile = await getArtistPublicProfile(session.user.id);
+
   return (
     <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
       <div className="mx-auto max-w-3xl">
@@ -62,7 +65,13 @@ export default async function VaultArtistProfilePage({ params }: Props) {
         </p>
 
         <div className="mt-10">
-          <ArtistProfileForm m={m} />
+          <ArtistProfileForm
+            m={m}
+            initialDisplayName={session.user.name ?? ""}
+            initialBio={profile?.bio ?? ""}
+            initialUseSsoImage={profile?.useSsoImage ?? false}
+            initialSsoImageUrl={session.user.image ?? ""}
+          />
         </div>
       </div>
     </main>

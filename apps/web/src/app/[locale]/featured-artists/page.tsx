@@ -91,9 +91,21 @@ export default async function FeaturedArtistsIndexPage({ params }: Props) {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="opus-text-metallic line-clamp-1 font-display text-base tracking-wide">
-                          {entry.penName}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          {entry.profileImageUrl ? (
+                            <Image
+                              src={entry.profileImageUrl}
+                              alt=""
+                              width={28}
+                              height={28}
+                              className="h-7 w-7 rounded-full border border-white/[0.16] object-cover"
+                              unoptimized
+                            />
+                          ) : null}
+                          <p className="opus-text-metallic line-clamp-1 font-display text-base tracking-wide">
+                            {entry.penName}
+                          </p>
+                        </div>
                         {entry.isOperatorPick ? (
                           <span className="mt-2 inline-block rounded-full border border-opus-gold/45 bg-black/40 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-[0.2em] text-opus-gold-light">
                             {t.operatorPickBadge}

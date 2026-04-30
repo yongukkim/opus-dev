@@ -3,11 +3,28 @@
 import { useState } from "react";
 import type { Messages } from "@/i18n/types";
 
-export function ArtistProfileForm({ m }: { m: Messages }) {
+type Props = {
+  m: Messages;
+  initialDisplayName: string;
+  initialBio: string;
+  initialUseSsoImage: boolean;
+  initialSsoImageUrl: string;
+};
+
+export function ArtistProfileForm({
+  m,
+  initialDisplayName,
+  initialBio,
+  initialUseSsoImage,
+  initialSsoImageUrl,
+}: Props) {
   const a = m.artistProfile;
-  const [displayName, setDisplayName] = useState("");
-  const [bio, setBio] = useState("");
+  const [displayName, setDisplayName] = useState(initialDisplayName);
+  const [bio, setBio] = useState(initialBio);
+  const [useSsoImage, setUseSsoImage] = useState(initialUseSsoImage);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card">
@@ -18,15 +35,38 @@ export function ArtistProfileForm({ m }: { m: Messages }) {
 
       <form
         className="space-y-4 px-6 py-6"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          setSaved(true);
-          window.setTimeout(() => setSaved(false), 2000);
+          setSaved(false);
+          setError("");
+          setSaving(true);
+          try {
+            const res = await fetch("/api/artist/profile", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ displayName, bio, useSsoImage }),
+            });
+            if (!res.ok) {
+              setError(a.saveFailedBanner);
+              return;
+            }
+            setSaved(true);
+            window.setTimeout(() => setSaved(false), 2000);
+          } catch {
+            setError(a.saveFailedBanner);
+          } finally {
+            setSaving(false);
+          }
         }}
       >
         {saved ? (
           <div className="rounded-lg border border-white/[0.10] bg-black/25 px-4 py-3 text-sm text-opus-warm/70">
             {a.savedBanner}
+          </div>
+        ) : null}
+        {error ? (
+          <div className="rounded-lg border border-red-200/20 bg-red-900/20 px-4 py-3 text-sm text-red-100">
+            {error}
           </div>
         ) : null}
 
@@ -54,11 +94,32 @@ export function ArtistProfileForm({ m }: { m: Messages }) {
           />
         </label>
 
+        <div className="rounded-xl border border-white/[0.08] bg-black/20 p-4">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">
+            {a.ssoImageTitle}
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-opus-warm/60">{a.ssoImageBody}</p>
+          {initialSsoImageUrl ? (
+            <label className="mt-3 flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={useSsoImage}
+                onChange={(e) => setUseSsoImage(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-white/[0.3] bg-black/20 text-opus-gold focus:ring-opus-gold/40"
+              />
+              <span className="text-xs text-opus-warm/75">{a.ssoImageUseCheckbox}</span>
+            </label>
+          ) : (
+            <p className="mt-3 text-xs text-opus-warm/50">{a.ssoImageMissing}</p>
+          )}
+        </div>
+
         <button
           type="submit"
-          className="opus-surface-metallic inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
+          disabled={saving}
+          className="opus-surface-metallic inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold tracking-[0.12em] text-black transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {a.saveCta}
+          {saving ? a.savingCta : a.saveCta}
         </button>
 
         <p className="text-center text-xs text-opus-warm/45">{a.note}</p>

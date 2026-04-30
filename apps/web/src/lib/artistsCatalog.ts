@@ -7,6 +7,8 @@ import {
   FEATURED_ARTIST_PICKS,
   type FeaturedArtistPick,
 } from "@/data/featured-artists";
+import { getArtistSsoImageOptInMap } from "@/lib/artistPublicProfile";
+import { prisma } from "@/lib/prisma";
 
 /**
  * Server-only artist resolver — backs `/[locale]/artist/[slug]`, the
@@ -52,6 +54,8 @@ export type ArtistEntry = {
   works: ArtistWork[];
   /** True when the entry was added by `FEATURED_ARTIST_PICKS`. */
   isOperatorPick: boolean;
+  /** Optional opt-in profile image from the artist's SSO account. */
+  profileImageUrl?: string;
 };
 
 export function encodeArtistSlug(penName: string): string {
@@ -162,12 +166,66 @@ async function loadLatestReleaseByArtistKey(): Promise<Map<string, number>> {
   return out;
 }
 
+function sanitizeHttpUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return undefined;
+    return parsed.toString();
+  } catch {
+    return undefined;
+  }
+}
+
+async function loadLatestArtistIdByPenNameKey(): Promise<Map<string, string>> {
+  const out = new Map<string, { artistId: string; ts: number }>();
+  const submissions = await listAllSubmissions();
+  for (const rec of submissions) {
+    if ((rec.reviewStatus ?? "pending_review") !== "approved") continue;
+    const key = (rec.nickname || rec.artistName || "").trim().toLowerCase();
+    if (!key) continue;
+    const artistId = rec.artistId.trim();
+    if (!artistId) continue;
+    const ts = Date.parse(rec.createdAt);
+    if (!Number.isFinite(ts)) continue;
+    const prev = out.get(key);
+    if (!prev || ts > prev.ts) out.set(key, { artistId, ts });
+  }
+  return new Map([...out.entries()].map(([k, v]) => [k, v.artistId]));
+}
+
+async function attachArtistProfileImages(entries: ArtistEntry[]): Promise<ArtistEntry[]> {
+  if (entries.length === 0) return entries;
+  const [artistIdByKey, imageOptInByArtistId] = await Promise.all([
+    loadLatestArtistIdByPenNameKey(),
+    getArtistSsoImageOptInMap(),
+  ]);
+  const artistIds = [...new Set([...artistIdByKey.values()])];
+  if (artistIds.length === 0) return entries;
+  const users = await prisma.user.findMany({
+    where: { id: { in: artistIds } },
+    select: { id: true, image: true },
+  });
+  const imageByArtistId = new Map(
+    users.map((u) => [u.id, sanitizeHttpUrl(u.image)] as const),
+  );
+  return entries.map((entry) => {
+    const artistId = artistIdByKey.get(entry.key);
+    if (!artistId) return entry;
+    if (!imageOptInByArtistId.get(artistId)) return entry;
+    const image = imageByArtistId.get(artistId);
+    if (!image) return entry;
+    return { ...entry, profileImageUrl: image };
+  });
+}
+
 /** All eligible artists (operator picks + ≥ 2 works grouping). */
 export async function loadArtists(): Promise<ArtistEntry[]> {
   const { files } = await loadCatalogFiles();
   const grouped = groupCatalog(files);
   const latestReleaseByArtistKey = await loadLatestReleaseByArtistKey();
-  return mergeOperatorPicks(grouped, FEATURED_ARTIST_PICKS, files, latestReleaseByArtistKey);
+  const merged = mergeOperatorPicks(grouped, FEATURED_ARTIST_PICKS, files, latestReleaseByArtistKey);
+  return attachArtistProfileImages(merged);
 }
 
 /** Single artist by URL slug, or null if the slug doesn't resolve. */

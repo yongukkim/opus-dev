@@ -637,8 +637,14 @@ export type Messages = {
     displayNamePlaceholder: string;
     bioLabel: string;
     bioPlaceholder: string;
+    ssoImageTitle: string;
+    ssoImageBody: string;
+    ssoImageUseCheckbox: string;
+    ssoImageMissing: string;
     saveCta: string;
+    savingCta: string;
     savedBanner: string;
+    saveFailedBanner: string;
     note: string;
   };
   submitSuccess: {
