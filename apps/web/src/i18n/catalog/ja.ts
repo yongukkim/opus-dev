@@ -817,18 +817,20 @@ export const ja: Messages = {
     registerKicker: "コレクター譲渡",
     registerTitle: "保有エディションの譲渡希望を登録",
     registerSubtitle:
-      "所蔵者移転の登録は、サーバ上の保管庫にある所蔵作品サムネイルから選択して行います。別途画像アップロードは不要で、設定できるのは金額・販売方式・備考のみです。作家表記は公開されたペンネームのみが使われ、所蔵者は編集できません。",
+      "他の作家のエディションを取得・所蔵した上で、次の所蔵者を求める手続きに用います。自身が作家として提出・登録した作品は本一覧には出ず、マイ作品で扱います。設定は金額・販売方式・備考までで、表記のペンネームは所蔵者は変更できません。",
     registerSelectFromVaultTitle: "保管庫の作品を選択",
     registerSelectFromVaultBody:
-      "このアカウントで現在所蔵し、かつ承認済みの作品のみ表示されます。サムネイルを選ぶと譲渡登録フォームを開けます。",
+      "自身が提出者の承認作は除き、他の作家名義の承認作のうち現在所蔵しているものだけを表示します。サムネイルを選ぶと譲渡登録フォームを開きます。",
     registerSelectFromVaultEmpty:
-      "このアカウントで譲渡登録可能な承認済み作品はまだありません。マイページのコレクションをご確認ください。",
+      "他作家作品で譲渡登録可能な所蔵がありません。ご自身名義の承認作のみの場合はマイ作品、所蔵状況はコレクションをご確認ください。",
     registerSelectFromVaultCta: "この作品で登録",
     transferRegisterMissingSubmission: "所蔵者移転の登録には作品提出IDが必要です。",
     transferRegisterMissingSubmissionHint:
       "マイページのコレクションから該当作品の「所蔵者移転を登録」を押すか、URL に `?submissionId=`（承認済み提出ID）を付けて開いてください。",
     transferRegisterInvalidSubmission:
       "該当作品が見つからないか、未承認か、またはサインイン中のアカウントが所蔵者として登録されていません。",
+    transferRegisterOwnRegistrationBlocked:
+      "ご自身が作家として提出・登録した作品の所蔵者譲渡登録（次の所蔵者候補の提示）はここでは開けません。提出内容・エディションは「マイ作品」で扱います。本画面は、他の作家の作品を取得し所蔵した場合に用います。",
     transferRegisterWorkLockedHint:
       "以下の作家表記・作品情報は作家の初回登録内容であり変更できません。金額・販売方式・備考のみ変更できます。",
     artistLegalNameRedactedHint: "作家が非公開にした本名です。",

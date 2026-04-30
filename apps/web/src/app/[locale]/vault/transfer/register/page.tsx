@@ -5,7 +5,10 @@ import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { auth } from "@/auth";
 import { cookies, headers } from "next/headers";
 import { getVaultUiRoleFromCookies, type VaultUiRole } from "@/lib/vaultRole";
-import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
+import {
+  isHeldApprovedOwnArtistRegistration,
+  resolveTransferRegisterLockedWork,
+} from "@/lib/transferRegisterLockedWork";
 import { listSubmissionsHeldByUser } from "@/lib/privateStorage";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
@@ -44,10 +47,12 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
 
   const session = await auth();
   const hasSession = Boolean(session?.user);
-  const heldApproved =
+  const heldApprovedForTransfer =
     hasSession && session?.user?.id
       ? (await listSubmissionsHeldByUser(session.user.id)).filter(
-          ({ submission }) => (submission.reviewStatus ?? "pending_review") === "approved",
+          ({ submission }) =>
+            (submission.reviewStatus ?? "pending_review") === "approved" &&
+            submission.artistId !== session.user.id,
         )
       : [];
 
@@ -57,7 +62,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
     vaultRole = getVaultUiRoleFromCookies(cookieStore);
   }
 
-  type Gate = "invalid_submission" | null;
+  type Gate = "invalid_submission" | "own_submission" | null;
   let submissionGate: Gate = null;
   let lockedWork: Awaited<ReturnType<typeof resolveTransferRegisterLockedWork>> = null;
 
@@ -67,11 +72,19 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
     if (role === "collector") {
       if (submissionIdParam) {
         lockedWork = await resolveTransferRegisterLockedWork(submissionIdParam, uid);
-        if (!lockedWork) submissionGate = "invalid_submission";
+        if (!lockedWork) {
+          submissionGate = (await isHeldApprovedOwnArtistRegistration(submissionIdParam, uid))
+            ? "own_submission"
+            : "invalid_submission";
+        }
       }
     } else if (role === "artist" && submissionIdParam) {
       lockedWork = await resolveTransferRegisterLockedWork(submissionIdParam, uid);
-      if (!lockedWork) submissionGate = "invalid_submission";
+      if (!lockedWork) {
+        submissionGate = (await isHeldApprovedOwnArtistRegistration(submissionIdParam, uid))
+          ? "own_submission"
+          : "invalid_submission";
+      }
     }
   }
 
@@ -106,7 +119,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
         <section className="mt-10">
           <p className="font-display text-xl text-opus-warm">{t.registerSelectFromVaultTitle}</p>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-opus-warm/55">{t.registerSelectFromVaultBody}</p>
-          {heldApproved.length === 0 ? (
+          {heldApprovedForTransfer.length === 0 ? (
             <div className="mt-6 max-w-xl rounded-xl border border-opus-gold/20 bg-opus-gold/[0.06] p-6 text-sm leading-relaxed text-opus-warm/80">
               <p>{t.registerSelectFromVaultEmpty}</p>
               <div className="mt-5">
@@ -120,7 +133,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
             </div>
           ) : (
             <ul className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {heldApproved.map(({ submission: rec }) => {
+              {heldApprovedForTransfer.map(({ submission: rec }) => {
                 const pen = rec.nickname?.trim() || "—";
                 const href = withLocale(
                   locale,
@@ -159,7 +172,23 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
           )}
         </section>
       ) : null}
-      {submissionGate === "invalid_submission" ? (
+      {submissionGate === "own_submission" ? (
+        <div className="mt-10 max-w-xl rounded-xl border border-amber-400/20 bg-amber-500/10 p-6 text-sm leading-relaxed text-amber-100/90">
+          <p>{t.transferRegisterOwnRegistrationBlocked}</p>
+          <Link
+            href={withLocale(locale, "/vault/my-artworks")}
+            className="mt-4 inline-block text-opus-gold underline-offset-4 hover:underline"
+          >
+            {m.nav.myArtworks} →
+          </Link>
+          <Link
+            href={withLocale(locale, "/vault")}
+            className="mt-3 block text-sm text-opus-warm/55 hover:text-opus-warm/75"
+          >
+            ← {m.nav.vault}
+          </Link>
+        </div>
+      ) : submissionGate === "invalid_submission" ? (
         <div className="mt-10 max-w-xl rounded-xl border border-red-400/25 bg-red-500/10 p-6 text-sm text-red-100/90">
           <p>{t.transferRegisterInvalidSubmission}</p>
           <Link

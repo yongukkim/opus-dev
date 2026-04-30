@@ -67,10 +67,34 @@ export async function resolveTransferRegisterLockedWork(
   if ((rec.reviewStatus ?? "pending_review") !== "approved") return null;
   const owner = await getCurrentOwner(rec.id, rec.artistId);
   if (owner.ownerId !== sessionUserId) return null;
+  // Custody transfer registration is for acquired editions, not the artist’s own first registration.
+  if (rec.artistId === sessionUserId) return null;
 
   const core = artworkFieldsFromSubmission(rec);
   return {
     submissionId: rec.id,
     ...core,
   };
+}
+
+/**
+ * True when the work is approved, held by the user, and the user is the registering artist
+ * (this page and API block opening a transfer form for the artist’s own inventory).
+ * KO: 직접 제출한 작가 본인 소장이면 이전 등록 UI를 열지 않습니다.
+ * JA: 自ら提出した作家本人の所蔵なら、譲渡登録UIを開きません。
+ * EN: The artist’s own first-registration hold has no transfer form here; use My Artworks.
+ */
+export async function isHeldApprovedOwnArtistRegistration(
+  submissionId: string,
+  sessionUserId: string,
+): Promise<boolean> {
+  const id = submissionId.trim();
+  const sid = sessionUserId.trim();
+  if (!id || !sid) return false;
+  const rec = await getSubmissionById(id);
+  if (!rec) return false;
+  if ((rec.reviewStatus ?? "pending_review") !== "approved") return false;
+  if (rec.artistId !== sid) return false;
+  const owner = await getCurrentOwner(rec.id, rec.artistId);
+  return owner.ownerId === sid;
 }

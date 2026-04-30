@@ -801,18 +801,20 @@ export const en: Messages = {
     registerKicker: "Collection transfer",
     registerTitle: "List an edition for the next collector",
     registerSubtitle:
-      "Select from thumbnails of approved works held in your server-side vault; no separate image upload is needed. On transfer listing, you only set amount, listing mode, and notes. Artist attribution uses the published pen name only and cannot be edited by the custodian.",
+      "Use this when you acquired another artist’s edition and want to list the next custodian. Works you originally registered as the artist do not appear here—use My Artworks for those. You only set amount, listing mode, and notes; pen name is read-only.",
     registerSelectFromVaultTitle: "Select from your vault",
     registerSelectFromVaultBody:
-      "Only approved works currently held by this account are shown. Choose a thumbnail to open the transfer form for that work.",
+      "Excludes works you originally submitted. Only approved works by other artists that this account currently holds are listed. Choose a thumbnail to open the transfer form.",
     registerSelectFromVaultEmpty:
-      "No approved held works are currently available for transfer listing under this account.",
+      "No approved held works from other artists are available for a transfer listing. If you only hold your own registrations, open My Artworks; otherwise check your collection hold status.",
     registerSelectFromVaultCta: "List this edition",
     transferRegisterMissingSubmission: "A submission ID is required to open this transfer form.",
     transferRegisterMissingSubmissionHint:
       "Use “Open custody transfer registration” on My Page → Collection for an approved work you hold, or open this URL with `?submissionId=` set to that submission’s id.",
     transferRegisterInvalidSubmission:
       "That work could not be loaded, is not approved yet, or is not held under your signed-in account.",
+    transferRegisterOwnRegistrationBlocked:
+      "You cannot open a next-custodian transfer listing for a work you registered as the artist. Manage submission and edition details in My Artworks. This page is for editions you acquired and hold from other artists.",
     transferRegisterWorkLockedHint:
       "Artist attribution and work details come from the artist’s first registration and cannot be edited here. Only price, listing mode, and notes can be changed.",
     artistLegalNameRedactedHint: "The artist kept their legal name private on the original registration.",

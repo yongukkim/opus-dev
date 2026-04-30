@@ -797,18 +797,20 @@ export const ko: Messages = {
     registerKicker: "소장 이전",
     registerTitle: "소장 에디션 이전 등록",
     registerSubtitle:
-      "소장 중인 작품은 서버 보관함의 작품 썸네일에서 선택하며, 이전 등록 시에는 금액·판매 방식·비고만 설정합니다. 작가 표시는 공개된 필명만 사용되고 소장자는 수정할 수 없습니다.",
+      "타 작가 에디션을 인수·소장한 뒤 다음 수탁자를 찾을 때 사용합니다. 본인이 직접 등록한 작품(작가 최초 제출)은 이 목록에 나오지 않으며 「내 작품」에서 다룹니다. 이전 등록 시 금액·판매 방식·비고만 설정하며, 작가 표기는 공개된 필명만 쓰입니다.",
     registerSelectFromVaultTitle: "내 보관함 작품 선택",
     registerSelectFromVaultBody:
-      "별도 업로드 없이 현재 계정이 소장 중이고 승인된 작품만 표시됩니다. 썸네일을 눌러 이전 등록 폼을 여세요.",
+      "본인이 직접 제출·등록한 승인 작품은 제외하고, 아래는 다른 작가의 승인 작품 중 현재 이 계정이 소장 중인 항목만 보입니다. 썸네일을 눌러 이전 등록 폼을 여세요.",
     registerSelectFromVaultEmpty:
-      "현재 계정으로 이전 등록 가능한 승인 작품이 없습니다. 마이페이지 컬렉션에서 소장 상태를 확인해 주세요.",
+      "이전 등록에 사용할(타 작가 출품분) 승인 소장 작품이 없습니다. 본인 등록분만 있다면 「내 작품」을, 인수·소장 상태는 마이페이지 컬렉션을 확인해 주세요.",
     registerSelectFromVaultCta: "이 작품으로 이전 등록",
     transferRegisterMissingSubmission: "이전 등록을 열려면 소장 중인 작품의 제출 ID가 필요합니다.",
     transferRegisterMissingSubmissionHint:
       "마이페이지 컬렉션에서 해당 작품의 「수탁 이전 등록」을 누르거나, 주소에 `?submissionId=`(승인된 제출 ID)를 붙여 접근해 주세요.",
     transferRegisterInvalidSubmission:
       "해당 작품을 찾을 수 없거나, 아직 승인되지 않았거나, 현재 계정이 소장자로 등록되어 있지 않습니다.",
+    transferRegisterOwnRegistrationBlocked:
+      "본인이 작가로 등록·제출한 작품에 대해 소장자 이전(다음 수탁자) 등록을 열 수 없습니다. 제출·에디션은 「내 작품」에서 확인하세요. 이 화면은 인수·소장한 다른 작가 작품에만 쓰입니다.",
     transferRegisterWorkLockedHint:
       "아래 작가 표기·작품 정보는 작가가 최초 등록한 내용이며 변경할 수 없습니다. 가격·판매 방식·비고만 수정할 수 있습니다.",
     artistLegalNameRedactedHint: "작가가 비공개로 둔 본명입니다.",
