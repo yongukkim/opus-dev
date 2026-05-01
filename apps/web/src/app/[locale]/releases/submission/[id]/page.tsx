@@ -60,6 +60,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
   const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&returnTo=${encodeURIComponent(vaultReturn)}`;
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
   const buyHref = session?.user ? checkoutPath : loginPath;
+  const collectThumbSrc = `/api/artwork-submissions/${id}/public-preview`;
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -91,7 +92,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
           <div className="w-full max-w-[18.75rem] shrink-0">
             <div className="relative mx-auto aspect-[4/5] w-full overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal shadow-opus-card">
               <img
-                src={`/api/artwork-submissions/${id}/public-preview`}
+                src={collectThumbSrc}
                 alt={`${title} — ${artist}`}
                 className="h-full w-full object-cover opacity-95"
               />
@@ -147,6 +148,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
                 title={title}
                 artist={artist}
                 priceJpy={priceJpy}
+                thumbnailSrc={collectThumbSrc}
                 addToCartLabel={a.detailAddToCart}
                 addToWishlistLabel={a.detailAddToWishlist}
                 addedToCartMessage={a.detailAddedToCart}

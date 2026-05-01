@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   OPUS_DEMO_CART_KEY,
   OPUS_DEMO_WISHLIST_KEY,
+  isSafeDemoThumbnailSrc,
   readDemoList,
   upsertDemoLine,
   writeDemoList,
@@ -22,6 +23,7 @@ export function ArtworkPdpCollectActions({
   addedToWishlistMessage,
   demoNote,
   afterWishlistHref,
+  thumbnailSrc,
 }: {
   slug: string;
   title: string;
@@ -32,6 +34,8 @@ export function ArtworkPdpCollectActions({
   addedToCartMessage: string;
   addedToWishlistMessage: string;
   demoNote: string;
+  /** Same-origin preview URL for activity list cards (catalog or submission API path). */
+  thumbnailSrc: string;
   afterWishlistHref?: string;
 }) {
   const [banner, setBanner] = useState<string | null>(null);
@@ -50,12 +54,13 @@ export function ArtworkPdpCollectActions({
         artist: artist.slice(0, 160),
         priceJpy,
         addedAt: new Date().toISOString(),
+        ...(isSafeDemoThumbnailSrc(thumbnailSrc) ? { thumbnailSrc: thumbnailSrc.trim() } : {}),
       };
       const prev = readDemoList(key);
       writeDemoList(key, upsertDemoLine(prev, line));
       flash(message);
     },
-    [slug, title, artist, priceJpy, flash],
+    [slug, title, artist, priceJpy, thumbnailSrc, flash],
   );
 
   const btnClass =

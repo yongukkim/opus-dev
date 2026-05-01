@@ -72,6 +72,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const session = await auth();
   const hasSession = Boolean(session?.user);
   const coverVariant: CatalogImageVariant = hasSession ? "vault" : "preview";
+  const collectThumbSrc = catalogImageSrcFromFile(resolved.file, coverVariant);
 
   const { files } = await loadCatalogFiles();
   const m = getDictionary(locale);
@@ -154,7 +155,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
               className={`relative mx-auto aspect-[4/5] w-full ${COVER_MAX} overflow-hidden rounded-lg border border-white/[0.08] bg-gradient-to-b from-[#1f1f1f] to-opus-charcoal shadow-opus-card`}
             >
               <Image
-                src={catalogImageSrcFromFile(resolved.file, coverVariant)}
+                src={collectThumbSrc}
                 alt={`${title} — ${artist}`}
                 fill
                 priority
@@ -216,6 +217,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
                 title={title}
                 artist={artist}
                 priceJpy={priceJpy}
+                thumbnailSrc={collectThumbSrc}
                 addToCartLabel={a.detailAddToCart}
                 addToWishlistLabel={a.detailAddToWishlist}
                 addedToCartMessage={a.detailAddedToCart}
