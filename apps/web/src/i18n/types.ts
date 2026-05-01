@@ -744,10 +744,6 @@ export type Messages = {
     paymentMethodSaved: string;
     paymentMethodError: string;
     paymentMethodLoadError: string;
-    linksHeading: string;
-    toPayouts: string;
-    toArtistProfile: string;
-    note: string;
     withdrawHeading: string;
     withdrawBody: string;
     withdrawConfirmLabel: string;

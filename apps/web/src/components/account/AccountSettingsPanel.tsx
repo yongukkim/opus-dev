@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import type { Locale } from "@/i18n/config";
@@ -20,15 +19,7 @@ function selectClass(): string {
   return inputClass();
 }
 
-export function AccountSettingsPanel({
-  locale,
-  m,
-  isArtist,
-}: {
-  locale: Locale;
-  m: Messages;
-  isArtist: boolean;
-}) {
+export function AccountSettingsPanel({ locale, m }: { locale: Locale; m: Messages }) {
   const s = m.accountSettings;
   const [saved, setSaved] = useState(false);
 
@@ -350,31 +341,6 @@ export function AccountSettingsPanel({
           </button>
         </form>
       </section>
-
-      {isArtist ? (
-        <section className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card">
-          <div className="border-b border-white/[0.06] px-6 py-6">
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/45">
-              {s.linksHeading}
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-opus-warm/60">{s.note}</p>
-          </div>
-          <div className="flex flex-col gap-3 px-6 py-6 sm:flex-row">
-            <Link
-              href={withLocale(locale, "/vault/payouts")}
-              className="rounded-xl border border-white/[0.12] bg-white/[0.04] px-5 py-4 text-sm text-opus-warm/80 transition hover:border-opus-gold/35 hover:bg-white/[0.06]"
-            >
-              {s.toPayouts}
-            </Link>
-            <Link
-              href={withLocale(locale, "/vault/artist-profile")}
-              className="rounded-xl border border-white/[0.12] bg-white/[0.04] px-5 py-4 text-sm text-opus-warm/80 transition hover:border-opus-gold/35 hover:bg-white/[0.06]"
-            >
-              {s.toArtistProfile}
-            </Link>
-          </div>
-        </section>
-      ) : null}
 
       <section className="overflow-hidden rounded-xl border border-red-300/20 bg-red-950/10 shadow-opus-card">
         <div className="border-b border-red-200/20 px-6 py-6">
