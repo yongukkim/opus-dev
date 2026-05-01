@@ -35,10 +35,18 @@ jobs:
             git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
             git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"
             git -C "$APP" checkout -B "$BR" "origin/$BR"
+            grep -q "console.opus-store.com" "$APP/infra/caddy/Caddyfile" || { echo "[caddy-reload] Caddyfile missing console host"; exit 1; }
             APP_DIR="$APP" bash "$APP/scripts/ops-caddy-reload.sh"
-            # reload alone sometimes leaves ACME for a new site stuck; full restart re-reads bind-mount and nudges issuance.
             cd "$APP" && docker compose -f compose.web.yaml restart caddy
-            sleep 8
-            curl -sfI --max-time 30 "https://console.opus-store.com/login" | head -n 5
+            sleep 12
+            curl -sfI --max-time 30 "https://console.opus-store.com/login" | head -n 8
             echo "[caddy-reload] done branch=$BR"
             '
+
+      - name: Verify TLS from public internet
+        run: |
+          set -euo pipefail
+          sleep 20
+          echo | openssl s_client -connect console.opus-store.com:443 -servername console.opus-store.com 2>&1 | tee /tmp/ossl.txt
+          grep -E "subject=|issuer=" /tmp/ossl.txt
+          curl -sfI --max-time 30 "https://console.opus-store.com/login" | head -n 8

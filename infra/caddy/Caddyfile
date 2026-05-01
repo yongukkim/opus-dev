@@ -13,28 +13,29 @@
 	email admin@opus-store.com
 }
 
-app.opus-store.com {
+# ISO 27001 A.10.1.1 (§3) — Single site block lists both public names so one LE cert carries SANs for app + console.
+# KO: app·console을 한 블록에 두면 SNI/인증서 발급이 호스트별로 어긋나 TLS 핸드셰이크가 끊기는 경우를 줄인다.
+# JA: app·console を同一ブロックに置くとSNI/証明書発行のずれでTLSが切れる事象を減らす。
+# EN: Listing app and console in one site block reduces TLS handshake gaps when per-host cert issuance drifts.
+app.opus-store.com, console.opus-store.com {
 	encode zstd gzip
 
 	# Caddy는 기본적으로 X-Forwarded-{Proto,Host,For,Port} 헤더를 upstream에 자동 부여한다 →
 	# Auth.js의 trustHost(=true)와 함께 secure cookie / callback URL 도출이 정상 동작한다.
-	reverse_proxy opus-web:3000
+	@app host app.opus-store.com
+	handle @app {
+		reverse_proxy opus-web:3000
+	}
+
+	# Operator console — Next.js `opus-console` (Dockerfile.console). OTP + optional Google OAuth.
+	@con host console.opus-store.com
+	handle @con {
+		reverse_proxy opus-console:3010
+	}
 
 	# HSTS preload 후보지만 운영 도메인 확정 + www 합류 후 별도 PR로 켠다.
 	# header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-	log {
-		output stderr
-		format console
-	}
-}
-
-# Operator console — separate Next.js service (`opus-console`, see Dockerfile.console).
-# Sign-in: email OTP (Resend) primary; optional Google OAuth callback https://console.opus-store.com/api/auth/callback/google
-# Ops: after DNS for console.* goes live, run `bash scripts/ops-caddy-reload.sh` on EC2 (or rely on deploy script reload).
-console.opus-store.com {
-	encode zstd gzip
-	reverse_proxy opus-console:3010
 	log {
 		output stderr
 		format console
