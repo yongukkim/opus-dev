@@ -100,6 +100,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const vaultReturn = withLocale(locale, "/vault/collection");
   const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&returnTo=${encodeURIComponent(vaultReturn)}`;
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
+  const buyHref = session?.user ? checkoutPath : loginPath;
 
   const homeHref = withLocale(locale, "/");
   const archiveHref = withLocale(locale, "/releases");
@@ -193,7 +194,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
 
             <div className="mt-6">
               <Link
-                href={loginPath}
+                href={buyHref}
                 className="opus-surface-metallic inline-flex w-full max-w-sm items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
               >
                 {a.detailBuyCta}

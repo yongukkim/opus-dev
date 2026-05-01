@@ -59,6 +59,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
   const vaultReturn = withLocale(locale, "/vault/collection");
   const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&returnTo=${encodeURIComponent(vaultReturn)}`;
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
+  const buyHref = session?.user ? checkoutPath : loginPath;
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -125,7 +126,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
 
             <div className="mt-6">
               <Link
-                href={loginPath}
+                href={buyHref}
                 className="opus-surface-metallic inline-flex w-full max-w-sm items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold tracking-[0.12em] text-black transition hover:opacity-95"
               >
                 {a.detailBuyCta}
