@@ -31,6 +31,7 @@ app.opus-store.com {
 
 # Operator console — separate Next.js service (`opus-console`, see Dockerfile.console).
 # Sign-in: email OTP (Resend) primary; optional Google OAuth callback https://console.opus-store.com/api/auth/callback/google
+# Ops: after DNS for console.* goes live, run `bash scripts/ops-caddy-reload.sh` on EC2 (or rely on deploy script reload).
 console.opus-store.com {
 	encode zstd gzip
 	reverse_proxy opus-console:3010

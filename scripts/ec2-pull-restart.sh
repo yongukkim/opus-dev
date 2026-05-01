@@ -83,6 +83,17 @@ fi
 docker compose -f compose.web.yaml up -d
 docker compose -f compose.web.yaml ps
 
+# ISO 27001 A.10.1.1 (§3) — Caddyfile bind-mount updates do not always hot-reload; nudge TLS for new public names (e.g. console.*).
+# KO: compose up만으로는 Caddy가 새 호스트 인증서를 즉시 못 붙일 수 있어 reload/restart로 ACME를 재시도한다.
+# JA: compose up だけでは新ホスト証明書が即座に付かないことがあるため reload/restart でACMEを再試行する。
+# EN: After `up`, reload (or restart) Caddy so Let's Encrypt retries for newly published hostnames.
+if docker compose -f compose.web.yaml ps -q caddy >/dev/null 2>&1; then
+  if ! docker compose -f compose.web.yaml exec -T caddy caddy reload --config /etc/caddy/Caddyfile; then
+    echo "[ec2-pull-restart] WARN: caddy reload failed; restarting caddy" >&2
+    docker compose -f compose.web.yaml restart caddy
+  fi
+fi
+
 # Root-owned 시드(JSONL·private) 직후 nextjs 가 append 하지 못하는 문제 방지.
 bash "$APP_DIR/scripts/ec2-chown-web-storage.sh"
 
