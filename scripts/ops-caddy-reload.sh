@@ -16,10 +16,7 @@ if [[ -z "$cid" ]]; then
   exit 1
 fi
 
-if docker compose -f compose.web.yaml exec -T caddy caddy reload --config /etc/caddy/Caddyfile; then
-  echo "ops-caddy-reload: caddy reload OK"
-else
-  echo "ops-caddy-reload: reload failed, restarting caddy" >&2
-  docker compose -f compose.web.yaml restart caddy
-  echo "ops-caddy-reload: caddy restart OK"
-fi
+# Reload can report success while TLS policy stays stale; recreate matches ec2-pull-restart behaviour.
+docker compose -f compose.web.yaml exec -T caddy caddy reload --config /etc/caddy/Caddyfile || true
+docker compose -f compose.web.yaml up -d --force-recreate --no-deps caddy
+echo "ops-caddy-reload: caddy recreated"

@@ -24,6 +24,7 @@ fi
 
 if [[ ! -f "$OPUS_EC2_IDENTITY_FILE" ]]; then
   echo "ec2-ssh: identity file not found: $OPUS_EC2_IDENTITY_FILE" >&2
+  echo "ec2-ssh: edit scripts/ec2-ssh.env — set OPUS_EC2_IDENTITY_FILE to your real .pem path (not the example placeholder)." >&2
   exit 1
 fi
 

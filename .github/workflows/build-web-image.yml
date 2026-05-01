@@ -15,6 +15,7 @@ on:
       - "infra/caddy/**"
       - "scripts/ec2-pull-restart.sh"
       - "scripts/ops-caddy-reload.sh"
+      - "scripts/ops-diagnose-edge.sh"
       - "scripts/ec2-chown-web-storage.sh"
       - "scripts/ops-web-stability-check.sh"
       - "scripts/ops-release-e2e-check.sh"
