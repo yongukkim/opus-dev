@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readActorFromRequest } from "@/lib/authContext";
 import { prisma } from "@/lib/prisma";
+import { getStripeServer } from "@/lib/stripeServer";
 
 export const runtime = "nodejs";
 
@@ -41,10 +42,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     return NextResponse.json({ ok: false, error: "invalid_amount" }, { status: 400 });
   }
 
+  const useStripe = Boolean(getStripeServer());
+
   const existing = await prisma.order.findUnique({ where: { idempotencyKey } });
   if (existing) {
     return NextResponse.json(
-      { ok: true, reused: true, orderId: existing.id, status: existing.status, amountJpy: existing.amountJpy },
+      {
+        ok: true,
+        reused: true,
+        orderId: existing.id,
+        status: existing.status,
+        amountJpy: existing.amountJpy,
+        provider: existing.provider,
+      },
       { status: 200 },
     );
   }
@@ -59,15 +69,15 @@ export async function POST(request: NextRequest): Promise<Response> {
         editionId: body.editionId?.trim() || null,
         sellerUserId: body.sellerUserId?.trim() || null,
         buyerUserId: actor.userId,
-        provider: "MOCK",
+        provider: useStripe ? "STRIPE" : "MOCK",
         status: "PENDING",
       },
-      select: { id: true, status: true, amountJpy: true, createdAt: true },
+      select: { id: true, status: true, amountJpy: true, createdAt: true, provider: true },
     });
     const payment = await tx.payment.create({
       data: {
         orderId: order.id,
-        provider: "MOCK",
+        provider: useStripe ? "STRIPE" : "MOCK",
         amountJpy,
         currency: "JPY",
         status: "REQUIRES_ACTION",

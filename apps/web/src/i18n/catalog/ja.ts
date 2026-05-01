@@ -797,14 +797,21 @@ export const ja: Messages = {
   },
   checkout: {
     title: "決済",
-    subtitle: "デモのチェックアウト画面です。実際の決済連携は次の段階で追加します。",
+    subtitle: "Stripe Checkoutで安全に決済します（特定商取引法・消費税の取り扱いは運用方針とStripe設定に従います）。",
     summaryLabel: "Summary",
     summaryArtwork: "作品: {artwork}",
     summaryFallback: "選択した作品情報をご確認ください。",
     summaryPrice: "金額: {price}",
     summaryPriceBasis: "",
-    payCta: "決済する（デモ）",
-    note: "Stripe / Apple Pay 連携前のフロー確認用画面です。",
+    payCta: "Stripeで支払う",
+    payStarting: "Stripeへ移動中…",
+    demoPayCta: "完了画面へ（デモ）",
+    payError: "決済を開始できませんでした。時間をおいて再度お試しください。",
+    payMustSignIn: "ログインして決済",
+    payArtistWrongRole:
+      "決済は所蔵者（一般会員）アカウントで行ってください。Vaultの表示モードを切り替えて再度お試しください。",
+    payNotConfigured: "Stripeの秘密鍵が未設定のため、デモ決済のみ可能です。",
+    note: "本番の決済はStripe Checkout（JPY）で処理されます。表示金額は登録基準であり、税・表示は運用方針とStripeの設定に従います。",
     appRequiredTitle: "スマートフォンアプリのインストールが必要です",
     appRequiredBody:
       "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
@@ -821,6 +828,12 @@ export const ja: Messages = {
     bodyWithArtwork: "購入が完了しました: {artwork}。マイページで保管情報と来歴（プロビナンス）をご確認いただけます。",
     toVault: "マイページへ移動",
     backToArchive: "← アーカイブへ戻る",
+    paymentPendingTitle: "決済確認中",
+    paymentPendingBody:
+      "Stripeでお手続き済みの場合、反映まで少し時間がかかることがあります。再読み込みするか、マイページでご確認ください。",
+    paymentFailedTitle: "決済が完了していません",
+    paymentFailedBody:
+      "注文が未払い、またはキャンセルされています。チェックアウトを再試行するか、サポートへお問い合わせください。",
   },
   artistArtworks: {
     title: "Artworks",

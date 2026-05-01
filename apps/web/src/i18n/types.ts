@@ -584,6 +584,12 @@ export type Messages = {
     /** KO/EN: JPY registration basis `{yen}`. Empty in JA. */
     summaryPriceBasis: string;
     payCta: string;
+    payStarting: string;
+    demoPayCta: string;
+    payError: string;
+    payMustSignIn: string;
+    payArtistWrongRole: string;
+    payNotConfigured: string;
     note: string;
     appRequiredTitle: string;
     appRequiredBody: string;
@@ -600,6 +606,10 @@ export type Messages = {
     bodyWithArtwork: string;
     toVault: string;
     backToArchive: string;
+    paymentPendingTitle: string;
+    paymentPendingBody: string;
+    paymentFailedTitle: string;
+    paymentFailedBody: string;
   };
   artistKyc: {
     consentTitle: string;

@@ -785,14 +785,21 @@ export const en: Messages = {
   },
   checkout: {
     title: "Checkout",
-    subtitle: "Demo checkout screen. Payment integration will be wired next.",
+    subtitle: "Secure payment with Stripe Checkout. Japan consumer/tax handling follows operating policy and Stripe configuration.",
     summaryLabel: "Summary",
     summaryArtwork: "Artwork: {artwork}",
     summaryFallback: "Review the selected artwork details.",
     summaryPrice: "Amount: {price}",
     summaryPriceBasis: "List and settlement basis: {yen}",
-    payCta: "Pay (demo)",
-    note: "For flow verification before Stripe / Apple Pay wiring.",
+    payCta: "Pay with Stripe",
+    payStarting: "Redirecting to Stripe…",
+    demoPayCta: "Continue to success (demo)",
+    payError: "Could not start checkout. Please try again shortly.",
+    payMustSignIn: "Sign in to pay",
+    payArtistWrongRole:
+      "Checkout runs on a collector account. Switch Vault mode to collector and try again.",
+    payNotConfigured: "Stripe is not configured (no secret key); demo checkout only.",
+    note: "Live payments use Stripe Checkout in JPY. Displayed amounts follow registration policy; tax and commercial disclosures follow operating policy and Stripe settings.",
     appRequiredTitle: "Smartphone app required",
     appRequiredBody:
       "High-fidelity viewing after purchase is provided only in the OPUS mobile app. Please install the iOS or Android app.",
@@ -809,6 +816,11 @@ export const en: Messages = {
     bodyWithArtwork: "Purchase complete: {artwork}. Open My Page to review custody and provenance.",
     toVault: "Go to My Page",
     backToArchive: "← Back to Archive",
+    paymentPendingTitle: "Confirming payment",
+    paymentPendingBody:
+      "If you completed payment in Stripe, status may take a moment. Refresh or check your order from My Page.",
+    paymentFailedTitle: "Payment not completed",
+    paymentFailedBody: "This order is not paid or was cancelled. Try checkout again or contact support.",
   },
   artistArtworks: {
     title: "Artworks",
