@@ -152,24 +152,6 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-/// Email OTP challenge for operator console sign-in (console.opus-store.com).
-/// ISO 27001 A.9.4.2 / A.14.2.1 (§2, §1) — short-lived hashed codes; rate limits enforced in application code.
-/// KO: 운영자 콘솔 이메일 OTP는 평문 저장 없이 해시만 보관하고 짧은 만료로 제한한다.
-/// JA: 運用者コンソールのメールOTPは平文を保存せずハッシュのみを短い有効期限で保持する。
-/// EN: Console email OTP stores only salted hashes with short expiry; plaintext codes are never persisted.
-model ConsoleLoginOtp {
-  id             String    @id @default(cuid())
-  createdAt      DateTime  @default(now()) @map("created_at")
-  emailNorm      String    @map("email_norm")
-  codeHash       String    @map("code_hash") @db.VarChar(64)
-  expiresAt      DateTime  @map("expires_at")
-  consumedAt     DateTime? @map("consumed_at")
-  verifyAttempts Int       @default(0) @map("verify_attempts")
-
-  @@index([emailNorm, createdAt])
-  @@map("console_login_otp")
-}
-
 // =============================================================================
 // OPUS catalog domain — Artwork / Edition / Listing / ChronicleEntry
 // -----------------------------------------------------------------------------

@@ -1,20 +1,20 @@
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { authConfig, googleAuthProviders } from "@/auth.config";
-import { verifyConsoleOtpAndLoadOperatorUser } from "@/lib/consoleOtp";
+import { cookies } from "next/headers";
+import { authConfig } from "@/auth.config";
+import { readOAuthConsentFromCookieJar } from "@/lib/oauthConsentCookie";
 import {
   ensureBootstrapOperatorRoleByEmail,
   OPUS_BOOTSTRAP_OPERATOR_EMAILS,
 } from "@/lib/operatorBootstrap";
 import { prisma } from "@/lib/prisma";
-import { defaultLocale, storefrontOrigin } from "@/lib/site";
+import { storefrontDefaultLocale, storefrontOrigin } from "@/lib/site";
 
 /**
- * ISO 27001 / OPUS Security — Console uses the same User table as the storefront (shared DATABASE_URL).
- * KO: 콘솔 전용 인스턴스이나 식별·역할의 진실 원장은 동일 Postgres User 행이다.
- * JA: コンソール専用インスタンスだが、識別・ロールの正は同一PostgresのUser行である。
- * EN: Dedicated console app; identity and roles remain the same Postgres `User` rows as the storefront.
+ * ISO 27001 / OPUS Security — Console Auth.js matches storefront Google OAuth + consent rules (shared DB).
+ * KO: 콘솔은 웹과 동일한 Google OAuth·동의 쿠키 규칙을 쓰고, 역할은 동일 Postgres User 행에서만 읽는다.
+ * JA: コンソールはウェブと同一のGoogle OAuth・同意クッキー規則を用い、ロールは同一PostgresのUser行のみから読む。
+ * EN: Console uses the same Google OAuth and consent-cookie rules as the web app; roles come only from shared `User` rows.
  */
 function mapDbRoleToSession(
   role: string | undefined,
@@ -24,59 +24,50 @@ function mapDbRoleToSession(
   return "collector";
 }
 
+function storefrontSignupConsentErrorUrl(): string {
+  return `${storefrontOrigin()}/${storefrontDefaultLocale}/signup?error=oauth_consent_required`;
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  providers: [
-    ...googleAuthProviders,
-    Credentials({
-      id: "console-otp",
-      name: "Email code",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        code: { label: "Code", type: "text" },
-      },
-      authorize: async (credentials) => {
-        const email = credentials?.email;
-        const code = credentials?.code;
-        if (typeof email !== "string" || typeof code !== "string") return null;
-        const user = await verifyConsoleOtpAndLoadOperatorUser(email, code);
-        if (!user) return null;
-        return {
-          id: user.id,
-          email: user.email ?? undefined,
-          name: user.name ?? undefined,
-          image: user.image ?? undefined,
-        };
-      },
-    }),
-  ],
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === "console-otp") {
-        return true;
-      }
-      if (account?.provider !== "google") {
-        return true;
-      }
-
+      if (account?.provider !== "google") return true;
       const email = user.email?.trim();
       if (!email) return false;
 
-      const existing = await prisma.user.findFirst({
-        where: { email: { equals: email, mode: "insensitive" } },
+      const jar = await cookies();
+      const consent = readOAuthConsentFromCookieJar(jar);
+      const existing = await prisma.user.findUnique({
+        where: { email },
         select: { id: true, role: true },
       });
-      if (!existing) {
-        return `${storefrontOrigin()}/${defaultLocale}/signup`;
+      if (existing) {
+        await ensureBootstrapOperatorRoleByEmail(email);
+        if (consent?.flow === "artist-signup" && existing.role === "COLLECTOR") {
+          const acceptedAt = new Date(consent.recordedAt);
+          await prisma.user.update({
+            where: { id: existing.id },
+            data: {
+              role: "ARTIST",
+              tosAcceptedAt: acceptedAt,
+              tosVersionAccepted: consent.tosVersion,
+              privacyAcceptedAt: acceptedAt,
+              privacyVersionAccepted: consent.privacyVersion,
+              overseasTransferAcceptedAt: acceptedAt,
+              buyerAgeSelfAttestedAt: acceptedAt,
+              ...(consent.marketing ? { marketingOptInAt: acceptedAt } : {}),
+            },
+          });
+        }
+        return true;
       }
 
-      await ensureBootstrapOperatorRoleByEmail(email);
-      const fresh = await prisma.user.findUnique({
-        where: { id: existing.id },
-        select: { role: true },
-      });
-      return fresh?.role === "OPERATOR";
+      if (!consent) {
+        return storefrontSignupConsentErrorUrl();
+      }
+      return true;
     },
     async jwt({ token, user }) {
       const subjectId = user?.id ?? token.sub;
@@ -117,8 +108,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   events: {
     async createUser({ user }) {
+      const jar = await cookies();
+      const consent = readOAuthConsentFromCookieJar(jar);
+      if (!user.id) return;
+
       const email = user.email?.trim();
       if (email) await ensureBootstrapOperatorRoleByEmail(email);
+      if (!consent) return;
+
+      const acceptedAt = new Date(consent.recordedAt);
+      const role = consent.flow === "artist-signup" ? "ARTIST" : "COLLECTOR";
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          role,
+          tosAcceptedAt: acceptedAt,
+          tosVersionAccepted: consent.tosVersion,
+          privacyAcceptedAt: acceptedAt,
+          privacyVersionAccepted: consent.privacyVersion,
+          overseasTransferAcceptedAt: acceptedAt,
+          buyerAgeSelfAttestedAt: acceptedAt,
+          marketingOptInAt: consent.marketing ? acceptedAt : null,
+        },
+      });
     },
   },
 });

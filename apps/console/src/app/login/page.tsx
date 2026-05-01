@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
-import { ConsoleOtpLogin } from "@/components/login/ConsoleOtpLogin";
+import { ConsoleGoogleSignIn } from "@/components/login/ConsoleGoogleSignIn";
 import { isConsoleDevPreview } from "@/lib/devPreview";
 
 async function signOutFromConsole() {
@@ -25,8 +25,8 @@ export default async function LoginPage() {
       <div className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
         <h1 className="text-xl font-semibold text-gray-900">OPUS Console</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Sign in with a one-time code sent to your email. Only accounts with the OPERATOR role in the shared database
-          can receive a code.
+          Sign in with Google, using the same rules as the public OPUS site. The operator console still requires the
+          OPERATOR role in the shared database to open review tools.
         </p>
         {session?.user ? (
           <div className="mt-4 space-y-3">
@@ -58,13 +58,13 @@ export default async function LoginPage() {
             </p>
           </div>
         ) : null}
-        {!session?.user ? <ConsoleOtpLogin googleOAuthConfigured={googleOAuthConfigured} /> : null}
+        {!session?.user ? <ConsoleGoogleSignIn configured={googleOAuthConfigured} /> : null}
         <p className="mt-6 text-center text-xs text-gray-400">
-          New accounts must complete signup on the{" "}
+          New accounts: use the{" "}
           <a className="text-blue-600 underline" href={process.env["OPUS_STORE_PUBLIC_ORIGIN"] ?? "#"}>
-            public site
+            public OPUS site
           </a>{" "}
-          first.
+          signup flow first (consents), then open the console.
         </p>
       </div>
     </div>
