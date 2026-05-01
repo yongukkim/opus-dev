@@ -872,6 +872,9 @@ export type Messages = {
     activityWishlistHeading: string;
     activityWishlistBody: string;
     activityWishlistEmpty: string;
+    activityCartHeading: string;
+    activityCartBody: string;
+    activityCartEmpty: string;
     activityPurchaseHeading: string;
     activityPurchaseBody: string;
     activityPurchaseEmpty: string;

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { VaultActivityWishlistPanel } from "@/components/vault/VaultActivityWishlistPanel";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { OPUS_DEMO_CART_KEY, OPUS_DEMO_WISHLIST_KEY } from "@/lib/demoLists";
 import { prisma } from "@/lib/prisma";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -61,7 +62,20 @@ export default async function VaultActivityPage({ params }: Props) {
         <div className="mt-5">
           <VaultActivityWishlistPanel
             locale={locale}
+            listKey={OPUS_DEMO_WISHLIST_KEY}
             labels={{ empty: v.activityWishlistEmpty, openWork: v.activityOpenWork }}
+          />
+        </div>
+      </section>
+
+      <section className="mt-10 border-t border-white/[0.06] pt-7">
+        <h2 className="font-display text-xl text-opus-warm">{v.activityCartHeading}</h2>
+        <p className="mt-2 text-sm text-opus-warm/55">{v.activityCartBody}</p>
+        <div className="mt-5">
+          <VaultActivityWishlistPanel
+            locale={locale}
+            listKey={OPUS_DEMO_CART_KEY}
+            labels={{ empty: v.activityCartEmpty, openWork: v.activityOpenWork }}
           />
         </div>
       </section>

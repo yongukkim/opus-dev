@@ -4,24 +4,25 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
-import { OPUS_DEMO_WISHLIST_KEY, readDemoList, type DemoListLine } from "@/lib/demoLists";
+import { readDemoList, type DemoListLine } from "@/lib/demoLists";
 
 type Props = {
   locale: Locale;
+  listKey: string;
   labels: {
     empty: string;
     openWork: string;
   };
 };
 
-export function VaultActivityWishlistPanel({ locale, labels }: Props) {
+export function VaultActivityWishlistPanel({ locale, listKey, labels }: Props) {
   const [lines, setLines] = useState<DemoListLine[]>([]);
 
   useEffect(() => {
-    const next = readDemoList(OPUS_DEMO_WISHLIST_KEY);
+    const next = readDemoList(listKey);
     next.sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt));
     setLines(next);
-  }, []);
+  }, [listKey]);
 
   const hasItems = lines.length > 0;
   const money = useMemo(() => new Intl.NumberFormat(locale === "ja" ? "ja-JP" : "ko-KR"), [locale]);
