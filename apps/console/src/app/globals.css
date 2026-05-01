@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --console-sidebar: 249 250 251;
+  --console-border: 229 231 235;
+}
+
+body {
+  @apply bg-white text-gray-900 antialiased;
+}

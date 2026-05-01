@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "web": "sh scripts/dev-web-open.sh",
+    "console": "pnpm --filter @opus/console dev",
     "db:generate": "pnpm --filter @opus/web run db:generate",
     "db:migrate": "pnpm --filter @opus/web run db:migrate",
     "db:deploy": "pnpm --filter @opus/web run db:deploy",

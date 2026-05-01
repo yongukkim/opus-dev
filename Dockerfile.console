@@ -1,0 +1,37 @@
+# OPUS operator console (Next.js standalone). Build context = full repository (needs apps/web Prisma schema).
+# ISO 27001 A.8.2: Secrets at runtime only.
+
+FROM node:20-bookworm-slim AS base
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+
+FROM base AS builder
+WORKDIR /app
+ENV NODE_OPTIONS="--max-old-space-size=768"
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NPM_CONFIG_NODE_LINKER=hoisted
+ENV NPM_CONFIG_PREFER_FROZEN_LOCKFILE=true
+RUN printf 'node-linker=hoisted\nprefer-frozen-lockfile=true\n' > /app/.npmrc
+COPY . .
+RUN pnpm install --frozen-lockfile --prefer-offline --config.node-linker=hoisted
+RUN pnpm --filter @opus/console exec prisma generate --schema=apps/web/prisma/schema.prisma
+RUN AUTH_SECRET="00000000000000000000000000000000" \
+  pnpm exec turbo run build --filter=@opus/console --concurrency=1
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN groupadd --system --gid 1001 nodejs \
+  && useradd --system --uid 1001 --gid nodejs nextjs
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/static ./apps/console/.next/static
+USER nextjs
+EXPOSE 3010
+ENV PORT=3010
+ENV HOSTNAME=0.0.0.0
+CMD ["node", "apps/console/server.js"]

@@ -6,6 +6,7 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
 BRANCH="${BRANCH:-main}"
 OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-ghcr.io/yongukkim/opus-web:latest}"
+OPUS_CONSOLE_IMAGE="${OPUS_CONSOLE_IMAGE:-ghcr.io/yongukkim/opus-console:latest}"
 BASE_URL="${BASE_URL:-https://app.opus-store.com}"
 OPUS_ALERT_WEBHOOK="${OPUS_ALERT_WEBHOOK:-}"
 
@@ -32,6 +33,7 @@ fi
 
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
+export OPUS_CONSOLE_IMAGE
 
 # Always take a point-in-time storage backup before rollout.
 if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then
@@ -47,6 +49,7 @@ docker container prune -f || true
 docker builder prune -af || true
 
 docker pull "$OPUS_WEB_IMAGE"
+docker pull "$OPUS_CONSOLE_IMAGE"
 
 # ISO 27001 A.12.1.2 / A.14.2.8 (§5, §8): run Prisma migrations before exposing the new container so schema
 # drift can never serve traffic. Uses the same image + /etc/opus/opus.env so DATABASE_URL is injected at runtime.
@@ -83,4 +86,4 @@ else
   echo "[ec2-pull-restart] WARN: ops-release-e2e-check.sh missing or not executable" >&2
 fi
 
-notify "ok" "branch=$BRANCH image=$OPUS_WEB_IMAGE host=$(hostname) base=$BASE_URL"
+notify "ok" "branch=$BRANCH web=$OPUS_WEB_IMAGE console=$OPUS_CONSOLE_IMAGE host=$(hostname) base=$BASE_URL"

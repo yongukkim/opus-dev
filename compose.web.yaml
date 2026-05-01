@@ -1,7 +1,7 @@
-# Run OPUS web on EC2 (Caddy edge :80/:443 -> opus-web :3000).
+# Run OPUS web + operator console on EC2 (Caddy -> opus-web :3000, console.opus-store.com -> opus-console :3010).
 # 로컬 빌드: docker compose -f compose.web.yaml up --build -d
-# 레지스트리 이미지 사용: OPUS_WEB_IMAGE=ghcr.io/yongukkim/opus-web:latest docker compose -f compose.web.yaml up -d
-#   * EC2 ~/opus-dev/.env 파일에 OPUS_WEB_IMAGE 한 줄을 두면 force-recreate 시에도 옛 로컬 이미지로 회귀하지 않는다.
+# 레지스트리: OPUS_WEB_IMAGE / OPUS_CONSOLE_IMAGE 환경변수로 태그 지정 (scripts/ec2-pull-restart.sh).
+#   * EC2 ~/opus-dev/.env 에 이미지 태그를 두면 force-recreate 시 로컬 빌드 태그로 회귀하지 않는다.
 #
 # ISO 27001 A.10.1.1 / A.9.4.1 / A.13.1.3 (CLAUDE.md §3, §6):
 #   KO: DB 비밀은 이미지에 굽지 않고 EC2 호스트의 /etc/opus/opus.env 에서 런타임 주입한다.
@@ -9,7 +9,7 @@
 #   JA: DBシークレットはイメージに焼かず、/etc/opus/opus.env からランタイム注入する。
 #       外部公開はCaddyが443/80のみで受け、opus-webはコンテナネットワーク内部のみで露出する。
 #   EN: DB secrets are injected at runtime from /etc/opus/opus.env, never baked in.
-#       Public traffic enters only through Caddy on 443/80; opus-web stays on the internal network.
+#       Public traffic enters only through Caddy on 443/80; app and console stay on the internal network.
 services:
   opus-web:
     image: ${OPUS_WEB_IMAGE:-opus-web:local}
@@ -37,6 +37,27 @@ services:
       retries: 12
       start_period: 20s
 
+  opus-console:
+    image: ${OPUS_CONSOLE_IMAGE:-opus-console:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.console
+    pull_policy: missing
+    expose:
+      - "3010"
+    environment:
+      NODE_ENV: production
+    env_file:
+      - path: /etc/opus/opus.env
+        required: false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3010/login', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 25s
+
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
@@ -50,6 +71,8 @@ services:
       - caddy_config:/config
     depends_on:
       opus-web:
+        condition: service_healthy
+      opus-console:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "caddy", "version"]
