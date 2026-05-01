@@ -151,6 +151,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
                 addedToCartMessage={a.detailAddedToCart}
                 addedToWishlistMessage={a.detailAddedToWishlist}
                 demoNote={a.detailCollectDemoNote}
+                afterWishlistHref={withLocale(locale, "/vault/activity")}
               />
             </div>
           </div>

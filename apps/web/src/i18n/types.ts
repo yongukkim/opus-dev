@@ -869,6 +869,27 @@ export type Messages = {
     collectionHeldBadgeCollector: string;
     activityTitle: string;
     activityBody: string;
+    activityWishlistHeading: string;
+    activityWishlistBody: string;
+    activityWishlistEmpty: string;
+    activityPurchaseHeading: string;
+    activityPurchaseBody: string;
+    activityPurchaseEmpty: string;
+    activityPurchaseNeedSignIn: string;
+    activityOpenWork: string;
+    activityPurchaseStatusPending: string;
+    activityPurchaseStatusPaid: string;
+    activityPurchaseStatusFailed: string;
+    activityPurchaseStatusCancelled: string;
+    activityPurchaseStatusRefunded: string;
+    activityOrderDetailCta: string;
+    activityOrderDetailTitle: string;
+    activityOrderDetailBody: string;
+    activityOrderSummaryLabel: string;
+    activityOrderPaymentsLabel: string;
+    activityOrderPaymentEmpty: string;
+    activityOrderFailureLabel: string;
+    activityOrderBack: string;
     settingsTitle: string;
     settingsBody: string;
     /** Collector (일반 회원)가 작가 전용 경로를 열었을 때 */

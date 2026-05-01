@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   OPUS_DEMO_CART_KEY,
   OPUS_DEMO_WISHLIST_KEY,
@@ -20,6 +21,7 @@ export function ArtworkPdpCollectActions({
   addedToCartMessage,
   addedToWishlistMessage,
   demoNote,
+  afterWishlistHref,
 }: {
   slug: string;
   title: string;
@@ -30,8 +32,10 @@ export function ArtworkPdpCollectActions({
   addedToCartMessage: string;
   addedToWishlistMessage: string;
   demoNote: string;
+  afterWishlistHref?: string;
 }) {
   const [banner, setBanner] = useState<string | null>(null);
+  const router = useRouter();
 
   const flash = useCallback((msg: string) => {
     setBanner(msg);
@@ -74,7 +78,12 @@ export function ArtworkPdpCollectActions({
         <button
           type="button"
           className={btnClass}
-          onClick={() => addLine(OPUS_DEMO_WISHLIST_KEY, addedToWishlistMessage)}
+          onClick={() => {
+            addLine(OPUS_DEMO_WISHLIST_KEY, addedToWishlistMessage);
+            if (afterWishlistHref) {
+              window.setTimeout(() => router.push(afterWishlistHref), 160);
+            }
+          }}
         >
           {addToWishlistLabel}
         </button>
