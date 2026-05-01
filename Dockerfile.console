@@ -18,7 +18,7 @@ ENV NPM_CONFIG_PREFER_FROZEN_LOCKFILE=true
 RUN printf 'node-linker=hoisted\nprefer-frozen-lockfile=true\n' > /app/.npmrc
 COPY . .
 RUN pnpm install --frozen-lockfile --prefer-offline --config.node-linker=hoisted
-RUN pnpm --filter @opus/console exec prisma generate --schema=apps/web/prisma/schema.prisma
+RUN pnpm --filter @opus/console exec prisma generate --schema=../web/prisma/schema.prisma
 RUN AUTH_SECRET="00000000000000000000000000000000" \
   pnpm exec turbo run build --filter=@opus/console --concurrency=1
 

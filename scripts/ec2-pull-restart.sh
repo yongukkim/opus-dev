@@ -6,7 +6,7 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
 BRANCH="${BRANCH:-main}"
 OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-ghcr.io/yongukkim/opus-web:latest}"
-OPUS_CONSOLE_IMAGE="${OPUS_CONSOLE_IMAGE:-ghcr.io/yongukkim/opus-console:latest}"
+OPUS_CONSOLE_IMAGE="${OPUS_CONSOLE_IMAGE:-}"
 BASE_URL="${BASE_URL:-https://app.opus-store.com}"
 OPUS_ALERT_WEBHOOK="${OPUS_ALERT_WEBHOOK:-}"
 
@@ -21,7 +21,7 @@ notify() {
     -d "{\"text\":\"[opus-deploy][$level] $msg\"}" >/dev/null || true
 }
 
-trap 'notify "fail" "branch=$BRANCH image=$OPUS_WEB_IMAGE host=$(hostname)"; exit 1' ERR
+trap 'notify "fail" "branch=$BRANCH web=$OPUS_WEB_IMAGE console=${OPUS_CONSOLE_IMAGE:-auto} host=$(hostname)"; exit 1' ERR
 
 if [[ ! -d "$APP_DIR/.git" ]]; then
   git clone --depth 1 --branch "$BRANCH" https://github.com/yongukkim/opus-dev.git "$APP_DIR"
@@ -49,7 +49,17 @@ docker container prune -f || true
 docker builder prune -af || true
 
 docker pull "$OPUS_WEB_IMAGE"
-docker pull "$OPUS_CONSOLE_IMAGE"
+if [[ -n "$OPUS_CONSOLE_IMAGE" ]]; then
+  if ! docker pull "$OPUS_CONSOLE_IMAGE"; then
+    echo "[ec2-pull-restart] WARN: console image pull failed ($OPUS_CONSOLE_IMAGE); keeping current local console image" >&2
+    OPUS_CONSOLE_IMAGE="$(docker compose -f compose.web.yaml ps -q opus-console | xargs -r docker inspect --format '{{.Config.Image}}' | head -n 1 || true)"
+  fi
+fi
+if [[ -n "$OPUS_CONSOLE_IMAGE" ]]; then
+  export OPUS_CONSOLE_IMAGE
+else
+  unset OPUS_CONSOLE_IMAGE || true
+fi
 
 # ISO 27001 A.12.1.2 / A.14.2.8 (§5, §8): run Prisma migrations before exposing the new container so schema
 # drift can never serve traffic. Uses the same image + /etc/opus/opus.env so DATABASE_URL is injected at runtime.
