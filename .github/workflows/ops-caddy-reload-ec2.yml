@@ -1,0 +1,40 @@
+# ISO 27001 A.10.1.1 / A.13.1.3 (CLAUDE.md §3, §6) — TLS edge must match published hostnames without shipping keys in the repo.
+# KO: 이미지 빌드 없이 EC2에서 최신 Caddyfile을 반영·reload하여 console.* 등 신규 호스트의 LE 인증서를 유도한다.
+# JA: イメージビルドなしでEC2の最新Caddyfileを反映・reloadし、console.* 等の新ホストでLE証明書を促す。
+# EN: No image build: on EC2, sync Caddyfile and reload Caddy to obtain/refresh certs for hostnames like console.*.
+
+name: ops-caddy-reload-ec2
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: opus-ec2-caddy-reload
+  cancel-in-progress: false
+
+jobs:
+  reload:
+    if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync repo on EC2 and reload Caddy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          command_timeout: 5m
+          script_stop: true
+          script: |
+            bash -lc 'set -eo pipefail
+            BR="${{ github.ref_name }}"
+            APP="$HOME/opus-dev"
+            if [ ! -d "$APP/.git" ]; then echo "[caddy-reload] missing git clone at $APP" >&2; exit 1; fi
+            git -C "$APP" config --unset-all remote.origin.fetch || true
+            git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+            git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"
+            git -C "$APP" checkout -B "$BR" "origin/$BR"
+            APP_DIR="$APP" bash "$APP/scripts/ops-caddy-reload.sh"
+            echo "[caddy-reload] done branch=$BR"
+            '
