@@ -1,0 +1,11 @@
+# Paste into ~/.ssh/config (adjust Host, HostName, User, IdentityFile).
+# Then: ssh opus-ec2
+#
+# Host opus-ec2
+#   HostName ec2-xx-xx-xx-xx.ap-northeast-1.compute.amazonaws.com
+#   User ubuntu
+#   IdentityFile ~/.ssh/your-opus-ec2.pem
+#   IdentitiesOnly yes
+#   StrictHostKeyChecking accept-new
+#   RemoteCommand cd ~/opus-dev && exec $SHELL -l
+#   RequestTTY yes

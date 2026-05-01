@@ -71,3 +71,6 @@ coverage
 crash.*.log
 **/terraform.tfvars
 infra/terraform/backend.hcl
+
+# Local EC2 SSH jump config (see scripts/ec2-ssh.env.example)
+scripts/ec2-ssh.env
