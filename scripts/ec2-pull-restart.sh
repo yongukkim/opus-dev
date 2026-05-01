@@ -49,6 +49,11 @@ docker container prune -f || true
 docker builder prune -af || true
 
 docker pull "$OPUS_WEB_IMAGE"
+# If caller didn't provide console image, keep currently running console image
+# so `docker compose up -d` doesn't fall back to building `opus-console:local`.
+if [[ -z "$OPUS_CONSOLE_IMAGE" ]]; then
+  OPUS_CONSOLE_IMAGE="$(docker compose -f compose.web.yaml ps -q opus-console | xargs -r docker inspect --format '{{.Config.Image}}' | head -n 1 || true)"
+fi
 if [[ -n "$OPUS_CONSOLE_IMAGE" ]]; then
   if ! docker pull "$OPUS_CONSOLE_IMAGE"; then
     echo "[ec2-pull-restart] WARN: console image pull failed ($OPUS_CONSOLE_IMAGE); keeping current local console image" >&2
