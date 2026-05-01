@@ -16,7 +16,7 @@ export default async function LoginPage({
   const m = getDictionary(locale);
   const loginRole = roleParam === "artist" ? "artist" : "collector";
   const fallbackReturnTo =
-    loginRole === "artist" ? withLocale(locale, "/vault/submit") : withLocale(locale, "/vault");
+    loginRole === "artist" ? withLocale(locale, "/vault/submit") : withLocale(locale, "/vault/collection");
   const returnTo = sanitizeReturnTo(returnToParam, fallbackReturnTo);
 
   const collectorLoginHref = `${withLocale(locale, "/login")}?${new URLSearchParams({

@@ -160,7 +160,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
         <div className="mt-10 max-w-xl rounded-xl border border-red-400/25 bg-red-500/10 p-6 text-sm text-red-100/90">
           <p>{t.transferRegisterInvalidSubmission}</p>
           <Link
-            href={withLocale(locale, "/vault")}
+            href={withLocale(locale, "/vault/collection")}
             className="mt-4 inline-block text-opus-gold underline-offset-4 hover:underline"
           >
             ← {m.nav.vault}
@@ -183,7 +183,7 @@ export default async function VaultTransferRegisterPage({ params, searchParams }
         >
           {m.nav.provenance}
         </Link>
-        <Link href={withLocale(locale, "/vault")} className="text-opus-warm/45 hover:text-opus-warm/70">
+        <Link href={withLocale(locale, "/vault/collection")} className="text-opus-warm/45 hover:text-opus-warm/70">
           ← {m.nav.vault}
         </Link>
       </div>

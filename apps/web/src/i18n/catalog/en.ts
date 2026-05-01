@@ -271,7 +271,6 @@ export const en: Messages = {
       "Non-fungible digital art shown on OPUS is offered for personal appreciation and custody within the scope the artist grants. Copying, redistribution, or commercial exploitation without permission is prohibited. Check each edition’s detail page together with the terms of use. This notice will be updated after legal review.",
   },
   vaultNav: {
-    overview: "Overview",
     collection: "Collection",
     activity: "Activity",
     submit: "Submit artwork",
@@ -842,11 +841,6 @@ export const en: Messages = {
   },
   vault: {
     overviewKicker: "My Page",
-    overviewTitle: "Overview",
-    overviewBody:
-      "Check private collection status, notifications, and Chronicle updates on this screen.",
-    balance: "Balance",
-    activeBids: "Active bids",
     collectionTitle: "Collection",
     collectionBody:
       "Editions currently held under your signed-in account (per Chronicle ownership). Operator-approved works can open the next-custodian transfer form directly.",
@@ -875,7 +869,7 @@ export const en: Messages = {
     artistGateProfileBody:
       "Artist profile and settings are available to artist accounts only. In production, access follows your signed-in role and permissions.",
     artistGateSignupCta: "Register as an artist",
-    artistGateBackVault: "← Back to My Page overview",
+    artistGateBackVault: "← Back to My Page collection",
     artistKycGateBody:
       "To use artist features, complete artist verification (demo). In production, this will move to eKYC provider integration and session-based authorization.",
     artistKycGateCta: "Continue verification",

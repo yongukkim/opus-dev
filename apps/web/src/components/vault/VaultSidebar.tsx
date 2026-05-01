@@ -33,7 +33,6 @@ export function VaultSidebar({
   const nav = m.vaultNav;
   const vaultCopy = m.vault;
   const links = [
-    { path: "/vault" as const, label: nav.overview },
     { path: "/vault/collection" as const, label: nav.collection },
     { path: "/vault/transfer/register" as const, label: nav.transferRegister },
     { path: "/vault/activity" as const, label: nav.activity },
@@ -57,10 +56,6 @@ export function VaultSidebar({
     .map(({ path, label }) => ({ href: withLocale(locale, path), label }));
 
   function linkActive(href: string): boolean {
-    const overviewHref = withLocale(locale, "/vault");
-    if (href === overviewHref) {
-      return pathname === overviewHref || pathname === `${overviewHref}/`;
-    }
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 

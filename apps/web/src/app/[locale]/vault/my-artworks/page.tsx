@@ -234,7 +234,7 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
 
         <div className="mt-14 flex flex-wrap justify-center gap-6 text-center">
           <Link
-            href={withLocale(locale, "/vault")}
+            href={withLocale(locale, "/vault/collection")}
             className="inline-block text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
             {aa.backVault}

@@ -263,7 +263,7 @@ export function SellerVerifyConsentForm({ locale, strings: s }: SellerVerifyCons
               {s.footerPrivacy}
             </Link>
             <span className="text-[#4a433c]">·</span>
-            <Link href={withLocale(locale, "/vault")} className="text-[#9a8f7e]/80 hover:text-[#c9a97e]">
+            <Link href={withLocale(locale, "/vault/collection")} className="text-[#9a8f7e]/80 hover:text-[#c9a97e]">
               {s.footerVault}
             </Link>
           </p>

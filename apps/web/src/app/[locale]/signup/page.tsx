@@ -14,7 +14,7 @@ export default async function SignupPage({
   const { returnTo: returnToParam } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
-  const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
+  const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault/collection"));
   const loginHref = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(returnTo)}`;
   const googleOAuthConfigured = Boolean(
     process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),

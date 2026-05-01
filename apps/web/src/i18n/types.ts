@@ -360,7 +360,6 @@ export type Messages = {
   legalTerms: { back: string; title: string; lead: string; body: string };
   legalCopyright: { back: string; title: string; lead: string; body: string };
   vaultNav: {
-    overview: string;
     collection: string;
     activity: string;
     submit: string;
@@ -845,10 +844,6 @@ export type Messages = {
   };
   vault: {
     overviewKicker: string;
-    overviewTitle: string;
-    overviewBody: string;
-    balance: string;
-    activeBids: string;
     collectionTitle: string;
     collectionBody: string;
     collectionEmpty: string;

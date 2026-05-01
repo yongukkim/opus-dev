@@ -36,7 +36,7 @@ export function MarketingCtaBand({ locale, m }: { locale: Locale; m: Messages })
             {c.buy}
           </Link>
           <div className="flex w-full flex-wrap items-center justify-center gap-x-10 gap-y-3">
-            <Link href={withLocale(locale, "/vault")} className={secondaryLinkClass}>
+            <Link href={withLocale(locale, "/vault/collection")} className={secondaryLinkClass}>
               {c.openVault}
             </Link>
             <Link href={withLocale(locale, "/provenance")} className={secondaryLinkClass}>

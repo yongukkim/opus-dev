@@ -22,7 +22,7 @@ export default async function SellerVerifyStartPage({ params }: Props) {
   const m = getDictionary(locale);
   const s = m.sellerVerifyStart;
   const consentHref = withLocale(locale, "/seller/verify/consent");
-  const vaultHref = withLocale(locale, "/vault");
+  const vaultHref = withLocale(locale, "/vault/collection");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#060606] px-6 text-center text-[#d4cbc0]/85">

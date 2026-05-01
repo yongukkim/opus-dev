@@ -274,7 +274,6 @@ export const ja: Messages = {
       "OPUSで表示される複製不可のデジタルアートは、作家が付与した範囲内での個人的鑑賞・所蔵を前提とします。無断複製・頒布・商用利用は禁止されます。エディションごとの条件は作品詳細および利用規約もあわせてご確認ください。法務確定後に更新します。",
   },
   vaultNav: {
-    overview: "概要",
     collection: "コレクション",
     activity: "アクティビティ",
     submit: "作品登録",
@@ -858,11 +857,6 @@ export const ja: Messages = {
   },
   vault: {
     overviewKicker: "マイページ",
-    overviewTitle: "概要",
-    overviewBody:
-      "プライベート保管中のコレクション状態、通知、Chronicleの更新履歴を、この画面で確認できます。",
-    balance: "残高",
-    activeBids: "進行中の入札",
     collectionTitle: "コレクション",
     collectionBody:
       "サインイン中のアカウントがThe Chronicle上で所蔵しているエディションです。運営審査済みの作品から、次の所蔵者を探す登録フォームへ進めます。",
@@ -891,7 +885,7 @@ export const ja: Messages = {
     artistGateProfileBody:
       "作家プロフィール/設定は作家アカウントのみが利用できます。本番ではサインイン時の役割と権限に応じて自動的に切り替わります。",
     artistGateSignupCta: "作家として登録する",
-    artistGateBackVault: "← マイページ概要へ",
+    artistGateBackVault: "← マイページのコレクションへ",
     artistKycGateBody:
       "作家機能を利用するには本人確認（デモ）の完了が必要です。本番ではeKYC提供者連携とセッション認可に移行します。",
     artistKycGateCta: "本人確認を続ける",

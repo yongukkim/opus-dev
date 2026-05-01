@@ -22,7 +22,7 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
       ? formatListPriceForLocale(locale, priceParsed)
       : null;
 
-  const safeReturn = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
+  const safeReturn = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault/collection"));
   const successHref = `${withLocale(locale, "/purchase/success")}?returnTo=${encodeURIComponent(
     safeReturn,
   )}${artwork ? `&artwork=${encodeURIComponent(artwork)}` : ""}`;

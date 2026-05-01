@@ -49,7 +49,7 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
               userEmail={session?.user?.email}
             />
             {isArtist ? (
-              <Link href={withLocale(locale, "/vault")} className={authItemClassMobile}>
+              <Link href={withLocale(locale, "/vault/collection")} className={authItemClassMobile}>
                 {m.nav.vault}
               </Link>
             ) : (
@@ -92,7 +92,7 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
               userEmail={session?.user?.email}
             />
             {isArtist ? (
-              <Link href={withLocale(locale, "/vault")} className={authItemClass}>
+              <Link href={withLocale(locale, "/vault/collection")} className={authItemClass}>
                 {m.nav.vault}
               </Link>
             ) : (

@@ -31,7 +31,7 @@ export function VaultArtistKycGate({
           {v.artistKycGateCta}
         </Link>
         <Link
-          href={withLocale(locale, "/vault")}
+          href={withLocale(locale, "/vault/collection")}
           className="text-sm text-opus-gold/70 underline-offset-4 transition hover:text-opus-gold hover:underline"
         >
           {v.artistGateBackVault}

@@ -77,7 +77,7 @@ export default async function VaultSubmitSuccessPage({ params, searchParams }: P
             {m.submitSuccess.toMyArtworks}
           </Link>
           <Link
-            href={withLocale(locale, "/vault")}
+            href={withLocale(locale, "/vault/collection")}
             className="text-sm text-opus-gold/70 underline-offset-4 transition hover:text-opus-gold hover:underline"
           >
             {m.submitSuccess.toVault}

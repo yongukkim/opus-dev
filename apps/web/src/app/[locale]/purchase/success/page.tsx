@@ -15,7 +15,7 @@ export default async function PurchaseSuccessPage({ params, searchParams }: Prop
   const m = getDictionary(locale);
 
   const artwork = (artworkParam ?? "").trim();
-  const vaultHref = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault"));
+  const vaultHref = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault/collection"));
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">

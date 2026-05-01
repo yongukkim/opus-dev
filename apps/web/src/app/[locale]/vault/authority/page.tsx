@@ -47,7 +47,7 @@ export default async function VaultAuthoritySettingsPage({ params }: Props) {
           <p className="mt-3 text-sm text-opus-warm/60">{m.operatorAdmin.unauthorizedBody}</p>
           <div className="mt-6">
             <Link
-              href={withLocale(locale, "/vault")}
+              href={withLocale(locale, "/vault/collection")}
               className="text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
             >
               {m.vault.artistGateBackVault}

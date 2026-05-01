@@ -270,7 +270,6 @@ export const ko: Messages = {
       "OPUS에 표시되는 복제 불가능한 디지털 아트는 작가가 부여한 범위 내에서 개인적 감상·소장 목적의 이용을 전제로 합니다. 무단 복제·배포·상업적 이용은 금지됩니다. 에디션별 세부 조건은 작품 상세 및 이용약관을 함께 확인하십시오. 법적 확정은 법무 검토 후 갱신됩니다.",
   },
   vaultNav: {
-    overview: "개요",
     collection: "컬렉션",
     activity: "활동",
     submit: "작품 등록",
@@ -838,11 +837,6 @@ export const ko: Messages = {
   },
   vault: {
     overviewKicker: "마이페이지",
-    overviewTitle: "개요",
-    overviewBody:
-      "프라이빗 보관 중인 컬렉션 상태, 알림, Chronicle 갱신 이력을 이 화면에서 확인합니다.",
-    balance: "잔액",
-    activeBids: "진행 중 입찰",
     collectionTitle: "컬렉션",
     collectionBody:
       "현재 계정이 The Chronicle 기준으로 소장 중인 에디션입니다. 검수 완료된 작품은 다음 수탁자를 찾는 등록 폼으로 바로 이동할 수 있습니다.",
@@ -871,7 +865,7 @@ export const ko: Messages = {
     artistGateProfileBody:
       "작가 프로필/설정은 작가 계정에서만 이용할 수 있습니다. 실제 서비스에서는 로그인 역할과 권한에 따라 자동으로 구분됩니다.",
     artistGateSignupCta: "작가로 등록하기",
-    artistGateBackVault: "← 마이페이지 개요로",
+    artistGateBackVault: "← 마이페이지 컬렉션으로",
     artistKycGateBody:
       "작가 기능을 사용하려면 본인 확인(데모)을 완료해야 합니다. 실제 운영에서는 eKYC 제공자 연동과 세션 기반 권한으로 전환됩니다.",
     artistKycGateCta: "본인 확인 진행하기",

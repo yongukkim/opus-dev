@@ -97,7 +97,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
     .filter((e) => !sameFileSet.has(e.file))
     .slice(0, 6);
 
-  const vaultReturn = withLocale(locale, "/vault");
+  const vaultReturn = withLocale(locale, "/vault/collection");
   const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&returnTo=${encodeURIComponent(vaultReturn)}`;
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
 

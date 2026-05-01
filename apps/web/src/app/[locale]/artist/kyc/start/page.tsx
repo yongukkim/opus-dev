@@ -30,7 +30,7 @@ export default async function ArtistKycStartPage({ params, searchParams }: Props
 
         <div className="mt-10 text-center">
           <Link
-            href={withLocale(locale, "/vault")}
+            href={withLocale(locale, "/vault/collection")}
             className="text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
             {m.artistKyc.backToVault}

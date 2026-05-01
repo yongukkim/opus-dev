@@ -56,7 +56,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
 
   const homeHref = withLocale(locale, "/");
   const archiveHref = withLocale(locale, "/releases");
-  const vaultReturn = withLocale(locale, "/vault");
+  const vaultReturn = withLocale(locale, "/vault/collection");
   const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&returnTo=${encodeURIComponent(vaultReturn)}`;
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
 

@@ -11,7 +11,7 @@ export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
   const items = [
     { href: withLocale(locale, "/chronicle"), label: m.trust.chronicle },
     { href: withLocale(locale, "/provenance"), label: m.nav.provenance },
-    { href: withLocale(locale, "/vault"), label: m.trust.vaultShort },
+    { href: withLocale(locale, "/vault/collection"), label: m.trust.vaultShort },
   ] as const;
 
   return (
