@@ -131,20 +131,23 @@ jobs:
           script: |
             bash -lc 'set -eo pipefail; WIMG="ghcr.io/${{ steps.owner.outputs.value }}/opus-web:latest"; CIMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-console] web=$WIMG console=$CIMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin 2>/dev/null || echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$WIMG" OPUS_CONSOLE_IMAGE="$CIMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart-console.sh"'
 
-      # IPv4 only: avoids runner/browser picking a broken AAAA while EIP is IPv4-only.
-      - name: Verify HTTPS on console EIP (IPv4)
+      # Curl by raw EIP breaks TLS (cert is for console.opus-store.com). Pin DNS to EIP with --resolve.
+      - name: Verify HTTPS on console EIP (IPv4 + SNI)
         env:
           HOST: ${{ steps.chost.outputs.host }}
         run: |
           set -euo pipefail
+          CONSOLE_HOSTNAME="console.opus-store.com"
           for i in $(seq 1 24); do
-            code="$(curl -4gLsS -o /dev/null -w '%{http_code}' --connect-timeout 10 --max-time 25 "https://${HOST}/ko/login" 2>/dev/null || echo 000)"
-            echo "[deploy-console] probe attempt $i: HTTP ${code:-000}"
+            code="$(curl -4gLsS -o /dev/null -w '%{http_code}' --connect-timeout 10 --max-time 25 \
+              --resolve "${CONSOLE_HOSTNAME}:443:${HOST}" \
+              "https://${CONSOLE_HOSTNAME}/ko/login" 2>/dev/null || echo 000)"
+            echo "[deploy-console] probe attempt $i: HTTP ${code:-000} (→ ${HOST} via --resolve)"
             if [[ "$code" =~ ^[23][0-9][0-9]$ ]]; then
-              echo "[deploy-console] HTTPS reachable on CONSOLE_EC2_HOST (IPv4)"
+              echo "[deploy-console] HTTPS OK: SNI ${CONSOLE_HOSTNAME} to EIP ${HOST}"
               exit 0
             fi
             sleep 10
           done
-          echo "::error::HTTPS to CONSOLE_EC2_HOST (${HOST}) still not OK. Check: (1) DNS A for console.opus-store.com matches this IP, remove stray AAAA; (2) on EC2: sudo docker compose -f \$HOME/opus-dev/compose.console.yaml ps; sudo docker logs caddy --tail 80"
+          echo "::error::HTTPS probe still failing. Check: (1) DNS A for ${CONSOLE_HOSTNAME} = ${HOST}, remove bad AAAA; (2) EC2: sudo docker compose -f \$HOME/opus-dev/compose.console.yaml ps; sudo docker logs caddy --tail 80"
           exit 1
