@@ -12,17 +12,14 @@ on:
       - "pnpm-lock.yaml"
       - "Dockerfile.console"
       - ".dockerignore"
-      - "compose.web.yaml"
-      - "scripts/ec2-pull-restart.sh"
-      - "scripts/ec2-chown-web-storage.sh"
-      - "scripts/ops-web-stability-check.sh"
-      - "scripts/ops-release-e2e-check.sh"
-      - "infra/caddy/Caddyfile"
+      - "compose.console.yaml"
+      - "scripts/ec2-pull-restart-console.sh"
+      - "infra/caddy/Caddyfile.console"
       - ".github/workflows/build-console-image.yml"
   workflow_dispatch: {}
 
 concurrency:
-  group: opus-ec2-deploy-${{ github.ref }}
+  group: opus-ec2-deploy-console-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -87,14 +84,41 @@ jobs:
         id: owner
         run: echo "value=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
 
-      - name: SSH into EC2 and redeploy stack
+      - name: Resolve console EC2 host
+        id: chost
+        env:
+          CONSOLE_HOST: ${{ secrets.CONSOLE_EC2_HOST }}
+        run: |
+          if [ -z "${CONSOLE_HOST:-}" ]; then
+            echo "::error::Set repository secret CONSOLE_EC2_HOST to the console Elastic IP (terraform output -raw console_public_ip)." >&2
+            exit 1
+          fi
+          echo "host=$CONSOLE_HOST" >> "$GITHUB_OUTPUT"
+
+      # 새 콘솔 EC2(Terraform 로 만든 Ubuntu)에는 Docker 가 없을 수 있음 — 웹 배포와 동일하게 선설치.
+      - name: Ensure Docker on console EC2 (fresh host)
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ steps.chost.outputs.host }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          command_timeout: 15m
+          script_stop: true
+          script: |
+            bash -lc 'set -eo pipefail
+            if command -v docker >/dev/null 2>&1; then echo "[deploy-console] docker binary already present"; else curl -fsSL https://get.docker.com | sudo sh; fi
+            sudo usermod -aG docker "$(whoami)" || true
+            echo "[deploy-console] docker ready"'
+
+      - name: SSH into console EC2 and redeploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ steps.chost.outputs.host }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           command_timeout: 20m
           script_stop: true
           script: |
-            bash -lc 'set -eo pipefail; WIMG="ghcr.io/${{ steps.owner.outputs.value }}/opus-web:latest"; CIMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-console] web=$WIMG console=$CIMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" https://github.com/yongukkim/opus-dev.git "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$WIMG" OPUS_CONSOLE_IMAGE="$CIMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'
+            bash -lc 'set -eo pipefail; WIMG="ghcr.io/${{ steps.owner.outputs.value }}/opus-web:latest"; CIMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-console] web=$WIMG console=$CIMG br=$BR host=${{ steps.chost.outputs.host }}"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$WIMG" OPUS_CONSOLE_IMAGE="$CIMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart-console.sh"'
