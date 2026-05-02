@@ -6,6 +6,9 @@ import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
 
 type Props = { params: Promise<{ locale: string }> };
 
+// Same rationale as login — see login/page.tsx (ISO 27001 A.9.4.2 / §2).
+export const dynamic = "force-dynamic";
+
 export default async function SignupPage({
   params,
   searchParams,

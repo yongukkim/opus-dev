@@ -6,6 +6,12 @@ import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
 
 type Props = { params: Promise<{ locale: string }> };
 
+// ISO 27001 A.9.4.2 (§2) — OAuth readiness must reflect runtime env (e.g. /etc/opus/opus.env), not `next build` (no Google secrets in CI).
+// KO: Docker 런타임의 AUTH_GOOGLE_* 여부로 버튼 활성화를 판단해야 정적 프리렌더에 false가 고정되지 않는다.
+// JA: Docker ランタイムの AUTH_GOOGLE_* でボタン可否を判定し、静的プリレンダに false が固定されないようにする。
+// EN: Gate the Google row on runtime env so static prerender does not freeze “not configured” from the image build.
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage({
   params,
   searchParams,
