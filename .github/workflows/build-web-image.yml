@@ -84,6 +84,22 @@ jobs:
     if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
+      # 새 EC2(AMI만 깔린 머신)에는 Docker가 없을 수 있음 — 한 번 설치 후 다음 SSH에서 배포.
+      - name: Ensure Docker on EC2 (fresh host)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          command_timeout: 15m
+          script_stop: true
+          script: |
+            bash -lc 'set -eo pipefail
+            if command -v docker >/dev/null 2>&1; then echo "[deploy-web] docker binary already present"; else curl -fsSL https://get.docker.com | sudo sh; fi
+            sudo usermod -aG docker "$(whoami)" || true
+            echo "[deploy-web] docker ready (deploy step uses a new SSH session so docker group applies)"'
+
       # drone-ssh (appleboy/ssh-action) 의 multiline script 가 본 환경에서
       # docker login 직후 침묵 종료되는 이슈가 있어, 원격 스크립트는
       # 미리 EC2 에 clone 된 scripts/ec2-pull-restart.sh 하나로 일원화한다.
@@ -97,4 +113,4 @@ jobs:
           command_timeout: 20m
           script_stop: true
           script: |
-            bash -lc 'set -eo pipefail; IMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-web] web=$IMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" https://github.com/yongukkim/opus-dev.git "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$IMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'
+            bash -lc 'set -eo pipefail; IMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-web] web=$IMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$IMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'
