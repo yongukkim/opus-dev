@@ -11,6 +11,16 @@ OPUS_CONSOLE_IMAGE="${OPUS_CONSOLE_IMAGE:?Set OPUS_CONSOLE_IMAGE (e.g. ghcr.io/.
 OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-ghcr.io/yongukkim/opus-web:latest}"
 OPUS_ALERT_WEBHOOK="${OPUS_ALERT_WEBHOOK:-}"
 
+# ISO 27001 A.9.2.1 (CLAUDE.md §4)
+# KO: CI SSH 세션에서는 docker 그룹이 아직 적용되지 않을 수 있어 sudo 로 폴백한다.
+# JA: CI SSH セッションでは docker グループが未適用のことがあるため sudo にフォールバックする。
+# EN: CI SSH sessions may not yet have the docker group; fall back to sudo docker.
+if docker info >/dev/null 2>&1; then
+  DOCKER=(docker)
+else
+  DOCKER=(sudo docker)
+fi
+
 notify() {
   local level="$1"
   local msg="$2"
@@ -35,17 +45,19 @@ fi
 cd "$APP_DIR"
 export OPUS_CONSOLE_IMAGE OPUS_WEB_IMAGE
 
-dc_console() { env -u COMPOSE_FILE docker compose -f compose.console.yaml "$@"; }
+dc_console() {
+  env -u COMPOSE_FILE "${DOCKER[@]}" compose -f compose.console.yaml "$@"
+}
 
-docker image prune -af || true
-docker container prune -f || true
-docker builder prune -af || true
+"${DOCKER[@]}" image prune -af || true
+"${DOCKER[@]}" container prune -f || true
+"${DOCKER[@]}" builder prune -af || true
 
-docker pull "$OPUS_CONSOLE_IMAGE"
-docker pull "$OPUS_WEB_IMAGE"
+"${DOCKER[@]}" pull "$OPUS_CONSOLE_IMAGE"
+"${DOCKER[@]}" pull "$OPUS_WEB_IMAGE"
 
 if [[ -f /etc/opus/opus.env ]]; then
-  docker run --rm \
+  "${DOCKER[@]}" run --rm \
     --env-file /etc/opus/opus.env \
     "$OPUS_WEB_IMAGE" \
     node node_modules/prisma/build/index.js migrate deploy --schema=apps/web/prisma/schema.prisma
