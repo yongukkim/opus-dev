@@ -59,7 +59,25 @@ export const en: ConsoleMessages = {
     subtitle: "Review artwork registrations using the same data as the storefront operator tools.",
     loadError: "Could not load submissions. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and network access.",
   },
+  dashboard: {
+    title: "Operations home",
+    subtitle:
+      "Back office separated from the public storefront. Submission review is available now; payment records and reconciliation will roll out with Stripe in phases.",
+    cardSubmissionsTitle: "Submission review",
+    cardSubmissionsBody: "Review and approve artwork registration submissions.",
+    cardSubmissionsCta: "Open submissions",
+    cardPaymentsTitle: "Payments & reconciliation",
+    cardPaymentsBody:
+      "Planned: read-only payment activity, ledger reconciliation, and closeout summaries—without handling raw card data on this host.",
+    cardPaymentsBadge: "Coming soon",
+    cardHealthTitle: "Service status",
+    cardHealthBody: "Deploy and infrastructure summaries will appear here later.",
+  },
   chrome: {
+    brand: "OPUS Console",
+    navHome: "Home",
+    navReview: "Submissions",
+    navPayments: "Payments",
     submissions: "Submissions",
     submissionsLead: "Review artwork registrations using the same data as the storefront operator tools.",
     backToReview: "Back to review",

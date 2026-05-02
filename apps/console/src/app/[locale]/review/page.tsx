@@ -40,11 +40,11 @@ export default async function ReviewPage({ params }: { params: Promise<{ locale:
 
   return (
     <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome}>
-      <div className="px-6 py-6">
-        <h1 className="text-2xl font-semibold text-gray-900">{t.review.title}</h1>
-        <p className="mt-1 text-sm text-gray-500">{t.review.subtitle}</p>
+      <div className="border-b border-white/10 px-6 py-6">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#F6F4F0]">{t.review.title}</h1>
+        <p className="mt-1 text-sm text-[#F6F4F0]/60">{t.review.subtitle}</p>
         {loadError ? (
-          <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{loadError}</div>
+          <div className="mt-4 rounded-md border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm text-red-100">{loadError}</div>
         ) : (
           <ConsoleReviewWorkspace initialRows={rows} readOnlyPreview={preview} />
         )}

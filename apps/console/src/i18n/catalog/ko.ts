@@ -60,7 +60,25 @@ export const ko: ConsoleMessages = {
     loadError:
       "제출물을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 네트워크를 확인하세요.",
   },
+  dashboard: {
+    title: "운영 홈",
+    subtitle:
+      "공개 스토어와 분리된 백오피스입니다. 제출물 검수는 지금 사용할 수 있으며, 결제·대사 도구는 Stripe 연동 후 단계적으로 열립니다.",
+    cardSubmissionsTitle: "제출물 검수",
+    cardSubmissionsBody: "작품 등록 제출을 검토하고 승인합니다.",
+    cardSubmissionsCta: "제출물로 이동",
+    cardPaymentsTitle: "결제·대사",
+    cardPaymentsBody:
+      "수납 기록 조회, 대사(ledger와의 정합), 정산 보고를 한 곳에서 다룰 예정입니다. (Stripe 연동 예정)",
+    cardPaymentsBadge: "준비 중",
+    cardHealthTitle: "서비스 상태",
+    cardHealthBody: "배포·인프라 상태는 추후 이 영역에 요약합니다.",
+  },
   chrome: {
+    brand: "OPUS Console",
+    navHome: "홈",
+    navReview: "제출물",
+    navPayments: "결제·대사",
     submissions: "제출물",
     submissionsLead: "스토어 운영 도구와 동일한 데이터로 작품 등록을 검토합니다.",
     backToReview: "검수로 돌아가기",

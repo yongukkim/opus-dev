@@ -60,7 +60,25 @@ export const ja: ConsoleMessages = {
     loadError:
       "提出物を読み込めませんでした。OPUS_WEB_ORIGIN、OPUS_INTERNAL_API_SECRET、ネットワークを確認してください。",
   },
+  dashboard: {
+    title: "運用ホーム",
+    subtitle:
+      "公開ストアから分離したバックオフィスです。提出物の審査は今すぐ利用でき、決済・照合ツールは Stripe 連携後に段階的に提供します。",
+    cardSubmissionsTitle: "提出物の審査",
+    cardSubmissionsBody: "作品登録の提出を審査し承認します。",
+    cardSubmissionsCta: "提出物へ",
+    cardPaymentsTitle: "決済・照合",
+    cardPaymentsBody:
+      "入金記録の参照、台帳との照合、締め処理の要約を一箇所で扱う予定です（Stripe 連携予定）。",
+    cardPaymentsBadge: "準備中",
+    cardHealthTitle: "サービス状態",
+    cardHealthBody: "デプロイやインフラの要約は後日ここに表示します。",
+  },
   chrome: {
+    brand: "OPUS Console",
+    navHome: "ホーム",
+    navReview: "提出物",
+    navPayments: "決済・照合",
     submissions: "提出物",
     submissionsLead: "ストアの運用ツールと同じデータで作品登録を審査します。",
     backToReview: "審査に戻る",

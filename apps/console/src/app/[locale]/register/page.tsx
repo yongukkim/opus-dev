@@ -27,18 +27,18 @@ export default async function RegisterPage({
   const t = getDictionary(locale);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0E0E0E] px-4">
+      <div className="w-full max-w-md rounded-lg border border-white/10 bg-[#141414] p-8 shadow-xl shadow-black/40">
         <div className="flex items-start justify-between gap-4">
-          <h1 className="text-xl font-semibold text-gray-900">{t.register.title}</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-[#F6F4F0]">{t.register.title}</h1>
           <Suspense fallback={<div className="h-5 w-32 shrink-0" aria-hidden />}>
             <ConsoleLanguageSwitcher locale={locale} labels={t.lang} />
           </Suspense>
         </div>
-        <p className="mt-2 text-sm text-gray-600">{t.register.lead}</p>
+        <p className="mt-2 text-sm leading-relaxed text-[#F6F4F0]/70">{t.register.lead}</p>
         <ConsoleRegisterForm locale={locale} invite={invite} t={t} />
-        <p className="mt-6 text-center text-xs text-gray-400">
-          <Link href={`/${locale}/login`} className="text-blue-600 underline hover:text-blue-800">
+        <p className="mt-6 text-center text-xs text-[#F6F4F0]/40">
+          <Link href={`/${locale}/login`} className="text-[#DEB892] underline decoration-[#DEB892]/40 hover:text-[#F6F4F0]">
             {t.register.back}
           </Link>
         </p>

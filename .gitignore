@@ -74,3 +74,7 @@ infra/terraform/backend.hcl
 
 # Local EC2 SSH jump config (see scripts/ec2-ssh.env.example)
 scripts/ec2-ssh.env
+
+# Never commit private keys or ad-hoc Terraform var backups
+*.pem
+**/terraform.tfvars.save

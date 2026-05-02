@@ -60,7 +60,7 @@ export default auth((req) => {
 
   if (rest === "/" || rest === "") {
     if (devPreview) {
-      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/review`, req.url)));
+      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/home`, req.url)));
     }
     if (!req.auth?.user?.id) {
       return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
@@ -68,7 +68,7 @@ export default auth((req) => {
     if (req.auth.user.role !== "operator") {
       return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
     }
-    return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/review`, req.url)));
+    return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/home`, req.url)));
   }
 
   if (rest.startsWith("/login")) {
@@ -80,6 +80,26 @@ export default auth((req) => {
   }
 
   if (rest.startsWith("/review")) {
+    if (devPreview) {
+      return withLocaleHeader(NextResponse.next());
+    }
+    if (!req.auth?.user?.id || req.auth.user.role !== "operator") {
+      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
+    }
+    return withLocaleHeader(NextResponse.next());
+  }
+
+  if (rest.startsWith("/home")) {
+    if (devPreview) {
+      return withLocaleHeader(NextResponse.next());
+    }
+    if (!req.auth?.user?.id || req.auth.user.role !== "operator") {
+      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
+    }
+    return withLocaleHeader(NextResponse.next());
+  }
+
+  if (rest.startsWith("/payments")) {
     if (devPreview) {
       return withLocaleHeader(NextResponse.next());
     }

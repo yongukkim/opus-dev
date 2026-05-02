@@ -178,7 +178,7 @@ export function ConsoleReviewWorkspace({
     options?: { edition?: ParsedEdition; reviewNote?: string },
   ) {
     if (readOnlyPreview) {
-      window.alert("Preview mode: sign in with Google to submit reviews.");
+      window.alert("Preview mode: sign in with an operator account to submit reviews.");
       return;
     }
     if (pending) return;

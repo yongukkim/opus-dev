@@ -58,7 +58,23 @@ export type ConsoleMessages = {
     subtitle: string;
     loadError: string;
   };
+  dashboard: {
+    title: string;
+    subtitle: string;
+    cardSubmissionsTitle: string;
+    cardSubmissionsBody: string;
+    cardSubmissionsCta: string;
+    cardPaymentsTitle: string;
+    cardPaymentsBody: string;
+    cardPaymentsBadge: string;
+    cardHealthTitle: string;
+    cardHealthBody: string;
+  };
   chrome: {
+    brand: string;
+    navHome: string;
+    navReview: string;
+    navPayments: string;
     submissions: string;
     submissionsLead: string;
     backToReview: string;

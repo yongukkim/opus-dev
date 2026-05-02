@@ -3,10 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --console-sidebar: 249 250 251;
-  --console-border: 229 231 235;
+  --opus-bg: #0e0e0e;
+  --opus-fg: #f6f4f0;
+  --opus-accent: #deb892;
 }
 
 body {
-  @apply bg-white text-gray-900 antialiased;
+  @apply antialiased;
+  background-color: var(--opus-bg);
+  color: var(--opus-fg);
 }

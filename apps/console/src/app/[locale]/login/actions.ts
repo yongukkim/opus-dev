@@ -30,7 +30,7 @@ export async function consoleLoginAction(
     return { error: t.errors.loginInvalid };
   }
 
-  redirect(`/${locale}/`);
+  redirect(`/${locale}/home`);
 }
 
 export async function consoleSignOutAction(formData: FormData) {

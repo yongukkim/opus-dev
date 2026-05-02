@@ -33,7 +33,7 @@ export function ConsoleLanguageSwitcher({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2 text-xs text-gray-500">
+    <div className="flex flex-wrap items-center justify-end gap-2 text-xs text-[#F6F4F0]/45">
       <span className="sr-only">Language</span>
       {locales.map((loc) => (
         <Link
@@ -42,8 +42,8 @@ export function ConsoleLanguageSwitcher({
           onClick={() => persistLocale(loc)}
           className={
             loc === locale
-              ? "font-semibold text-gray-900"
-              : "text-blue-600 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-800"
+              ? "font-semibold text-[#F6F4F0]"
+              : "text-[#DEB892] underline decoration-[#DEB892]/40 underline-offset-2 hover:text-[#F6F4F0]"
           }
           hrefLang={loc}
         >
