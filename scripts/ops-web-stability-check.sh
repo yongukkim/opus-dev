@@ -15,22 +15,42 @@ ok() { printf '[OK] %s\n' "$*"; }
 warn() { printf '[WARN] %s\n' "$*"; WARNS=$((WARNS + 1)); }
 fail() { printf '[FAIL] %s\n' "$*"; FAILS=$((FAILS + 1)); }
 
+# ISO 27001 A.13.1.3 / A.12.4.1 (CLAUDE.md §5, §6):
+#   KO: 호스트·repo .env 의 COMPOSE_FILE 병합으로 의도하지 않은 스택이 올라가지 않도록 compose 호출 시 제거한다.
+#   JA: ホストや repo .env の COMPOSE_FILE マージで意図しないスタックが起動しないよう、compose 呼び出し時に除去する。
+#   EN: Strip COMPOSE_FILE when invoking compose so merged stacks from host/repo .env cannot start unintentionally.
 dc() {
   if docker info >/dev/null 2>&1; then
-    docker compose "$@"
+    env -u COMPOSE_FILE docker compose "$@"
   else
-    sudo docker compose "$@"
+    sudo env -u COMPOSE_FILE docker compose "$@"
   fi
 }
 
 run_http_checks() {
-  log "HTTP status checks: ${BASE_URL} (/, /ko, /ja)"
+  # ISO 27001 A.13.1.3 (CLAUDE.md §6):
+  #   KO: Caddy 재기동 직후 ACME/TLS 준비 전에 배포가 실패하지 않도록 HTTPS 응답을 재시도한다.
+  #   JA: Caddy 再起動直後の ACME/TLS 準備前にデプロイが失敗しないよう、HTTPS 応答を再試行する。
+  #   EN: Retry HTTPS after Caddy/ACME cold start so post-deploy checks do not false-fail.
+  local max_attempts="${OPUS_HTTPS_HEALTH_RETRIES:-18}"
+  local sleep_s="${OPUS_HTTPS_HEALTH_SLEEP:-5}"
+  log "HTTP status checks: ${BASE_URL} (/, /ko, /ja) retries=${max_attempts}x${sleep_s}s"
   for p in "${PATHS[@]}"; do
-    code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 "${BASE_URL}${p}" || true)"
-    if [[ "$code" =~ ^[23][0-9][0-9]$ ]]; then
-      ok "${p} -> HTTP ${code}"
-    else
-      fail "${p} -> HTTP ${code:-n/a}"
+    local code="" attempt=1
+    while [[ $attempt -le $max_attempts ]]; do
+      code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 12 "${BASE_URL}${p}" 2>/dev/null || true)"
+      if [[ "$code" =~ ^[23][0-9][0-9]$ ]]; then
+        ok "${p} -> HTTP ${code}"
+        break
+      fi
+      if [[ $attempt -lt $max_attempts ]]; then
+        log "wait HTTPS ${p} attempt ${attempt}/${max_attempts} (code=${code:-n/a})"
+        sleep "$sleep_s"
+      fi
+      attempt=$((attempt + 1))
+    done
+    if [[ ! "$code" =~ ^[23][0-9][0-9]$ ]]; then
+      fail "${p} -> HTTP ${code:-n/a} after ${max_attempts} attempts"
     fi
   done
 }
@@ -58,10 +78,18 @@ run_container_checks() {
 }
 
 run_backup_checks() {
+  # ISO 27001 A.12.3.1 (CLAUDE.md §5):
+  #   KO: 인스턴스 교체 직후 첫 사이클에는 백업 아카이브가 없을 수 있어 기본은 경고만 한다.
+  #   JA: インスタンス交換直後の初回サイクルではバックアップが無い場合があるため、既定は警告のみとする。
+  #   EN: After instance replacement the first cycle may have no tarball; default is warn, not fail.
   log "Backup artifact checks"
   latest="$(sudo bash -lc 'ls -1t /var/backups/opus-storage/opus-storage-*.tgz 2>/dev/null | head -n 1' || true)"
   if [[ -z "$latest" ]]; then
-    fail "no backup archive found in /var/backups/opus-storage"
+    if [[ "${OPUS_STRICT_BACKUP_CHECK:-0}" == "1" ]]; then
+      fail "no backup archive found in /var/backups/opus-storage"
+    else
+      warn "no backup archive yet (cold host / first cycle); OPUS_STRICT_BACKUP_CHECK=1 to fail here"
+    fi
     return
   fi
   ok "latest backup: $latest"
@@ -91,7 +119,7 @@ run_storage_checks() {
   submissions="$src/submissions.jsonl"
   ownership="$src/ownership-events.jsonl"
   if ! sudo test -f "$submissions"; then
-    fail "missing submissions file: $submissions"
+    warn "missing submissions file (empty volume / not restored): $submissions — skipping jsonl checks"
     return
   fi
   if ! sudo test -f "$ownership"; then

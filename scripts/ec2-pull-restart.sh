@@ -34,8 +34,8 @@ fi
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
 
-# Storefront host: force a single compose file (unset is not enough if ~/.profile or repo .env re-exported COMPOSE_FILE).
-export COMPOSE_FILE=compose.web.yaml
+# Storefront: only compose.web.yaml — strip host/repo COMPOSE_FILE so Docker does not merge extra files.
+dc_web() { env -u COMPOSE_FILE docker compose -f compose.web.yaml "$@"; }
 
 # Always take a point-in-time storage backup before rollout.
 if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then
@@ -66,16 +66,16 @@ else
   echo "[ec2-pull-restart] WARN: /etc/opus/opus.env missing — skipping prisma migrate deploy" >&2
 fi
 
-docker compose -f compose.web.yaml up -d
-docker compose -f compose.web.yaml ps
+dc_web up -d
+dc_web ps
 
 # ISO 27001 A.10.1.1 (§3) — `compose up -d` may skip unchanged caddy; recreate forces re-read of bind-mounted Caddyfile + LE retry.
 # KO: Caddy 컨테이너가 그대로면 마운트된 Caddyfile 변경·SAN 갱신이 TLS에 반영되지 않을 수 있어 항상 재생성한다.
 # JA: CaddyコンテナがそのままだとマウントされたCaddyfile変更がTLSに反映されないことがあるため常に再作成する。
 # EN: If the caddy container is unchanged, bind-mount updates may not affect TLS; always force-recreate caddy after up.
-if docker compose -f compose.web.yaml ps -q caddy >/dev/null 2>&1; then
+if dc_web ps -q caddy >/dev/null 2>&1; then
   echo "[ec2-pull-restart] recreating caddy to apply Caddyfile / certificates"
-  docker compose -f compose.web.yaml up -d --force-recreate --no-deps caddy
+  dc_web up -d --force-recreate --no-deps caddy
 fi
 
 # Root-owned 시드(JSONL·private) 직후 nextjs 가 append 하지 못하는 문제 방지.

@@ -17,21 +17,30 @@ fail() { printf '[FAIL] %s\n' "$*"; FAILS=$((FAILS + 1)); }
 
 dc() {
   if docker info >/dev/null 2>&1; then
-    docker compose "$@"
+    env -u COMPOSE_FILE docker compose "$@"
   else
-    sudo docker compose "$@"
+    sudo env -u COMPOSE_FILE docker compose "$@"
   fi
 }
 
 check_http_code() {
   local url="$1"
   local label="$2"
-  local code
-  code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 "$url" || true)"
-  if [[ "$code" =~ ^[23][0-9][0-9]$ ]]; then
-    ok "${label}: HTTP ${code}"
-    return 0
-  fi
+  local max_attempts="${OPUS_HTTPS_HEALTH_RETRIES:-18}"
+  local sleep_s="${OPUS_HTTPS_HEALTH_SLEEP:-5}"
+  local code="" attempt=1
+  while [[ $attempt -le $max_attempts ]]; do
+    code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 12 "$url" 2>/dev/null || true)"
+    if [[ "$code" =~ ^[23][0-9][0-9]$ ]]; then
+      ok "${label}: HTTP ${code}"
+      return 0
+    fi
+    if [[ $attempt -lt $max_attempts ]]; then
+      log "${label}: wait HTTPS attempt ${attempt}/${max_attempts} (code=${code:-n/a})"
+      sleep "$sleep_s"
+    fi
+    attempt=$((attempt + 1))
+  done
   fail "${label}: HTTP ${code:-n/a}"
   return 1
 }
@@ -55,8 +64,9 @@ if [[ -z "$src" ]]; then
 fi
 submissions="$src/submissions.jsonl"
 if ! sudo test -f "$submissions"; then
-  fail "missing submissions file: $submissions"
-  exit 1
+  warn "missing submissions file (cold volume): $submissions — skip release E2E"
+  printf '\n[ops-release-e2e] done: fails=%d warns=%d\n' "$FAILS" "$WARNS"
+  exit 0
 fi
 
 log "Locate newest approved submission id"
@@ -100,7 +110,7 @@ check_http_code "${BASE_URL}/ko/releases/submission/${approved_id}" "KO release 
 check_http_code "${BASE_URL}/api/artwork-submissions/${approved_id}/public-preview" "Public preview"
 
 log "Verify releases index references the approved submission"
-if curl -sS --max-time 10 "${BASE_URL}/ko/releases" | python3 -c 'import sys; html=sys.stdin.read(); needle=sys.argv[1]; sys.exit(0 if needle in html else 1)' "$approved_id"; then
+if curl -sS --max-time 12 "${BASE_URL}/ko/releases" 2>/dev/null | python3 -c 'import sys; html=sys.stdin.read(); needle=sys.argv[1]; sys.exit(0 if needle in html else 1)' "$approved_id"; then
   ok "KO releases page contains submission id link"
 else
   fail "KO releases page does not include approved submission id"

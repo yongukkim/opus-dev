@@ -19,9 +19,9 @@ cd "$APP_DIR"
 
 dc() {
   if docker info >/dev/null 2>&1; then
-    docker compose "$@"
+    env -u COMPOSE_FILE docker compose "$@"
   else
-    sudo docker compose "$@"
+    sudo env -u COMPOSE_FILE docker compose "$@"
   fi
 }
 

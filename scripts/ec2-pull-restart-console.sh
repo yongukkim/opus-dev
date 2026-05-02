@@ -35,7 +35,7 @@ fi
 cd "$APP_DIR"
 export OPUS_CONSOLE_IMAGE OPUS_WEB_IMAGE
 
-export COMPOSE_FILE=compose.console.yaml
+dc_console() { env -u COMPOSE_FILE docker compose -f compose.console.yaml "$@"; }
 
 docker image prune -af || true
 docker container prune -f || true
@@ -53,12 +53,12 @@ else
   echo "[ec2-pull-restart-console] WARN: /etc/opus/opus.env missing — skipping prisma migrate deploy" >&2
 fi
 
-docker compose -f compose.console.yaml up -d
-docker compose -f compose.console.yaml ps
+dc_console up -d
+dc_console ps
 
-if docker compose -f compose.console.yaml ps -q caddy >/dev/null 2>&1; then
+if dc_console ps -q caddy >/dev/null 2>&1; then
   echo "[ec2-pull-restart-console] recreating caddy"
-  docker compose -f compose.console.yaml up -d --force-recreate --no-deps caddy
+  dc_console up -d --force-recreate --no-deps caddy
 fi
 
 notify "ok" "branch=$BRANCH console=$OPUS_CONSOLE_IMAGE host=$(hostname)"

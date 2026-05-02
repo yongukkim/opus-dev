@@ -18,9 +18,9 @@ die() { printf '[backup-opus-storage] ERROR: %s\n' "$*" >&2; exit 1; }
 
 dc() {
   if docker info >/dev/null 2>&1; then
-    docker compose "$@"
+    env -u COMPOSE_FILE docker compose "$@"
   else
-    sudo docker compose "$@"
+    sudo env -u COMPOSE_FILE docker compose "$@"
   fi
 }
 
