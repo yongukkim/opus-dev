@@ -23,12 +23,13 @@ services:
       - path: /etc/opus/opus.env
         required: false
     restart: unless-stopped
+    # Root is enough for liveness; /ko/login can be slower on t4g.nano cold start.
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3010/ko/login', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3010/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
       interval: 10s
-      timeout: 3s
-      retries: 12
-      start_period: 25s
+      timeout: 5s
+      retries: 18
+      start_period: 120s
 
   caddy:
     image: caddy:2-alpine
@@ -41,9 +42,10 @@ services:
       - ./infra/caddy/Caddyfile.console:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+    # Caddy must not block on full Next health (nano OOM/slow boot); edge TLS can come up first.
     depends_on:
       opus-console:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "caddy", "version"]
       interval: 30s
