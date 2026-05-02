@@ -83,6 +83,10 @@ jobs:
     needs: build-and-push
     if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
     runs-on: ubuntu-latest
+    # ISO 27001 A.9.4.2 — deploy job token is separate from build; GHCR pull on EC2 needs packages:read.
+    permissions:
+      contents: read
+      packages: read
     steps:
       # 새 EC2(AMI만 깔린 머신)에는 Docker가 없을 수 있음 — 한 번 설치 후 다음 SSH에서 배포.
       - name: Ensure Docker on EC2 (fresh host)

@@ -80,6 +80,13 @@ jobs:
     needs: build-and-push
     if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
     runs-on: ubuntu-latest
+    # ISO 27001 A.9.4.2 / A.15.1.1 (CLAUDE.md §2, §8) — GITHUB_TOKEN passed to EC2 for GHCR pull.
+    # KO: deploy job 은 build job 과 토큰 권한이 분리되므로 packages:read 를 명시해야 ghcr 로그인·pull 이 된다.
+    # JA: deploy ジョブは build とトークン権限が分かれるため、packages:read を明示しないと ghcr ログイン・pull に失敗する。
+    # EN: Deploy job’s token is separate from build; declare packages:read or GHCR login/pull from EC2 fails.
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Lowercase repo owner
         id: owner
@@ -119,7 +126,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          command_timeout: 20m
+          command_timeout: 30m
           script_stop: true
           script: |
-            bash -lc 'set -eo pipefail; WIMG="ghcr.io/${{ steps.owner.outputs.value }}/opus-web:latest"; CIMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-console] web=$WIMG console=$CIMG br=$BR host=${{ steps.chost.outputs.host }}"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin 2>/dev/null || echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$WIMG" OPUS_CONSOLE_IMAGE="$CIMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart-console.sh"'
+            bash -lc 'set -eo pipefail; WIMG="ghcr.io/${{ steps.owner.outputs.value }}/opus-web:latest"; CIMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-console] web=$WIMG console=$CIMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin 2>/dev/null || echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$WIMG" OPUS_CONSOLE_IMAGE="$CIMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart-console.sh"'
