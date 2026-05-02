@@ -34,17 +34,17 @@ importers:
         specifier: ^6.19.0
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
       bcryptjs:
-        specifier: ^3.0.2
+        specifier: ^3.0.3
         version: 3.0.3
       next:
         specifier: ^16.2.1
         version: 16.2.1(babel-plugin-react-compiler@1.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       next-auth:
         specifier: 5.0.0-beta.31
-        version: 5.0.0-beta.31(next@16.2.1(babel-plugin-react-compiler@1.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(nodemailer@6.10.1)(react@19.0.0)
+        version: 5.0.0-beta.31(next@16.2.1(babel-plugin-react-compiler@1.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(nodemailer@7.0.13)(react@19.0.0)
       nodemailer:
-        specifier: ^6.10.1
-        version: 6.10.1
+        specifier: ^7.0.13
+        version: 7.0.13
       pg:
         specifier: ^8.20.0
         version: 8.20.0
@@ -62,7 +62,7 @@ importers:
         specifier: ^22.13.5
         version: 22.19.15
       '@types/nodemailer':
-        specifier: ^6.4.17
+        specifier: ^6.4.23
         version: 6.4.23
       '@types/react':
         specifier: ^19.0.10
@@ -4165,10 +4165,6 @@ packages:
   node-releases@2.0.36:
     resolution: {integrity: sha512-TdC8FSgHz8Mwtw9g5L4gR/Sh9XhSP/0DEkQxfEFXOpiul5IiHgHan2VhYYb6agDSfp4KuvltmGApc8HMgUrIkA==}
 
-  nodemailer@6.10.1:
-    resolution: {integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==}
-    engines: {node: '>=6.0.0'}
-
   nodemailer@7.0.13:
     resolution: {integrity: sha512-PNDFSJdP+KFgdsG3ZzMXCgquO7I6McjY2vlqILjtJd0hy8wEvtugS9xKRF2NWlPNGxvLCXlTNIae4serI7dinw==}
     engines: {node: '>=6.0.0'}
@@ -5471,16 +5467,6 @@ snapshots:
   '@adraffy/ens-normalize@1.11.1': {}
 
   '@alloc/quick-lru@5.2.0': {}
-
-  '@auth/core@0.41.2(nodemailer@6.10.1)':
-    dependencies:
-      '@panva/hkdf': 1.2.1
-      jose: 6.2.2
-      oauth4webapi: 3.8.5
-      preact: 10.24.3
-      preact-render-to-string: 6.5.11(preact@10.24.3)
-    optionalDependencies:
-      nodemailer: 6.10.1
 
   '@auth/core@0.41.2(nodemailer@7.0.13)':
     dependencies:
@@ -10405,14 +10391,6 @@ snapshots:
 
   negotiator@0.6.4: {}
 
-  next-auth@5.0.0-beta.31(next@16.2.1(babel-plugin-react-compiler@1.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(nodemailer@6.10.1)(react@19.0.0):
-    dependencies:
-      '@auth/core': 0.41.2(nodemailer@6.10.1)
-      next: 16.2.1(babel-plugin-react-compiler@1.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      react: 19.0.0
-    optionalDependencies:
-      nodemailer: 6.10.1
-
   next-auth@5.0.0-beta.31(next@16.2.1(babel-plugin-react-compiler@1.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(nodemailer@7.0.13)(react@19.0.0):
     dependencies:
       '@auth/core': 0.41.2(nodemailer@7.0.13)
@@ -10461,10 +10439,7 @@ snapshots:
 
   node-releases@2.0.36: {}
 
-  nodemailer@6.10.1: {}
-
-  nodemailer@7.0.13:
-    optional: true
+  nodemailer@7.0.13: {}
 
   normalize-path@3.0.0: {}
 

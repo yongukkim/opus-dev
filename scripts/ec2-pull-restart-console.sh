@@ -35,7 +35,7 @@ fi
 cd "$APP_DIR"
 export OPUS_CONSOLE_IMAGE OPUS_WEB_IMAGE
 
-unset COMPOSE_FILE
+export COMPOSE_FILE=compose.console.yaml
 
 docker image prune -af || true
 docker container prune -f || true

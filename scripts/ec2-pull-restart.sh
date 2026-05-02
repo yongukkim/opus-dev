@@ -34,8 +34,8 @@ fi
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
 
-# Compose v2 merges host COMPOSE_FILE with -f; storefront EC2 must not inherit compose.console.yaml from shell profile.
-unset COMPOSE_FILE
+# Storefront host: force a single compose file (unset is not enough if ~/.profile or repo .env re-exported COMPOSE_FILE).
+export COMPOSE_FILE=compose.web.yaml
 
 # Always take a point-in-time storage backup before rollout.
 if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then
