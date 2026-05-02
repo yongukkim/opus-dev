@@ -1,4 +1,5 @@
 name: build-and-deploy-console
+# Re-run after changing repo secrets (e.g. CONSOLE_EC2_HOST): push this file or use Actions → Run workflow.
 
 on:
   push:
