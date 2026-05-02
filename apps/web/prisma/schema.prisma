@@ -49,6 +49,8 @@ model User {
   emailVerified DateTime? @map("email_verified")
   name          String?
   image         String?
+  /// Bcrypt hash for operator-console email/password auth only (OAuth-only storefront users stay null).
+  passwordHash String? @map("password_hash") @db.VarChar(255)
 
   // --- OPUS application role (default collector). Operator/Artist promotion is a privileged backend op. ---
   role OpusRole @default(COLLECTOR)

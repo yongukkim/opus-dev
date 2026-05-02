@@ -39,7 +39,7 @@ jobs:
             APP_DIR="$APP" bash "$APP/scripts/ops-caddy-reload.sh"
             cd "$APP" && docker compose -f compose.web.yaml up -d --force-recreate --no-deps caddy
             sleep 12
-            curl -sfI --max-time 30 "https://console.opus-store.com/login" | head -n 8
+            curl -sfI --max-time 30 "https://console.opus-store.com/ko/login" | head -n 8
             echo "[caddy-reload] done branch=$BR"
             '
 
@@ -49,4 +49,4 @@ jobs:
           sleep 20
           echo | openssl s_client -connect console.opus-store.com:443 -servername console.opus-store.com 2>&1 | tee /tmp/ossl.txt
           grep -E "subject=|issuer=" /tmp/ossl.txt
-          curl -sfI --max-time 30 "https://console.opus-store.com/login" | head -n 8
+          curl -sfI --max-time 30 "https://console.opus-store.com/ko/login" | head -n 8
