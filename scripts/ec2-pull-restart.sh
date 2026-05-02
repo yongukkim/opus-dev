@@ -33,6 +33,8 @@ fi
 
 cd "$APP_DIR"
 export OPUS_WEB_IMAGE
+# OAuth / Auth.js canonical URL for the web container (overrides any AUTH_URL inside shared opus.env).
+export AUTH_URL_WEB="${AUTH_URL_WEB:-$BASE_URL}"
 
 # Storefront: only compose.web.yaml — strip host/repo COMPOSE_FILE so Docker does not merge extra files.
 dc_web() { env -u COMPOSE_FILE docker compose -f compose.web.yaml "$@"; }
