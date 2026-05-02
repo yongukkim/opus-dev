@@ -31,7 +31,8 @@ fi
 cd "$APP_DIR"
 CID="$(dc -f "$COMPOSE_FILE" ps -q "$SERVICE_NAME" 2>/dev/null || true)"
 if [[ -z "${CID:-}" ]]; then
-  die "service '$SERVICE_NAME' is not running"
+  log "skip: service '$SERVICE_NAME' is not running (cold host or first deploy — no volume snapshot this cycle)"
+  exit 0
 fi
 
 SRC="$(docker inspect "$CID" --format '{{range .Mounts}}{{if eq .Destination "/app/storage"}}{{.Source}}{{end}}{{end}}')"
