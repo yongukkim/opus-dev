@@ -1,0 +1,56 @@
+# Operator console EC2 — Caddy (443) → opus-console :3010. Same DATABASE_URL as web via /etc/opus/opus.env.
+# 로컬: docker compose -f compose.console.yaml up --build -d
+# EC2: scripts/ec2-pull-restart-console.sh
+#
+# ISO 27001 A.10.1.1 / A.13.1.3 (CLAUDE.md §3, §6)
+# KO: 스토어 EC2와 분리된 호스트에서만 콘솔 컨테이너를 노출한다.
+# JA: ストアEC2と分離したホストでのみコンソールコンテナを公開する。
+# EN: Run the console container only on the dedicated console host (not the storefront EC2).
+
+services:
+  opus-console:
+    image: ${OPUS_CONSOLE_IMAGE:-opus-console:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.console
+    pull_policy: missing
+    expose:
+      - "3010"
+    environment:
+      NODE_ENV: production
+      AUTH_URL: ${AUTH_URL_CONSOLE:-https://console.opus-store.com}
+    env_file:
+      - path: /etc/opus/opus.env
+        required: false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3010/ko/login', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 25s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./infra/caddy/Caddyfile.console:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      opus-console:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "caddy", "version"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  caddy_data:
+  caddy_config:

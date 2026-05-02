@@ -1,0 +1,21 @@
+# OPUS operator console edge — console.opus-store.com only (dedicated EC2).
+#
+# ISO 27001 A.10.1.1 / A.13.1.3 (CLAUDE.md §3, §6)
+# KO: 콘솔 전용 호스트에서 Let's Encrypt·TLS를 종단한다.
+# JA: コンソール専用ホストでLet's Encrypt/TLSを終端する。
+# EN: Terminate TLS for the operator console on its own host.
+
+{
+	email admin@opus-store.com
+}
+
+console.opus-store.com {
+	encode zstd gzip
+
+	reverse_proxy opus-console:3010
+
+	log {
+		output stderr
+		format console
+	}
+}
