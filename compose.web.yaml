@@ -47,6 +47,10 @@ services:
       - "3010"
     environment:
       NODE_ENV: production
+      # KO: 웹과 동일 `opus.env`에 `AUTH_URL`(스토어)이 있으면 콘솔 OAuth 쿠키·redirect_uri가 app으로 고정되어 콜백 500이 난다.
+      # JA: ウェブと同一 `opus.env` に `AUTH_URL`(ストア)があるとコンソールOAuthが app に固定されコールバックで失敗する。
+      # EN: Shared `opus.env` often sets `AUTH_URL` for the storefront; console must override so Auth.js uses this host.
+      AUTH_URL: ${AUTH_URL_CONSOLE:-https://console.opus-store.com}
     env_file:
       - path: /etc/opus/opus.env
         required: false
