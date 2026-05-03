@@ -18,10 +18,10 @@ type EditionDraft = {
 };
 
 function badgeClass(kind: "neutral" | "good" | "warn" | "bad"): string {
-  if (kind === "good") return "bg-emerald-50 text-emerald-800 ring-emerald-200";
-  if (kind === "warn") return "bg-amber-50 text-amber-900 ring-amber-200";
-  if (kind === "bad") return "bg-rose-50 text-rose-800 ring-rose-200";
-  return "bg-gray-50 text-gray-700 ring-gray-200";
+  if (kind === "good") return "bg-emerald-950/60 text-emerald-300 ring-emerald-700/40";
+  if (kind === "warn") return "bg-amber-950/60 text-amber-300 ring-amber-700/40";
+  if (kind === "bad") return "bg-rose-950/60 text-rose-300 ring-rose-700/40";
+  return "bg-white/5 text-[#F6F4F0]/60 ring-white/10";
 }
 
 function statusLabel(s: ReviewStatus): string {
@@ -77,8 +77,8 @@ function draftToParsedEdition(d: EditionDraft): ParsedEdition | null {
 }
 
 const inputCls = (invalid: boolean) =>
-  `mt-1 w-full rounded-md border px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/30 ${
-    invalid ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+  `mt-1 w-full rounded-md border px-2.5 py-1.5 text-sm text-[#F6F4F0] outline-none focus:ring-2 focus:ring-[#DEB892]/30 ${
+    invalid ? "border-rose-500/50 bg-rose-950/30" : "border-white/15 bg-[#0E0E0E]"
   }`;
 
 export function ConsoleReviewWorkspace({
@@ -259,14 +259,14 @@ export function ConsoleReviewWorkspace({
   return (
     <div className="mt-8 space-y-6">
       {readOnlyPreview ? (
-        <p className="rounded-md border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-600">
+        <p className="rounded-md border border border-white/10 bg-white/5 px-3 py-2 text-sm text-[#F6F4F0]/60">
           미리보기 모드 — 샘플 데이터만 표시됩니다. 운영자 계정으로 로그인해야 실제 검수가 가능합니다.
         </p>
       ) : null}
-      <section className="rounded-lg border border-gray-200 bg-gray-50/80 p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">대기 목록</p>
+      <section className="rounded-lg border border-white/10 bg-[#141414] p-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-[#DEB892]/70">대기 목록</p>
         {actionableRows.length === 0 ? (
-          <p className="mt-2 text-sm text-gray-600">검수 대기 중인 작품이 없습니다.</p>
+          <p className="mt-2 text-sm text-[#F6F4F0]/55">검수 대기 중인 작품이 없습니다.</p>
         ) : (
           <>
             <ul className="mt-4 flex gap-3 overflow-x-auto pb-2">
@@ -279,33 +279,33 @@ export function ConsoleReviewWorkspace({
                       type="button"
                       onClick={() => setSelectedId(r.id)}
                       className={`w-28 overflow-hidden rounded-lg border text-left transition ${
-                        active ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-200 bg-white hover:border-gray-300"
+                        active ? "border-[#DEB892] ring-2 ring-[#DEB892]/25" : "border-white/10 bg-[#1a1a1a] hover:border-white/20"
                       }`}
                     >
-                      <div className="relative aspect-[4/5] w-full bg-gray-100">
+                      <div className="relative aspect-[4/5] w-full bg-[#0E0E0E]">
                         {readOnlyPreview ? (
-                          <div className="flex h-full items-center justify-center px-1 text-center text-[0.6rem] text-gray-500">
+                          <div className="flex h-full items-center justify-center px-1 text-center text-[0.6rem] text-[#F6F4F0]/40">
                             자산 없음
                           </div>
                         ) : isImage ? (
                           // eslint-disable-next-line @next/next/no-img-element -- dynamic operator asset URLs; avoid Image remotePatterns churn
                           <img src={assetUrl(r.id)} alt="" className="h-full w-full object-cover" />
                         ) : (
-                          <div className="flex h-full items-center justify-center text-[0.65rem] text-gray-500">Video</div>
+                          <div className="flex h-full items-center justify-center text-[0.65rem] text-[#F6F4F0]/40">Video</div>
                         )}
                       </div>
-                      <p className="truncate px-2 py-1.5 text-xs text-gray-800">{r.artworkTitle}</p>
+                      <p className="truncate px-2 py-1.5 text-xs text-[#F6F4F0]/85">{r.artworkTitle}</p>
                     </button>
                   </li>
                 );
               })}
             </ul>
             {selectedRow && editionDraft ? (
-              <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4">
+              <div className="mt-4 rounded-lg border border-white/10 bg-[#141414] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <h2 className="text-base font-medium text-gray-900">{selectedRow.artworkTitle}</h2>
+                  <h2 className="text-base font-medium text-[#F6F4F0]">{selectedRow.artworkTitle}</h2>
                   {readOnlyPreview ? (
-                    <span className="rounded-md border border-dashed border-gray-300 px-3 py-1.5 text-xs text-gray-500">
+                    <span className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-[#F6F4F0]/40">
                       자산 없음
                     </span>
                   ) : (
@@ -313,16 +313,16 @@ export function ConsoleReviewWorkspace({
                       href={assetUrl(selectedRow.id)}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+                      className="rounded-md border border-white/15 px-3 py-1.5 text-xs font-medium text-[#DEB892] hover:bg-white/5"
                     >
                       원본 열기
                     </a>
                   )}
                 </div>
-                <p className="mt-1 font-mono text-xs text-gray-500">{formatEdition(selectedRow)}</p>
-                <div className="mt-3 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+                <p className="mt-1 font-mono text-xs text-[#F6F4F0]/45">{formatEdition(selectedRow)}</p>
+                <div className="mt-3 overflow-hidden rounded-md border border-white/10 bg-[#0E0E0E]">
                   {readOnlyPreview ? (
-                    <div className="flex min-h-[12rem] items-center justify-center bg-gray-100 text-sm text-gray-500">
+                    <div className="flex min-h-[12rem] items-center justify-center bg-[#1a1a1a] text-sm text-[#F6F4F0]/40">
                       미리보기에서는 자산 표시 불가
                     </div>
                   ) : (selectedRow.mime ?? "").startsWith("image/") ? (
@@ -333,11 +333,11 @@ export function ConsoleReviewWorkspace({
                   )}
                 </div>
 
-                <div className={`mt-5 rounded-lg border border-gray-200 p-4 ${readOnlyPreview ? "opacity-80" : ""}`}>
-                  <p className="text-xs font-medium uppercase text-gray-500">에디션 설정 (검수 대기 중 수정 가능)</p>
+                <div className={`mt-5 rounded-lg border border-white/10 p-4 ${readOnlyPreview ? "opacity-80" : ""}`}>
+                  <p className="text-xs font-medium uppercase text-[#DEB892]/70">에디션 설정 (검수 대기 중 수정 가능)</p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div>
-                      <p className="text-xs text-gray-600">모드</p>
+                      <p className="text-xs text-[#F6F4F0]/55">모드</p>
                       <div className="mt-1 flex gap-3 text-sm">
                         <label className="flex items-center gap-2">
                           <input
@@ -364,7 +364,7 @@ export function ConsoleReviewWorkspace({
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">총 수량</p>
+                      <p className="text-xs text-[#F6F4F0]/55">총 수량</p>
                       <input
                         name="editionTotal"
                         value={editionDraft.editionTotal}
@@ -376,7 +376,7 @@ export function ConsoleReviewWorkspace({
                       />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">최초 발행 수량</p>
+                      <p className="text-xs text-[#F6F4F0]/55">최초 발행 수량</p>
                       <input
                         name="initialMint"
                         value={editionDraft.initialMint}
@@ -388,7 +388,7 @@ export function ConsoleReviewWorkspace({
                       />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">번호 부여</p>
+                      <p className="text-xs text-[#F6F4F0]/55">번호 부여</p>
                       <select
                         name="numberingPolicy"
                         value={editionDraft.numberingPolicy}
@@ -401,7 +401,7 @@ export function ConsoleReviewWorkspace({
                       </select>
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="flex gap-2 text-sm text-gray-700">
+                      <label className="flex gap-2 text-sm text-[#F6F4F0]/80">
                         <input
                           type="checkbox"
                           name="lockEdition"
@@ -416,14 +416,14 @@ export function ConsoleReviewWorkspace({
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-xs text-gray-600">작가에게 전달할 메모 (반려 / 수정 요청 시)</p>
+                  <p className="text-xs text-[#F6F4F0]/55">작가에게 전달할 메모 (반려 / 수정 요청 시)</p>
                   <textarea
                     value={reviewNoteDraft}
                     onChange={(e) => setReviewNoteDraft(e.target.value)}
                     rows={3}
                     maxLength={800}
                     disabled={readOnlyPreview}
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/30 disabled:bg-gray-100"
+                    className="mt-1 w-full rounded-md border border-white/15 bg-[#0E0E0E] px-3 py-2 text-sm text-[#F6F4F0] outline-none focus:ring-2 focus:ring-[#DEB892]/30 disabled:opacity-50"
                   />
                 </div>
 
@@ -432,7 +432,7 @@ export function ConsoleReviewWorkspace({
                     type="button"
                     disabled={readOnlyPreview || pending === selectedRow.id}
                     onClick={() => void applyReviewFromPanel({ reviewStatus: "approved", contentRating: "general" })}
-                    className="rounded-md bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                    className="rounded-md bg-[#DEB892] px-3 py-2 text-xs font-medium text-[#1a1510] hover:bg-[#e8c9a0] disabled:opacity-50"
                   >
                     승인 (일반)
                   </button>
@@ -440,7 +440,7 @@ export function ConsoleReviewWorkspace({
                     type="button"
                     disabled={readOnlyPreview || pending === selectedRow.id}
                     onClick={() => void applyReviewFromPanel({ reviewStatus: "approved", contentRating: "mature" })}
-                    className="rounded-md border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-800 hover:bg-gray-50 disabled:opacity-50"
+                    className="rounded-md border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-[#F6F4F0]/80 hover:bg-white/10 disabled:opacity-50"
                   >
                     승인 (연령제한)
                   </button>
@@ -468,11 +468,11 @@ export function ConsoleReviewWorkspace({
       </section>
 
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs font-medium uppercase text-gray-500">필터</span>
+        <span className="text-xs font-medium uppercase text-[#DEB892]/70">필터</span>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value as ReviewStatus | "all")}
-          className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+          className="rounded-md border border-white/15 bg-[#0E0E0E] px-3 py-2 text-sm text-[#F6F4F0]"
         >
           <option value="pending_review">검수 대기</option>
           <option value="approved">승인됨</option>
@@ -482,15 +482,15 @@ export function ConsoleReviewWorkspace({
         </select>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto_auto_minmax(0,1.2fr)] gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3 text-xs font-medium text-gray-600">
+      <div className="overflow-hidden rounded-lg border border-white/10 shadow-sm">
+        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto_auto_minmax(0,1.2fr)] gap-3 border-b border-white/10 bg-[#141414] px-4 py-3 text-xs font-medium text-[#DEB892]/70">
           <span>작품</span>
           <span>작가</span>
           <span>상태</span>
           <span>등급</span>
           <span>액션</span>
         </div>
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-white/[0.06]">
           {filtered.map((r) => {
             const statusKind =
               r.reviewStatus === "approved"
@@ -510,16 +510,16 @@ export function ConsoleReviewWorkspace({
                 className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto_auto_minmax(0,1.2fr)] gap-3 px-4 py-3 text-sm"
               >
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900">{r.artworkTitle}</p>
+                  <p className="truncate font-medium text-[#F6F4F0]">{r.artworkTitle}</p>
                   {typeof r.priceJpy === "number" ? (
-                    <p className="mt-0.5 font-mono text-xs text-gray-500">¥{r.priceJpy.toLocaleString("ja-JP")}</p>
+                    <p className="mt-0.5 font-mono text-xs text-[#F6F4F0]/45">¥{r.priceJpy.toLocaleString("ja-JP")}</p>
                   ) : null}
-                  <p className="mt-0.5 font-mono text-xs text-gray-400">{formatEdition(r)}</p>
-                  <p className="font-mono text-xs text-gray-400">{r.id}</p>
+                  <p className="mt-0.5 font-mono text-xs text-[#F6F4F0]/35">{formatEdition(r)}</p>
+                  <p className="font-mono text-xs text-[#F6F4F0]/35">{r.id}</p>
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-gray-800">{r.nickname}</p>
-                  <p className="font-mono text-xs text-gray-400">{r.artistId}</p>
+                  <p className="truncate text-[#F6F4F0]/80">{r.nickname}</p>
+                  <p className="font-mono text-xs text-[#F6F4F0]/35">{r.artistId}</p>
                 </div>
                 <span className={`h-fit w-fit rounded-full px-2.5 py-0.5 text-xs ring-1 ${badgeClass(statusKind)}`}>
                   {statusLabel(r.reviewStatus)}
@@ -532,7 +532,7 @@ export function ConsoleReviewWorkspace({
                     type="button"
                     disabled={readOnlyPreview || busy}
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "approved", contentRating: "general" })}
-                    className="rounded border border-gray-200 bg-white px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
+                    className="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#F6F4F0]/80 hover:bg-white/10 disabled:opacity-50"
                   >
                     승인
                   </button>
@@ -540,7 +540,7 @@ export function ConsoleReviewWorkspace({
                     type="button"
                     disabled={readOnlyPreview || busy}
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "approved", contentRating: "mature" })}
-                    className="rounded border border-gray-200 bg-white px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
+                    className="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#F6F4F0]/80 hover:bg-white/10 disabled:opacity-50"
                   >
                     연령제한 승인
                   </button>
@@ -550,7 +550,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() =>
                       void applyReviewFromTable(r, { reviewStatus: "changes_requested", contentRating: r.contentRating })
                     }
-                    className="rounded border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-900 disabled:opacity-50"
+                    className="rounded border border-amber-700/40 bg-amber-950/40 px-2 py-1 text-xs text-amber-300 disabled:opacity-50"
                   >
                     수정 요청
                   </button>
@@ -558,7 +558,7 @@ export function ConsoleReviewWorkspace({
                     type="button"
                     disabled={readOnlyPreview || busy}
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "rejected", contentRating: "explicit" })}
-                    className="rounded border border-rose-200 bg-rose-50 px-2 py-1 text-xs text-rose-900 disabled:opacity-50"
+                    className="rounded border border-rose-700/40 bg-rose-950/40 px-2 py-1 text-xs text-rose-300 disabled:opacity-50"
                   >
                     반려
                   </button>
