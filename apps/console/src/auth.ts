@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { authConfig } from "@/auth.config";
 import { ensureBootstrapOperatorRoleByEmail, OPUS_BOOTSTRAP_OPERATOR_EMAILS } from "@/lib/operatorBootstrap";
@@ -38,8 +39,10 @@ function mapDbRoleToSession(
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
-    // Google is spread from authConfig (activated when AUTH_GOOGLE_* env vars are present).
-    ...authConfig.providers,
+    // Google lives here (Node runtime only) — never in authConfig (Edge) to avoid redirect loops.
+    ...(process.env["AUTH_GOOGLE_ID"] && process.env["AUTH_GOOGLE_SECRET"]
+      ? [Google({ clientId: process.env["AUTH_GOOGLE_ID"]!, clientSecret: process.env["AUTH_GOOGLE_SECRET"]! })]
+      : []),
     Credentials({
       id: "credentials",
       name: "Credentials",
