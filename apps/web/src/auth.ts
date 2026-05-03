@@ -8,7 +8,6 @@ import { authConfig } from "@/auth.config";
 
 const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set([
   "admin@opus-store.com",
-  "kimvisors@gmail.com",
 ]);
 
 /**
