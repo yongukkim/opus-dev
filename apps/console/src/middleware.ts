@@ -13,7 +13,14 @@ export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const devPreview = isConsoleDevPreview();
 
-  const token = await getToken({ req, secret: process.env["AUTH_SECRET"] });
+  // Auth.js v5 (next-auth@5.x) uses "__Secure-authjs.session-token" in production (HTTPS)
+  // and "authjs.session-token" in development (HTTP).
+  const secret = process.env["AUTH_SECRET"] ?? "";
+  const token = await getToken({ req, secret })
+    ?? await getToken({ req, secret, cookieName: "__Secure-authjs.session-token" })
+    ?? await getToken({ req, secret, cookieName: "authjs.session-token" })
+    ?? await getToken({ req, secret, cookieName: "__Secure-next-auth.session-token" })
+    ?? await getToken({ req, secret, cookieName: "next-auth.session-token" });
   const isOperator = token?.["role"] === "operator";
 
   if (
