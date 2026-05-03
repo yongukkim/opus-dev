@@ -2,11 +2,15 @@ import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
 import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
+import { ArtistUpgradeForm } from "@/components/auth/ArtistUpgradeForm";
 
 type Props = { params: Promise<{ locale: string }> };
 
-// Same rationale as login — see login/page.tsx (ISO 27001 A.9.4.2 / §2).
+// ISO 27001 A.9.4.2 (§2) — session must be read at request time, not statically.
 export const dynamic = "force-dynamic";
 
 export default async function ArtistSignupPage({
@@ -19,10 +23,41 @@ export default async function ArtistSignupPage({
   const m = getDictionary(locale);
   const s = m.artistSignup ?? m.signup;
   const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/artist/onboarding/profile"));
-  const loginHref = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(returnTo)}`;
+  const loginHref = `${withLocale(locale, "/login")}?role=artist&returnTo=${encodeURIComponent(returnTo)}`;
   const googleOAuthConfigured = Boolean(
     process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
   );
+
+  // If already logged in as artist or operator, redirect to returnTo directly.
+  const session = await auth();
+  if (session?.user?.id) {
+    const role = session.user.role;
+    if (role === "artist" || role === "operator") {
+      redirect(returnTo);
+    }
+    // Logged in as collector → show upgrade form (consent + server action).
+    return (
+      <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
+        <div className="mx-auto max-w-md">
+          <p className="opus-text-metallic-soft text-center text-xs uppercase tracking-[0.4em]">OPUS</p>
+          <h1 className="mt-4 text-center font-display text-3xl tracking-[0.12em] text-opus-warm">
+            {s.title}
+          </h1>
+          <p className="mt-3 text-center text-sm text-opus-warm/55">{s.subtitle}</p>
+          <ArtistUpgradeForm
+            locale={locale}
+            returnTo={returnTo}
+            userId={session.user.id}
+            termsHref={withLocale(locale, "/terms")}
+            privacyHref={withLocale(locale, "/privacy")}
+            termsLabel={m.footer.terms}
+            privacyLabel={m.footer.privacy}
+            m={m}
+          />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
