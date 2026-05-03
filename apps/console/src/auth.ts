@@ -101,13 +101,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user }) {
+      // Prefer email lookup so Google OAuth (sub = numeric) maps correctly to our CUID-based User rows.
+      const emailKey = user?.email ?? token["email"] as string | undefined;
       const subjectId = user?.id ?? token.sub;
-      if (subjectId) {
-        token.sub = subjectId;
-        let dbUser = await prisma.user.findUnique({
-          where: { id: subjectId },
-          select: { role: true, email: true, name: true, image: true },
-        });
+      if (emailKey || subjectId) {
+        let dbUser = emailKey
+          ? await prisma.user.findFirst({
+              where: { email: { equals: emailKey, mode: "insensitive" } },
+              select: { id: true, role: true, email: true, name: true, image: true },
+            })
+          : await prisma.user.findUnique({
+              where: { id: subjectId! },
+              select: { id: true, role: true, email: true, name: true, image: true },
+            });
+        if (dbUser?.id) token.sub = dbUser.id;
         if (
           dbUser?.email &&
           dbUser.role !== "OPERATOR" &&
@@ -115,12 +122,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         ) {
           await ensureBootstrapOperatorRoleByEmail(dbUser.email);
           dbUser = await prisma.user.findUnique({
-            where: { id: subjectId },
-            select: { role: true, email: true, name: true, image: true },
+            where: { id: dbUser.id },
+            select: { id: true, role: true, email: true, name: true, image: true },
           });
         }
         token["role"] = mapDbRoleToSession(dbUser?.["role"]);
-        token["email"] = dbUser?.email ?? user?.email ?? token["email"] ?? undefined;
+        token["email"] = dbUser?.email ?? emailKey ?? undefined;
         token["name"] = dbUser?.name ?? user?.name ?? token["name"] ?? undefined;
         token["picture"] = dbUser?.image ?? user?.image ?? token["picture"] ?? undefined;
       }
