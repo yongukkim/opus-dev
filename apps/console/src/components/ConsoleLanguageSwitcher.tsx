@@ -33,7 +33,7 @@ export function ConsoleLanguageSwitcher({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2 text-xs text-[#F6F4F0]/45">
+    <div className="flex flex-wrap items-center gap-2 text-xs text-[#F6F4F0]/45">
       <span className="sr-only">Language</span>
       {locales.map((loc) => (
         <Link
