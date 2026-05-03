@@ -38,6 +38,8 @@ function mapDbRoleToSession(
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
+    // Google is spread from authConfig (activated when AUTH_GOOGLE_* env vars are present).
+    ...authConfig.providers,
     Credentials({
       id: "credentials",
       name: "Credentials",
