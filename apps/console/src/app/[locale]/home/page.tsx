@@ -22,7 +22,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
   const chromeUser = preview ? devPreviewChromeUser() : session!.user;
 
   return (
-    <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome}>
+    <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome} langLabels={t.lang}>
       <div className="border-b border-white/10 bg-[#141414] px-6 py-8">
         <h1 className="text-2xl font-semibold tracking-tight text-[#F6F4F0]">{t.dashboard.title}</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#F6F4F0]/70">{t.dashboard.subtitle}</p>

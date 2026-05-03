@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import type { Session } from "next-auth";
 import type { Locale } from "@/i18n/config";
 import type { ConsoleMessages } from "@/i18n/types";
 import { ConsoleSidebarNav } from "@/components/ConsoleSidebarNav";
+import { ConsoleLanguageSwitcher } from "@/components/ConsoleLanguageSwitcher";
 
 export function ConsoleChrome({
   user,
@@ -10,13 +12,14 @@ export function ConsoleChrome({
   previewMode = false,
   locale,
   labels,
+  langLabels,
 }: {
   user: Session["user"];
   children: React.ReactNode;
-  /** Local dev: bypass sign-in; no real session. */
   previewMode?: boolean;
   locale: Locale;
   labels: ConsoleMessages["chrome"];
+  langLabels: ConsoleMessages["lang"];
 }) {
   const signOutCallback = encodeURIComponent(`/${locale}/login`);
 
@@ -35,6 +38,11 @@ export function ConsoleChrome({
           <ConsoleSidebarNav locale={locale} labels={labels} />
           <div className="border-t border-white/10 p-4 text-xs text-[#F6F4F0]/50">
             <p className="truncate font-medium text-[#F6F4F0]/80">{user.email}</p>
+            <div className="mt-2">
+              <Suspense fallback={null}>
+                <ConsoleLanguageSwitcher locale={locale} labels={langLabels} />
+              </Suspense>
+            </div>
             {previewMode ? (
               <p className="mt-2">{labels.notSignedIn}</p>
             ) : (

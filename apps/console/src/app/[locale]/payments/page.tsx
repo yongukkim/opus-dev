@@ -28,7 +28,7 @@ export default async function PaymentsPlaceholderPage({ params }: { params: Prom
   const chromeUser = preview ? devPreviewChromeUser() : session!.user;
 
   return (
-    <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome}>
+    <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome} langLabels={t.lang}>
       <div className="border-b border-white/10 bg-[#141414] px-6 py-5">
         <h1 className="text-xl font-semibold tracking-tight text-[#F6F4F0]">{t.dashboard.cardPaymentsTitle}</h1>
         <p className="mt-1 max-w-2xl text-sm text-[#F6F4F0]/65">{t.dashboard.cardPaymentsBody}</p>

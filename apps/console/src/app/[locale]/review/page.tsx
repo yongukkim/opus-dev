@@ -39,7 +39,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ locale:
   }
 
   return (
-    <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome}>
+    <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome} langLabels={t.lang}>
       <div className="border-b border-white/10 px-6 py-6">
         <h1 className="text-2xl font-semibold tracking-tight text-[#F6F4F0]">{t.review.title}</h1>
         <p className="mt-1 text-sm text-[#F6F4F0]/60">{t.review.subtitle}</p>
