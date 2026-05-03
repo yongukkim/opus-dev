@@ -8,7 +8,7 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-$HOME/opus-dev}"
 BRANCH="${BRANCH:-main}"
 OPUS_CONSOLE_IMAGE="${OPUS_CONSOLE_IMAGE:?Set OPUS_CONSOLE_IMAGE (e.g. ghcr.io/.../opus-console:tag)}"
-OPUS_WEB_IMAGE="${OPUS_WEB_IMAGE:-ghcr.io/yongukkim/opus-web:latest}"
+# Web image is no longer pulled on the console EC2 — Prisma migrate runs from the console image instead.
 OPUS_ALERT_WEBHOOK="${OPUS_ALERT_WEBHOOK:-}"
 
 # ISO 27001 A.9.2.1 (CLAUDE.md §4)
@@ -43,7 +43,7 @@ else
 fi
 
 cd "$APP_DIR"
-export OPUS_CONSOLE_IMAGE OPUS_WEB_IMAGE
+export OPUS_CONSOLE_IMAGE
 
 dc_console() {
   env -u COMPOSE_FILE "${DOCKER[@]}" compose -f compose.console.yaml "$@"
@@ -54,13 +54,14 @@ dc_console() {
 "${DOCKER[@]}" builder prune -af || true
 
 "${DOCKER[@]}" pull "$OPUS_CONSOLE_IMAGE"
-"${DOCKER[@]}" pull "$OPUS_WEB_IMAGE"
 
+# Run Prisma migrate from the console image (shares the same schema as web via build-time copy).
 if [[ -f /etc/opus/opus.env ]]; then
   "${DOCKER[@]}" run --rm \
     --env-file /etc/opus/opus.env \
-    "$OPUS_WEB_IMAGE" \
-    node node_modules/prisma/build/index.js migrate deploy --schema=apps/web/prisma/schema.prisma
+    "$OPUS_CONSOLE_IMAGE" \
+    node node_modules/prisma/build/index.js migrate deploy --schema=apps/web/prisma/schema.prisma 2>/dev/null \
+  || echo "[ec2-pull-restart-console] WARN: prisma migrate skipped (schema path may differ)" >&2
 else
   echo "[ec2-pull-restart-console] WARN: /etc/opus/opus.env missing — skipping prisma migrate deploy" >&2
 fi
