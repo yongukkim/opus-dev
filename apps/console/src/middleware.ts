@@ -1,20 +1,20 @@
-import NextAuth from "next-auth";
-import { NextResponse } from "next/server";
-import { authConfig } from "@/auth.config";
+import { NextResponse, type NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { isConsoleDevPreview } from "@/lib/devPreview";
 import { localeFromPath, pathAfterLocale, resolveLocale } from "@/lib/localeResolve";
 
-const { auth } = NextAuth(authConfig);
-
 /**
  * ISO 27001 A.9.2.1 / A.18.1.4 (CLAUDE.md §4, §7)
- * KO: `/[locale]/…` 접두를 강제하고, 등록은 `OPUS_CONSOLE_REGISTER_SECRET`과 일치하는 `invite`가 있을 때만 허용한다.
- * JA: `/[locale]/…` プレフィックスを強制し、登録は `invite` がサーバ秘密と一致する場合のみ許可する。
- * EN: Force `/[locale]/…` prefix; `/register` is allowed only when `invite` matches `OPUS_CONSOLE_REGISTER_SECRET`.
+ * KO: Auth.js auth() 래퍼 대신 getToken()으로 JWT를 직접 검증해 리다이렉트 루프를 방지한다.
+ * JA: Auth.js auth() ラッパーの代わりに getToken() で JWT を直接検証し、リダイレクトループを防ぐ。
+ * EN: Use getToken() directly instead of auth() wrapper to avoid redirect loops in Edge middleware.
  */
-export default auth((req) => {
+export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const devPreview = isConsoleDevPreview();
+
+  const token = await getToken({ req, secret: process.env["AUTH_SECRET"] });
+  const isOperator = token?.["role"] === "operator";
 
   if (
     pathname.startsWith("/api") ||
@@ -52,58 +52,26 @@ export default auth((req) => {
   }
 
   if (rest === "/" || rest === "") {
-    if (devPreview) {
-      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/home`, req.url)));
-    }
-    if (!req.auth?.user?.id) {
-      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
-    }
-    if (req.auth.user.role !== "operator") {
-      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
-    }
+    if (devPreview) return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/home`, req.url)));
+    if (!token) return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
+    if (!isOperator) return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
     return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/home`, req.url)));
   }
 
-  if (rest.startsWith("/login")) {
+  if (rest.startsWith("/login") || rest.startsWith("/register")) {
     return withLocaleHeader(NextResponse.next());
   }
 
-  if (rest.startsWith("/register")) {
-    return withLocaleHeader(NextResponse.next());
-  }
-
-  if (rest.startsWith("/review")) {
-    if (devPreview) {
-      return withLocaleHeader(NextResponse.next());
-    }
-    if (!req.auth?.user?.id || req.auth.user.role !== "operator") {
-      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
-    }
-    return withLocaleHeader(NextResponse.next());
-  }
-
-  if (rest.startsWith("/home")) {
-    if (devPreview) {
-      return withLocaleHeader(NextResponse.next());
-    }
-    if (!req.auth?.user?.id || req.auth.user.role !== "operator") {
-      return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
-    }
-    return withLocaleHeader(NextResponse.next());
-  }
-
-  if (rest.startsWith("/payments")) {
-    if (devPreview) {
-      return withLocaleHeader(NextResponse.next());
-    }
-    if (!req.auth?.user?.id || req.auth.user.role !== "operator") {
+  if (rest.startsWith("/review") || rest.startsWith("/home") || rest.startsWith("/payments")) {
+    if (devPreview) return withLocaleHeader(NextResponse.next());
+    if (!token || !isOperator) {
       return withLocaleHeader(NextResponse.redirect(new URL(`/${locale}/login`, req.url)));
     }
     return withLocaleHeader(NextResponse.next());
   }
 
   return withLocaleHeader(NextResponse.next());
-});
+}
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
