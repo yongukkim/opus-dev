@@ -30,8 +30,6 @@ RUN groupadd --system --gid 1001 nodejs \
   && useradd --system --uid 1001 --gid nodejs nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/static ./apps/console/.next/static
-# nodemailer and other server-only deps are not bundled by Next standalone; carry the full hoisted tree.
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 USER nextjs
 EXPOSE 3010
 ENV PORT=3010
