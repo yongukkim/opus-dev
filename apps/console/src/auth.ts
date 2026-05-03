@@ -80,29 +80,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Google OAuth: only allowlisted emails may access the console.
       if (account?.provider === "google") {
         const email = user.email?.trim().toLowerCase() ?? "";
-        const allowed = buildAllowedEmailSet();
-        if (!email || !allowed.has(email)) {
-          return false;
-        }
-        // Ensure OPERATOR role is set for allowed Google sign-ins.
-        if (email) {
-          await ensureBootstrapOperatorRoleByEmail(email).catch(() => undefined);
-          // Upsert user so Google-only accounts exist in the shared DB.
-          await prisma.user.upsert({
-            where: { email },
-            create: {
-              email,
-              name: user.name ?? null,
-              image: user.image ?? null,
-              role: "OPERATOR",
-              emailVerified: new Date(),
-            },
-            update: { role: "OPERATOR" },
-          }).catch(() => undefined);
-        }
+        if (!email) return false;
+        // Upsert so Google-only accounts exist in the shared DB.
+        await prisma.user.upsert({
+          where: { email },
+          create: {
+            email,
+            name: user.name ?? null,
+            image: user.image ?? null,
+            role: "COLLECTOR",
+            emailVerified: new Date(),
+          },
+          update: {},
+        }).catch(() => undefined);
+        // Promote bootstrap operators.
+        await ensureBootstrapOperatorRoleByEmail(email).catch(() => undefined);
       }
       return true;
     },
