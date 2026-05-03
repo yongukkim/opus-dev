@@ -6,11 +6,27 @@ import { ensureBootstrapOperatorRoleByEmail, OPUS_BOOTSTRAP_OPERATOR_EMAILS } fr
 import { prisma } from "@/lib/prisma";
 
 /**
- * ISO 27001 / OPUS Security — operator console uses email + password (bcrypt) with verified email; roles from shared DB.
- * KO: Google OAuth를 쓰지 않고 Credentials로만 인증하며, 역할은 동일 Postgres `User` 행에서만 읽는다.
- * JA: Google OAuthを使わずCredentialsのみで認証し、ロールは同一PostgresのUser行のみから読む。
- * EN: Console authenticates with email/password (no Google SSO); roles are read only from shared `User` rows.
+ * ISO 27001 A.9.4.2 / A.9.2.1 (CLAUDE.md §2, §4) Console auth: Credentials + optional Google OAuth.
+ * KO: Credentials(이메일+비밀번호)와 Google OAuth를 모두 지원하며, Google은 허용 이메일 목록 또는
+ *     OPUS_BOOTSTRAP_OPERATOR_EMAILS에 있는 계정만 OPERATOR로 승격한다.
+ * JA: Credentials とオプションの Google OAuth を両立。Google は許可リストまたは
+ *     OPUS_BOOTSTRAP_OPERATOR_EMAILS のみ OPERATOR に昇格する。
+ * EN: Supports Credentials and Google OAuth. Google sign-in is restricted to allowlisted emails;
+ *     others are denied to prevent unauthorized operator access.
  */
+
+// ISO 27001 A.9.2.1 (§4) — OPUS_CONSOLE_ALLOWED_EMAILS is a comma-separated runtime allowlist.
+// KO: 환경변수에 없는 이메일은 Google OAuth로 로그인해도 콘솔 접근이 차단된다.
+// JA: 環境変数にないメールは Google OAuth でサインインしてもコンソールへのアクセスを拒否する。
+// EN: Emails not in the env var are blocked even if they authenticate successfully via Google.
+function buildAllowedEmailSet(): Set<string> {
+  const raw = process.env["OPUS_CONSOLE_ALLOWED_EMAILS"] ?? "";
+  const extra = raw
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return new Set([...Array.from(OPUS_BOOTSTRAP_OPERATOR_EMAILS).map((e) => e.toLowerCase()), ...extra]);
+}
 function mapDbRoleToSession(
   role: string | undefined,
 ): "collector" | "artist" | "operator" {
@@ -61,7 +77,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn() {
+    async signIn({ user, account }) {
+      // Google OAuth: only allowlisted emails may access the console.
+      if (account?.provider === "google") {
+        const email = user.email?.trim().toLowerCase() ?? "";
+        const allowed = buildAllowedEmailSet();
+        if (!email || !allowed.has(email)) {
+          return false;
+        }
+        // Ensure OPERATOR role is set for allowed Google sign-ins.
+        if (email) {
+          await ensureBootstrapOperatorRoleByEmail(email).catch(() => undefined);
+          // Upsert user so Google-only accounts exist in the shared DB.
+          await prisma.user.upsert({
+            where: { email },
+            create: {
+              email,
+              name: user.name ?? null,
+              image: user.image ?? null,
+              role: "OPERATOR",
+              emailVerified: new Date(),
+            },
+            update: { role: "OPERATOR" },
+          }).catch(() => undefined);
+        }
+      }
       return true;
     },
     async jwt({ token, user }) {

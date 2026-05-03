@@ -93,7 +93,14 @@ export default async function LoginPage({
             <p className="text-center text-xs text-[#F6F4F0]/45">{t.login.previewEnvHint}</p>
           </div>
         ) : null}
-        {!session?.user ? <ConsoleLoginForm locale={locale} t={t} queryBanner={queryBanner} /> : null}
+        {!session?.user ? (
+          <ConsoleLoginForm
+            locale={locale}
+            t={t}
+            queryBanner={queryBanner}
+            googleConfigured={Boolean(process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim())}
+          />
+        ) : null}
         <p className="mt-4 text-center text-sm text-[#F6F4F0]/50">
           {t.login.registerPrompt}{" "}
           <Link href={`/${locale}/register`} className="text-[#DEB892] underline decoration-[#DEB892]/40 hover:text-[#F6F4F0]">

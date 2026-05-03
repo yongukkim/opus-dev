@@ -12,6 +12,8 @@ export const ja: ConsoleMessages = {
     registerPrompt: "アカウントをお持ちでないですか？",
     registerLink: "新規登録",
     invitationNote: "登録後、メールで認証リンクをご確認ください。認証後にログインできます。",
+    continueWithGoogle: "Google で続ける",
+    orEmail: "またはメールでサインイン",
     publicSite: "公開 OPUS サイト",
     previewOpen: "レイアウトプレビュー（サインインなし）",
     previewEnvHint: "開発専用: .env.local に OPUS_CONSOLE_DEV_PREVIEW=1",

@@ -11,6 +11,8 @@ export type ConsoleMessages = {
     registerPrompt: string;
     registerLink: string;
     invitationNote: string;
+    continueWithGoogle: string;
+    orEmail: string;
     publicSite: string;
     previewOpen: string;
     previewEnvHint: string;

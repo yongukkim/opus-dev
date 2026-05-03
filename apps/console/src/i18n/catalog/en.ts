@@ -12,6 +12,8 @@ export const en: ConsoleMessages = {
     registerPrompt: "Need an account?",
     registerLink: "Sign up",
     invitationNote: "After signing up, check your email to verify your address. You can log in once verified.",
+    continueWithGoogle: "Continue with Google",
+    orEmail: "or sign in with email",
     publicSite: "Public OPUS site",
     previewOpen: "Open layout preview (no sign-in)",
     previewEnvHint: "Development only: set OPUS_CONSOLE_DEV_PREVIEW=1 in .env.local",

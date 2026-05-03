@@ -12,6 +12,8 @@ export const ko: ConsoleMessages = {
     registerPrompt: "계정이 없으신가요?",
     registerLink: "회원가입",
     invitationNote: "가입 후 이메일 인증 링크를 확인하세요. 인증 완료 후 로그인할 수 있습니다.",
+    continueWithGoogle: "Google로 계속하기",
+    orEmail: "또는 이메일로",
     publicSite: "공개 OPUS 사이트",
     previewOpen: "레이아웃 미리보기 (로그인 생략)",
     previewEnvHint: "개발 전용: .env.local에 OPUS_CONSOLE_DEV_PREVIEW=1",

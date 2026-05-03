@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState, type FormEvent } from "react";
+import { signIn } from "next-auth/react";
 import type { Locale } from "@/i18n/config";
 import type { ConsoleMessages } from "@/i18n/types";
 import { consoleLoginAction, type ConsoleLoginState } from "./actions";
@@ -19,10 +20,12 @@ export function ConsoleLoginForm({
   locale,
   t,
   queryBanner,
+  googleConfigured,
 }: {
   locale: Locale;
   t: ConsoleMessages;
   queryBanner?: { message: string; variant: "info" | "success" | "error" };
+  googleConfigured?: boolean;
 }) {
   const [state, formAction, pending] = useActionState<ConsoleLoginState | undefined, FormData>(
     consoleLoginAction,
@@ -33,6 +36,25 @@ export function ConsoleLoginForm({
     <div className="mt-6 space-y-4">
       {queryBanner ? <Banner message={queryBanner.message} variant={queryBanner.variant} /> : null}
       {state?.error ? <Banner message={state.error} variant="error" /> : null}
+      {googleConfigured ? (
+        <button
+          type="button"
+          onClick={() => signIn("google", { callbackUrl: `/${locale}/home` })}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-medium text-[#F6F4F0] shadow-sm hover:bg-white/10"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
+            <path fill="currentColor" d="M12 5.2c1.7 0 3.1.6 4.2 1.6l1.9-1.9C16.6 3.5 14.5 2.6 12 2.6 8 2.6 4.5 4.9 3 8.3l2.2 1.7C6.2 7.1 8.9 5.2 12 5.2Zm9.3 6.8c0-.7-.1-1.3-.2-1.9H12v3.6h5.3c-.2 1.2-.9 2.2-1.9 2.9l2.2 1.7c2-1.8 3.4-4.5 3.4-7.3ZM12 21.4c2.5 0 4.6-.8 6.1-2.3l-2.2-1.7c-.9.6-2.1 1-3.9 1-3 0-5.6-2-6.5-4.7l-2.3 1.8c1.5 3.3 5 5.5 8.8 5.5Zm-6.5-7.1c-.2-.6-.4-1.3-.4-2s.1-1.4.4-2L3.2 8.6c-.6 1.1-.9 2.4-.9 3.7s.3 2.6.9 3.7l2.3-1.7Z" />
+          </svg>
+          {t.login.continueWithGoogle}
+        </button>
+      ) : null}
+      {googleConfigured ? (
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-white/10" />
+          <span className="text-xs text-[#F6F4F0]/35">{t.login.orEmail}</span>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+      ) : null}
       <form action={formAction} className="space-y-3">
         <input type="hidden" name="locale" value={locale} />
         <div>
