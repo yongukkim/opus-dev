@@ -19,9 +19,6 @@ function loginBannerFromSearch(
   sp: LoginSearch,
   t: ReturnType<typeof getDictionary>,
 ): { message: string; variant: "info" | "success" | "error" } | undefined {
-  if (sp.register === "closed") {
-    return { message: t.login.banners.registerClosed, variant: "error" };
-  }
   if (sp.registered === "1") {
     return { message: t.login.banners.checkEmail, variant: "info" };
   }

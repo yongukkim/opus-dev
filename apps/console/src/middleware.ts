@@ -46,16 +46,9 @@ export default auth((req) => {
     return res;
   };
 
+  // Register is open (email verification required after sign-up; OPERATOR role granted manually).
   if (rest === "/register" || rest.startsWith("/register/")) {
-    const secret = process.env["OPUS_CONSOLE_REGISTER_SECRET"]?.trim();
-    const invite = req.nextUrl.searchParams.get("invite")?.trim();
-    if (!secret || invite !== secret) {
-      const url = req.nextUrl.clone();
-      url.pathname = `/${locale}/login`;
-      url.searchParams.delete("invite");
-      url.searchParams.set("register", "closed");
-      return withLocaleHeader(NextResponse.redirect(url));
-    }
+    return withLocaleHeader(NextResponse.next());
   }
 
   if (rest === "/" || rest === "") {
