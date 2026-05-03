@@ -1,7 +1,6 @@
 "use server";
 
 import { hash } from "bcryptjs";
-import type { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { getDictionary } from "@/i18n/catalog";
 import type { ConsoleMessages } from "@/i18n/types";
@@ -33,12 +32,6 @@ export async function consoleRegisterAction(
 ): Promise<ConsoleRegisterState> {
   const locale = localeFromFormData(formData);
   const t = getDictionary(locale);
-
-  const secret = process.env["OPUS_CONSOLE_REGISTER_SECRET"]?.trim();
-  const invite = String(formData.get("invite") ?? "").trim();
-  if (!secret || invite !== secret) {
-    return { error: t.errors.registerInviteInvalid };
-  }
 
   const email = normalizeEmail(String(formData.get("email") ?? ""));
   const password = String(formData.get("password") ?? "");
@@ -86,7 +79,8 @@ export async function consoleRegisterAction(
 
   let createdId: string;
   try {
-    const created = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const created = await prisma.$transaction(async (tx: any) => {
       const user = await tx.user.create({
         data: {
           email,

@@ -94,7 +94,13 @@ export default async function LoginPage({
           </div>
         ) : null}
         {!session?.user ? <ConsoleLoginForm locale={locale} t={t} queryBanner={queryBanner} /> : null}
-        <p className="mt-6 text-center text-xs text-[#F6F4F0]/40">
+        <p className="mt-4 text-center text-sm text-[#F6F4F0]/50">
+          {t.login.registerPrompt}{" "}
+          <Link href={`/${locale}/register`} className="text-[#DEB892] underline decoration-[#DEB892]/40 hover:text-[#F6F4F0]">
+            {t.login.registerLink}
+          </Link>
+        </p>
+        <p className="mt-4 text-center text-xs text-[#F6F4F0]/40">
           <a className="text-[#DEB892] underline decoration-[#DEB892]/40 hover:text-[#F6F4F0]" href={process.env["OPUS_STORE_PUBLIC_ORIGIN"] ?? "#"}>
             {t.login.publicSite}
           </a>

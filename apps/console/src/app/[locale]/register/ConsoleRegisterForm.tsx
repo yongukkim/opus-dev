@@ -11,11 +11,9 @@ const field =
 
 export function ConsoleRegisterForm({
   locale,
-  invite,
   t,
 }: {
   locale: Locale;
-  invite: string;
   t: ConsoleMessages;
 }) {
   const [state, formAction, pending] = useActionState<ConsoleRegisterState | undefined, FormData>(
@@ -26,7 +24,6 @@ export function ConsoleRegisterForm({
   return (
     <form action={formAction} className="mt-6 space-y-4">
       <input type="hidden" name="locale" value={locale} />
-      <input type="hidden" name="invite" value={invite} />
       {state?.error ? (
         <p className="rounded-md border border-red-500/25 bg-red-950/40 px-3 py-2 text-sm text-red-100">{state.error}</p>
       ) : null}

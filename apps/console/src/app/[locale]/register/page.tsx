@@ -8,21 +8,12 @@ import { ConsoleRegisterForm } from "./ConsoleRegisterForm";
 
 export default async function RegisterPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ invite?: string }>;
 }) {
   const { locale: raw } = await params;
   if (!isSupportedLocale(raw)) notFound();
   const locale = raw;
-
-  const sp = await searchParams;
-  const invite = typeof sp.invite === "string" ? sp.invite : "";
-  const secret = process.env["OPUS_CONSOLE_REGISTER_SECRET"]?.trim();
-  if (!secret || invite !== secret) {
-    notFound();
-  }
 
   const t = getDictionary(locale);
 
@@ -36,7 +27,7 @@ export default async function RegisterPage({
           </Suspense>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-[#F6F4F0]/70">{t.register.lead}</p>
-        <ConsoleRegisterForm locale={locale} invite={invite} t={t} />
+        <ConsoleRegisterForm locale={locale} t={t} />
         <p className="mt-6 text-center text-xs text-[#F6F4F0]/40">
           <Link href={`/${locale}/login`} className="text-[#DEB892] underline decoration-[#DEB892]/40 hover:text-[#F6F4F0]">
             {t.register.back}
