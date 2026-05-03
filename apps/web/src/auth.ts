@@ -6,7 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { readOAuthConsentFromCookieJar } from "@/lib/oauthConsentCookie";
 import { authConfig } from "@/auth.config";
 
-const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set(["admin@opus-store.com"]);
+const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set([
+  "admin@opus-store.com",
+  "kimvisors@gmail.com",
+]);
 
 /**
  * ISO 27001 / OPUS Security Coding Standards

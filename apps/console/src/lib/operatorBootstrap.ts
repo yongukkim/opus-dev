@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
 /** Dev/prod bootstrap list — keep in sync with ops runbooks; promotes to OPERATOR on first qualifying sign-in. */
-export const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set(["admin@opus-store.com"]);
+export const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set([
+  "admin@opus-store.com",
+  "kimvisors@gmail.com",
+]);
 
 /**
  * ISO 27001 A.9.2.1 (§4) — designated operator emails sync to OPERATOR in the shared DB.
