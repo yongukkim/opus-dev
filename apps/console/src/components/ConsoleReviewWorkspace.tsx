@@ -26,22 +26,22 @@ function badgeClass(kind: "neutral" | "good" | "warn" | "bad"): string {
 
 function statusLabel(s: ReviewStatus): string {
   const m: Record<ReviewStatus, string> = {
-    pending_review: "Pending",
-    approved: "Approved",
-    changes_requested: "Changes",
-    rejected: "Rejected",
+    pending_review: "검수 대기",
+    approved: "승인됨",
+    changes_requested: "수정 요청",
+    rejected: "반려",
   };
   return m[s];
 }
 
 function ratingLabel(r: ContentRating): string {
-  const m: Record<ContentRating, string> = { general: "General", mature: "Mature", explicit: "Explicit" };
+  const m: Record<ContentRating, string> = { general: "일반", mature: "성인(연령제한)", explicit: "성인(명시적)" };
   return m[r];
 }
 
 function formatEdition(r: ReviewRow): string {
-  if (r.editionMode === "unique") return "Edition 1/1";
-  return `Edition ${r.initialMint}/${r.editionTotal}`;
+  if (r.editionMode === "unique") return "에디션 1/1";
+  return `에디션 ${r.initialMint}/${r.editionTotal}`;
 }
 
 function rowToEditionDraft(r: ReviewRow): EditionDraft {
@@ -178,7 +178,7 @@ export function ConsoleReviewWorkspace({
     options?: { edition?: ParsedEdition; reviewNote?: string },
   ) {
     if (readOnlyPreview) {
-      window.alert("Preview mode: sign in with an operator account to submit reviews.");
+      window.alert("미리보기 모드: 실제 검수는 운영자 계정으로 로그인 후 사용하세요.");
       return;
     }
     if (pending) return;
@@ -193,12 +193,12 @@ export function ConsoleReviewWorkspace({
         body: JSON.stringify(body),
       });
       if (!res.ok) {
-        window.alert("Review update failed.");
+        window.alert("검수 업데이트에 실패했습니다.");
         return;
       }
       window.location.reload();
     } catch {
-      window.alert("Review update failed.");
+      window.alert("검수 업데이트에 실패했습니다.");
     } finally {
       setPending(null);
     }
@@ -215,7 +215,7 @@ export function ConsoleReviewWorkspace({
     });
     const parsed = draftToParsedEdition(editionDraft);
     if (!parsed) {
-      window.alert("Invalid edition fields.");
+      window.alert("에디션 설정값이 올바르지 않습니다.");
       return;
     }
     const opts: { edition: ParsedEdition; reviewNote?: string } = { edition: parsed };
@@ -234,7 +234,7 @@ export function ConsoleReviewWorkspace({
     });
     const parsed = draftToParsedEdition(editionDraft);
     if (!parsed) {
-      window.alert("Invalid edition fields.");
+      window.alert("에디션 설정값이 올바르지 않습니다.");
       return;
     }
     await setReview(
@@ -246,10 +246,10 @@ export function ConsoleReviewWorkspace({
 
   async function applyReviewFromTable(r: ReviewRow, next: { reviewStatus: ReviewStatus; contentRating: ContentRating }) {
     if (next.reviewStatus === "changes_requested") {
-      if (!window.confirm("Request changes for this submission?")) return;
+      if (!window.confirm("이 작품에 수정을 요청하시겠습니까?")) return;
     }
     if (next.reviewStatus === "rejected" && next.contentRating === "explicit") {
-      if (!window.confirm("Reject as explicit content?")) return;
+      if (!window.confirm("성인(명시적) 콘텐츠로 반려하시겠습니까?")) return;
     }
     await setReview(r.id, next);
   }
@@ -260,13 +260,13 @@ export function ConsoleReviewWorkspace({
     <div className="mt-8 space-y-6">
       {readOnlyPreview ? (
         <p className="rounded-md border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-600">
-          Preview mode — sample rows only. Asset thumbnails and review actions stay disabled until you sign in.
+          미리보기 모드 — 샘플 데이터만 표시됩니다. 운영자 계정으로 로그인해야 실제 검수가 가능합니다.
         </p>
       ) : null}
       <section className="rounded-lg border border-gray-200 bg-gray-50/80 p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Queue</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">대기 목록</p>
         {actionableRows.length === 0 ? (
-          <p className="mt-2 text-sm text-gray-600">No items pending review.</p>
+          <p className="mt-2 text-sm text-gray-600">검수 대기 중인 작품이 없습니다.</p>
         ) : (
           <>
             <ul className="mt-4 flex gap-3 overflow-x-auto pb-2">
@@ -285,7 +285,7 @@ export function ConsoleReviewWorkspace({
                       <div className="relative aspect-[4/5] w-full bg-gray-100">
                         {readOnlyPreview ? (
                           <div className="flex h-full items-center justify-center px-1 text-center text-[0.6rem] text-gray-500">
-                            No asset
+                            자산 없음
                           </div>
                         ) : isImage ? (
                           // eslint-disable-next-line @next/next/no-img-element -- dynamic operator asset URLs; avoid Image remotePatterns churn
@@ -306,7 +306,7 @@ export function ConsoleReviewWorkspace({
                   <h2 className="text-base font-medium text-gray-900">{selectedRow.artworkTitle}</h2>
                   {readOnlyPreview ? (
                     <span className="rounded-md border border-dashed border-gray-300 px-3 py-1.5 text-xs text-gray-500">
-                      Asset N/A
+                      자산 없음
                     </span>
                   ) : (
                     <a
@@ -315,7 +315,7 @@ export function ConsoleReviewWorkspace({
                       rel="noreferrer"
                       className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
                     >
-                      Open asset
+                      원본 열기
                     </a>
                   )}
                 </div>
@@ -323,7 +323,7 @@ export function ConsoleReviewWorkspace({
                 <div className="mt-3 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
                   {readOnlyPreview ? (
                     <div className="flex min-h-[12rem] items-center justify-center bg-gray-100 text-sm text-gray-500">
-                      No asset in preview
+                      미리보기에서는 자산 표시 불가
                     </div>
                   ) : (selectedRow.mime ?? "").startsWith("image/") ? (
                     // eslint-disable-next-line @next/next/no-img-element -- dynamic operator asset URLs; avoid Image remotePatterns churn
@@ -334,10 +334,10 @@ export function ConsoleReviewWorkspace({
                 </div>
 
                 <div className={`mt-5 rounded-lg border border-gray-200 p-4 ${readOnlyPreview ? "opacity-80" : ""}`}>
-                  <p className="text-xs font-medium uppercase text-gray-500">Edition (editable while pending)</p>
+                  <p className="text-xs font-medium uppercase text-gray-500">에디션 설정 (검수 대기 중 수정 가능)</p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div>
-                      <p className="text-xs text-gray-600">Mode</p>
+                      <p className="text-xs text-gray-600">모드</p>
                       <div className="mt-1 flex gap-3 text-sm">
                         <label className="flex items-center gap-2">
                           <input
@@ -348,7 +348,7 @@ export function ConsoleReviewWorkspace({
                             onChange={onEditionText}
                             disabled={readOnlyPreview}
                           />
-                          Unique
+                          단독 에디션
                         </label>
                         <label className="flex items-center gap-2">
                           <input
@@ -359,12 +359,12 @@ export function ConsoleReviewWorkspace({
                             onChange={onEditionText}
                             disabled={readOnlyPreview}
                           />
-                          Limited
+                          한정 에디션
                         </label>
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">Total</p>
+                      <p className="text-xs text-gray-600">총 수량</p>
                       <input
                         name="editionTotal"
                         value={editionDraft.editionTotal}
@@ -376,7 +376,7 @@ export function ConsoleReviewWorkspace({
                       />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">Initial mint</p>
+                      <p className="text-xs text-gray-600">최초 발행 수량</p>
                       <input
                         name="initialMint"
                         value={editionDraft.initialMint}
@@ -388,7 +388,7 @@ export function ConsoleReviewWorkspace({
                       />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">Numbering</p>
+                      <p className="text-xs text-gray-600">번호 부여</p>
                       <select
                         name="numberingPolicy"
                         value={editionDraft.numberingPolicy}
@@ -396,8 +396,8 @@ export function ConsoleReviewWorkspace({
                         className={inputCls(false)}
                         disabled={readOnlyPreview}
                       >
-                        <option value="auto">Auto</option>
-                        <option value="manual">Manual</option>
+                        <option value="auto">자동</option>
+                        <option value="manual">수동</option>
                       </select>
                     </div>
                     <div className="sm:col-span-2">
@@ -409,14 +409,14 @@ export function ConsoleReviewWorkspace({
                           onChange={onEditionCheckbox}
                           disabled={readOnlyPreview}
                         />
-                        Lock edition after approval
+                        승인 후 에디션 잠금
                       </label>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-xs text-gray-600">Note to artist (rejection / changes)</p>
+                  <p className="text-xs text-gray-600">작가에게 전달할 메모 (반려 / 수정 요청 시)</p>
                   <textarea
                     value={reviewNoteDraft}
                     onChange={(e) => setReviewNoteDraft(e.target.value)}
@@ -434,7 +434,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyReviewFromPanel({ reviewStatus: "approved", contentRating: "general" })}
                     className="rounded-md bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
                   >
-                    Approve (general)
+                    승인 (일반)
                   </button>
                   <button
                     type="button"
@@ -442,7 +442,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyReviewFromPanel({ reviewStatus: "approved", contentRating: "mature" })}
                     className="rounded-md border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-800 hover:bg-gray-50 disabled:opacity-50"
                   >
-                    Approve (mature)
+                    승인 (연령제한)
                   </button>
                   <button
                     type="button"
@@ -450,7 +450,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyRequestChangesFromPanel()}
                     className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50"
                   >
-                    Request changes
+                    수정 요청
                   </button>
                   <button
                     type="button"
@@ -458,7 +458,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyReviewFromPanel({ reviewStatus: "rejected", contentRating: "explicit" })}
                     className="rounded-md border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-medium text-rose-900 hover:bg-rose-100 disabled:opacity-50"
                   >
-                    Reject (explicit)
+                    반려 (성인 콘텐츠)
                   </button>
                 </div>
               </div>
@@ -468,27 +468,27 @@ export function ConsoleReviewWorkspace({
       </section>
 
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs font-medium uppercase text-gray-500">Filter</span>
+        <span className="text-xs font-medium uppercase text-gray-500">필터</span>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value as ReviewStatus | "all")}
           className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
         >
-          <option value="pending_review">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="changes_requested">Changes requested</option>
-          <option value="rejected">Rejected</option>
-          <option value="all">All</option>
+          <option value="pending_review">검수 대기</option>
+          <option value="approved">승인됨</option>
+          <option value="changes_requested">수정 요청</option>
+          <option value="rejected">반려</option>
+          <option value="all">전체</option>
         </select>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
         <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto_auto_minmax(0,1.2fr)] gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3 text-xs font-medium text-gray-600">
-          <span>Artwork</span>
-          <span>Artist</span>
-          <span>Status</span>
-          <span>Rating</span>
-          <span>Actions</span>
+          <span>작품</span>
+          <span>작가</span>
+          <span>상태</span>
+          <span>등급</span>
+          <span>액션</span>
         </div>
         <ul className="divide-y divide-gray-100">
           {filtered.map((r) => {
@@ -534,7 +534,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "approved", contentRating: "general" })}
                     className="rounded border border-gray-200 bg-white px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
                   >
-                    OK
+                    승인
                   </button>
                   <button
                     type="button"
@@ -542,7 +542,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "approved", contentRating: "mature" })}
                     className="rounded border border-gray-200 bg-white px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
                   >
-                    Mature
+                    연령제한 승인
                   </button>
                   <button
                     type="button"
@@ -552,7 +552,7 @@ export function ConsoleReviewWorkspace({
                     }
                     className="rounded border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-900 disabled:opacity-50"
                   >
-                    Changes
+                    수정 요청
                   </button>
                   <button
                     type="button"
@@ -560,7 +560,7 @@ export function ConsoleReviewWorkspace({
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "rejected", contentRating: "explicit" })}
                     className="rounded border border-rose-200 bg-rose-50 px-2 py-1 text-xs text-rose-900 disabled:opacity-50"
                   >
-                    Reject
+                    반려
                   </button>
                 </div>
               </li>
