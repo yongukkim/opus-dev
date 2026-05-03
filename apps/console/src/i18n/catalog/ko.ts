@@ -57,18 +57,18 @@ export const ko: ConsoleMessages = {
     acceptMarketing: "선택: OPUS 제품 소식을 받습니다(별도 동의).",
   },
   review: {
-    title: "제출물",
+    title: "승인 대기",
     subtitle: "스토어 운영 도구와 동일한 데이터로 작품 등록을 검토합니다.",
     loadError:
-      "제출물을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 네트워크를 확인하세요.",
+      "승인 대기 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 네트워크를 확인하세요.",
   },
   dashboard: {
     title: "운영 홈",
     subtitle:
-      "공개 스토어와 분리된 백오피스입니다. 제출물 검수는 지금 사용할 수 있으며, 결제·대사 도구는 Stripe 연동 후 단계적으로 열립니다.",
-    cardSubmissionsTitle: "제출물 검수",
-    cardSubmissionsBody: "작품 등록 제출을 검토하고 승인합니다.",
-    cardSubmissionsCta: "제출물로 이동",
+      "공개 스토어와 분리된 백오피스입니다. 승인 대기 검수는 지금 사용할 수 있으며, 결제·대사 도구는 Stripe 연동 후 단계적으로 열립니다.",
+    cardSubmissionsTitle: "승인 대기",
+    cardSubmissionsBody: "작품 등록 신청을 검토하고 승인합니다.",
+    cardSubmissionsCta: "승인 대기로 이동",
     cardPaymentsTitle: "결제·대사",
     cardPaymentsBody:
       "수납 기록 조회, 대사(ledger와의 정합), 정산 보고를 한 곳에서 다룰 예정입니다. (Stripe 연동 예정)",
@@ -79,11 +79,11 @@ export const ko: ConsoleMessages = {
   chrome: {
     brand: "OPUS Console",
     navHome: "홈",
-    navReview: "제출물",
+    navReview: "승인 대기",
     navPayments: "결제·대사",
-    submissions: "제출물",
+    submissions: "승인 대기",
     submissionsLead: "스토어 운영 도구와 동일한 데이터로 작품 등록을 검토합니다.",
-    backToReview: "검수로 돌아가기",
+    backToReview: "승인 대기로 돌아가기",
     signOut: "로그아웃",
     previewTitle: "미리보기 모드",
     previewBody:

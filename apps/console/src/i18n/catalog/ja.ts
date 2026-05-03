@@ -57,18 +57,18 @@ export const ja: ConsoleMessages = {
     acceptMarketing: "任意: OPUS の製品アップデート情報を受け取る（別途の同意）。",
   },
   review: {
-    title: "提出物",
+    title: "承認待ち",
     subtitle: "ストアの運用ツールと同じデータで作品登録を審査します。",
     loadError:
-      "提出物を読み込めませんでした。OPUS_WEB_ORIGIN、OPUS_INTERNAL_API_SECRET、ネットワークを確認してください。",
+      "承認待ちリストを読み込めませんでした。OPUS_WEB_ORIGIN、OPUS_INTERNAL_API_SECRET、ネットワークを確認してください。",
   },
   dashboard: {
     title: "運用ホーム",
     subtitle:
-      "公開ストアから分離したバックオフィスです。提出物の審査は今すぐ利用でき、決済・照合ツールは Stripe 連携後に段階的に提供します。",
-    cardSubmissionsTitle: "提出物の審査",
+      "公開ストアから分離したバックオフィスです。承認待ちの審査は今すぐ利用でき、決済・照合ツールは Stripe 連携後に段階的に提供します。",
+    cardSubmissionsTitle: "承認待ち",
     cardSubmissionsBody: "作品登録の提出を審査し承認します。",
-    cardSubmissionsCta: "提出物へ",
+    cardSubmissionsCta: "承認待ちへ",
     cardPaymentsTitle: "決済・照合",
     cardPaymentsBody:
       "入金記録の参照、台帳との照合、締め処理の要約を一箇所で扱う予定です（Stripe 連携予定）。",
@@ -79,11 +79,11 @@ export const ja: ConsoleMessages = {
   chrome: {
     brand: "OPUS Console",
     navHome: "ホーム",
-    navReview: "提出物",
+    navReview: "承認待ち",
     navPayments: "決済・照合",
-    submissions: "提出物",
+    submissions: "承認待ち",
     submissionsLead: "ストアの運用ツールと同じデータで作品登録を審査します。",
-    backToReview: "審査に戻る",
+    backToReview: "承認待ちに戻る",
     signOut: "サインアウト",
     previewTitle: "プレビューモード",
     previewBody:

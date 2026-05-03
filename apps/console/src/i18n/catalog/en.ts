@@ -57,17 +57,17 @@ export const en: ConsoleMessages = {
     acceptMarketing: "Optional: keep me informed about OPUS product updates (separate consent).",
   },
   review: {
-    title: "Submissions",
+    title: "Pending Approval",
     subtitle: "Review artwork registrations using the same data as the storefront operator tools.",
-    loadError: "Could not load submissions. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and network access.",
+    loadError: "Could not load pending items. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and network access.",
   },
   dashboard: {
     title: "Operations home",
     subtitle:
-      "Back office separated from the public storefront. Submission review is available now; payment records and reconciliation will roll out with Stripe in phases.",
-    cardSubmissionsTitle: "Submission review",
+      "Back office separated from the public storefront. Pending approval review is available now; payment records and reconciliation will roll out with Stripe in phases.",
+    cardSubmissionsTitle: "Pending Approval",
     cardSubmissionsBody: "Review and approve artwork registration submissions.",
-    cardSubmissionsCta: "Open submissions",
+    cardSubmissionsCta: "Open pending items",
     cardPaymentsTitle: "Payments & reconciliation",
     cardPaymentsBody:
       "Planned: read-only payment activity, ledger reconciliation, and closeout summaries—without handling raw card data on this host.",
@@ -78,11 +78,11 @@ export const en: ConsoleMessages = {
   chrome: {
     brand: "OPUS Console",
     navHome: "Home",
-    navReview: "Submissions",
+    navReview: "Pending Approval",
     navPayments: "Payments",
-    submissions: "Submissions",
+    submissions: "Pending Approval",
     submissionsLead: "Review artwork registrations using the same data as the storefront operator tools.",
-    backToReview: "Back to review",
+    backToReview: "Back to pending",
     signOut: "Sign out",
     previewTitle: "Preview mode",
     previewBody:
