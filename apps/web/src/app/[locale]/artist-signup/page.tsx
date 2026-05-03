@@ -32,7 +32,11 @@ export default async function ArtistSignupPage({
   const session = await auth();
   if (session?.user?.id) {
     const role = session.user.role;
-    if (role === "artist" || role === "operator") {
+    // operator can already submit artwork
+    if (role === "operator") {
+      redirect(withLocale(locale, "/vault/submit"));
+    }
+    if (role === "artist") {
       redirect(returnTo);
     }
     // Logged in as collector → show upgrade form (consent + server action).

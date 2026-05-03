@@ -26,7 +26,7 @@ export default async function ArtistOnboardingProfilePage({ params, searchParams
     const loginHref = `${withLocale(locale, "/login")}?${new URLSearchParams({ role: "artist", returnTo: selfHref }).toString()}`;
     redirect(loginHref);
   }
-  if (session.user.role !== "artist") {
+  if (session.user.role !== "artist" && session.user.role !== "operator") {
     redirect(withLocale(locale, "/artist-signup"));
   }
 
