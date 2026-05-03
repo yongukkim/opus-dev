@@ -33,6 +33,7 @@ services:
     volumes:
       - opus_storage:/app/storage
       - opus_storage:/app/apps/web/storage
+      - opus_artworks:/app/apps/web/public/local-artworks
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
@@ -66,3 +67,4 @@ volumes:
   caddy_data:
   caddy_config:
   opus_storage:
+  opus_artworks:
