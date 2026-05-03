@@ -77,18 +77,6 @@ export function ConsoleRegisterForm({
           <input type="checkbox" name="acceptPrivacy" value="on" required className="mt-1 accent-[#DEB892]" />
           {t.register.acceptPrivacy}
         </label>
-        <label className="flex gap-2">
-          <input type="checkbox" name="acceptOverseas" value="on" required className="mt-1 accent-[#DEB892]" />
-          {t.register.acceptOverseas}
-        </label>
-        <label className="flex gap-2">
-          <input type="checkbox" name="acceptAge" value="on" required className="mt-1 accent-[#DEB892]" />
-          {t.register.acceptAge}
-        </label>
-        <label className="flex gap-2">
-          <input type="checkbox" name="acceptMarketing" value="on" className="mt-1 accent-[#DEB892]" />
-          {t.register.acceptMarketing}
-        </label>
       </div>
       <button
         type="submit"

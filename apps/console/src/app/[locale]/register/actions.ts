@@ -51,25 +51,16 @@ export async function consoleRegisterAction(
   if (formData.get("acceptTos") !== "on" || formData.get("acceptPrivacy") !== "on") {
     return { error: t.errors.registerConsentRequired };
   }
-  if (formData.get("acceptOverseas") !== "on") {
-    return { error: t.errors.registerOverseasRequired };
-  }
-  if (formData.get("acceptAge") !== "on") {
-    return { error: t.errors.registerAgeRequired };
-  }
 
-  const marketing = formData.get("acceptMarketing") === "on";
   const now = new Date();
 
   const existing = await prisma.user.findFirst({
     where: { email: { equals: email, mode: "insensitive" } },
     select: { id: true, passwordHash: true },
   });
+  // Allow existing Google-OAuth accounts to add a console password.
   if (existing?.passwordHash) {
     return { error: t.errors.registerAlreadyRegistered };
-  }
-  if (existing && !existing.passwordHash) {
-    return { error: t.errors.registerEmailUsedStorefront };
   }
 
   const passwordHash = await hash(password, 12);
@@ -81,29 +72,37 @@ export async function consoleRegisterAction(
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const created = await prisma.$transaction(async (tx: any) => {
-      const user = await tx.user.create({
-        data: {
-          email,
-          name,
-          passwordHash,
-          emailVerified: null,
-          tosAcceptedAt: now,
-          tosVersionAccepted: CONSOLE_LEGAL_VERSION,
-          privacyAcceptedAt: now,
-          privacyVersionAccepted: CONSOLE_LEGAL_VERSION,
-          overseasTransferAcceptedAt: now,
-          buyerAgeSelfAttestedAt: now,
-          marketingOptInAt: marketing ? now : null,
-        },
-        select: { id: true },
-      });
+      // Upsert: if the account came from Google OAuth, just add the passwordHash.
+      const user = existing
+        ? await tx.user.update({
+            where: { id: existing.id },
+            data: {
+              name: name ?? undefined,
+              passwordHash,
+              emailVerified: null,
+              tosAcceptedAt: now,
+              tosVersionAccepted: CONSOLE_LEGAL_VERSION,
+              privacyAcceptedAt: now,
+              privacyVersionAccepted: CONSOLE_LEGAL_VERSION,
+            },
+            select: { id: true },
+          })
+        : await tx.user.create({
+            data: {
+              email,
+              name,
+              passwordHash,
+              emailVerified: null,
+              tosAcceptedAt: now,
+              tosVersionAccepted: CONSOLE_LEGAL_VERSION,
+              privacyAcceptedAt: now,
+              privacyVersionAccepted: CONSOLE_LEGAL_VERSION,
+            },
+            select: { id: true },
+          });
       await tx.verificationToken.deleteMany({ where: { identifier: email } });
       await tx.verificationToken.create({
-        data: {
-          identifier: email,
-          token: tokenHash,
-          expires,
-        },
+        data: { identifier: email, token: tokenHash, expires },
       });
       return user;
     });
