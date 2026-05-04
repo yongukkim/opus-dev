@@ -6,7 +6,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ["ui-sans-serif", "system-ui", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        display: ["var(--font-cinzel)", "ui-serif", "Georgia", "serif"],
+        mono: ["var(--font-mono-jb)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
     },
   },

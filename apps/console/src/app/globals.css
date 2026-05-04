@@ -8,8 +8,23 @@
   --opus-accent: #deb892;
 }
 
-body {
-  @apply antialiased;
-  background-color: var(--opus-bg);
-  color: var(--opus-fg);
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #0e0e0e;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+    background-color: var(--opus-bg);
+    color: var(--opus-fg);
+  }
+
+  html[data-opus-typography="ja"] body {
+    font-family: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  html[data-opus-typography="ja"] .font-serif {
+    font-family: var(--font-zen-old-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  }
 }
