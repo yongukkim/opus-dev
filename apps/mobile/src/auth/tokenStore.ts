@@ -5,6 +5,22 @@
  * EN: Persist access/refresh tokens in SecureStore (Keychain/Keystore) with strict access flags.
  */
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
+
+// Web fallback: SecureStore is not available on web, use localStorage.
+const webStore = {
+  getItemAsync: async (key: string) => {
+    try { return typeof localStorage !== "undefined" ? localStorage.getItem(key) : null; } catch { return null; }
+  },
+  setItemAsync: async (key: string, value: string) => {
+    try { if (typeof localStorage !== "undefined") localStorage.setItem(key, value); } catch {}
+  },
+  deleteItemAsync: async (key: string) => {
+    try { if (typeof localStorage !== "undefined") localStorage.removeItem(key); } catch {}
+  },
+};
+
+const store = Platform.OS === "web" ? webStore : SecureStore;
 
 const KEYS = {
   accessToken: "opus.auth.access.v1",
@@ -32,12 +48,12 @@ export async function saveTokens(
   user: StoredUser,
 ): Promise<void> {
   await Promise.all([
-    SecureStore.setItemAsync(KEYS.accessToken, accessToken, SECURE_OPTIONS),
-    SecureStore.setItemAsync(KEYS.refreshToken, refreshToken, SECURE_OPTIONS),
-    SecureStore.setItemAsync(KEYS.userId, user.id, SECURE_OPTIONS),
-    SecureStore.setItemAsync(KEYS.userEmail, user.email, SECURE_OPTIONS),
-    SecureStore.setItemAsync(KEYS.userName, user.name ?? "", SECURE_OPTIONS),
-    SecureStore.setItemAsync(KEYS.userRole, user.role, SECURE_OPTIONS),
+    store.setItemAsync(KEYS.accessToken, accessToken, SECURE_OPTIONS),
+    store.setItemAsync(KEYS.refreshToken, refreshToken, SECURE_OPTIONS),
+    store.setItemAsync(KEYS.userId, user.id, SECURE_OPTIONS),
+    store.setItemAsync(KEYS.userEmail, user.email, SECURE_OPTIONS),
+    store.setItemAsync(KEYS.userName, user.name ?? "", SECURE_OPTIONS),
+    store.setItemAsync(KEYS.userRole, user.role, SECURE_OPTIONS),
   ]);
 }
 
@@ -47,12 +63,12 @@ export async function loadTokens(): Promise<{
   user: StoredUser | null;
 }> {
   const [accessToken, refreshToken, id, email, name, role] = await Promise.all([
-    SecureStore.getItemAsync(KEYS.accessToken),
-    SecureStore.getItemAsync(KEYS.refreshToken),
-    SecureStore.getItemAsync(KEYS.userId),
-    SecureStore.getItemAsync(KEYS.userEmail),
-    SecureStore.getItemAsync(KEYS.userName),
-    SecureStore.getItemAsync(KEYS.userRole),
+    store.getItemAsync(KEYS.accessToken),
+    store.getItemAsync(KEYS.refreshToken),
+    store.getItemAsync(KEYS.userId),
+    store.getItemAsync(KEYS.userEmail),
+    store.getItemAsync(KEYS.userName),
+    store.getItemAsync(KEYS.userRole),
   ]);
 
   const user =
@@ -64,5 +80,5 @@ export async function loadTokens(): Promise<{
 }
 
 export async function clearTokens(): Promise<void> {
-  await Promise.all(Object.values(KEYS).map((k) => SecureStore.deleteItemAsync(k).catch(() => {})));
+  await Promise.all(Object.values(KEYS).map((k) => store.deleteItemAsync(k).catch(() => {})));
 }

@@ -11,4 +11,11 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 
+// Force React and React-DOM to resolve from the app's node_modules
+// to avoid monorepo version mismatch.
+config.resolver.extraNodeModules = {
+  react: path.resolve(projectRoot, "node_modules/react"),
+  "react-dom": path.resolve(projectRoot, "node_modules/react-dom"),
+};
+
 module.exports = config;
