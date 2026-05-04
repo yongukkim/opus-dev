@@ -55,7 +55,12 @@ export function LoginScreen() {
     try {
       const { expoAuth, expoBrowser } = authSessionRef;
 
-      const redirectUri = expoAuth.makeRedirectUri({ scheme: "opus" });
+      // Use Expo auth proxy so Google web client accepts the redirect.
+      // Register https://auth.expo.io/@yongukkim/opus-mobile in Google Cloud Console.
+      const redirectUri = expoAuth.makeRedirectUri({
+        scheme: "opus",
+        useProxy: true,
+      });
       const discovery = {
         authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
         tokenEndpoint: "https://oauth2.googleapis.com/token",
