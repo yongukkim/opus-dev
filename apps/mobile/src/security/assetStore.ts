@@ -21,6 +21,8 @@ export type StoredAssetMetaV1 = {
   downloadedAt: string;
   /** ISO string */
   expiresAt: string;
+  /** MIME type of the original asset */
+  mimeType?: string;
   /** Encrypted payload (base64 encoded parts) */
   payload: EncryptedBlobV1;
 };
@@ -37,6 +39,7 @@ export async function storeEncryptedAssetV1(args: {
   assetId: string;
   plainBytes: Uint8Array;
   expiresAt: string;
+  mimeType?: string;
 }): Promise<StoredAssetMetaV1> {
   await ensureRoot();
   const payload = await encryptBytesV1(args.plainBytes);
@@ -45,6 +48,7 @@ export async function storeEncryptedAssetV1(args: {
     assetId: args.assetId,
     downloadedAt: new Date().toISOString(),
     expiresAt: args.expiresAt,
+    mimeType: args.mimeType,
     payload,
   };
   await FileSystem.writeAsStringAsync(metaPath(args.assetId), JSON.stringify(meta), {

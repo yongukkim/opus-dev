@@ -1,6 +1,7 @@
 export type RootStackParamList = {
   Tabs: undefined;
-  ArtworkViewer: { artworkId: string };
+  ArtworkViewer: { artworkId: string; editionId?: string; title?: string };
+  Login: undefined;
 };
 
 export type TabParamList = {
