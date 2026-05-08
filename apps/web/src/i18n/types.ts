@@ -52,6 +52,9 @@ export type Messages = {
     /** `/chronicle` public issuance log index. */
     chronicleIndexTitle: string;
     chronicleIndexDescription: string;
+    /** `/about` — what OPUS is (not stock / not generic e-commerce framing). */
+    aboutTitle: string;
+    aboutDescription: string;
     /** PR-19: `/releases/[slug]` detail. Templated with `{title}`
      *  (artwork title) and `{artist}` (pen name). Falls back to the
      *  releases index copy when the slug doesn't resolve, same
@@ -84,6 +87,8 @@ export type Messages = {
     curation: string;
     /** Featured artists index (PR-12). Single word per locale. */
     artists: string;
+    /** Primary nav → `/about` (service introduction for first-time visitors). */
+    about: string;
   };
   /**
    * Channel badges shown on home rails and (later) the ⌘K omni-search results.
@@ -359,6 +364,29 @@ export type Messages = {
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
   legalCopyright: { back: string; title: string; lead: string; body: string };
+  /** Public `/about` — draft positioning copy (KO/JA/EN). */
+  aboutPage: {
+    back: string;
+    title: string;
+    lead: string;
+    /** Planning intent + (JA-adjacent) market context; keep non-absolute claims. */
+    sWhyTitle: string;
+    sWhyP1: string;
+    sWhyP2: string;
+    sWhyP3: string;
+    s1Title: string;
+    s1p1: string;
+    s1p2: string;
+    s2Title: string;
+    s2p1: string;
+    s2p2: string;
+    s3Title: string;
+    s3p1: string;
+    s3p2: string;
+    s4Title: string;
+    s4p1: string;
+    draftNote: string;
+  };
   vaultNav: {
     collection: string;
     activity: string;
@@ -376,6 +404,9 @@ export type Messages = {
     title: string;
     subtitle: string;
     reviewSection: string;
+    /** Short copy: review UI lives on OPUS Console */
+    reviewConsoleBody: string;
+    reviewConsoleCta: string;
     accountSection: string;
   };
   hero: {
