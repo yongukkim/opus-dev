@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "prisma generate",
+    "predev:fixed": "prisma generate",
     "build": "next build",
     "dev": "next dev --turbopack",
     "dev:fixed": "next dev --turbopack -p 4321",

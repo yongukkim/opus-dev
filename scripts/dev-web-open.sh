@@ -16,4 +16,8 @@ if command -v open >/dev/null 2>&1; then
   (sleep 3 && open "$URL") &
 fi
 
+# SiteHeader calls `auth()` → `@/auth` loads Prisma; without a generated client,
+# every `[locale]/*` page returns 500 ("Cannot find module '.prisma/client/default'").
+pnpm --filter @opus/web run db:generate
+
 exec pnpm --filter @opus/web exec next dev --turbopack -p "$PORT"
