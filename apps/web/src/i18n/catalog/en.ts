@@ -36,9 +36,9 @@ export const en: Messages = {
     chronicleIndexTitle: "The Chronicle",
     chronicleIndexDescription:
       "Public issuance entries from OPUS operator approvals — masked identifiers, off-chain integrity chain (demo ledger). Not a public blockchain explorer.",
-    aboutTitle: "About OPUS",
+    aboutTitle: "OPUS: Where human spirit opens the record",
     aboutDescription:
-      "What OPUS is: authenticated digital-art editions, The Chronicle, and collector-focused viewing — not a stock-image shop or generic checkout cart.",
+      "Authenticated digital-art editions, The Chronicle (line of custody), and a space for deep appreciation — welcome to OPUS.",
     releaseTitleTpl: "{title} — {artist}",
     releaseDescriptionTpl:
       "Primary edition \u201C{title}\u201D by {artist}. An authenticated, non-reproducible digital-art work on OPUS.",
@@ -46,7 +46,7 @@ export const en: Messages = {
   a11y: {
     primaryNav: "Primary",
     utilityNav: "Utility",
-    trustStripNav: "Shortcuts to The Chronicle, Provenance, and My Page",
+    trustStripNav: "Shortcut to My Page",
     language: "Language",
     vaultNav: "My Page navigation",
     designPhilosophy: "Design philosophy",
@@ -276,36 +276,39 @@ export const en: Messages = {
   },
   aboutPage: {
     back: "← Back home",
-    title: "About OPUS",
-    lead:
-      "OPUS is built for people who want an authenticated edition of non-reproducible digital art — with a clear record of how it entered the archive and how custody moves over time. If you are used to stock libraries or generic e-commerce, the surface may feel unfamiliar at first; this page is a short orientation.",
-    sWhyTitle: "Why we planned OPUS",
-    sWhyP1:
-      "Images produced with assistance from generative models are part of technological progress, and the convenience they bring is something people may rightly use. What we want to hold up is different: the warmth and breath of a human creator—the small choices in a stroke, the patience in revision, the presence of a person standing behind the work. OPUS was not planned to demonize tools; it was planned to **elevate** that human authorship so primary editions do not vanish into an undifferentiated stream of pixels.",
-    sWhyP2:
-      "When provenance and process blur, collectors lose that sense of presence first. In Japan's illustration communities and adjacent fan-adjacent debate, consent, rights, and honest disclosure recur for the same reason. Communities do not speak with one voice against technology—but distrust rises when it is unclear whose hand made the work.",
-    sWhyP3:
-      "OPUS answers in product form: operator-backed issuance, a Chronicle trail that is public-facing yet privacy-conscious (masked identifiers), and collector flows built around authenticated editions—not interchangeable files—so the author's choices remain legible through first release and custody. Moral rights and copyright stay with the artist; OPUS is the service layer that keeps human authorship continuous in record and viewing.",
-    s1Title: "Not a stock-image marketplace",
+    title: "OPUS: Where human spirit opens the record",
+    lead: "Welcome. We are glad you are here — OPUS is a home for authenticated digital-art editions.",
+    lead2:
+      "We exist to do more than move files. From the moment a work is born to the next custodian who receives it, we **permanently record** and **permanently preserve** that **story** with care and transparency. If this is your first visit, we would like to introduce the values OPUS stands for.",
+    s1Title: "1. We hold the warmth of the creator",
     s1p1:
-      "Stock sites sell interchangeable files for campaigns and layouts. OPUS lists primary editions that artists first release here: each listing is meant to be a specific work with edition boundaries and operator-backed issuance context.",
+      "Technology has brought an age when models can render images in seconds. Yet between those polished pixels, something essential can fade: the tremor in a hand on the brush, the choices made through long nights, the breath of a real author in the work.",
     s1p2:
-      "You are not buying a generic download token; you are entering a catalog that treats the work as an authenticated edition within OPUS rules.",
-    s2Title: "Releases, The Chronicle, and Provenance",
+      "OPUS does not reject tools. We believe the singular value of work led by a human spirit—not cold calculation alone—deserves a place to stay vivid. We authenticate and record **human-authored** editions so that warmth does not dissolve inside the service.",
+    s2Title: "2. The Chronicle — attesting the meaning of custody",
     s2p1:
-      "Releases is where editions first appear on OPUS. The Chronicle is the public issuance trail operators maintain (masked identifiers — not a public chain explorer). Provenance is where collectors may look for the next custodian of a work, described as custody transfer between custodians.",
+      "Because digital works are easy to copy, stewardship has sometimes been treated lightly. OPUS addresses this with **The Chronicle** — a public line-of-custody record for editions.",
     s2p2:
-      "Together, these surfaces explain what happened to an edition and who may steward it next — without publishing legal names or private contact details in listings.",
-    s3Title: "What you pay for",
-    s3p1:
-      "Payment secures participation in this archive: an authenticated edition slot, access to the collector experience OPUS provides (including viewing paths the product defines), and the continuity of records that support provenance and accountability.",
-    s3p2:
-      "OPUS does not position editions as financial instruments. The value story is authenticity, custody clarity, and appreciation within the service.",
-    s4Title: "Web and the mobile app",
-    s4p1:
-      "The web experience is tuned for discovery, trust surfaces, and limited-resolution previews. High-fidelity viewing for verified owners is designed around the authenticated mobile path described in product policy.",
+      "When you steward an edition, the **fact and timing** of custody join the work’s public Chronicle as a continuous trail. This **permanent record** is designed for integrity under OPUS policy and helps make provenance and custody legible—closer to a certified public register than a private scrapbook. Public identifiers may be masked; we do not promise legal names on storefront pages. We hope the joy of stewardship rests on a **permanently preserved** line of trust—not a fleeting glance alone.",
+    s3Title: "3. Not a checkout — an invitation to the archive",
+    s3p1: "Securing an edition on OPUS is not the same as buying a generic item in a mall cart.",
+    s3Bullet1Label: "Releases",
+    s3Bullet1Body:
+      "Where you meet primary editions an artist brings to the world first through OPUS — a space for that first encounter.",
+    s3Bullet2Label: "Authenticated editions",
+    s3Bullet2Body: "Limited slots the artist approves and OPUS stands behind as an authenticated edition.",
+    s3Bullet3Label: "Continuity of custody",
+    s3Bullet3Body:
+      "Payment confirms your place in this archive: it fixes the work’s integrity and the viewing entitlements the service defines into a **permanent record**, held inside a frame of **permanent preservation**.",
+    s4Title: "4. A space for deep appreciation",
+    s4Lead: "We believe a work’s meaning completes in **deep appreciation** — not in noise.",
+    s4WebTitle: "Web",
+    s4WebBody: "A surface for discovery and trust: comfortable browsing and clear context.",
+    s4AppTitle: "Mobile app",
+    s4AppBody:
+      "Prepared for **verified owners** only. High-resolution viewing lets you feel the artist’s finest marks with clarity.",
     draftNote:
-      "Draft orientation copy — refine with legal and brand before major traffic campaigns.",
+      "Please align final wording with Terms, Privacy, and Chronicle disclosure policy (including masked identifiers) through legal review.",
   },
   vaultNav: {
     collection: "Collection",

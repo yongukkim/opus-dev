@@ -9,8 +9,6 @@ import { withLocale } from "@/i18n/paths";
 export function TrustStrip({ locale, m }: { locale: Locale; m: Messages }) {
   const ja = locale === "ja";
   const items = [
-    { href: withLocale(locale, "/chronicle"), label: m.trust.chronicle },
-    { href: withLocale(locale, "/provenance"), label: m.nav.provenance },
     { href: withLocale(locale, "/vault/collection"), label: m.trust.vaultShort },
   ] as const;
 

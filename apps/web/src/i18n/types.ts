@@ -364,16 +364,12 @@ export type Messages = {
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
   legalCopyright: { back: string; title: string; lead: string; body: string };
-  /** Public `/about` — draft positioning copy (KO/JA/EN). */
+  /** Public `/about` — service story (KO/JA/EN). */
   aboutPage: {
     back: string;
     title: string;
     lead: string;
-    /** Planning intent + (JA-adjacent) market context; keep non-absolute claims. */
-    sWhyTitle: string;
-    sWhyP1: string;
-    sWhyP2: string;
-    sWhyP3: string;
+    lead2: string;
     s1Title: string;
     s1p1: string;
     s1p2: string;
@@ -382,9 +378,18 @@ export type Messages = {
     s2p2: string;
     s3Title: string;
     s3p1: string;
-    s3p2: string;
+    s3Bullet1Label: string;
+    s3Bullet1Body: string;
+    s3Bullet2Label: string;
+    s3Bullet2Body: string;
+    s3Bullet3Label: string;
+    s3Bullet3Body: string;
     s4Title: string;
-    s4p1: string;
+    s4Lead: string;
+    s4WebTitle: string;
+    s4WebBody: string;
+    s4AppTitle: string;
+    s4AppBody: string;
     draftNote: string;
   };
   vaultNav: {

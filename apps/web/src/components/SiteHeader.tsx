@@ -76,12 +76,7 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             <Link href={withLocale(locale, "/featured-artists")} className={navItemClass}>
               {m.nav.artists}
             </Link>
-            <Link href={withLocale(locale, "/chronicle")} className={navItemClass}>
-              {m.nav.chronicle}
-            </Link>
-            <Link href={withLocale(locale, "/provenance")} className={navItemClass}>
-              {m.nav.provenance}
-            </Link>
+            {/* Chronicle + Provenance: deep links removed from primary nav (pages unchanged). */}
             <Link href={withLocale(locale, "/provenance?saleMode=auction")} className={navItemClass}>
               {m.nav.provenanceAuctions}
             </Link>
