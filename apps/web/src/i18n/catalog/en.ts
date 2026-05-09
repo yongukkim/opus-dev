@@ -215,6 +215,60 @@ export const en: Messages = {
     signInLink: "Sign in",
     note: "UI only for now. Signup and verification come next.",
   },
+  artistSubmissionGuide: {
+    ariaTitle: "Artwork submission guide",
+    progressTpl: "{current} / {total}",
+    prev: "Back",
+    next: "Next",
+    completeCta: "I have read everything — continue to submission",
+    completeFailed: "Could not mark the guide complete. Check your connection and try again.",
+    swipeHint: "On mobile, swipe the card left or right to move between slides.",
+    card0Title: "OPUS artist — artwork submission guide",
+    card0Lead:
+      "Welcome. This guide explains how your work becomes a limited authenticated edition and reaches collectors on OPUS.",
+    rowCopyrightL: "Copyright",
+    rowCopyrightV:
+      "Copyright in each work remains with you. OPUS intermediates only transactions and records of authenticated digital-edition ownership.",
+    rowSettlementL: "Payout cycle",
+    rowSettlementV:
+      "Sales through each calendar month-end are aggregated; the following month, on the 10th business day (or the prior business day if the 10th is a holiday), we transfer totals to the bank account you register.",
+    rowDataL: "Data protection",
+    rowDataV:
+      "Master files are stored encrypted. Verified owners receive high-fidelity viewing only through the dedicated in-app viewer.",
+    rowEditionL: "Editions",
+    rowEditionV: "Smaller edition counts increase scarcity for the work.",
+    step1Title: "Step 1. Artist verification",
+    step1Lead:
+      "OPUS discourages indiscriminate AI-only output and respects your distinctive style and creative process.",
+    step1Bullet1:
+      "Portfolio review: on first registration we confirm identity through your existing public activity or portfolio.",
+    step1Bullet2:
+      "Proof of authorship when needed: we may ask for layered files or sketch stages that show human authorship. This is a minimal safeguard to protect you and your work.",
+    step2Title: "Step 2. Upload artwork and set metadata",
+    step2Lead: "The story inside the piece matters as much as its visual finish.",
+    step2Bullet1:
+      "High-resolution master: upload the best-resolution master so collectors can appreciate fine marks in the app.",
+    step2Bullet2:
+      "Work narrative: describe inspiration and intent in detail. This opens the first Chronicle page for the edition.",
+    step3Title: "Step 3. Edition count and pricing",
+    step3Lead: "This step defines scarcity for the release.",
+    step3Bullet1:
+      "Edition size: decide how many authenticated copies exist (e.g. an edition of 10).",
+    step3Bullet2:
+      "List price in JPY: you set the sale price in yen. 80% is settled to you; 20% covers platform operations and maintaining the permanent record.",
+    step4Title: "Step 4. Chronicle preparation and review",
+    step4Lead: "Submitted information is prepared for OPUS integrity records in The Chronicle.",
+    step4Bullet1:
+      "Digital fingerprinting: unique identification is bound to the work files to deter misuse and copying.",
+    step4Bullet2:
+      "Final curation: the OPUS operations team checks for missing metadata and image quality before approval.",
+    step5Title: "Step 5. Publication and custody begins",
+    step5Lead: "After approval, the work appears on the storefront.",
+    step5Bullet1:
+      "Custody record begins: when a collector acquires the edition, the first custody event is written to The Chronicle. Public identifiers may be masked.",
+    step5Bullet2:
+      "Monitoring: use the artist dashboard to follow sales and estimated payout amounts in near real time.",
+  },
   trust: {
     line: "Authenticated editions",
     tokushoho: "Commercial disclosures (Japan)",

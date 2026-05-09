@@ -20,6 +20,50 @@ type SignupMessages = {
   note: string;
 };
 
+/** Six-card onboarding before first artwork submission (`/vault/submit`). */
+export type ArtistSubmissionGuideMessages = {
+  ariaTitle: string;
+  /** Templated with `{current}` and `{total}` (e.g. 1/6). */
+  progressTpl: string;
+  prev: string;
+  next: string;
+  completeCta: string;
+  /** Shown when POST /complete fails (network or server). */
+  completeFailed: string;
+  /** Footer hint for touch carousel. */
+  swipeHint: string;
+  card0Title: string;
+  card0Lead: string;
+  rowCopyrightL: string;
+  rowCopyrightV: string;
+  rowSettlementL: string;
+  rowSettlementV: string;
+  rowDataL: string;
+  rowDataV: string;
+  rowEditionL: string;
+  rowEditionV: string;
+  step1Title: string;
+  step1Lead: string;
+  step1Bullet1: string;
+  step1Bullet2: string;
+  step2Title: string;
+  step2Lead: string;
+  step2Bullet1: string;
+  step2Bullet2: string;
+  step3Title: string;
+  step3Lead: string;
+  step3Bullet1: string;
+  step3Bullet2: string;
+  step4Title: string;
+  step4Lead: string;
+  step4Bullet1: string;
+  step4Bullet2: string;
+  step5Title: string;
+  step5Lead: string;
+  step5Bullet1: string;
+  step5Bullet2: string;
+};
+
 export type Messages = {
   meta: {
     siteDescription: string;
@@ -325,6 +369,7 @@ export type Messages = {
   };
   signup: SignupMessages;
   artistSignup: SignupMessages;
+  artistSubmissionGuide: ArtistSubmissionGuideMessages;
   trust: { line: string; tokushoho: string; chronicle: string; vaultShort: string };
   footer: {
     about: string;
