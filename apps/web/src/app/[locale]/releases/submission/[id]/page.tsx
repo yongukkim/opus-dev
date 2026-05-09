@@ -142,9 +142,8 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
                 m={m}
                 title={a.detailAppRequiredTitle}
                 body={a.detailAppRequiredBody}
-                iosLabel={a.detailAppRequiredIos}
-                androidLabel={a.detailAppRequiredAndroid}
-                comingSoonLabel={a.detailAppRequiredComingSoon}
+                pwaStepSafari={a.detailPwaStepSafari}
+                pwaStepChrome={a.detailPwaStepChrome}
                 className="mt-5 max-w-sm rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"
               />
               <ArtworkPdpCollectActions

@@ -289,11 +289,11 @@ export const ko: Messages = {
     terms: "이용약관",
     copyright: "저작권·이용 안내",
     chronicleTrust: "The Chronicle 기술을 통한 기록 무결성 검증",
-    appRequiredTitle: "앱 설치",
-    appRequiredBody: "구매 후 고해상도 감상은 OPUS 앱에서만 제공됩니다.",
-    appRequiredIos: "iPhone",
-    appRequiredAndroid: "Android",
-    appRequiredComingSoon: "준비 중",
+    appRequiredTitle: "모바일 웹에서 감상",
+    appRequiredBody:
+      "고해상 감상은 인증된 모바일 웹(홈 화면에 추가한 PWA)에서 제공됩니다. 데스크톱 웹은 저해상·워터마크 미리보기만 유지합니다.",
+    pwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
+    pwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     securedByLine: "OPUS로 보호됩니다",
     colService: "서비스",
     colChronicle: "The Chronicle",
@@ -357,9 +357,9 @@ export const ko: Messages = {
     s4Lead: "저희는 작품의 진정한 가치가 ‘깊이 있는 감상’에서 완성된다고 믿습니다.",
     s4WebTitle: "웹(Web)",
     s4WebBody: "작품의 발견과 신뢰를 확인하는 표면으로, 쾌적한 탐색을 지원합니다.",
-    s4AppTitle: "모바일 앱(App)",
+    s4AppTitle: "모바일 웹(PWA)",
     s4AppBody:
-      "오직 검증된 소장자만을 위해 준비된 공간입니다. 고해상도의 선명한 화질로 작가의 세밀한 필치를 온전히 경험하실 수 있습니다.",
+      "검증된 소장·작가 계정의 모바일 웹 세션에서 고해상 타일 감상을 제공합니다. 홈 화면에 추가해 앱처럼 쓸 수 있으며, 데스크톱 브라우저에는 고해상 스트림을 내리지 않습니다.",
     draftNote:
       "표현·기능은 이용약관·개인정보처리방침 및 The Chronicle 공개 방침(식별자 마스킹 등)과 함께 법무 검토를 권장합니다.",
   },
@@ -726,15 +726,14 @@ export const ko: Messages = {
   home: {
     kicker: "OPUS",
     title: "사진과 컬렉션을 위한 공간",
-    lead: "결제·안내는 이 사이트에서. 작품 감상은 모바일 앱에서.",
+    lead: "결제·안내는 이 사이트에서. 고해상 감상은 로그인한 모바일 웹(PWA)에서.",
     buyCta: "구매·결제하기",
     legalLink: "특정상거래법 표시",
-    appRequiredTitle: "스마트폰 앱 설치가 필요합니다",
+    appRequiredTitle: "모바일 웹(PWA)",
     appRequiredBody:
-      "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
-    appRequiredIos: "iPhone (App Store)",
-    appRequiredAndroid: "Android (Google Play)",
-    appRequiredComingSoon: "스토어 링크 준비 중",
+      "고해상 감상은 인증된 모바일 웹에서만 열립니다. Safari 또는 Chrome에서 OPUS를 연 뒤 홈 화면에 추가해 주세요.",
+    pwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
+    pwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     comingSoon: "곧 공개",
     railReleases: {
       title: "신작공개 · 최신 1차 에디션",
@@ -802,7 +801,7 @@ export const ko: Messages = {
   marketing: {
     title: "컬렉션을 공식 기록과 함께",
     body:
-      "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 감상은 앱에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
+      "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 고해상 감상은 인증된 모바일 웹(PWA)에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
     openVault: "마이페이지 열기",
     openProvenance: "소장품 둘러보기",
@@ -827,12 +826,11 @@ export const ko: Messages = {
     detailListPrice: "표시 가격",
     detailDemoNote: "데모 카탈로그용 금액입니다. 실제 판매가와 다를 수 있습니다.",
     detailBuyCta: "구매·결제로 진행",
-    detailAppRequiredTitle: "스마트폰 앱 설치가 필요합니다",
+    detailAppRequiredTitle: "모바일 웹(PWA)",
     detailAppRequiredBody:
-      "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
-    detailAppRequiredIos: "iPhone (App Store)",
-    detailAppRequiredAndroid: "Android (Google Play)",
-    detailAppRequiredComingSoon: "스토어 링크 준비 중",
+      "고해상 감상은 인증된 모바일 웹에서만 제공됩니다. 홈 화면에 추가하면 바로 가기 편합니다.",
+    detailPwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
+    detailPwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     openWorkCta: "상세·구매",
     detailBackArchive: "← 아카이브로",
     detailBreadcrumbHome: "홈",
@@ -854,7 +852,7 @@ export const ko: Messages = {
     detailFormatValue: "인증 디지털 아트 에디션（데모 카탈로그）",
     detailAboutHeading: "작품 정보",
     detailAboutBody:
-      "The Chronicle에 등록된 에디션입니다. 결제·소유 기록은 웹에서 진행하고, 감상은 앱에서 이어집니다. 본 화면은 플로우 확인용 데모입니다.",
+      "The Chronicle에 등록된 에디션입니다. 결제·소유 기록은 웹에서 진행하고, 고해상 감상은 인증된 모바일 웹에서 이어집니다. 본 화면은 플로우 확인용 데모입니다.",
     detailAddToCart: "장바구니에 담기",
     detailAddToWishlist: "찜 목록에 추가",
     detailAddedToCart: "장바구니에 담았습니다. (이 기기에만 저장)",
@@ -891,12 +889,11 @@ export const ko: Messages = {
     payArtistWrongRole: "결제는 소장자(일반 회원) 계정에서 진행해 주세요. Vault에서 모드를 전환한 뒤 다시 시도해 주세요.",
     payNotConfigured: "KOMOJU 연동 전까지는 데모 결제만 가능합니다. 본 결제가 열리면 이 안내가 바뀝니다.",
     note: "본 결제는 KOMOJU(JPY)로 처리할 예정입니다. 표시 금액은 등록 기준이며, 세금·표시는 운영 정책 및 결제 파트너 설정에 따릅니다.",
-    appRequiredTitle: "스마트폰 앱 설치가 필요합니다",
+    appRequiredTitle: "모바일 웹(PWA)",
     appRequiredBody:
-      "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
-    appRequiredIos: "iPhone (App Store)",
-    appRequiredAndroid: "Android (Google Play)",
-    appRequiredComingSoon: "스토어 링크 준비 중",
+      "고해상 감상은 인증된 모바일 웹에서만 열립니다. Safari 또는 Chrome에서 OPUS를 연 뒤 홈 화면에 추가해 주세요.",
+    pwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
+    pwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     back: "← 아카이브로",
   },
   purchaseSuccess: {
@@ -945,6 +942,7 @@ export const ko: Messages = {
       "현재 계정이 The Chronicle 기준으로 소장 중인 에디션입니다. 검수 완료된 작품은 다음 수탁자를 찾는 등록 폼으로 바로 이동할 수 있습니다.",
     collectionEmpty: "아직 이 계정으로 소장으로 등록된 작품이 없습니다.",
     collectionTransferCta: "수탁 이전 등록",
+    collectionImmersiveCta: "모바일 고해상 감상",
     collectionCertificateLead:
       "에디션별 인증 JSON — 작품과 동일한 식별자로 묶이며, 수탁이 이전될 때 버전이 올라갑니다.",
     collectionCertificateEditionJson: "에디션 {n} · 인증 JSON",
@@ -1194,5 +1192,21 @@ export const ko: Messages = {
     body: "이 화면은 eKYC 전문 기관 연동 전 플레이스홀더입니다. 곧 안전한 리다이렉트 또는 임베드 플로우가 연결됩니다.",
     backToConsent: "동의 화면으로",
     vaultLink: "마이페이지",
+  },
+  mobileViewer: {
+    bridgeTitle: "모바일에서 이어하기",
+    bridgeLead:
+      "고해상 몰입 감상은 모바일 웹에서만 열립니다. 아래 QR을 스마트폰으로 스캔하거나, 링크를 모바일 브라우저에서 여세요.",
+    bridgeScanLabel: "QR로 열기",
+    bridgeOpenCta: "같은 주소를 모바일에서 열기",
+    bridgeLoginHint: "로그인 세션은 이 브라우저와 공유되지 않을 수 있습니다. 필요하면 휴대폰에서 다시 로그인하세요.",
+    immersiveKicker: "Immersive",
+    immersiveTitle: "몰입 감상(모바일)",
+    immersiveLead:
+      "짧은 수명의 타일 세션 토큰을 발급합니다. 타일 CDN 연동은 다음 마일스톤입니다.",
+    immersiveNoAccess: "이 작품에 대한 감상 권한이 없거나 아직 공개되지 않았습니다.",
+    tileRequestCta: "타일 세션 토큰 요청",
+    tileResultLabel: "응답",
+    tileErrorGeneric: "요청에 실패했습니다. 잠시 후 다시 시도해 주세요.",
   },
 };

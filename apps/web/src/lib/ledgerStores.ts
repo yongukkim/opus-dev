@@ -69,6 +69,8 @@ export const AUX_LEDGER_FILES = {
   artistPayoutProfiles: path.join(STORAGE_ROOT, "artist-payout-profiles.jsonl"),
   /** User payment card metadata only (no PAN/CVV); tokenization replaces this in production. */
   userPaymentMethods: path.join(STORAGE_ROOT, "user-payment-methods.jsonl"),
+  /** Append-only audit of high-fidelity viewer tile-session grants (no raw device fingerprint). */
+  viewerTileSessionAudit: path.join(STORAGE_ROOT, "viewer-tile-session-audit.jsonl"),
 } as const;
 
 /** Bounded exponential backoff for mint worker (operator-triggered or future cron). */

@@ -7,6 +7,7 @@ import {
   locales,
   type Locale,
 } from "@/i18n/config";
+import { isLikelyMobileWebClient } from "@/lib/mobileUserAgent";
 
 /**
  * ISO 27001 A.9.4.2 / A.13.1.3 (§2, §6) Edge-safe NextAuth instance.
@@ -31,10 +32,11 @@ function pathAfterLocale(pathname: string, locale: Locale): string {
   return pathname;
 }
 
-/** Vault + seller flows require a signed-in user. Operator review stays demo-gated separately. */
+/** Vault + seller + mobile immersive viewer require a signed-in user (Edge JWT only). */
 function needsAuthentication(pathAfterLocale: string): boolean {
   if (pathAfterLocale === "/vault" || pathAfterLocale.startsWith("/vault/")) return true;
   if (pathAfterLocale === "/seller" || pathAfterLocale.startsWith("/seller/")) return true;
+  if (pathAfterLocale.startsWith("/viewer/immersive/")) return true;
   return false;
 }
 
@@ -136,6 +138,16 @@ export default auth((req) => {
   }
 
   const rest = pathAfterLocale(pathname, found);
+
+  if (rest.startsWith("/viewer/immersive/")) {
+    const mobile = isLikelyMobileWebClient(req.headers.get("user-agent"), req.headers.get("sec-ch-ua-mobile"));
+    if (!mobile) {
+      const bridge = new URL(`/${found}/mobile-bridge`, req.url);
+      bridge.searchParams.set("returnTo", pathname);
+      return NextResponse.redirect(bridge);
+    }
+  }
+
   if (needsAuthentication(rest) && !req.auth) {
     const loginUrl = new URL(`/${found}/login`, req.url);
     loginUrl.searchParams.set("returnTo", pathname);

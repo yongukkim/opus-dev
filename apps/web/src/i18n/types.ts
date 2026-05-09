@@ -388,9 +388,10 @@ export type Messages = {
     chronicleTrust: string;
     appRequiredTitle: string;
     appRequiredBody: string;
-    appRequiredIos: string;
-    appRequiredAndroid: string;
-    appRequiredComingSoon: string;
+    /** Add-to-home instructions — Safari (iOS). */
+    pwaStepSafari: string;
+    /** Add-to-home instructions — Chrome / Android. */
+    pwaStepChrome: string;
     /** Strapline under the enclosure mark in the site footer. */
     securedByLine: string;
     /** Four-column footer headings + home link (localized; was hardcoded EN). */
@@ -482,9 +483,8 @@ export type Messages = {
     legalLink: string;
     appRequiredTitle: string;
     appRequiredBody: string;
-    appRequiredIos: string;
-    appRequiredAndroid: string;
-    appRequiredComingSoon: string;
+    pwaStepSafari: string;
+    pwaStepChrome: string;
     /** Shared "Coming soon" badge used on rail / chronicle placeholders below. */
     comingSoon: string;
     /**
@@ -612,9 +612,8 @@ export type Messages = {
     detailBuyCta: string;
     detailAppRequiredTitle: string;
     detailAppRequiredBody: string;
-    detailAppRequiredIos: string;
-    detailAppRequiredAndroid: string;
-    detailAppRequiredComingSoon: string;
+    detailPwaStepSafari: string;
+    detailPwaStepChrome: string;
     /** CTA on grid/list to open the work detail page. */
     openWorkCta: string;
     detailBackArchive: string;
@@ -672,9 +671,8 @@ export type Messages = {
     note: string;
     appRequiredTitle: string;
     appRequiredBody: string;
-    appRequiredIos: string;
-    appRequiredAndroid: string;
-    appRequiredComingSoon: string;
+    pwaStepSafari: string;
+    pwaStepChrome: string;
     back: string;
   };
   purchaseSuccess: {
@@ -934,6 +932,8 @@ export type Messages = {
     collectionEmpty: string;
     /** CTA → `/vault/transfer/register?submissionId=` */
     collectionTransferCta: string;
+    /** CTA → `/viewer/immersive/[submissionId]` (mobile web high-fidelity path). */
+    collectionImmersiveCta: string;
     /** Short line above per-edition JSON download links (authenticated edition certificate). */
     collectionCertificateLead: string;
     /** Download label; placeholder `{n}` = edition number. */
@@ -1193,6 +1193,21 @@ export type Messages = {
     body: string;
     backToConsent: string;
     vaultLink: string;
+  };
+  /** Mobile immersive viewer + desktop QR bridge (localized). */
+  mobileViewer: {
+    bridgeTitle: string;
+    bridgeLead: string;
+    bridgeScanLabel: string;
+    bridgeOpenCta: string;
+    bridgeLoginHint: string;
+    immersiveKicker: string;
+    immersiveTitle: string;
+    immersiveLead: string;
+    immersiveNoAccess: string;
+    tileRequestCta: string;
+    tileResultLabel: string;
+    tileErrorGeneric: string;
   };
   operatorReview: {
     title: string;

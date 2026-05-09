@@ -72,9 +72,8 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
             m={m}
             title={m.footer.appRequiredTitle}
             body={m.footer.appRequiredBody}
-            iosLabel={m.footer.appRequiredIos}
-            androidLabel={m.footer.appRequiredAndroid}
-            comingSoonLabel={m.footer.appRequiredComingSoon}
+            pwaStepSafari={m.footer.pwaStepSafari}
+            pwaStepChrome={m.footer.pwaStepChrome}
             className="rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6"
           />
         </div>
