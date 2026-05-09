@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { OperatorMintJobsPanel } from "@/components/operator/OperatorMintJobsPanel";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { getOpusConsoleReviewUrl } from "@/lib/opusConsoleUrl";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -24,7 +25,7 @@ export default async function OperatorOnchainMintPage({ params }: Props) {
 
         <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm">
           <Link
-            href={withLocale(locale, "/operator/review")}
+            href={getOpusConsoleReviewUrl(locale)}
             className="text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
           >
             {q.linkReview}

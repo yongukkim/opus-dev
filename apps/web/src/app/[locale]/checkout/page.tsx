@@ -4,7 +4,6 @@ import { getDictionary } from "@/i18n/catalog";
 import type { Locale } from "@/i18n/config";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { formatListPriceForLocale } from "@/lib/localePriceFromJpy";
-import { getStripeServer } from "@/lib/stripeServer";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 
@@ -31,11 +30,8 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
   )}${artwork ? `&artwork=${encodeURIComponent(artwork)}` : ""}`;
 
   const session = await auth();
-  const stripeEnabled = Boolean(getStripeServer());
 
   const payCopy = {
-    payCta: c.payCta,
-    payStarting: c.payStarting,
     demoPayCta: c.demoPayCta,
     payError: c.payError,
     payMustSignIn: c.payMustSignIn,
@@ -77,7 +73,6 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
                 priceJpy={priceParsed}
                 returnTo={safeReturn}
                 successHref={successHref}
-                stripeEnabled={stripeEnabled}
                 isSignedIn={Boolean(session?.user)}
                 isCollector={session?.user?.role === "collector"}
                 copy={payCopy}

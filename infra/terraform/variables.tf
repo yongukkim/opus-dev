@@ -18,6 +18,15 @@ variable "app_instance_type" {
   default     = "t4g.small"
 }
 
+# KO: 운영 콘솔 전용 호스트 — 스토어 EC2와 분리; RDS는 동일 VPC에서 SG로만 접근.
+# JA: 運用コンソール専用ホスト — ストアEC2と分離。RDSは同一VPC内でSG経由のみ。
+# EN: Dedicated operator-console host (split from storefront EC2); same RDS over VPC SG rules.
+variable "console_instance_type" {
+  type        = string
+  description = "EC2 instance type for the OPUS console server only (arm64 Graviton, e.g. t4g.nano)."
+  default     = "t4g.nano"
+}
+
 # ISO 27001 A.13.1.3 / A.10.1.1: RDS 네트워크·암호화 경계를 변수로 노출해
 # 환경(개발/스테이징) 단위로 독립 관리한다.
 # KO: RDS 활성/비활성과 규모는 tfvars 에서만 토글해 실수로 프로덕션 크기를 띄우지 않는다.

@@ -12,6 +12,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -39,20 +40,31 @@ type Props = NativeStackScreenProps<RootStackParamList, "ArtworkViewer">;
 const API_BASE = process.env["EXPO_PUBLIC_API_URL"] ?? "https://app.opus-store.com";
 const { width, height } = Dimensions.get("window");
 
-type AssetState = "idle" | "checking" | "downloading" | "ready" | "expired" | "missing" | "forbidden" | "error";
+type AssetState =
+  | "idle"
+  | "checking"
+  | "downloading"
+  | "ready"
+  | "expired"
+  | "missing"
+  | "forbidden"
+  | "error"
+  /** Browser preview: high-fidelity cache pipeline is native-only (CLAUDE.md). */
+  | "unsupported";
 
 export function ArtworkViewerScreen({ route, navigation }: Props) {
   const { artworkId, title } = route.params;
   const { getAccessToken } = useAuth();
 
   const [captureBreachCount, setCaptureBreachCount] = useState(0);
-  const [assetState, setAssetState] = useState<AssetState>("idle");
+  const [assetState, setAssetState] = useState<AssetState>(Platform.OS === "web" ? "unsupported" : "idle");
   const [assetUri, setAssetUri] = useState<string | null>(null);
   const [mimeType, setMimeType] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Screen capture prevention
   useEffect(() => {
+    if (Platform.OS === "web") return;
     void preventScreenCaptureAsync();
     const off = onScreenshot(() => {
       setCaptureBreachCount((n) => n + 1);
@@ -69,6 +81,7 @@ export function ArtworkViewerScreen({ route, navigation }: Props) {
 
   // Check local cache on mount
   useEffect(() => {
+    if (Platform.OS === "web") return;
     void (async () => {
       setAssetState("checking");
       const meta = await loadStoredAssetMeta(artworkId);
@@ -234,6 +247,14 @@ export function ArtworkViewerScreen({ route, navigation }: Props) {
                   <Pressable style={styles.actionBtn} onPress={() => void revalidateLease()}>
                     <Text style={styles.actionBtnText}>재인증 및 다시 보기</Text>
                   </Pressable>
+                </>
+              ) : assetState === "unsupported" ? (
+                <>
+                  <Text style={styles.iconText}>🌐</Text>
+                  <Text style={styles.statusText}>브라우저에서는 UI 미리보기만 지원합니다.</Text>
+                  <Text style={styles.hintText}>
+                    고해상 감상·로컬 보관은 iOS/Android 앱에서 제공됩니다. (OPUS 정책)
+                  </Text>
                 </>
               ) : assetState === "forbidden" ? (
                 <>

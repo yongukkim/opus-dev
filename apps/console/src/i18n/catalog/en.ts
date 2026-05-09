@@ -64,7 +64,7 @@ export const en: ConsoleMessages = {
   dashboard: {
     title: "Operations home",
     subtitle:
-      "Back office separated from the public storefront. Pending approval review is available now; payment records and reconciliation will roll out with Stripe in phases.",
+      "Back office separated from the public storefront. Pending approval review is available now; payment records and reconciliation will roll out with KOMOJU in phases.",
     cardSubmissionsTitle: "Pending Approval",
     cardSubmissionsBody: "Review and approve artwork registration submissions.",
     cardSubmissionsCta: "Open pending items",

@@ -882,21 +882,20 @@ export const en: Messages = {
   },
   checkout: {
     title: "Checkout",
-    subtitle: "Secure payment with Stripe Checkout. Japan consumer/tax handling follows operating policy and Stripe configuration.",
+    subtitle:
+      "Payments will be processed with KOMOJU. Japan consumer/tax handling follows operating policy and the payment partner’s configuration. This screen is for flow review only.",
     summaryLabel: "Summary",
     summaryArtwork: "Artwork: {artwork}",
     summaryFallback: "Review the selected artwork details.",
     summaryPrice: "Amount: {price}",
     summaryPriceBasis: "List and settlement basis: {yen}",
-    payCta: "Pay with Stripe",
-    payStarting: "Redirecting to Stripe…",
     demoPayCta: "Continue to success (demo)",
     payError: "Could not start checkout. Please try again shortly.",
     payMustSignIn: "Sign in to pay",
     payArtistWrongRole:
       "Checkout runs on a collector account. Switch Vault mode to collector and try again.",
-    payNotConfigured: "Stripe is not configured (no secret key); demo checkout only.",
-    note: "Live payments use Stripe Checkout in JPY. Displayed amounts follow registration policy; tax and commercial disclosures follow operating policy and Stripe settings.",
+    payNotConfigured: "Until KOMOJU is connected, only demo checkout is available. This notice will change when live payments open.",
+    note: "Live payments are planned via KOMOJU in JPY. Displayed amounts follow registration policy; tax and commercial disclosures follow operating policy and the payment partner’s settings.",
     appRequiredTitle: "Smartphone app required",
     appRequiredBody:
       "High-fidelity viewing after purchase is provided only in the OPUS mobile app. Please install the iOS or Android app.",
@@ -915,7 +914,7 @@ export const en: Messages = {
     backToArchive: "← Back to Archive",
     paymentPendingTitle: "Confirming payment",
     paymentPendingBody:
-      "If you completed payment in Stripe, status may take a moment. Refresh or check your order from My Page.",
+      "If you completed payment, status may take a moment. Refresh or check your order from My Page.",
     paymentFailedTitle: "Payment not completed",
     paymentFailedBody: "This order is not paid or was cancelled. Try checkout again or contact support.",
   },
@@ -973,6 +972,7 @@ export const en: Messages = {
     activityPurchaseEmpty: "No purchase records yet.",
     activityPurchaseNeedSignIn: "Sign in to view purchase records.",
     activityOpenWork: "Open work",
+    activityRemoveItem: "Remove from list",
     activityPurchaseStatusPending: "Payment pending",
     activityPurchaseStatusPaid: "Paid",
     activityPurchaseStatusFailed: "Payment failed",
@@ -1182,7 +1182,7 @@ export const en: Messages = {
     consentSensitive:
       "Consent to process unique identification information (e.g. ID numbers)",
     consentThirdParty:
-      "Consent to disclosure to third parties (identity providers such as Stripe Identity, Liquid eKYC)",
+      "Consent to disclosure to third parties (identity providers such as Liquid eKYC)",
     dbNote:
       "OPUS does not store ID image paths or card numbers; only verification outcomes are linked.",
     back: "Back",

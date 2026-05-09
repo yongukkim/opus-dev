@@ -13,20 +13,39 @@ cd "$APP_DIR"
 echo "=== repo HEAD ==="
 git rev-parse --short HEAD 2>/dev/null || echo "(not a git repo)"
 
-echo "=== host Caddyfile (names) ==="
-grep -E '^[[:alnum:]].*opus-store\.com' infra/caddy/Caddyfile || true
+web_caddy_q="$(docker compose -f compose.web.yaml ps -q caddy 2>/dev/null || true)"
+con_caddy_q="$(docker compose -f compose.console.yaml ps -q caddy 2>/dev/null || true)"
 
-echo "=== container Caddyfile (names) ==="
-docker compose -f compose.web.yaml exec -T caddy cat /etc/caddy/Caddyfile 2>/dev/null | grep -E '^[[:alnum:]].*opus-store\.com' || echo "(exec failed — is caddy up?)"
+if [[ -n "$web_caddy_q" ]]; then
+  echo ""
+  echo "=== APP STACK (compose.web.yaml) — host Caddyfile (names) ==="
+  grep -E '^[[:alnum:]].*opus-store\.com' infra/caddy/Caddyfile || true
+  echo "=== APP STACK — container Caddyfile (names) ==="
+  docker compose -f compose.web.yaml exec -T caddy cat /etc/caddy/Caddyfile 2>/dev/null | grep -E '^[[:alnum:]].*opus-store\.com' || echo "(exec failed)"
+  echo "=== openssl SNI app @ 127.0.0.1:443 ==="
+  echo | openssl s_client -connect 127.0.0.1:443 -servername app.opus-store.com 2>&1 | grep -E 'subject=|issuer=|no peer|Verify return code' || true
+  echo "=== docker ps (app: web + caddy) ==="
+  docker compose -f compose.web.yaml ps opus-web caddy 2>/dev/null || docker compose -f compose.web.yaml ps
+  echo "=== caddy logs app (last 50) ==="
+  docker compose -f compose.web.yaml logs --tail=50 caddy 2>&1
+fi
 
-echo "=== openssl SNI console @ 127.0.0.1:443 ==="
-echo | openssl s_client -connect 127.0.0.1:443 -servername console.opus-store.com 2>&1 | grep -E 'subject=|issuer=|no peer|Verify return code' || true
+if [[ -n "$con_caddy_q" ]]; then
+  echo ""
+  echo "=== CONSOLE STACK (compose.console.yaml) — host Caddyfile (names) ==="
+  grep -E '^[[:alnum:]].*opus-store\.com' infra/caddy/Caddyfile.console || true
+  echo "=== CONSOLE STACK — container Caddyfile (names) ==="
+  docker compose -f compose.console.yaml exec -T caddy cat /etc/caddy/Caddyfile 2>/dev/null | grep -E '^[[:alnum:]].*opus-store\.com' || echo "(exec failed)"
+  echo "=== openssl SNI console @ 127.0.0.1:443 ==="
+  echo | openssl s_client -connect 127.0.0.1:443 -servername console.opus-store.com 2>&1 | grep -E 'subject=|issuer=|no peer|Verify return code' || true
+  echo "=== docker ps (console: opus-console + caddy) ==="
+  docker compose -f compose.console.yaml ps opus-console caddy 2>/dev/null || docker compose -f compose.console.yaml ps
+  echo "=== caddy logs console (last 50) ==="
+  docker compose -f compose.console.yaml logs --tail=50 caddy 2>&1
+fi
 
-echo "=== openssl SNI app @ 127.0.0.1:443 ==="
-echo | openssl s_client -connect 127.0.0.1:443 -servername app.opus-store.com 2>&1 | grep -E 'subject=|issuer=|no peer|Verify return code' || true
-
-echo "=== docker ps (caddy / console / web) ==="
-docker compose -f compose.web.yaml ps opus-web opus-console caddy 2>/dev/null || docker compose -f compose.web.yaml ps
-
-echo "=== caddy logs (last 50 lines) ==="
-docker compose -f compose.web.yaml logs --tail=50 caddy 2>&1
+if [[ -z "$web_caddy_q" && -z "$con_caddy_q" ]]; then
+  echo ""
+  echo "=== no Caddy container found ==="
+  echo "Neither compose.web.yaml nor compose.console.yaml has a running caddy service on this host."
+fi

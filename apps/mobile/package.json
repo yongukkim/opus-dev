@@ -6,11 +6,15 @@
   "scripts": {
     "build": "tsc --noEmit",
     "dev": "expo start",
+    "dev:web": "expo start --web",
+    "mobile:web": "expo start --web",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .expo dist"
   },
   "dependencies": {
+    "@expo-google-fonts/cinzel": "^0.4.2",
+    "@expo-google-fonts/jetbrains-mono": "^0.4.1",
     "@expo/metro-runtime": "~55.0.10",
     "@expo/vector-icons": "^15.1.1",
     "@opus/api": "workspace:*",
@@ -22,6 +26,8 @@
     "expo-auth-session": "^55.0.15",
     "expo-crypto": "^55.0.14",
     "expo-file-system": "^55.0.17",
+    "expo-font": "~55.0.6",
+    "expo-linear-gradient": "~55.0.13",
     "expo-screen-capture": "^55.0.13",
     "expo-secure-store": "^55.0.13",
     "expo-status-bar": "~55.0.5",

@@ -15,7 +15,17 @@ output "instance_id" {
 
 output "instance_public_ip" {
   value       = aws_eip.app_static_ip.public_ip
-  description = "EC2 public Elastic IP (stable across instance changes)"
+  description = "App EC2 public Elastic IP (app.opus-store.com)"
+}
+
+output "console_instance_id" {
+  value       = aws_instance.console_server.id
+  description = "Console-only EC2 instance ID"
+}
+
+output "console_public_ip" {
+  value       = aws_eip.console_static_ip.public_ip
+  description = "Console EC2 Elastic IP — point console.opus-store.com A record here"
 }
 
 # ---------- RDS (enable_rds = true 일 때만 값 노출) ----------

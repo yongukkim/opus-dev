@@ -72,6 +72,21 @@ export function writeDemoList(key: string, lines: DemoListLine[]): void {
   }
 }
 
+/**
+ * ISO 27001 A.14.2.1 (§1) Input validation
+ * KO: slug는 목록에 존재하는 항목만 제거하며, 저장 전에 다시 검증합니다.
+ * JA: slugはリストに存在する行のみ除去し、保存前に再検証します。
+ * EN: Removes only lines present in the list and re-validates before persisting.
+ */
+export function removeDemoLineBySlug(key: string, slug: string): DemoListLine[] {
+  const trimmed = slug.trim();
+  if (!trimmed) return readDemoList(key);
+  const prev = readDemoList(key);
+  const next = prev.filter((x) => x.slug !== trimmed);
+  writeDemoList(key, next);
+  return next;
+}
+
 export function upsertDemoLine(lines: DemoListLine[], line: DemoListLine): DemoListLine[] {
   const next = lines.filter((x) => x.slug !== line.slug);
   next.push(line);

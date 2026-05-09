@@ -1,4 +1,5 @@
 import * as ScreenCapture from "expo-screen-capture";
+import { Platform } from "react-native";
 
 /**
  * Best-effort screen capture blocking.
@@ -12,6 +13,7 @@ import * as ScreenCapture from "expo-screen-capture";
  * EN: Apply capture prevention on viewing surfaces to strengthen session protection.
  */
 export async function preventScreenCaptureAsync(): Promise<void> {
+  if (Platform.OS === "web") return;
   try {
     await ScreenCapture.preventScreenCaptureAsync();
   } catch {
@@ -20,6 +22,7 @@ export async function preventScreenCaptureAsync(): Promise<void> {
 }
 
 export async function allowScreenCaptureAsync(): Promise<void> {
+  if (Platform.OS === "web") return;
   try {
     await ScreenCapture.allowScreenCaptureAsync();
   } catch {
@@ -28,7 +31,12 @@ export async function allowScreenCaptureAsync(): Promise<void> {
 }
 
 export function onScreenshot(callback: () => void): () => void {
-  const sub = ScreenCapture.addScreenshotListener(() => callback());
-  return () => sub.remove();
+  if (Platform.OS === "web") return () => {};
+  try {
+    const sub = ScreenCapture.addScreenshotListener(() => callback());
+    return () => sub.remove();
+  } catch {
+    return () => {};
+  }
 }
 

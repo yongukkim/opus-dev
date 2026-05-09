@@ -31,8 +31,9 @@ resource "aws_db_subnet_group" "opus" {
 
 # ---------- DB security group (app SG 에서만 5432 허용) ----------
 resource "aws_security_group" "db" {
-  count       = var.enable_rds ? 1 : 0
-  name        = "opus-db-sg"
+  count = var.enable_rds ? 1 : 0
+  name  = "opus-db-sg"
+  # KO: description 변경은 SG 전체 교체를 유도해 RDS ENI와 충돌할 수 있어 고정 문구를 유지한다(콘솔 허용은 db_from_console 규칙으로 추가).
   description = "PostgreSQL access restricted to EC2 app SG"
   vpc_id      = aws_vpc.main.id
   tags        = { Name = "opus-db-sg" }
@@ -45,7 +46,17 @@ resource "aws_vpc_security_group_ingress_rule" "db_from_app" {
   ip_protocol                  = "tcp"
   from_port                    = 5432
   to_port                      = 5432
-  description                  = "PostgreSQL from EC2 app servers only"
+  description                  = "PostgreSQL from EC2 app server"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "db_from_console" {
+  count                        = var.enable_rds ? 1 : 0
+  security_group_id            = aws_security_group.db[0].id
+  referenced_security_group_id = aws_security_group.console.id
+  ip_protocol                  = "tcp"
+  from_port                    = 5432
+  to_port                      = 5432
+  description                  = "PostgreSQL from EC2 console server"
 }
 
 # DB 는 외부 네트워크를 호출할 필요가 없으므로 egress 도 최소화 (VPC 내부 only)

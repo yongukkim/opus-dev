@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
-import { readDemoList, resolveDemoLineThumbnail, type DemoListLine } from "@/lib/demoLists";
+import { readDemoList, removeDemoLineBySlug, resolveDemoLineThumbnail, type DemoListLine } from "@/lib/demoLists";
 
 type Props = {
   locale: Locale;
@@ -12,17 +12,25 @@ type Props = {
   labels: {
     empty: string;
     openWork: string;
+    removeItem: string;
   };
 };
+
+function sortLinesNewestFirst(list: DemoListLine[]): DemoListLine[] {
+  return [...list].sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt));
+}
 
 export function VaultActivityWishlistPanel({ locale, listKey, labels }: Props) {
   const [lines, setLines] = useState<DemoListLine[]>([]);
 
   useEffect(() => {
-    const next = readDemoList(listKey);
-    next.sort((a, b) => Date.parse(b.addedAt) - Date.parse(a.addedAt));
-    setLines(next);
+    setLines(sortLinesNewestFirst(readDemoList(listKey)));
   }, [listKey]);
+
+  function removeLine(slug: string) {
+    const next = sortLinesNewestFirst(removeDemoLineBySlug(listKey, slug));
+    setLines(next);
+  }
 
   const hasItems = lines.length > 0;
   const money = useMemo(() => new Intl.NumberFormat(locale === "ja" ? "ja-JP" : "ko-KR"), [locale]);
@@ -74,13 +82,20 @@ export function VaultActivityWishlistPanel({ locale, listKey, labels }: Props) {
                     {new Date(line.addedAt).toLocaleString(locale)}
                   </p>
                 </div>
-                <div>
+                <div className="flex flex-wrap gap-2">
                   <Link
                     href={workHref(line.slug)}
                     className="inline-flex rounded-md border border-opus-gold/25 bg-opus-gold/10 px-3 py-1.5 text-xs font-semibold text-opus-gold-light transition hover:border-opus-gold/40 hover:bg-opus-gold/[0.14]"
                   >
                     {labels.openWork}
                   </Link>
+                  <button
+                    type="button"
+                    onClick={() => removeLine(line.slug)}
+                    className="inline-flex rounded-md border border-white/[0.12] bg-black/15 px-3 py-1.5 text-xs font-medium text-opus-warm/55 transition hover:border-white/[0.18] hover:bg-black/25 hover:text-opus-warm/80"
+                  >
+                    {labels.removeItem}
+                  </button>
                 </div>
               </div>
             </div>

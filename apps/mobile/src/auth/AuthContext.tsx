@@ -31,10 +31,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Load persisted tokens on mount
   useEffect(() => {
     void (async () => {
-      const { accessToken, refreshToken, user } = await loadTokens();
-      if (accessToken && refreshToken && user) {
-        setAuth({ status: "authenticated", accessToken, refreshToken, user });
-      } else {
+      try {
+        const { accessToken, refreshToken, user } = await loadTokens();
+        if (accessToken && refreshToken && user) {
+          setAuth({ status: "authenticated", accessToken, refreshToken, user });
+        } else {
+          setAuth({ status: "unauthenticated" });
+        }
+      } catch {
+        // ISO 27001 A.12.4.1 (CLAUDE.md §5) — persist load failure → safe unauthenticated state; no PII in logs.
+        // KO: 저장소 읽기 실패 시 로그인 화면으로 되돌려 세션 상태를 안전하게 초기화한다.
+        // JA: ストア読込失敗時はログイン画面へ戻し、セッション状態を安全に初期化する。
+        // EN: On storage read failure, fall back to unauthenticated state without leaking details.
         setAuth({ status: "unauthenticated" });
       }
     })();

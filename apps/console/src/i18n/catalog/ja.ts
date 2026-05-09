@@ -65,13 +65,13 @@ export const ja: ConsoleMessages = {
   dashboard: {
     title: "運用ホーム",
     subtitle:
-      "公開ストアから分離したバックオフィスです。承認待ちの審査は今すぐ利用でき、決済・照合ツールは Stripe 連携後に段階的に提供します。",
+      "公開ストアから分離したバックオフィスです。承認待ちの審査は今すぐ利用でき、決済・照合ツールは KOMOJU 連携後に段階的に提供します。",
     cardSubmissionsTitle: "承認待ち",
     cardSubmissionsBody: "作品登録の提出を審査し承認します。",
     cardSubmissionsCta: "承認待ちへ",
     cardPaymentsTitle: "決済・照合",
     cardPaymentsBody:
-      "入金記録の参照、台帳との照合、締め処理の要約を一箇所で扱う予定です（Stripe 連携予定）。",
+      "入金記録の参照、台帳との照合、締め処理の要約を一箇所で扱う予定です（KOMOJU 連携予定）。",
     cardPaymentsBadge: "準備中",
     cardHealthTitle: "サービス状態",
     cardHealthBody: "デプロイやインフラの要約は後日ここに表示します。",

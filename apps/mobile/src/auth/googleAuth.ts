@@ -7,13 +7,55 @@
  * NOTE: expo-auth-session and expo-web-browser are required.
  * Install with: npx expo install expo-auth-session expo-web-browser
  */
+import { Platform } from "react-native";
 import type { StoredUser } from "./tokenStore";
-
-const API_BASE = process.env["EXPO_PUBLIC_API_URL"] ?? "https://app.opus-store.com";
 
 export type GoogleAuthResult =
   | { ok: true; accessToken: string; refreshToken: string; user: StoredUser }
   | { ok: false; error: string };
+
+/**
+ * Web (Expo Metro): Google "Web application" clients require client_secret at token endpoint —
+ * performed on OPUS API with AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET (ISO A.10.1.1).
+ */
+async function exchangeGoogleCodeViaOpusApi(
+  code: string,
+  codeVerifier: string,
+  redirectUri: string,
+  apiBase: string,
+): Promise<GoogleAuthResult> {
+  try {
+    const appRes = await fetch(`${apiBase}/api/mobile/auth/google/code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, redirectUri, codeVerifier }),
+    });
+    const data = (await appRes.json().catch(() => ({}))) as {
+      ok?: boolean;
+      error?: string;
+      accessToken?: string;
+      refreshToken?: string;
+      user?: { id: string; email: string; name: string | null; role: string };
+    };
+    if (!appRes.ok || !data.ok || !data.accessToken || !data.refreshToken || !data.user?.id) {
+      return { ok: false, error: typeof data.error === "string" ? data.error : "app_token_exchange_failed" };
+    }
+    return {
+      ok: true,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name ?? null,
+        role: (data.user.role as StoredUser["role"]) ?? "collector",
+      },
+    };
+  } catch (e) {
+    if (__DEV__) console.warn("[exchangeGoogleCodeViaOpusApi]", apiBase, e);
+    return { ok: false, error: "app_network_error" };
+  }
+}
 
 /**
  * Exchange Google authorization code for app tokens.
@@ -25,6 +67,12 @@ export async function exchangeGoogleCode(
   apiBase: string,
   googleClientId: string,
 ): Promise<GoogleAuthResult> {
+  if (Platform.OS === "web") {
+    return exchangeGoogleCodeViaOpusApi(code, codeVerifier, redirectUri, apiBase);
+  }
+
+  // Native: public client + PKCE — token exchange without client_secret (Google iOS/Android client types).
+
   // Step 1: Exchange code for Google tokens
   let idToken: string;
   try {

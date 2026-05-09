@@ -63,7 +63,11 @@ export default async function VaultActivityPage({ params }: Props) {
           <VaultActivityWishlistPanel
             locale={locale}
             listKey={OPUS_DEMO_WISHLIST_KEY}
-            labels={{ empty: v.activityWishlistEmpty, openWork: v.activityOpenWork }}
+            labels={{
+              empty: v.activityWishlistEmpty,
+              openWork: v.activityOpenWork,
+              removeItem: v.activityRemoveItem,
+            }}
           />
         </div>
       </section>
@@ -75,7 +79,11 @@ export default async function VaultActivityPage({ params }: Props) {
           <VaultActivityWishlistPanel
             locale={locale}
             listKey={OPUS_DEMO_CART_KEY}
-            labels={{ empty: v.activityCartEmpty, openWork: v.activityOpenWork }}
+            labels={{
+              empty: v.activityCartEmpty,
+              openWork: v.activityOpenWork,
+              removeItem: v.activityRemoveItem,
+            }}
           />
         </div>
       </section>

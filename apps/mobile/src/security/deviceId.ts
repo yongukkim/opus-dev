@@ -10,6 +10,17 @@ function randomId(): string {
 }
 
 export async function getOrCreateDeviceId(): Promise<string> {
+  if (Platform.OS === "web") {
+    try {
+      const existing = typeof localStorage !== "undefined" ? localStorage.getItem(KEY) : null;
+      if (existing?.trim()) return existing.trim();
+      const id = randomId();
+      if (typeof localStorage !== "undefined") localStorage.setItem(KEY, id);
+      return id;
+    } catch {
+      return randomId();
+    }
+  }
   const existing = await SecureStore.getItemAsync(KEY);
   if (existing?.trim()) return existing.trim();
   const id = randomId();
@@ -19,6 +30,10 @@ export async function getOrCreateDeviceId(): Promise<string> {
 
 export async function deleteDeviceId(): Promise<void> {
   try {
+    if (Platform.OS === "web") {
+      if (typeof localStorage !== "undefined") localStorage.removeItem(KEY);
+      return;
+    }
     await SecureStore.deleteItemAsync(KEY);
   } catch {
     // ignore

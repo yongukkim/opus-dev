@@ -664,8 +664,6 @@ export type Messages = {
     summaryPrice: string;
     /** KO/EN: JPY registration basis `{yen}`. Empty in JA. */
     summaryPriceBasis: string;
-    payCta: string;
-    payStarting: string;
     demoPayCta: string;
     payError: string;
     payMustSignIn: string;
@@ -961,6 +959,8 @@ export type Messages = {
     activityPurchaseEmpty: string;
     activityPurchaseNeedSignIn: string;
     activityOpenWork: string;
+    /** Remove one work from the on-device demo wishlist or cart on Activity. */
+    activityRemoveItem: string;
     activityPurchaseStatusPending: string;
     activityPurchaseStatusPaid: string;
     activityPurchaseStatusFailed: string;

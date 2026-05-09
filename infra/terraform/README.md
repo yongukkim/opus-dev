@@ -1,6 +1,6 @@
 # OPUS — Terraform (AWS)
 
-VPC, EC2(앱 서버), **옵션 RDS(PostgreSQL)** 를 한 스택으로 올립니다. 리전 기본값은 `ap-northeast-1` 입니다.
+VPC, EC2(앱 서버), **운영 콘솔 전용 EC2(최소 사양)**, **옵션 RDS(PostgreSQL)** 를 한 스택으로 올립니다. 앱·콘솔은 호스트를 나누고 **DB(RDS)는 동일**하게 쓰도록 설계했습니다. 리전 기본값은 `ap-northeast-1` 입니다.
 
 ## 사전 준비
 
@@ -52,7 +52,21 @@ terraform apply
 
 `terraform.tfvars`와 `*.tfstate`는 `.gitignore`에 포함되어 있습니다. **state에 RDS 비밀번호가 들어가므로** S3 백엔드 + 버킷 암호화·IAM 최소 권한을 유지하세요.
 
-앱 EC2 타입은 변수 **`app_instance_type`**(기본 `t4g.small`)로 조절합니다. `terraform apply` 시 타입이 바뀌면 인스턴스가 **교체**될 수 있고 **퍼블릭 IP가 바뀔 수** 있습니다.
+앱 EC2 타입은 변수 **`app_instance_type`**(기본 `t4g.small`)로, 콘솔 전용 EC2는 **`console_instance_type`**(기본 `t4g.nano`)로 조절합니다. `terraform apply` 시 타입이 바뀌면 인스턴스가 **교체**될 수 있고 **퍼블릭 IP가 바뀔 수** 있습니다(앱·콘솔 각각 **Elastic IP**에 고정됩니다).
+
+## apply 전 확인 — 스토어 EC2는 유지하고 콘솔만 추가할 때
+
+의도가 **「기존 스토어 VM은 손대지 않고 `opus-console-server`만 만든다」** 라면, **`terraform plan` 결과를 반드시 읽은 뒤** apply 하세요.
+
+- **정상(의도에 맞음):** `aws_instance.console_server`, `aws_eip.console_static_ip`, `aws_security_group.console`, RDS 관련 `db_from_console` 등 **콘솔·규칙 추가(+)만** 보이는 경우.
+- **위험:** `aws_instance.app_server`에 **`must be replaced` / `-/+`** 가 보이는 경우 — 이때 apply 하면 **스토어용 인스턴스가 새 VM으로 바뀌고**, 예전 인스턴스는 **중지·삭제**될 수 있습니다. **적용을 중단**하고, 레포의 `main.tf`에 **`lifecycle { ignore_changes = [ami] }`**(앱 인스턴스)가 있는지 확인하세요.
+- 스토어의 **북마크용 공인 주소**는 인스턴스의 임시 퍼블릭 IP가 아니라 **`aws_eip.app_static_ip`에 연결된 Elastic IP**입니다. `terraform output -raw instance_public_ip` 가 Route53 **`app.opus-store.com`** 과 일치하는지 보세요.
+
+## 콘솔 호스트·DNS
+
+- `terraform output -raw console_public_ip` 값으로 DNS **`console.opus-store.com` A 레코드**를 맞춥니다(앱과 **다른 IP**여야 정상 분리입니다).
+- GitHub Actions 콘솔 배포(`.github/workflows/build-console-image.yml`)는 저장소 시크릿 **`CONSOLE_EC2_HOST`** 에 그 **Elastic IP(또는 고정 호스트명)** 를 넣어야 합니다. 앱 서버용 **`EC2_HOST`** 와 별도입니다.
+- 콘솔 EC2에도 앱과 **동일한** `/etc/opus/opus.env`(특히 `DATABASE_URL`)를 두면 RDS를 공유합니다.
 
 ## RDS 켜기
 
@@ -89,14 +103,17 @@ DATABASE_URL="$(terraform -chdir=../../infra/terraform output -raw rds_database_
 
 | 출력 | 설명 |
 |------|------|
-| `instance_public_ip` | EC2 퍼블릭 IPv4 |
+| `instance_id` | 앱 EC2 인스턴스 ID |
+| `instance_public_ip` | 앱 EC2 Elastic IP (`app.opus-store.com`) |
+| `console_public_ip` | 콘솔 EC2 Elastic IP (`console.opus-store.com` A 레코드) |
+| `console_instance_id` | 콘솔 EC2 인스턴스 ID |
 | `rds_endpoint` / `rds_port` | RDS 호스트명·포트 |
 | `rds_username` / `rds_db_name` | 연결에 필요한 메타 |
 | `rds_password` | `-raw` 로만 조회; 가능하면 앱에는 `rds_database_url` 한 줄만 사용 |
 
 ## 운영·보안 메모
 
-- GitHub Actions 배포(`.github/workflows/build-web-image.yml`)는 **`secrets.EC2_HOST`** 를 씁니다. EC2를 바꾸거나 퍼블릭 IP가 갱신되면 GitHub 저장소 Settings → Secrets 에서 **`EC2_HOST`를 `terraform output -raw instance_public_ip` 값으로** 맞춰 주세요. 로컬에서는 `scripts/write-ec2-env.sh`가 같은 출력을 기본 호스트로 사용합니다.
+- GitHub Actions: 스토어 배포는 **`secrets.EC2_HOST`** (`terraform output -raw instance_public_ip`), 콘솔 배포·Caddy reload는 **`secrets.CONSOLE_EC2_HOST`** (`terraform output -raw console_public_ip`)를 맞춥니다. 로컬에서는 `scripts/write-ec2-env.sh`가 앱 호스트 출력을 기본으로 사용합니다.
 - 프로덕션에서는 `SECURITY_GOVERNANCE.md`에 맞춰 비밀은 **GCP/AWS Secret Manager** 등으로 이전하고, Terraform output은 초기 부트스트랩에만 쓰는 패턴이 안전합니다.
 - EC2 SSH(22)·HTTP(80)·HTTPS(443)는 현재 `0.0.0.0/0` 입니다. 운영 시 관리 IP·Tailscale 등으로 좁히는 것을 검토하세요.
 

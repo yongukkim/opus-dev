@@ -1,3 +1,22 @@
+/** OPUS font families — loaded via expo-font in App.tsx */
+export const opusFonts = {
+  display: "Cinzel_700Bold",
+  displayMedium: "Cinzel_600SemiBold",
+  displayRegular: "Cinzel_400Regular",
+  mono: "JetBrainsMono_400Regular",
+  monoMedium: "JetBrainsMono_500Medium",
+} as const;
+
+/** OPUS brass gradient stops — mirrors globals.css brass tokens */
+export const brassPalette = {
+  highlight: "#f2e9dc",
+  mid: "#e4d2b8",
+  body: "#d6bc96",
+  shadow: "#c4a06e",
+  accent: "#deb892",
+  deep: "#c9a97e",
+} as const;
+
 /** OPUS Classic Luxury — near-black charcoal, champagne brass, warm white. */
 export const opusColors = {
   charcoal: "#0E0E0E",

@@ -65,13 +65,13 @@ export const ko: ConsoleMessages = {
   dashboard: {
     title: "운영 홈",
     subtitle:
-      "공개 스토어와 분리된 백오피스입니다. 승인 대기 검수는 지금 사용할 수 있으며, 결제·대사 도구는 Stripe 연동 후 단계적으로 열립니다.",
+      "공개 스토어와 분리된 백오피스입니다. 승인 대기 검수는 지금 사용할 수 있으며, 결제·대사 도구는 KOMOJU 연동 후 단계적으로 열립니다.",
     cardSubmissionsTitle: "승인 대기",
     cardSubmissionsBody: "작품 등록 신청을 검토하고 승인합니다.",
     cardSubmissionsCta: "승인 대기로 이동",
     cardPaymentsTitle: "결제·대사",
     cardPaymentsBody:
-      "수납 기록 조회, 대사(ledger와의 정합), 정산 보고를 한 곳에서 다룰 예정입니다. (Stripe 연동 예정)",
+      "수납 기록 조회, 대사(ledger와의 정합), 정산 보고를 한 곳에서 다룰 예정입니다. (KOMOJU 연동 예정)",
     cardPaymentsBadge: "준비 중",
     cardHealthTitle: "서비스 상태",
     cardHealthBody: "배포·인프라 상태는 추후 이 영역에 요약합니다.",

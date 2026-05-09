@@ -110,6 +110,13 @@ resource "aws_instance" "app_server" {
   key_name               = aws_key_pair.opus_key.key_name
 
   tags = { Name = "opus-dev-server" }
+
+  # KO: data.aws_ami most_recent 가 바뀔 때마다 인스턴스 전체 교체(forces replacement)되는 것을 막는다.
+  # JA: 最新AMI追従のたびにインスタンス全面置換されないよう無視する。
+  # EN: Prevent full instance replacement whenever the resolved "latest" AMI id drifts.
+  lifecycle {
+    ignore_changes = [ami]
+  }
 }
 
 # ISO 27001 A.13.1.3 (§6) — fixed ingress endpoint for DNS/ACME stability.

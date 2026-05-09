@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { signMobileAccessToken, signMobileRefreshToken } from "@/lib/mobileAuthToken";
+import { issueMobileAuthFromGoogleIdToken } from "@/lib/mobileGoogleIdTokenAuth";
 
 export const runtime = "nodejs";
 
@@ -25,66 +24,18 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ ok: false, error: "id_token_required" }, { status: 400 });
   }
 
-  // Verify id_token with Google tokeninfo endpoint.
-  type GoogleTokenInfo = { sub: string; email: string; email_verified: string; aud: string };
-  let googlePayload: GoogleTokenInfo | null = null;
-  try {
-    const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`);
-    if (!res.ok) {
-      return NextResponse.json({ ok: false, error: "invalid_id_token" }, { status: 401 });
-    }
-    googlePayload = (await res.json()) as GoogleTokenInfo;
-  } catch {
-    return NextResponse.json({ ok: false, error: "google_verify_failed" }, { status: 502 });
+  const result = await issueMobileAuthFromGoogleIdToken(idToken);
+  if (!result.ok) {
+    return NextResponse.json({ ok: false, error: result.error }, { status: result.status });
   }
-
-  if (!googlePayload?.email || googlePayload.email_verified !== "true") {
-    return NextResponse.json({ ok: false, error: "email_not_verified" }, { status: 401 });
-  }
-
-  // Validate audience matches our OAuth client
-  const clientId = process.env["AUTH_GOOGLE_ID"]?.trim();
-  if (clientId && googlePayload.aud !== clientId) {
-    return NextResponse.json({ ok: false, error: "invalid_audience" }, { status: 401 });
-  }
-
-  const email = googlePayload.email.trim().toLowerCase();
-
-  // Upsert user — same pattern as web auth.ts createUser
-  const user = await prisma.user.upsert({
-    where: { email },
-    create: {
-      email,
-      emailVerified: new Date(),
-      role: "COLLECTOR",
-    },
-    update: { emailVerified: new Date() },
-    select: { id: true, role: true, email: true, name: true, image: true },
-  });
-
-  const roleMap: Record<string, "collector" | "artist" | "operator"> = {
-    COLLECTOR: "collector",
-    ARTIST: "artist",
-    OPERATOR: "operator",
-  };
-  const role = roleMap[user.role] ?? "collector";
-
-  const accessToken = signMobileAccessToken(user.id, role, user.email ?? email);
-  const refreshToken = signMobileRefreshToken(user.id);
 
   return NextResponse.json(
     {
       ok: true,
-      accessToken,
-      refreshToken,
-      expiresIn: 900, // 15 minutes
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        image: user.image,
-        role,
-      },
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+      expiresIn: result.expiresIn,
+      user: result.user,
     },
     {
       status: 200,

@@ -14,13 +14,18 @@
     "android": {
       "package": "com.opus.mobile"
     },
+    "web": {
+      "bundler": "metro"
+    },
     "extra": {
       "eas": {
         "projectId": "replace-with-eas-project-id"
       }
     },
     "plugins": [
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-secure-store",
+      "expo-font"
     ]
   }
 }

@@ -893,21 +893,20 @@ export const ja: Messages = {
   },
   checkout: {
     title: "決済",
-    subtitle: "Stripe Checkoutで安全に決済します（特定商取引法・消費税の取り扱いは運用方針とStripe設定に従います）。",
+    subtitle:
+      "決済はKOMOJUで連携する予定です（特定商取引法・消費税の取り扱いは運用方針と決済パートナーの設定に従います）。現画面はフロー確認用です。",
     summaryLabel: "Summary",
     summaryArtwork: "作品: {artwork}",
     summaryFallback: "選択した作品情報をご確認ください。",
     summaryPrice: "金額: {price}",
     summaryPriceBasis: "",
-    payCta: "Stripeで支払う",
-    payStarting: "Stripeへ移動中…",
     demoPayCta: "完了画面へ（デモ）",
     payError: "決済を開始できませんでした。時間をおいて再度お試しください。",
     payMustSignIn: "ログインして決済",
     payArtistWrongRole:
       "決済は所蔵者（一般会員）アカウントで行ってください。Vaultの表示モードを切り替えて再度お試しください。",
-    payNotConfigured: "Stripeの秘密鍵が未設定のため、デモ決済のみ可能です。",
-    note: "本番の決済はStripe Checkout（JPY）で処理されます。表示金額は登録基準であり、税・表示は運用方針とStripeの設定に従います。",
+    payNotConfigured: "KOMOJU連携までの間はデモ決済のみ可能です。本番が開くとこの案内が更新されます。",
+    note: "本番の決済はKOMOJU（JPY）で処理する予定です。表示金額は登録基準であり、税・表示は運用方針と決済パートナーの設定に従います。",
     appRequiredTitle: "スマートフォンアプリのインストールが必要です",
     appRequiredBody:
       "購入後の高画質鑑賞は、OPUSのスマートフォンアプリでのみ提供されます。iOS または Android アプリをインストールしてください。",
@@ -926,7 +925,7 @@ export const ja: Messages = {
     backToArchive: "← アーカイブへ戻る",
     paymentPendingTitle: "決済確認中",
     paymentPendingBody:
-      "Stripeでお手続き済みの場合、反映まで少し時間がかかることがあります。再読み込みするか、マイページでご確認ください。",
+      "お手続き済みの場合、反映まで少し時間がかかることがあります。再読み込みするか、マイページでご確認ください。",
     paymentFailedTitle: "決済が完了していません",
     paymentFailedBody:
       "注文が未払い、またはキャンセルされています。チェックアウトを再試行するか、サポートへお問い合わせください。",
@@ -989,6 +988,7 @@ export const ja: Messages = {
     activityPurchaseEmpty: "購入履歴はまだありません。",
     activityPurchaseNeedSignIn: "購入履歴はサインイン後に確認できます。",
     activityOpenWork: "作品を見る",
+    activityRemoveItem: "リストから外す",
     activityPurchaseStatusPending: "決済処理中",
     activityPurchaseStatusPaid: "決済完了",
     activityPurchaseStatusFailed: "決済失敗",
@@ -1197,7 +1197,7 @@ export const ja: Messages = {
       "個人情報の収集・利用への同意（氏名、生年月日、住所、身分証情報）",
     consentSensitive: "固有識別情報の取扱いへの同意（身分証番号等）",
     consentThirdParty:
-      "第三者提供への同意（本人確認の専門事業者：Stripe Identity、Liquid eKYC 等）",
+      "第三者提供への同意（本人確認の専門事業者：Liquid eKYC 等）",
     dbNote:
       "OPUSのデータベースには身分証画像のパスやカード番号は保存せず、検証結果の参照のみを連携します。",
     back: "戻る",

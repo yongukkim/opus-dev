@@ -878,20 +878,19 @@ export const ko: Messages = {
   },
   checkout: {
     title: "결제",
-    subtitle: "Stripe Checkout으로 안전하게 결제합니다. (일본 소비자 표시·세금 처리는 운영 정책과 Stripe 설정을 따릅니다.)",
+    subtitle:
+      "결제는 KOMOJU로 연동할 예정입니다. (일본 소비자 표시·세금 처리는 운영 정책과 결제 파트너 설정을 따릅니다.) 현재 화면은 플로우 확인용입니다.",
     summaryLabel: "Summary",
     summaryArtwork: "작품: {artwork}",
     summaryFallback: "선택한 작품 정보를 확인하세요.",
     summaryPrice: "금액: {price}",
     summaryPriceBasis: "등록·정산 기준: {yen}",
-    payCta: "Stripe로 결제하기",
-    payStarting: "Stripe로 이동 중…",
     demoPayCta: "결제 완료로 이동 (데모)",
     payError: "결제를 시작할 수 없습니다. 잠시 후 다시 시도해 주세요.",
     payMustSignIn: "로그인 후 결제",
     payArtistWrongRole: "결제는 소장자(일반 회원) 계정에서 진행해 주세요. Vault에서 모드를 전환한 뒤 다시 시도해 주세요.",
-    payNotConfigured: "Stripe 비밀키가 없어 데모 결제만 가능합니다. 운영 시 환경변수를 설정해 주세요.",
-    note: "실제 결제는 Stripe Checkout(JPY)으로 처리됩니다. 표시 금액은 등록 기준이며, 세금·표시는 운영 정책 및 Stripe 설정에 따릅니다.",
+    payNotConfigured: "KOMOJU 연동 전까지는 데모 결제만 가능합니다. 본 결제가 열리면 이 안내가 바뀝니다.",
+    note: "본 결제는 KOMOJU(JPY)로 처리할 예정입니다. 표시 금액은 등록 기준이며, 세금·표시는 운영 정책 및 결제 파트너 설정에 따릅니다.",
     appRequiredTitle: "스마트폰 앱 설치가 필요합니다",
     appRequiredBody:
       "구매 후 작품 감상(고해상도)은 OPUS 스마트폰 앱에서만 제공됩니다. iOS 또는 Android 앱을 설치해 주세요.",
@@ -910,7 +909,7 @@ export const ko: Messages = {
     backToArchive: "← 아카이브로 돌아가기",
     paymentPendingTitle: "결제 확인 중",
     paymentPendingBody:
-      "Stripe에서 결제를 완료하셨다면 잠시 후 상태가 반영됩니다. 새로고침하거나 마이페이지에서 주문을 확인해 주세요.",
+      "결제를 완료하셨다면 잠시 후 상태가 반영됩니다. 새로고침하거나 마이페이지에서 주문을 확인해 주세요.",
     paymentFailedTitle: "결제가 완료되지 않았습니다",
     paymentFailedBody: "주문이 완료되지 않았거나 취소되었습니다. 다시 체크아웃을 시도하거나 고객 지원으로 문의해 주세요.",
   },
@@ -968,6 +967,7 @@ export const ko: Messages = {
     activityPurchaseEmpty: "구매 내역이 아직 없습니다.",
     activityPurchaseNeedSignIn: "구매 내역은 로그인 후 확인할 수 있습니다.",
     activityOpenWork: "작품 보기",
+    activityRemoveItem: "목록에서 빼기",
     activityPurchaseStatusPending: "결제 진행 중",
     activityPurchaseStatusPaid: "결제 완료",
     activityPurchaseStatusFailed: "결제 실패",
@@ -1176,7 +1176,7 @@ export const ko: Messages = {
       "개인정보 수집 및 이용 동의 (성명, 생년월일, 주소, 신분증 정보)",
     consentSensitive: "고유식별정보 처리 동의 (신분증 번호 등)",
     consentThirdParty:
-      "제3자 제공 동의 (본인 확인 전문 기관: Stripe Identity, Liquid eKYC 등)",
+      "제3자 제공 동의 (본인 확인 전문 기관: Liquid eKYC 등)",
     dbNote:
       "OPUS DB에는 신분증 이미지 경로·카드번호를 저장하지 않으며, 검증 결과 참조만 연동합니다.",
     back: "이전으로",
