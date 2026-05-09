@@ -1,5 +1,8 @@
 name: build-and-deploy-console
 # Re-run after changing repo secrets (e.g. CONSOLE_EC2_HOST): push this file or use Actions → Run workflow.
+#
+# Repo variables: set `DEPLOY_CONSOLE_ENABLED=true` to run the EC2 deploy job when `DEPLOY_WEB_ENABLED` is false.
+# If `DEPLOY_CONSOLE_ENABLED` is unset, `DEPLOY_WEB_ENABLED=true` still runs console deploy (same as storefront).
 
 on:
   push:
@@ -78,7 +81,7 @@ jobs:
 
   deploy:
     needs: build-and-push
-    if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' }}
+    if: ${{ vars.DEPLOY_WEB_ENABLED == 'true' || vars.DEPLOY_CONSOLE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     # ISO 27001 A.9.4.2 / A.15.1.1 (CLAUDE.md §2, §8) — GITHUB_TOKEN passed to EC2 for GHCR pull.
     # KO: deploy job 은 build job 과 토큰 권한이 분리되므로 packages:read 를 명시해야 ghcr 로그인·pull 이 된다.
