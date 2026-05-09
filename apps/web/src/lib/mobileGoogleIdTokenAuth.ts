@@ -76,6 +76,8 @@ export async function issueMobileAuthFromGoogleIdToken(
   const accessToken = signMobileAccessToken(user.id, role, user.email ?? email);
   const refreshToken = signMobileRefreshToken(user.id);
 
+  const resolvedEmail = user.email ?? email;
+
   return {
     ok: true,
     accessToken,
@@ -83,7 +85,7 @@ export async function issueMobileAuthFromGoogleIdToken(
     expiresIn: 900,
     user: {
       id: user.id,
-      email: user.email,
+      email: resolvedEmail,
       name: user.name,
       image: user.image,
       role,
