@@ -21,6 +21,8 @@ export function CheckoutPayButton({
   isSignedIn,
   isCollector,
   copy,
+  catalogSlug,
+  fromSubmission,
 }: {
   locale: Locale;
   artwork: string;
@@ -30,11 +32,16 @@ export function CheckoutPayButton({
   isSignedIn: boolean;
   isCollector: boolean;
   copy: CheckoutPayCopy;
+  /** When set, preserved on login return-to checkout URL. */
+  catalogSlug?: string;
+  fromSubmission?: string;
 }) {
   const cancelQs = new URLSearchParams({
     ...(artwork ? { artwork } : {}),
     priceJpy: String(priceJpy),
     returnTo,
+    ...(catalogSlug?.trim() ? { slug: catalogSlug.trim() } : {}),
+    ...(fromSubmission?.trim() ? { fromSubmission: fromSubmission.trim() } : {}),
   }).toString();
   const cancelPathWithSlash = `${withLocale(locale, "/checkout")}${cancelQs ? `?${cancelQs}` : ""}`;
 

@@ -57,7 +57,7 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
   const homeHref = withLocale(locale, "/");
   const archiveHref = withLocale(locale, "/releases");
   const vaultReturn = withLocale(locale, "/vault/collection");
-  const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&returnTo=${encodeURIComponent(vaultReturn)}`;
+  const checkoutPath = `${withLocale(locale, "/checkout")}?artwork=${encodeURIComponent(title)}&priceJpy=${String(priceJpy)}&fromSubmission=${encodeURIComponent(id)}&returnTo=${encodeURIComponent(vaultReturn)}`;
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
   const buyHref = session?.user ? checkoutPath : loginPath;
   const collectThumbSrc = `/api/artwork-submissions/${id}/public-preview`;

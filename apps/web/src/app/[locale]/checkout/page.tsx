@@ -1,20 +1,42 @@
 import { auth } from "@/auth";
+import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMiniCard";
+import { SubmissionReleaseMiniCard } from "@/components/artworks/SubmissionReleaseMiniCard";
 import { CheckoutPayButton } from "@/components/checkout/CheckoutPayButton";
 import { getDictionary } from "@/i18n/catalog";
 import type { Locale } from "@/i18n/config";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import {
+  loadCatalogFiles,
+  parseTitleArtist,
+  pickSameArtistCatalogEntries,
+  resolveArtworkBySlug,
+} from "@/lib/artworksCatalog";
 import { formatListPriceForLocale } from "@/lib/localePriceFromJpy";
+import { listApprovedPrimaryReleasesByArtistExcept } from "@/lib/primaryReleasesForRail";
+import { getSubmissionById } from "@/lib/privateStorage";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ artwork?: string; returnTo?: string; priceJpy?: string }>;
+  searchParams: Promise<{
+    artwork?: string;
+    returnTo?: string;
+    priceJpy?: string;
+    slug?: string;
+    fromSubmission?: string;
+  }>;
 };
 
 export default async function CheckoutPage({ params, searchParams }: Props) {
   const { locale: raw } = await params;
-  const { artwork: artworkParam, returnTo: returnToParam, priceJpy: priceJpyParam } = await searchParams;
+  const {
+    artwork: artworkParam,
+    returnTo: returnToParam,
+    priceJpy: priceJpyParam,
+    slug: slugParam,
+    fromSubmission: fromSubmissionParam,
+  } = await searchParams;
   const locale = normalizeLocale(raw) as Locale;
   const m = getDictionary(locale);
   const c = m.checkout;
@@ -38,6 +60,30 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
     payArtistWrongRole: c.payArtistWrongRole,
     payNotConfigured: c.payNotConfigured,
   };
+
+  const slug = (slugParam ?? "").trim();
+  const fromSubmission = (fromSubmissionParam ?? "").trim();
+  const a = m.artworks;
+
+  let sameArtistCatalog: { file: string; globalIndex: number }[] = [];
+  let sameArtistSubmissions: Awaited<ReturnType<typeof listApprovedPrimaryReleasesByArtistExcept>> = [];
+
+  if (slug) {
+    const resolved = await resolveArtworkBySlug(slug);
+    if (resolved) {
+      const { files } = await loadCatalogFiles();
+      const { artist } = parseTitleArtist(resolved.file, resolved.globalIndex);
+      sameArtistCatalog = pickSameArtistCatalogEntries(files, resolved.file, artist, 8);
+    }
+  } else if (fromSubmission) {
+    const sub = await getSubmissionById(fromSubmission);
+    if (sub && (sub.reviewStatus ?? "pending_review") === "approved") {
+      sameArtistSubmissions = await listApprovedPrimaryReleasesByArtistExcept(sub.artistId, sub.id, 8);
+    }
+  }
+
+  const showSameArtistRail = sameArtistCatalog.length > 0 || sameArtistSubmissions.length > 0;
+  const railClass = "-mx-6 overflow-x-auto overflow-y-hidden px-6 pb-1 md:mx-0 md:px-0 [scrollbar-width:thin]";
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -76,6 +122,8 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
                 isSignedIn={Boolean(session?.user)}
                 isCollector={session?.user?.role === "collector"}
                 copy={payCopy}
+                catalogSlug={slug || undefined}
+                fromSubmission={fromSubmission || undefined}
               />
             ) : (
               <p className="text-center text-sm text-opus-warm/55">{c.summaryFallback}</p>
@@ -83,6 +131,46 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
             <p className="mt-4 text-center text-xs text-opus-warm/45">{c.note}</p>
           </div>
         </div>
+
+        {showSameArtistRail ? (
+          <section
+            className="mt-12 border-t border-white/[0.08] pt-10"
+            aria-labelledby="checkout-same-artist-heading"
+          >
+            <h2
+              id="checkout-same-artist-heading"
+              className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45"
+            >
+              {a.detailSameArtistHeading}
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-opus-warm/50">{a.detailSameArtistLead}</p>
+            <div className={railClass}>
+              <div className="flex w-max snap-x snap-mandatory gap-3 pt-4">
+                {sameArtistCatalog.map((e) => (
+                  <ArtworkCatalogMiniCard key={e.file} locale={locale} file={e.file} globalIndex={e.globalIndex} />
+                ))}
+                {sameArtistSubmissions.map((rec) => (
+                  <SubmissionReleaseMiniCard
+                    key={rec.id}
+                    locale={locale}
+                    submissionId={rec.id}
+                    title={rec.artworkTitle}
+                    artist={rec.nickname || rec.artistName}
+                    priceJpy={rec.priceJpy ?? 0}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="mt-6">
+              <Link
+                href={withLocale(locale, "/releases")}
+                className="inline-flex text-sm font-medium text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+              >
+                {a.detailMoreInArchive}
+              </Link>
+            </div>
+          </section>
+        ) : null}
 
         <div className="mt-10 text-center">
           <Link
