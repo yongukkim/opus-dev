@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { AuthError } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
@@ -27,6 +28,12 @@ const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set([
  *
  * NOTE: This file uses Node-only modules (Prisma, node:crypto via cookie verifier) and MUST NOT be
  * imported from Edge contexts (middleware). Edge code must import `@/auth.config` instead.
+ *
+ * ISO 27001 A.9.4.2 (§2) / A.12.4.1 (§5)
+ * KO: `auth()` 무인자 호출은 JWT 세션 쿠키 복호화 실패(JWTSessionError 등) 시 예외를 삼키지 않고 `null`을 반환해
+ *     레이아웃·헤더 RSC가 중단되지 않게 한다(손상·만료·배포 시크릿 변경 쿠키는 로그아웃과 동등하게 취급).
+ * JA: 引数なしの `auth()` はJWTセッションCookie復号失敗時に例外でなく `null` を返し、レイアウト/ヘッダのRSCを落とさない。
+ * EN: Parameterless `auth()` returns `null` on undecryptable JWT session cookies so layout/header RSC does not crash.
  */
 function mapDbRoleToSession(
   role: string | undefined,
@@ -51,7 +58,7 @@ async function ensureBootstrapOperatorRoleByEmail(email: string): Promise<void> 
   });
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const { handlers, auth: authInternal, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   callbacks: {
@@ -146,3 +153,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
+/** @see module block above — stale/invalid session cookie → signed-out, not a thrown RSC error. */
+export const auth = ((...args: Parameters<typeof authInternal>) => {
+  const argv = args as unknown[];
+  if (argv.length === 0) {
+    return (async () => {
+      try {
+        return await authInternal();
+      } catch (error) {
+        if (error instanceof AuthError) {
+          if (error.type === "JWTSessionError" || error.type === "SessionTokenError") {
+            return null;
+          }
+        }
+        throw error;
+      }
+    })();
+  }
+  return authInternal(...(args as Parameters<typeof authInternal>));
+}) as typeof authInternal;
+
+export { handlers, signIn, signOut };
