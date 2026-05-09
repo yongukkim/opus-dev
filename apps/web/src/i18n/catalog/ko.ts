@@ -945,6 +945,9 @@ export const ko: Messages = {
       "현재 계정이 The Chronicle 기준으로 소장 중인 에디션입니다. 검수 완료된 작품은 다음 수탁자를 찾는 등록 폼으로 바로 이동할 수 있습니다.",
     collectionEmpty: "아직 이 계정으로 소장으로 등록된 작품이 없습니다.",
     collectionTransferCta: "수탁 이전 등록",
+    collectionCertificateLead:
+      "에디션별 인증 JSON — 작품과 동일한 식별자로 묶이며, 수탁이 이전될 때 버전이 올라갑니다.",
+    collectionCertificateEditionJson: "에디션 {n} · 인증 JSON",
     collectionViewDetail: "작품 페이지",
     collectionViewDetailUnavailableTitle:
       "신작 공개 페이지는 검수 완료 후에만 열립니다. 작가 본인은 검수 전에는 스튜디오(편집) 화면에서 확인하세요.",

@@ -138,6 +138,23 @@ export default async function VaultCollectionPage({ params }: Props) {
                         ))}
                       </div>
                     ) : null}
+                    {approved && rec.initialMint > 0 ? (
+                      <div className="border-t border-white/[0.06] pt-3">
+                        <p className="text-[0.65rem] leading-relaxed text-opus-warm/45">{v.collectionCertificateLead}</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {Array.from({ length: rec.initialMint }, (_, i) => i + 1).map((n) => (
+                            <a
+                              key={n}
+                              href={`/api/edition-certificates/${encodeURIComponent(rec.id)}/${n}`}
+                              download
+                              className="inline-flex rounded border border-opus-gold/25 bg-opus-gold/5 px-2 py-1 font-mono text-[0.6rem] text-opus-gold-light transition hover:border-opus-gold/40 hover:bg-opus-gold/10"
+                            >
+                              {v.collectionCertificateEditionJson.replace("{n}", String(n))}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                   <div className="mt-auto flex flex-col gap-2 pt-1">
                     {approved ? (
                       isOwnArtistRegistration ? (

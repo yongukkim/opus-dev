@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readActorFromRequest } from "@/lib/authContext";
+import { reissueEditionCertificatesOnCustodyTransfer } from "@/lib/editionCertificate";
 import { getSubmissionById, transferOwnershipToBuyer } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
@@ -44,6 +45,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const moved = await transferOwnershipToBuyer({ submission, buyerId, buyerRole });
+    try {
+      await reissueEditionCertificatesOnCustodyTransfer({
+        submissionId,
+        newCustodyUserId: buyerId,
+        newOwnerType: buyerRole,
+      });
+    } catch {
+      /* certificate append is auxiliary; sale transfer already persisted */
+    }
     return NextResponse.json({ ok: true, submissionId, buyerId, buyerRole, storedAt: moved.toRelativePath }, { status: 200 });
   } catch {
     return NextResponse.json({ ok: false, error: "transfer_failed" }, { status: 400 });

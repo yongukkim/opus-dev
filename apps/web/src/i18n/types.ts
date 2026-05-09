@@ -934,6 +934,10 @@ export type Messages = {
     collectionEmpty: string;
     /** CTA → `/vault/transfer/register?submissionId=` */
     collectionTransferCta: string;
+    /** Short line above per-edition JSON download links (authenticated edition certificate). */
+    collectionCertificateLead: string;
+    /** Download label; placeholder `{n}` = edition number. */
+    collectionCertificateEditionJson: string;
     collectionViewDetail: string;
     /** Title on disabled "detail" control when no public PDP exists yet (e.g. collector-held pending). */
     collectionViewDetailUnavailableTitle: string;

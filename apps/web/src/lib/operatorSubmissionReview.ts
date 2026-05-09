@@ -1,5 +1,6 @@
 import { parseEditionObject, type ParsedEdition } from "@/lib/editionFields";
 import { appendIssuanceChronicleIfNewlyApproved } from "@/lib/chronicleLedger";
+import { issueEditionCertificatesOnApproval } from "@/lib/editionCertificate";
 import { enqueueMintJobForApprovedSubmission } from "@/lib/onchainMintQueue";
 import {
   appendSubmissionReviewPatch,
@@ -83,10 +84,17 @@ export async function runOperatorSubmissionReview(input: {
     editionOverride,
   });
 
+  let chronicleIssuanceId: string | null = null;
   try {
-    await appendIssuanceChronicleIfNewlyApproved({ before: submission, written });
+    chronicleIssuanceId = await appendIssuanceChronicleIfNewlyApproved({ before: submission, written });
   } catch {
     /* auxiliary failure — see route comment ISO A.12.4.1 */
+  }
+
+  try {
+    await issueEditionCertificatesOnApproval(written, chronicleIssuanceId);
+  } catch {
+    /* auxiliary failure — certificate append must not block review */
   }
 
   try {

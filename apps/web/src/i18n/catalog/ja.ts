@@ -966,6 +966,9 @@ export const ja: Messages = {
       "サインイン中のアカウントがThe Chronicle上で所蔵しているエディションです。運営審査済みの作品から、次の所蔵者を探す登録フォームへ進めます。",
     collectionEmpty: "このアカウントで所蔵として記録された作品はまだありません。",
     collectionTransferCta: "所蔵者移転を登録",
+    collectionCertificateLead:
+      "エディション別の認証JSON — 作品と安定した結合キーで紐づき、保管が移るたびにバージョンが上がります。",
+    collectionCertificateEditionJson: "エディション {n} · 認証JSON",
     collectionViewDetail: "作品ページ",
     collectionViewDetailUnavailableTitle:
       "新作公開ページは審査承認後にのみ開きます。作家本人は審査前にスタジオ（編集）画面で確認してください。",

@@ -5,11 +5,11 @@ import path from "node:path";
  *
  * KO: 아래 경로는 **책임을 섞지 않는다**. (1) `submissions.jsonl`은 제출·검수 스냅샷의 진실 원장, (2) `chronicle-entries.jsonl`은
  *     공개·감사용 발행 이력(마스킹 투영은 API에서만), (3) `onchain-mint-jobs.jsonl`은 온체인 실행·재시도 큐(가스·ABI 스냅샷),
- *     (4) `ownership-events.jsonl`은 소유권 이전 이벤트. 한 레이어의 실패가 다른 레이어의 확정을 덮어쓰지 않게 API에서 분기한다.
- * JA: 以下のパスは**責務を混在させない**。(1) submissions は提出・審査スナップショット、(2) chronicle は公開・監査向け発行履歴、
- *     (3) onchain-mint-jobs はオンチェーン実行・再試行キュー、(4) ownership-events は所有移転。失敗を他レイヤーの確定で上書きしない。
- * EN: Paths below are **single-responsibility append-only ledgers**: submissions (review truth), chronicle (public audit trail),
- *     onchain-mint-jobs (execution queue + retry + policy snapshots), ownership-events (custody). API routes keep failures isolated.
+ *     (4) `ownership-events.jsonl`은 소유권 이전 이벤트, (5) `edition-certificates.jsonl`은 에디션 단위 서명 인증서(승인·수탁 이동 버전).
+ * JA: 以下のパスは**責務を混在させない**。(1) submissions、(2) chronicle、(3) onchain-mint-jobs、(4) ownership-events、
+ *     (5) edition-certificates（エディション単位の署名付き認証書・承認/保管移転バージョン）。
+ * EN: Paths below are **single-responsibility append-only ledgers**: submissions, chronicle, onchain-mint-jobs, ownership-events,
+ *     edition-certificates (per-edition signed attestations; issuance and custody-transfer versions).
  *
  * 단계별 확장: Prisma `ChronicleEntry`/`Edition` 컷오버 시에도 동일 경계를 유지하고, 이 모듈의 상수만 교체·이전하면 된다.
  * Phased extension: keep the same boundaries when cutting over to Prisma; swap paths via this module only.
@@ -50,6 +50,7 @@ export const LEDGER_FILES = {
   ownershipEvents: path.join(STORAGE_ROOT, "ownership-events.jsonl"),
   chronicleEntries: path.join(STORAGE_ROOT, "chronicle-entries.jsonl"),
   onchainMintJobs: path.join(STORAGE_ROOT, "onchain-mint-jobs.jsonl"),
+  editionCertificates: path.join(STORAGE_ROOT, "edition-certificates.jsonl"),
 } as const;
 
 /**

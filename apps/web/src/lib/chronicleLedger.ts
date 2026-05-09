@@ -79,10 +79,10 @@ async function lastEntryForSubmission(submissionId: string): Promise<ChronicleLe
 export async function appendIssuanceChronicleIfNewlyApproved(input: {
   before: SubmissionRecord;
   written: SubmissionRecord;
-}): Promise<void> {
+}): Promise<string | null> {
   const { before, written } = input;
-  if (written.reviewStatus !== "approved") return;
-  if (before.reviewStatus === "approved") return;
+  if (written.reviewStatus !== "approved") return null;
+  if (before.reviewStatus === "approved") return null;
 
   const prev = await lastEntryForSubmission(written.id);
   const prevHash = prev?.contentHash ?? "GENESIS";
@@ -114,6 +114,7 @@ export async function appendIssuanceChronicleIfNewlyApproved(input: {
   };
   await appendJsonl(CHRONICLE_FILE, row);
   void syncIssuanceToPrismaAfterJsonl(written, occurredAt);
+  return row.id;
 }
 
 export async function listPublicChroniclePreviewRows(limit: number): Promise<ChroniclePreviewPublicRow[]> {

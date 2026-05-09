@@ -950,6 +950,9 @@ export const en: Messages = {
       "Editions currently held under your signed-in account (per Chronicle ownership). Operator-approved works can open the next-custodian transfer form directly.",
     collectionEmpty: "No editions are recorded under this account yet.",
     collectionTransferCta: "Open custody transfer registration",
+    collectionCertificateLead:
+      "Per-edition attestation JSON — bound to the work by a stable binding key; the version increments when custody moves.",
+    collectionCertificateEditionJson: "Edition {n} · attestation JSON",
     collectionViewDetail: "Work page",
     collectionViewDetailUnavailableTitle:
       "The public release page opens only after approval. As the artist, use the studio (edit) screen while review is pending.",
