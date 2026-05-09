@@ -14,7 +14,9 @@ export const runtime = "nodejs";
 function isPrivateIpv4Host(hostname: string): boolean {
   const p = hostname.split(".").map((x) => Number.parseInt(x, 10));
   if (p.length !== 4 || p.some((n) => Number.isNaN(n) || n < 0 || n > 255)) return false;
-  const [a, b] = p;
+  const a = p[0];
+  const b = p[1];
+  if (a === undefined || b === undefined) return false;
   if (a === 10) return true;
   if (a === 192 && b === 168) return true;
   if (a === 172 && b >= 16 && b <= 31) return true;
