@@ -4,9 +4,11 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
+import { SubmissionReleaseMiniCard } from "@/components/artworks/SubmissionReleaseMiniCard";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { formatListPriceForLocale } from "@/lib/localePriceFromJpy";
+import { listApprovedPrimaryReleasesByArtistExcept } from "@/lib/primaryReleasesForRail";
 import { getSubmissionById } from "@/lib/privateStorage";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
@@ -61,6 +63,8 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
   const loginPath = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(checkoutPath)}`;
   const buyHref = session?.user ? checkoutPath : loginPath;
   const collectThumbSrc = `/api/artwork-submissions/${id}/public-preview`;
+  const siblingReleases = await listApprovedPrimaryReleasesByArtistExcept(submission.artistId, submission.id, 8);
+  const railClass = "-mx-6 overflow-x-auto overflow-y-hidden px-6 pb-1 md:mx-0 md:px-0 [scrollbar-width:thin]";
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -159,6 +163,42 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
             </div>
           </div>
         </div>
+
+        <section className="mt-12 border-t border-white/[0.06] pt-10" aria-labelledby="submission-same-artist-heading">
+          <h2
+            id="submission-same-artist-heading"
+            className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45"
+          >
+            {a.detailSameArtistHeading}
+          </h2>
+          <p className="mt-2 max-w-xl text-sm text-opus-warm/50">{a.detailSameArtistLead}</p>
+          {siblingReleases.length > 0 ? (
+            <div className={railClass}>
+              <div className="flex w-max snap-x snap-mandatory gap-3 pt-4">
+                {siblingReleases.map((rec) => (
+                  <SubmissionReleaseMiniCard
+                    key={rec.id}
+                    locale={locale}
+                    submissionId={rec.id}
+                    title={rec.artworkTitle}
+                    artist={rec.nickname || rec.artistName}
+                    priceJpy={rec.priceJpy ?? 0}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-opus-warm/45">{a.detailSameArtistEmpty}</p>
+          )}
+          <div className="mt-6">
+            <Link
+              href={archiveHref}
+              className="inline-flex text-sm font-medium text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+            >
+              {a.detailMoreInArchive}
+            </Link>
+          </div>
+        </section>
 
         <aside
           className="mt-12 border-t border-white/[0.06] pt-6"

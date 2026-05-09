@@ -67,6 +67,7 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
 
   let sameArtistCatalog: { file: string; globalIndex: number }[] = [];
   let sameArtistSubmissions: Awaited<ReturnType<typeof listApprovedPrimaryReleasesByArtistExcept>> = [];
+  let showSameArtistSection = false;
 
   if (slug) {
     const resolved = await resolveArtworkBySlug(slug);
@@ -74,15 +75,17 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
       const { files } = await loadCatalogFiles();
       const { artist } = parseTitleArtist(resolved.file, resolved.globalIndex);
       sameArtistCatalog = pickSameArtistCatalogEntries(files, resolved.file, artist, 8);
+      showSameArtistSection = true;
     }
   } else if (fromSubmission) {
     const sub = await getSubmissionById(fromSubmission);
     if (sub && (sub.reviewStatus ?? "pending_review") === "approved") {
       sameArtistSubmissions = await listApprovedPrimaryReleasesByArtistExcept(sub.artistId, sub.id, 8);
+      showSameArtistSection = true;
     }
   }
 
-  const showSameArtistRail = sameArtistCatalog.length > 0 || sameArtistSubmissions.length > 0;
+  const hasSameArtistCards = sameArtistCatalog.length > 0 || sameArtistSubmissions.length > 0;
   const railClass = "-mx-6 overflow-x-auto overflow-y-hidden px-6 pb-1 md:mx-0 md:px-0 [scrollbar-width:thin]";
 
   return (
@@ -132,7 +135,7 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
           </div>
         </div>
 
-        {showSameArtistRail ? (
+        {showSameArtistSection ? (
           <section
             className="mt-12 border-t border-white/[0.08] pt-10"
             aria-labelledby="checkout-same-artist-heading"
@@ -144,23 +147,27 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
               {a.detailSameArtistHeading}
             </h2>
             <p className="mt-2 max-w-xl text-sm text-opus-warm/50">{a.detailSameArtistLead}</p>
-            <div className={railClass}>
-              <div className="flex w-max snap-x snap-mandatory gap-3 pt-4">
-                {sameArtistCatalog.map((e) => (
-                  <ArtworkCatalogMiniCard key={e.file} locale={locale} file={e.file} globalIndex={e.globalIndex} />
-                ))}
-                {sameArtistSubmissions.map((rec) => (
-                  <SubmissionReleaseMiniCard
-                    key={rec.id}
-                    locale={locale}
-                    submissionId={rec.id}
-                    title={rec.artworkTitle}
-                    artist={rec.nickname || rec.artistName}
-                    priceJpy={rec.priceJpy ?? 0}
-                  />
-                ))}
+            {hasSameArtistCards ? (
+              <div className={railClass}>
+                <div className="flex w-max snap-x snap-mandatory gap-3 pt-4">
+                  {sameArtistCatalog.map((e) => (
+                    <ArtworkCatalogMiniCard key={e.file} locale={locale} file={e.file} globalIndex={e.globalIndex} />
+                  ))}
+                  {sameArtistSubmissions.map((rec) => (
+                    <SubmissionReleaseMiniCard
+                      key={rec.id}
+                      locale={locale}
+                      submissionId={rec.id}
+                      title={rec.artworkTitle}
+                      artist={rec.nickname || rec.artistName}
+                      priceJpy={rec.priceJpy ?? 0}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-opus-warm/45">{a.detailSameArtistEmpty}</p>
+            )}
             <div className="mt-6">
               <Link
                 href={withLocale(locale, "/releases")}
