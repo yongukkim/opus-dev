@@ -4,6 +4,8 @@
 # EN: No image build: sync Caddyfile and reload Caddy on each EC2 role for Let's Encrypt refresh.
 
 name: ops-caddy-reload-ec2
+# KO: job if 에는 secrets 를 쓸 수 없다(GitHub 제한). 콘솔 EC2 리로드는 `DEPLOY_CONSOLE_ENABLED` 로만 연다.
+# EN: GitHub disallows `secrets` in job-level `if`; gate console reload with repo var `DEPLOY_CONSOLE_ENABLED`.
 
 on:
   workflow_dispatch: {}
@@ -52,7 +54,7 @@ jobs:
           curl -sfI --max-time 30 "https://app.opus-store.com/" | head -n 8
 
   reload-console:
-    if: ${{ secrets.CONSOLE_EC2_HOST != '' }}
+    if: ${{ vars.DEPLOY_CONSOLE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Sync repo on console EC2 and reload Caddy
