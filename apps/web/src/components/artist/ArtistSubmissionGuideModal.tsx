@@ -13,7 +13,9 @@ function progressLabel(tpl: string, current: number): string {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid gap-1 border-b border-white/[0.07] py-3 sm:grid-cols-[minmax(0,7rem)_1fr] sm:gap-4">
-      <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-gold/80">{label}</p>
+      <p className="font-mono text-sm font-medium uppercase leading-relaxed tracking-[0.18em] text-opus-gold/80">
+        {label}
+      </p>
       <p className="text-sm leading-relaxed text-opus-warm/75">{value}</p>
     </div>
   );
