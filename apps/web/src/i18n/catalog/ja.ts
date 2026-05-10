@@ -290,11 +290,6 @@ export const ja: Messages = {
     terms: "利用規約",
     copyright: "著作権・利用について",
     chronicleTrust: "The Chronicle Technology により検証されています。",
-    appRequiredTitle: "モバイルWebで鑑賞",
-    appRequiredBody:
-      "高画質鑑賞は認証済みモバイルWeb（ホーム画面に追加したPWA）で提供します。デスクトップWebは低解像・ウォーターマークのプレビューのみです。",
-    pwaStepSafari: "iPhone Safari：共有 → ホーム画面に追加",
-    pwaStepChrome: "Android Chrome：メニュー(⋮) → ホーム画面に追加またはインストール",
     securedByLine: "OPUSで保護されています",
     colService: "サービス",
     colChronicle: "The Chronicle",
@@ -360,7 +355,7 @@ export const ja: Messages = {
     s4Lead: "作品の真の価値は、**深い鑑賞**のなかで完成すると私たちは信じています。",
     s4WebTitle: "Web",
     s4WebBody: "作品との出会いと信頼を確かめる表層として、快適な探索を支えます。",
-    s4AppTitle: "モバイルWeb（PWA）",
+    s4AppTitle: "モバイルWeb",
     s4AppBody:
       "認証済みの所蔵者・作家向けモバイルWebセッションで高解像タイル鑑賞を提供します。ホーム画面に追加してアプリのように利用でき、デスクトップブラウザには高解像ストリームを配信しません。",
     draftNote:
@@ -739,14 +734,9 @@ export const ja: Messages = {
   home: {
     kicker: "OPUS",
     title: "写真とコレクションのための場所",
-    lead: "決済・案内は本サイトで行い、高画質鑑賞はログイン済みモバイルWeb（PWA）から行えます。",
+    lead: "決済・案内は本サイトで行い、高画質鑑賞はログイン済みモバイルWebから行えます。",
     buyCta: "購入・決済へ進む",
     legalLink: "特定商取引法に基づく表記",
-    appRequiredTitle: "モバイルWeb（PWA）",
-    appRequiredBody:
-      "高画質鑑賞は認証済みモバイルWebでのみ開きます。Safari または Chrome で OPUS を開き、ホーム画面に追加してください。",
-    pwaStepSafari: "iPhone Safari：共有 → ホーム画面に追加",
-    pwaStepChrome: "Android Chrome：メニュー(⋮) → ホーム画面に追加またはインストール",
     comingSoon: "近日公開",
     railReleases: {
       title: "新作公開・最新の一次エディション",
@@ -815,7 +805,7 @@ export const ja: Messages = {
   marketing: {
     title: "コレクションを、公式の記録とともに。",
     body:
-      "アーカイブの閲覧、マイページの管理、決済はウェブから行えます。高画質鑑賞は認証済みモバイルWeb（PWA）で行えます。実物資産や金融商品ではなく、複製不可デジタルアートの体験を提供します。",
+      "アーカイブの閲覧、マイページの管理、決済はウェブから行えます。高画質鑑賞は認証済みモバイルWebで行えます。実物資産や金融商品ではなく、複製不可デジタルアートの体験を提供します。",
     buy: "購入・決済へ進む",
     openVault: "My Pageを開く",
     openProvenance: "来歴を見る",
@@ -840,11 +830,6 @@ export const ja: Messages = {
     detailListPrice: "表示価格",
     detailDemoNote: "カタログデモ用の金額です。実際の販売価格と異なる場合があります。",
     detailBuyCta: "購入・決済へ進む",
-    detailAppRequiredTitle: "モバイルWeb（PWA）",
-    detailAppRequiredBody:
-      "高画質鑑賞は認証済みモバイルWebでのみ提供されます。ホーム画面に追加するとすぐに開けます。",
-    detailPwaStepSafari: "iPhone Safari：共有 → ホーム画面に追加",
-    detailPwaStepChrome: "Android Chrome：メニュー(⋮) → ホーム画面に追加またはインストール",
     openWorkCta: "詳細・購入",
     detailBackArchive: "← アーカイブへ",
     detailBreadcrumbHome: "ホーム",
@@ -905,11 +890,6 @@ export const ja: Messages = {
       "決済は所蔵者（一般会員）アカウントで行ってください。Vaultの表示モードを切り替えて再度お試しください。",
     payNotConfigured: "KOMOJU連携までの間はデモ決済のみ可能です。本番が開くとこの案内が更新されます。",
     note: "本番の決済はKOMOJU（JPY）で処理する予定です。表示金額は登録基準であり、税・表示は運用方針と決済パートナーの設定に従います。",
-    appRequiredTitle: "モバイルWeb（PWA）",
-    appRequiredBody:
-      "高画質鑑賞は認証済みモバイルWebでのみ開きます。Safari または Chrome で OPUS を開き、ホーム画面に追加してください。",
-    pwaStepSafari: "iPhone Safari：共有 → ホーム画面に追加",
-    pwaStepChrome: "Android Chrome：メニュー(⋮) → ホーム画面に追加またはインストール",
     back: "← アーカイブへ",
   },
   purchaseSuccess: {

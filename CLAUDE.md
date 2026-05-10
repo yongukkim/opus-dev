@@ -28,10 +28,10 @@
 * **기획 문서(참고용):** 작품거래사이트.pdf 등 초안에서 뽑은 기능·일정·수익 가정 목록은 **참고만** 한다. 이미 반영된 항목, 보류·취소·변경될 수 있으며 구현 우선순위는 별도 합의로 조정한다.
 * **시각 기준:** 웹·앱 레이아웃·밀도·카피 톤은 `apps/web/public/design-spec`(원본 PNG 및 PDF에서 추출한 시안 이미지 포함)과 **정합**을 맞춘다. 시안에 과거 가칭이 보여도 **구현 시 표기는 OPUS로 통일**하고, OPUS 토큰(**near-black 차콜·챔페인 브라스·웜 화이트**, 위 **재질 표현** 규칙)을 유지한다. **인장·공식 인증** 등은 `opus-seal` 계열로 소량 포인트만 쓴다.
 
-## 고해상 작품 이미지 · 모바일 웹(PWA) (배포 정책)
-* **원칙:** **고해상도(또는 원본에 가까운) 감상용 래스터는 인증된 모바일 웹 세션에서만** 제공한다(홈 화면 추가/PWA 권장). **데스크톱 웹** 브라우저에는 고해상 타일·원본 스트림을 내리지 않는다. 마켓플레이스·카탈로그 웹은 공개·세션 한도 내 **저해상·워터마크 파생**만 유지한다(현재 `/api/catalog-image`의 `preview` / `vault` 등).
+## 고해상 작품 이미지 · 모바일 웹 (배포 정책)
+* **원칙:** **고해상도(또는 원본에 가까운) 감상용 래스터는 인증된 모바일 웹 세션에서만** 제공한다. **데스크톱 웹** 브라우저에는 고해상 타일·원본 스트림을 내리지 않는다. 마켓플레이스·카탈로그 웹은 공개·세션 한도 내 **저해상·워터마크 파생**만 유지한다(현재 `/api/catalog-image`의 `preview` / `vault` 등).
 * **구현 시:** 소유·역할 검증(Chronicle·에디션)을 통과한 클라이언트에만 **짧은 수명의 타일 세션 토큰** 등으로 고해상 자산 URL을 제한한다. 데스크톱에서 열려 할 경우 **QR 브리지** 등으로 모바일로 유도한다. 웹 데스크톱과 동일 엔드포인트로 고해상을 내리지 않는다.
-* **EN (for agents):** Ship **high-fidelity artwork pixels only to authenticated mobile web** (PWA / add-to-home-screen) for verified owners; **do not** serve the high-resolution stream to desktop browsers; keep catalog/marketplace web on downsampled, watermarked derivatives unless product explicitly changes this policy.
+* **EN (for agents):** Ship **high-fidelity artwork pixels only to authenticated mobile web** for verified owners; **do not** serve the high-resolution stream to desktop browsers; keep catalog/marketplace web on downsampled, watermarked derivatives unless product explicitly changes this policy.
 
 ## 1. 입력값 검증 및 살균 (Input Validation & Sanitization)
 * **통제 항목:** ISO 27001 A.14.2.1

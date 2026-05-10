@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ArtworkCatalogMiniCard } from "@/components/artworks/ArtworkCatalogMiniCard";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
-import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
@@ -200,14 +199,6 @@ export default async function ArtworkDetailPage({ params }: Props) {
               </Link>
               <p className="opus-pdp-buy-hint mt-2">{a.buyHint}</p>
               <p className="opus-pdp-caption mt-3">{a.detailDemoNote}</p>
-              <AppInstallCallout
-                m={m}
-                title={a.detailAppRequiredTitle}
-                body={a.detailAppRequiredBody}
-                pwaStepSafari={a.detailPwaStepSafari}
-                pwaStepChrome={a.detailPwaStepChrome}
-                className="mt-5 max-w-sm rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"
-              />
 
               <ArtworkPdpCollectActions
                 slug={slug}

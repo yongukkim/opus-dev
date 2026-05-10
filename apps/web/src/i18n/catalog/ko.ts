@@ -289,11 +289,6 @@ export const ko: Messages = {
     terms: "이용약관",
     copyright: "저작권·이용 안내",
     chronicleTrust: "The Chronicle 기술을 통한 기록 무결성 검증",
-    appRequiredTitle: "모바일 웹에서 감상",
-    appRequiredBody:
-      "고해상 감상은 인증된 모바일 웹(홈 화면에 추가한 PWA)에서 제공됩니다. 데스크톱 웹은 저해상·워터마크 미리보기만 유지합니다.",
-    pwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
-    pwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     securedByLine: "OPUS로 보호됩니다",
     colService: "서비스",
     colChronicle: "The Chronicle",
@@ -357,7 +352,7 @@ export const ko: Messages = {
     s4Lead: "저희는 작품의 진정한 가치가 ‘깊이 있는 감상’에서 완성된다고 믿습니다.",
     s4WebTitle: "웹(Web)",
     s4WebBody: "작품의 발견과 신뢰를 확인하는 표면으로, 쾌적한 탐색을 지원합니다.",
-    s4AppTitle: "모바일 웹(PWA)",
+    s4AppTitle: "모바일 웹",
     s4AppBody:
       "검증된 소장·작가 계정의 모바일 웹 세션에서 고해상 타일 감상을 제공합니다. 홈 화면에 추가해 앱처럼 쓸 수 있으며, 데스크톱 브라우저에는 고해상 스트림을 내리지 않습니다.",
     draftNote:
@@ -726,14 +721,9 @@ export const ko: Messages = {
   home: {
     kicker: "OPUS",
     title: "사진과 컬렉션을 위한 공간",
-    lead: "결제·안내는 이 사이트에서. 고해상 감상은 로그인한 모바일 웹(PWA)에서.",
+    lead: "결제·안내는 이 사이트에서. 고해상 감상은 로그인한 모바일 웹에서.",
     buyCta: "구매·결제하기",
     legalLink: "특정상거래법 표시",
-    appRequiredTitle: "모바일 웹(PWA)",
-    appRequiredBody:
-      "고해상 감상은 인증된 모바일 웹에서만 열립니다. Safari 또는 Chrome에서 OPUS를 연 뒤 홈 화면에 추가해 주세요.",
-    pwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
-    pwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     comingSoon: "곧 공개",
     railReleases: {
       title: "신작공개 · 최신 1차 에디션",
@@ -801,7 +791,7 @@ export const ko: Messages = {
   marketing: {
     title: "컬렉션을 공식 기록과 함께",
     body:
-      "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 고해상 감상은 인증된 모바일 웹(PWA)에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
+      "아카이브 열람, 마이페이지 관리, 결제는 웹에서. 고해상 감상은 인증된 모바일 웹에서. 실물자산이나 금융 상품이 아닌, 복제 불가 디지털 아트 경험을 제공합니다.",
     buy: "구매·결제하기",
     openVault: "마이페이지 열기",
     openProvenance: "소장품 둘러보기",
@@ -826,11 +816,6 @@ export const ko: Messages = {
     detailListPrice: "표시 가격",
     detailDemoNote: "데모 카탈로그용 금액입니다. 실제 판매가와 다를 수 있습니다.",
     detailBuyCta: "구매·결제로 진행",
-    detailAppRequiredTitle: "모바일 웹(PWA)",
-    detailAppRequiredBody:
-      "고해상 감상은 인증된 모바일 웹에서만 제공됩니다. 홈 화면에 추가하면 바로 가기 편합니다.",
-    detailPwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
-    detailPwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     openWorkCta: "상세·구매",
     detailBackArchive: "← 아카이브로",
     detailBreadcrumbHome: "홈",
@@ -889,11 +874,6 @@ export const ko: Messages = {
     payArtistWrongRole: "결제는 소장자(일반 회원) 계정에서 진행해 주세요. Vault에서 모드를 전환한 뒤 다시 시도해 주세요.",
     payNotConfigured: "KOMOJU 연동 전까지는 데모 결제만 가능합니다. 본 결제가 열리면 이 안내가 바뀝니다.",
     note: "본 결제는 KOMOJU(JPY)로 처리할 예정입니다. 표시 금액은 등록 기준이며, 세금·표시는 운영 정책 및 결제 파트너 설정에 따릅니다.",
-    appRequiredTitle: "모바일 웹(PWA)",
-    appRequiredBody:
-      "고해상 감상은 인증된 모바일 웹에서만 열립니다. Safari 또는 Chrome에서 OPUS를 연 뒤 홈 화면에 추가해 주세요.",
-    pwaStepSafari: "iPhone Safari: 공유 → 홈 화면에 추가",
-    pwaStepChrome: "Android Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치",
     back: "← 아카이브로",
   },
   purchaseSuccess: {

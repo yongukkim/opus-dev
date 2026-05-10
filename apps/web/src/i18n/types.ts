@@ -386,12 +386,6 @@ export type Messages = {
     copyright: string;
     /** Technical integrity line (Chronicle); KO/JA/EN per locale. */
     chronicleTrust: string;
-    appRequiredTitle: string;
-    appRequiredBody: string;
-    /** Add-to-home instructions — Safari (iOS). */
-    pwaStepSafari: string;
-    /** Add-to-home instructions — Chrome / Android. */
-    pwaStepChrome: string;
     /** Strapline under the enclosure mark in the site footer. */
     securedByLine: string;
     /** Four-column footer headings + home link (localized; was hardcoded EN). */
@@ -481,10 +475,6 @@ export type Messages = {
     lead: string;
     buyCta: string;
     legalLink: string;
-    appRequiredTitle: string;
-    appRequiredBody: string;
-    pwaStepSafari: string;
-    pwaStepChrome: string;
     /** Shared "Coming soon" badge used on rail / chronicle placeholders below. */
     comingSoon: string;
     /**
@@ -610,10 +600,6 @@ export type Messages = {
     detailListPrice: string;
     detailDemoNote: string;
     detailBuyCta: string;
-    detailAppRequiredTitle: string;
-    detailAppRequiredBody: string;
-    detailPwaStepSafari: string;
-    detailPwaStepChrome: string;
     /** CTA on grid/list to open the work detail page. */
     openWorkCta: string;
     detailBackArchive: string;
@@ -669,10 +655,6 @@ export type Messages = {
     payArtistWrongRole: string;
     payNotConfigured: string;
     note: string;
-    appRequiredTitle: string;
-    appRequiredBody: string;
-    pwaStepSafari: string;
-    pwaStepChrome: string;
     back: string;
   };
   purchaseSuccess: {

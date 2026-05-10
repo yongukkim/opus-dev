@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { AppInstallCallout } from "@/components/AppInstallCallout";
 import { ArtworkPdpCollectActions } from "@/components/artworks/ArtworkPdpCollectActions";
 import { SubmissionReleaseMiniCard } from "@/components/artworks/SubmissionReleaseMiniCard";
 import { getDictionary } from "@/i18n/catalog";
@@ -136,14 +135,6 @@ export default async function SubmissionReleaseDetailPage({ params }: Props) {
               </Link>
               <p className="opus-pdp-buy-hint mt-2">{a.buyHint}</p>
               <p className="opus-pdp-caption mt-3">{a.detailDemoNote}</p>
-              <AppInstallCallout
-                m={m}
-                title={a.detailAppRequiredTitle}
-                body={a.detailAppRequiredBody}
-                pwaStepSafari={a.detailPwaStepSafari}
-                pwaStepChrome={a.detailPwaStepChrome}
-                className="mt-5 max-w-sm rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"
-              />
               <ArtworkPdpCollectActions
                 slug={`submission-${id}`}
                 title={title}

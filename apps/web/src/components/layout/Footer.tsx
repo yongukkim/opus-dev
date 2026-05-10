@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
-import { AppInstallCallout } from "@/components/AppInstallCallout";
 
 /**
  * Deep charcoal footer, four-column IA. LEGAL links to public docs + Terms.
@@ -67,17 +66,6 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
       aria-label={m.footer.ariaSiteFooter}
     >
       <div className="mx-auto max-w-6xl px-6 py-14 md:px-10">
-        <div className="mb-12">
-          <AppInstallCallout
-            m={m}
-            title={m.footer.appRequiredTitle}
-            body={m.footer.appRequiredBody}
-            pwaStepSafari={m.footer.pwaStepSafari}
-            pwaStepChrome={m.footer.pwaStepChrome}
-            className="rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6"
-          />
-        </div>
-
         {/*
           At lg, use zero grid gap + symmetric column padding + vertical dividers
           so the space between readable blocks feels even (short nav in col 1 no

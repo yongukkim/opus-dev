@@ -289,11 +289,6 @@ export const en: Messages = {
     terms: "Terms of use",
     copyright: "Copyright & permitted use",
     chronicleTrust: "Verified by The Chronicle Technology",
-    appRequiredTitle: "Mobile web viewing",
-    appRequiredBody:
-      "High-fidelity viewing is offered on authenticated mobile web (Add to Home Screen / PWA). Desktop web stays on downsampled, watermarked previews.",
-    pwaStepSafari: "iPhone Safari: Share → Add to Home Screen",
-    pwaStepChrome: "Android Chrome: Menu (⋮) → Add to Home screen or Install",
     securedByLine: "Secured by OPUS",
     colService: "Service",
     colChronicle: "The Chronicle",
@@ -358,7 +353,7 @@ export const en: Messages = {
     s4Lead: "We believe a work’s meaning completes in **deep appreciation** — not in noise.",
     s4WebTitle: "Web",
     s4WebBody: "A surface for discovery and trust: comfortable browsing and clear context.",
-    s4AppTitle: "Mobile web (PWA)",
+    s4AppTitle: "Mobile web",
     s4AppBody:
       "High-fidelity tiled viewing is delivered to **verified** collector and artist sessions on mobile web. Add OPUS to your home screen for an app-like shell; desktop browsers do not receive the high-resolution stream.",
     draftNote:
@@ -728,14 +723,9 @@ export const en: Messages = {
   home: {
     kicker: "OPUS",
     title: "A place for photography and collecting",
-    lead: "Payments and guidance on this site. High-fidelity viewing on signed-in mobile web (PWA).",
+    lead: "Payments and guidance on this site. High-fidelity viewing on signed-in mobile web.",
     buyCta: "Purchase & pay",
     legalLink: "Commercial disclosures (Japan)",
-    appRequiredTitle: "Mobile web (PWA)",
-    appRequiredBody:
-      "High-fidelity viewing opens only on authenticated mobile web. Add OPUS to your home screen from Safari or Chrome.",
-    pwaStepSafari: "iPhone Safari: Share → Add to Home Screen",
-    pwaStepChrome: "Android Chrome: Menu (⋮) → Add to Home screen or Install",
     comingSoon: "Coming soon",
     railReleases: {
       title: "Releases — latest primary editions",
@@ -804,7 +794,7 @@ export const en: Messages = {
   marketing: {
     title: "Your collection, with the official record",
     body:
-      "Browse the archive, manage My Page, and pay on the web — high-fidelity viewing on authenticated mobile web (PWA). We offer non-fungible digital art experiences, not physical-asset or financial products.",
+      "Browse the archive, manage My Page, and pay on the web — high-fidelity viewing on authenticated mobile web. We offer non-fungible digital art experiences, not physical-asset or financial products.",
     buy: "Purchase & pay",
     openVault: "Open My Page",
     openProvenance: "Open Provenance",
@@ -829,11 +819,6 @@ export const en: Messages = {
     detailListPrice: "List price",
     detailDemoNote: "Demo amount for this catalog preview; live pricing may differ.",
     detailBuyCta: "Continue to checkout",
-    detailAppRequiredTitle: "Mobile web (PWA)",
-    detailAppRequiredBody:
-      "High-fidelity viewing is available on authenticated mobile web only. Add OPUS to your home screen for quick access.",
-    detailPwaStepSafari: "iPhone Safari: Share → Add to Home Screen",
-    detailPwaStepChrome: "Android Chrome: Menu (⋮) → Add to Home screen or Install",
     openWorkCta: "View & purchase",
     detailBackArchive: "← Back to Archive",
     detailBreadcrumbHome: "Home",
@@ -894,11 +879,6 @@ export const en: Messages = {
       "Checkout runs on a collector account. Switch Vault mode to collector and try again.",
     payNotConfigured: "Until KOMOJU is connected, only demo checkout is available. This notice will change when live payments open.",
     note: "Live payments are planned via KOMOJU in JPY. Displayed amounts follow registration policy; tax and commercial disclosures follow operating policy and the payment partner’s settings.",
-    appRequiredTitle: "Mobile web (PWA)",
-    appRequiredBody:
-      "High-fidelity viewing opens only on authenticated mobile web. Add OPUS to your home screen from Safari or Chrome.",
-    pwaStepSafari: "iPhone Safari: Share → Add to Home Screen",
-    pwaStepChrome: "Android Chrome: Menu (⋮) → Add to Home screen or Install",
     back: "← Back to Archive",
   },
   purchaseSuccess: {
