@@ -951,8 +951,7 @@ export const ja: Messages = {
     collectionCertificateViewCta: "認証書を表示",
     collectionCertificateViewCtaEditionTpl: "認証書 · {n}",
     collectionCertificateLead:
-      "エディション別の認証JSON — 作品と安定した結合キーで紐づき、保管が移るたびにバージョンが上がります。",
-    collectionCertificateEditionJson: "エディション {n} · 認証JSON",
+      "エディション別の認証書 — 作品と安定した結合キーで紐づき、保管が移るたびに記録バージョンが上がる場合があります。",
     collectionCertificateViewScreen: "エディション {n} · 認証書を表示",
     certificateEyebrow: "認証済みエディション",
     certificateHeading: "エディション認証書",
@@ -975,7 +974,7 @@ export const ja: Messages = {
     certificateEventIssued: "初回発行",
     certificateEventCustodyTransfer: "保管更新",
     certificateIntegrityBlurb:
-      "本文書は当該エディションに固定されたOPUS署名記録を示します。同一結合キーを含む認証JSONは保管移転時にバージョンが上がる場合があります。",
+      "本文書は当該エディションに固定されたOPUS署名記録を示します。保管が移ると、同一結合キーに対する署名記録が新しいバージョンとして続く場合があります。",
     certificateLegalFooter:
       "本認証書は鑑賞・所蔵記録用の電子文書であり、金融商品や投資を意味しません。著作権・利用範囲は規約および著作権表示に従います。",
     certificateSealCaption: "OPUS承認",
@@ -987,7 +986,6 @@ export const ja: Messages = {
     certificateForbiddenTitle: "アクセスが制限されています",
     certificateForbiddenBody: "この認証書を開く権限がありません。",
     certificateBackCollection: "← コレクションへ",
-    certificateJsonCta: "署名付きJSONを取得",
     collectionViewDetail: "作品ページ",
     collectionViewDetailUnavailableTitle:
       "新作公開ページは審査承認後にのみ開きます。作家本人は審査前にスタジオ（編集）画面で確認してください。",

@@ -935,8 +935,7 @@ export const en: Messages = {
     collectionCertificateViewCta: "View certificate",
     collectionCertificateViewCtaEditionTpl: "Certificate · {n}",
     collectionCertificateLead:
-      "Per-edition attestation JSON — bound to the work by a stable binding key; the version increments when custody moves.",
-    collectionCertificateEditionJson: "Edition {n} · attestation JSON",
+      "Per-edition certificate — linked to the work by a stable binding key; the record version can advance when custody moves.",
     collectionCertificateViewScreen: "Edition {n} · view certificate",
     certificateEyebrow: "Authenticated edition",
     certificateHeading: "Edition certificate",
@@ -959,7 +958,7 @@ export const en: Messages = {
     certificateEventIssued: "Issued",
     certificateEventCustodyTransfer: "Custody update",
     certificateIntegrityBlurb:
-      "This document reflects an OPUS-signed record bound to the edition. The attestation JSON carries the same binding key and may advance when custody updates.",
+      "This document reflects an OPUS-signed record bound to the edition. When custody updates, newer signed rows may appear for the same binding key.",
     certificateLegalFooter:
       "This certificate supports viewing and collection records; it is not a financial product statement. Copyright and permitted use follow OPUS terms and notices.",
     certificateSealCaption: "OPUS approval",
@@ -971,7 +970,6 @@ export const en: Messages = {
     certificateForbiddenTitle: "Access restricted",
     certificateForbiddenBody: "You do not have permission to open this certificate.",
     certificateBackCollection: "← Back to Collection",
-    certificateJsonCta: "Download signed JSON",
     collectionViewDetail: "Work page",
     collectionViewDetailUnavailableTitle:
       "The public release page opens only after approval. As the artist, use the studio (edit) screen while review is pending.",

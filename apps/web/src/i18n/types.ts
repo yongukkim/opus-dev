@@ -924,10 +924,8 @@ export type Messages = {
     collectionCertificateViewCta: string;
     /** Compact certificate CTA per edition when `initialMint` > 1; `{n}` = edition number. */
     collectionCertificateViewCtaEditionTpl: string;
-    /** Short line above per-edition JSON download links (authenticated edition certificate). */
+    /** Short line above per-edition certificate links on Collection. */
     collectionCertificateLead: string;
-    /** Download label; placeholder `{n}` = edition number. */
-    collectionCertificateEditionJson: string;
     /** CTA → `/vault/certificate/[submissionId]/[n]`; `{n}` = edition number. */
     collectionCertificateViewScreen: string;
     /** Screen edition certificate (Vault) — document labels and notices. */
@@ -963,7 +961,6 @@ export type Messages = {
     certificateForbiddenTitle: string;
     certificateForbiddenBody: string;
     certificateBackCollection: string;
-    certificateJsonCta: string;
     collectionViewDetail: string;
     /** Title on disabled "detail" control when no public PDP exists yet (e.g. collector-held pending). */
     collectionViewDetailUnavailableTitle: string;

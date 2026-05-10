@@ -930,8 +930,7 @@ export const ko: Messages = {
     collectionCertificateViewCta: "인증서 보기",
     collectionCertificateViewCtaEditionTpl: "인증서 · {n}",
     collectionCertificateLead:
-      "에디션별 인증 JSON — 작품과 동일한 식별자로 묶이며, 수탁이 이전될 때 버전이 올라갑니다.",
-    collectionCertificateEditionJson: "에디션 {n} · 인증 JSON",
+      "에디션별 인증서 — 작품과 같은 식별자로 묶이며, 수탁이 이전될 때 기록 버전이 올라갈 수 있습니다.",
     collectionCertificateViewScreen: "에디션 {n} · 인증서 보기",
     certificateEyebrow: "인증된 에디션",
     certificateHeading: "에디션 인증서",
@@ -954,7 +953,7 @@ export const ko: Messages = {
     certificateEventIssued: "최초 발행",
     certificateEventCustodyTransfer: "수탁 갱신",
     certificateIntegrityBlurb:
-      "본 문서는 해당 에디션에 고정된 OPUS 서명 기록을 반영합니다. 동일 결합 키를 담은 인증 JSON은 수탁이 바뀔 때 버전이 올라갈 수 있습니다.",
+      "본 문서는 해당 에디션에 고정된 OPUS 서명 기록을 반영합니다. 수탁이 바뀌면 동일 결합 키에 대한 서명 기록이 새 버전으로 이어질 수 있습니다.",
     certificateLegalFooter:
       "본 인증서는 감상·소장 기록을 위한 전자 문서이며 금융 상품이나 투자를 의미하지 않습니다. 저작권·이용 범위는 약관 및 저작권 안내를 따릅니다.",
     certificateSealCaption: "OPUS 승인",
@@ -966,7 +965,6 @@ export const ko: Messages = {
     certificateForbiddenTitle: "접근이 제한되었습니다",
     certificateForbiddenBody: "이 인증서를 열 권한이 없습니다.",
     certificateBackCollection: "← 컬렉션으로",
-    certificateJsonCta: "서명된 JSON 받기",
     collectionViewDetail: "작품 페이지",
     collectionViewDetailUnavailableTitle:
       "신작 공개 페이지는 검수 완료 후에만 열립니다. 작가 본인은 검수 전에는 스튜디오(편집) 화면에서 확인하세요.",

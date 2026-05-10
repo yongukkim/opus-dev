@@ -171,7 +171,6 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
     cert.custodyOwnerType === "artist" ? v.certificateCustodyArtist : v.certificateCustodyCollector;
   const eventLabel = cert.event === "ISSUED" ? v.certificateEventIssued : v.certificateEventCustodyTransfer;
   const previewSrc = `/api/artwork-submissions/${encodeURIComponent(submission.id)}/public-preview`;
-  const jsonHref = `/api/edition-certificates/${encodeURIComponent(submission.id)}/${editionNum}`;
 
   return (
     <VaultCertificateScrollShell>
@@ -280,20 +279,13 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
             <p className="mx-auto mt-8 max-w-lg text-center text-[0.65rem] leading-relaxed text-opus-warm/40">{v.certificateLegalFooter}</p>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-white/[0.06] bg-black/20 px-6 py-5 md:flex-row md:items-center md:justify-between md:px-10">
+          <div className="border-t border-white/[0.06] bg-black/20 px-6 py-5 md:px-10">
             <Link
               href={withLocale(locale, "/vault/collection")}
-              className="text-center text-sm text-opus-warm/70 underline decoration-opus-gold/30 underline-offset-4 transition hover:text-opus-warm md:text-left"
+              className="block text-center text-sm text-opus-warm/70 underline decoration-opus-gold/30 underline-offset-4 transition hover:text-opus-warm"
             >
               {v.certificateBackCollection}
             </Link>
-            <a
-              href={jsonHref}
-              download
-              className="inline-flex items-center justify-center rounded-md border border-opus-gold/30 bg-opus-gold/10 px-4 py-2 text-center text-xs font-semibold text-opus-gold-light transition hover:border-opus-gold/50 hover:bg-opus-gold/[0.14]"
-            >
-              {v.certificateJsonCta}
-            </a>
           </div>
         </div>
       </div>
