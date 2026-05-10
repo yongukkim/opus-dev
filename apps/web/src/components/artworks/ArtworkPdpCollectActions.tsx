@@ -70,7 +70,7 @@ export function ArtworkPdpCollectActions({
     <div className="mt-4 max-w-sm">
       {banner ? (
         <p
-          className="mb-3 rounded-lg border border-opus-gold/20 bg-opus-gold/10 px-3 py-2 text-xs text-opus-warm/80"
+          className="mb-3 rounded-lg border border-opus-gold/20 bg-opus-gold/10 px-3 py-2 text-sm text-opus-warm/85"
           role="status"
         >
           {banner}
@@ -93,7 +93,7 @@ export function ArtworkPdpCollectActions({
           {addToWishlistLabel}
         </button>
       </div>
-      <p className="mt-3 text-[0.7rem] leading-relaxed text-opus-warm/40">{demoNote}</p>
+      <p className="opus-pdp-caption mt-3">{demoNote}</p>
     </div>
   );
 }

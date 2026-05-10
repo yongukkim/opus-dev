@@ -125,16 +125,16 @@ export default async function ArtworkDetailPage({ params }: Props) {
       />
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
       <div className="mx-auto max-w-4xl">
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/40">{a.kicker}</p>
+        <p className="opus-pdp-kicker">{a.kicker}</p>
 
         <nav className="mt-4" aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-opus-warm/50">
+          <ol className="opus-pdp-breadcrumb">
             <li>
               <Link href={homeHref} className="transition hover:text-opus-gold-light">
                 {a.detailBreadcrumbHome}
               </Link>
             </li>
-            <li className="text-opus-warm/25" aria-hidden>
+            <li className="text-opus-warm/40" aria-hidden>
               /
             </li>
             <li>
@@ -142,10 +142,10 @@ export default async function ArtworkDetailPage({ params }: Props) {
                 {a.detailBreadcrumbArchive}
               </Link>
             </li>
-            <li className="text-opus-warm/25" aria-hidden>
+            <li className="text-opus-warm/40" aria-hidden>
               /
             </li>
-            <li className="max-w-[min(100%,14rem)] truncate text-opus-warm/65 sm:max-w-md">{title}</li>
+            <li className="max-w-[min(100%,14rem)] truncate text-opus-warm/75 sm:max-w-md">{title}</li>
           </ol>
         </nav>
 
@@ -168,11 +168,9 @@ export default async function ArtworkDetailPage({ params }: Props) {
 
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-xl leading-snug tracking-wide text-opus-warm md:text-2xl">{title}</h1>
-            <p className="mt-2 text-sm text-opus-warm/60">
-              <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-opus-warm/40">
-                {a.detailArtistLabel}
-              </span>{" "}
-              <span className="text-opus-warm/75">{artist}</span>
+            <p className="mt-2 text-sm text-opus-warm/65">
+              <span className="opus-pdp-artist-label">{a.detailArtistLabel}</span>{" "}
+              <span className="text-opus-warm/80">{artist}</span>
             </p>
 
             <ul className="mt-5 space-y-2 border-b border-white/[0.06] pb-5">
@@ -181,16 +179,16 @@ export default async function ArtworkDetailPage({ params }: Props) {
                   <span className="font-display text-2xl text-opus-gold-light md:text-[1.65rem]">
                     {priceParts.primary}
                   </span>
-                  <span className="text-[0.7rem] text-opus-warm/45">{a.detailPriceTaxNote}</span>
+                  <span className="text-sm text-opus-warm/58">{a.detailPriceTaxNote}</span>
                 </div>
                 {priceParts.showListBasis && a.detailPriceListBasis.trim() ? (
-                  <p className="text-[0.65rem] leading-snug text-opus-warm/42">
+                  <p className="text-sm leading-snug text-opus-warm/60">
                     {a.detailPriceListBasis.replace("{yen}", priceParts.listYenFormatted)}
                   </p>
                 ) : null}
               </li>
-              <li className="font-mono text-[0.7rem] text-opus-warm/50">{a.detailStockNote}</li>
-              <li className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-opus-warm/45">{editionLine}</li>
+              <li className="opus-pdp-meta-line">{a.detailStockNote}</li>
+              <li className="opus-pdp-meta-line uppercase tracking-[0.16em]">{editionLine}</li>
             </ul>
 
             <div className="mt-6">
@@ -200,8 +198,8 @@ export default async function ArtworkDetailPage({ params }: Props) {
               >
                 {a.detailBuyCta}
               </Link>
-              <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-opus-warm/35">{a.buyHint}</p>
-              <p className="mt-3 text-xs leading-relaxed text-opus-warm/45">{a.detailDemoNote}</p>
+              <p className="opus-pdp-buy-hint mt-2">{a.buyHint}</p>
+              <p className="opus-pdp-caption mt-3">{a.detailDemoNote}</p>
               <AppInstallCallout
                 m={m}
                 title={a.detailAppRequiredTitle}
@@ -229,25 +227,25 @@ export default async function ArtworkDetailPage({ params }: Props) {
             <table className="mt-8 w-full border-t border-white/[0.08] text-sm">
               <tbody>
                 <tr className={specRowClass}>
-                  <th scope="row" className="w-[7.5rem] font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/45">
+                  <th scope="row" className="opus-pdp-spec-th">
                     {a.detailSpecArtist}
                   </th>
                   <td className="text-opus-warm/80">{artist}</td>
                 </tr>
                 <tr className={specRowClass}>
-                  <th scope="row" className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/45">
+                  <th scope="row" className="opus-pdp-spec-th">
                     {a.detailSpecEdition}
                   </th>
-                  <td className="font-mono text-[0.7rem] text-opus-warm/75">{editionLine}</td>
+                  <td className="opus-pdp-meta-line text-opus-warm/75">{editionLine}</td>
                 </tr>
                 <tr className={specRowClass}>
-                  <th scope="row" className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/45">
+                  <th scope="row" className="opus-pdp-spec-th">
                     {a.detailSpecFormat}
                   </th>
                   <td className="text-opus-warm/75">{a.detailFormatValue}</td>
                 </tr>
                 <tr className={specRowClass}>
-                  <th scope="row" className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/45">
+                  <th scope="row" className="opus-pdp-spec-th">
                     {a.detailSpecAudienceTone}
                   </th>
                   <td className="text-opus-warm/75">{audienceToneLabel}</td>
@@ -256,15 +254,15 @@ export default async function ArtworkDetailPage({ params }: Props) {
             </table>
 
             <section className="mt-8 border-t border-white/[0.06] pt-6">
-              <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">{a.detailAboutHeading}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-opus-warm/60">{a.detailAboutBody}</p>
+              <h2 className="opus-pdp-section-heading">{a.detailAboutHeading}</h2>
+              <p className="mt-3 text-sm leading-relaxed text-opus-warm/65">{a.detailAboutBody}</p>
             </section>
           </div>
         </div>
 
         <section className="mt-16 border-t border-white/[0.08] pt-10">
-          <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45">{a.detailPrecautionsHeading}</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-opus-warm/55 marker:text-opus-gold/40">
+          <h2 className="opus-pdp-section-heading">{a.detailPrecautionsHeading}</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-opus-warm/62 marker:text-opus-gold/40">
             {a.detailPrecautionBullets.map((line, i) => (
               <li key={i}>{line}</li>
             ))}
@@ -273,10 +271,10 @@ export default async function ArtworkDetailPage({ params }: Props) {
 
         {relatedEntries.length > 0 ? (
           <section className="mt-12 border-t border-white/[0.06] pt-10" aria-labelledby="related-heading">
-            <h2 id="related-heading" className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45">
+            <h2 id="related-heading" className="opus-pdp-section-heading">
               {a.detailRelatedHeading}
             </h2>
-            <p className="mt-2 max-w-xl text-sm text-opus-warm/50">{a.detailRelatedLead}</p>
+            <p className="mt-2 max-w-xl text-sm text-opus-warm/62">{a.detailRelatedLead}</p>
             <div className={railClass}>
               <div className="flex w-max snap-x snap-mandatory gap-3 pt-4">
                 {relatedEntries.map((e) => (
@@ -293,10 +291,10 @@ export default async function ArtworkDetailPage({ params }: Props) {
         ) : null}
 
         <section className="mt-12 border-t border-white/[0.06] pt-10" aria-labelledby="same-artist-heading">
-          <h2 id="same-artist-heading" className="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-opus-warm/45">
+          <h2 id="same-artist-heading" className="opus-pdp-section-heading">
             {a.detailSameArtistHeading}
           </h2>
-          <p className="mt-2 max-w-xl text-sm text-opus-warm/50">{a.detailSameArtistLead}</p>
+          <p className="mt-2 max-w-xl text-sm text-opus-warm/62">{a.detailSameArtistLead}</p>
           {sameArtistEntries.length > 0 ? (
             <div className={railClass}>
               <div className="flex w-max snap-x snap-mandatory gap-3 pt-4">
@@ -311,7 +309,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
               </div>
             </div>
           ) : (
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-opus-warm/45">{a.detailSameArtistEmpty}</p>
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-opus-warm/60">{a.detailSameArtistEmpty}</p>
           )}
           <div className="mt-6">
             <Link
@@ -327,7 +325,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
           className="mt-12 border-t border-white/[0.06] pt-6"
           aria-label={a.detailPriceFxFooterRegionLabel}
         >
-          <p className="max-w-3xl text-[0.7rem] leading-relaxed text-opus-warm/38">{a.detailPriceFxFooter}</p>
+          <p className="opus-pdp-fx-footer">{a.detailPriceFxFooter}</p>
         </aside>
 
         <div className="mt-8 border-t border-white/[0.06] pt-8">

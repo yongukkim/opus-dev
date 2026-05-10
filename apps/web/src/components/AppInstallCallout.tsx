@@ -21,20 +21,20 @@ export function AppInstallCallout({
 }) {
   void m;
   const stepClass =
-    "rounded-xl border border-white/[0.08] bg-[#0B0B0B] px-4 py-3 text-sm leading-relaxed text-opus-warm/75 shadow-[0_12px_40px_rgba(0,0,0,0.35)]";
+    "rounded-xl border border-white/[0.08] bg-[#0B0B0B] px-4 py-3 text-sm leading-relaxed text-opus-warm/80 shadow-[0_12px_40px_rgba(0,0,0,0.35)]";
 
   return (
     <div className={className ?? "rounded-xl border border-white/[0.08] bg-opus-charcoal/30 px-5 py-5"}>
-      <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">{title}</p>
-      <p className="mt-2 text-xs leading-relaxed text-opus-warm/55">{body}</p>
+      <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-opus-warm/55">{title}</p>
+      <p className="mt-2 text-sm leading-relaxed text-opus-warm/68">{body}</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <div className={stepClass}>
-          <p className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-opus-warm/40">Safari</p>
-          <p className="mt-1.5 text-opus-warm/80">{pwaStepSafari}</p>
+          <p className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-opus-warm/52">Safari</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-opus-warm/82">{pwaStepSafari}</p>
         </div>
         <div className={stepClass}>
-          <p className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-opus-warm/40">Chrome</p>
-          <p className="mt-1.5 text-opus-warm/80">{pwaStepChrome}</p>
+          <p className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-opus-warm/52">Chrome</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-opus-warm/82">{pwaStepChrome}</p>
         </div>
       </div>
     </div>

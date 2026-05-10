@@ -106,6 +106,61 @@ body {
   }
 
   /**
+   * Releases / artwork PDP — secondary microcopy (archive + submission detail).
+   * KO: 극소 폰트·과도한 투명도 조합을 피하고, 보조 카피는 대략 13px급·대비를 확보한다.
+   * JA: 極小フォントと低コントラストの組み合わせを避け、補助文は約13px相当のコントラストを確保する。
+   * EN: Avoid sub-11px body-adjacent copy; keep supporting text near 13px with readable contrast on charcoal.
+   */
+  .opus-pdp-kicker {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.26em] text-opus-warm/55 md:text-[0.78rem];
+  }
+
+  .opus-pdp-breadcrumb {
+    @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-snug text-opus-warm/68;
+  }
+
+  .opus-pdp-section-heading {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.22em] text-opus-warm/58 md:text-[0.78rem];
+  }
+
+  .opus-pdp-spec-th {
+    @apply w-[7.5rem] font-mono text-[0.72rem] uppercase tracking-[0.14em] text-opus-warm/58 md:text-[0.78rem];
+  }
+
+  .opus-pdp-meta-line {
+    @apply font-mono text-[0.78rem] leading-snug text-opus-warm/62 md:text-[0.8125rem];
+  }
+
+  .opus-pdp-caption {
+    @apply text-sm leading-relaxed text-opus-warm/65;
+  }
+
+  .opus-pdp-buy-hint {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.16em] text-opus-warm/52;
+  }
+
+  .opus-pdp-fx-footer {
+    @apply max-w-3xl text-sm leading-relaxed text-opus-warm/58;
+  }
+
+  .opus-pdp-artist-label {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.18em] text-opus-warm/54;
+  }
+
+  /** Horizontal mini cards on PDP rails */
+  .opus-rail-card-title {
+    @apply font-display text-[0.78rem] leading-snug tracking-wide text-opus-warm/88 md:text-[0.82rem];
+  }
+
+  .opus-rail-card-sub {
+    @apply line-clamp-1 text-[0.72rem] leading-snug text-opus-warm/58;
+  }
+
+  .opus-rail-card-price {
+    @apply font-mono text-[0.74rem] text-opus-gold/88 md:text-[0.78rem];
+  }
+
+  /**
    * Japanese + thin Mincho / gradient gold: bump weight so strokes stay legible on charcoal.
    * JA: 明細い明朝・グラデ金文字でも輪郭が潰れにくいようウェイトを上げる。
    */

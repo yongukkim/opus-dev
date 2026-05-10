@@ -35,12 +35,10 @@ export function SubmissionReleaseMiniCard({
           className="object-cover opacity-90 transition group-hover:opacity-100"
         />
       </div>
-      <p className="mt-2 line-clamp-2 min-h-[2.5rem] font-display text-[0.7rem] leading-snug tracking-wide text-opus-warm/85">
-        {title}
-      </p>
-      <p className="mt-0.5 line-clamp-1 text-[0.6rem] text-opus-warm/45">{artist}</p>
+      <p className="opus-rail-card-title mt-2 line-clamp-2 min-h-[2.5rem]">{title}</p>
+      <p className="opus-rail-card-sub mt-0.5">{artist}</p>
       {priceParts?.primary ? (
-        <p className="mt-1 font-mono text-[0.65rem] text-opus-gold/85">{priceParts.primary}</p>
+        <p className="opus-rail-card-price mt-1">{priceParts.primary}</p>
       ) : null}
     </Link>
   );
