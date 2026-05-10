@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { ImmersiveArtworkViewer } from "@/components/viewer/ImmersiveArtworkViewer";
+import { ProtectedArtworkSurface } from "@/components/viewer/ProtectedArtworkSurface";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { isLikelyMobileWebClient } from "@/lib/mobileUserAgent";
@@ -72,14 +73,12 @@ export default async function ImmersiveViewerPage({ params }: Props) {
       <p className="mt-2 font-display text-lg text-opus-gold-light/90">{submission.artworkTitle}</p>
       <p className="mt-4 text-sm leading-relaxed text-opus-warm/58">{mv.immersiveLead}</p>
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-white/[0.08] bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-        {/* eslint-disable-next-line @next/next/no-img-element -- same-origin WebP API; avoids next/image remote config */}
-        <img
+      <div className="mt-6 flex min-h-[12rem] justify-center overflow-hidden rounded-xl border border-white/[0.08] bg-black/20 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+        <ProtectedArtworkSurface
           src={previewSrc}
           alt=""
-          width={800}
-          height={600}
-          className="aspect-[4/3] h-auto w-full object-cover"
+          wrapperClassName="mx-auto inline-flex justify-center"
+          imgClassName="h-auto max-h-[min(55dvh,480px)] w-auto max-w-full object-contain"
           loading="eager"
           decoding="async"
         />

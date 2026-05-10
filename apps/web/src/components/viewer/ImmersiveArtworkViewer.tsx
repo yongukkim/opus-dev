@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ProtectedArtworkSurface } from "@/components/viewer/ProtectedArtworkSurface";
 
 function immersivePreviewUrl(submissionId: string, tier: "fit" | "zoom") {
   return `/api/artwork-submissions/${encodeURIComponent(submissionId)}/immersive-preview?tier=${tier}`;
@@ -134,8 +135,10 @@ export function ImmersiveArtworkViewer({
           role="dialog"
           aria-modal="true"
           aria-label={ctaLabel}
-          className="fixed inset-0 z-[200] flex flex-col bg-[#0E0E0E]"
+          className="fixed inset-0 z-[200] flex h-[100dvh] max-h-[100dvh] flex-col bg-[#0E0E0E] select-none"
+          onContextMenu={(e) => e.preventDefault()}
           style={{
+            WebkitTouchCallout: "none",
             paddingTop: "max(0.75rem, env(safe-area-inset-top))",
             paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
             paddingLeft: "max(0.75rem, env(safe-area-inset-left))",
@@ -199,13 +202,12 @@ export function ImmersiveArtworkViewer({
                 {imgErr ? (
                   <p className="max-w-sm px-4 text-center text-sm text-opus-warm/65">{loadErrorLabel}</p>
                 ) : (
-                  // eslint-disable-next-line @next/next/no-img-element -- authenticated same-origin tiered WebP
-                  <img
+                  <ProtectedArtworkSurface
                     key={displayTier}
                     src={immersivePreviewUrl(submissionId, displayTier)}
                     alt=""
-                    className="max-h-[100dvh] max-w-[100dvw] object-contain"
-                    draggable={false}
+                    wrapperClassName="inline-flex max-h-full max-w-full items-center justify-center"
+                    imgClassName="h-auto w-auto max-h-full max-w-full object-contain"
                     decoding="async"
                     onError={() => setImgErr(true)}
                   />
