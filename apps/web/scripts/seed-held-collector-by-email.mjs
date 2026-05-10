@@ -9,6 +9,12 @@
  * Loads `DATABASE_URL` from `apps/web/.env` / `.env.local` (first wins for unset vars).
  * Writes under `apps/web/storage/` (same as local `pnpm dev` / standalone `apps/web` cwd).
  *
+ * Optional branding (same collector keeps one seed id `opus-seed-held-<userId>` — if already seeded,
+ * remove that line from `submissions.jsonl` / `ownership-events.jsonl` before re-run, or use another account):
+ *   OPUS_SEED_ARTWORK_TITLE  — default: OPUS Collector Demo · 소장 테스트
+ *   OPUS_SEED_NICKNAME       — default: OPUS Test Artist
+ *   OPUS_SEED_ARTIST_NAME    — default: OPUS Seed Artist
+ *
  * ISO 27001 A.14.2.1 (§1)
  *   KO: 이메일·DB 조회는 시드 목적만으로 사용하며, 스토리지 경로는 고정 패턴 하위로만 씁니다.
  *   JA: メール・DB参照はシード目的のみとし、ストレージパスは固定パターン配下のみに限定する。
@@ -28,6 +34,11 @@ const OWNERSHIP = path.join(STORAGE, "ownership-events.jsonl");
 const SOURCE_PNG = path.join(WEB_ROOT, "public/design-spec/vault-transfer-register-preview.png");
 const PREVIEW_NAME = "opus-test-preview.png";
 const ARTIST_ID = "artist-seed-demo-001";
+
+/** Optional overrides (e.g. `OPUS_SEED_ARTWORK_TITLE=Lulu OPUS_SEED_NICKNAME=Lulu pnpm seed:held-demo -- you@mail`). */
+const SEED_ARTWORK_TITLE = (process.env.OPUS_SEED_ARTWORK_TITLE ?? "").trim() || "OPUS Collector Demo · 소장 테스트";
+const SEED_NICKNAME = (process.env.OPUS_SEED_NICKNAME ?? "").trim() || "OPUS Test Artist";
+const SEED_ARTIST_NAME = (process.env.OPUS_SEED_ARTIST_NAME ?? "").trim() || "OPUS Seed Artist";
 
 function loadDotEnv() {
   for (const name of [".env.local", ".env"]) {
@@ -120,10 +131,10 @@ const submission = {
   id: SUBMISSION_ID,
   createdAt: now,
   artistId: ARTIST_ID,
-  artistName: "OPUS Seed Artist",
+  artistName: SEED_ARTIST_NAME,
   artistNameVisibility: "public",
-  nickname: "OPUS Test Artist",
-  artworkTitle: "OPUS Collector Demo · 소장 테스트",
+  nickname: SEED_NICKNAME,
+  artworkTitle: SEED_ARTWORK_TITLE,
   genre: "generative",
   audienceCategory: "none",
   year: 2026,
