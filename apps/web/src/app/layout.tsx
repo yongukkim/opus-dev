@@ -1,42 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, JetBrains_Mono, Noto_Sans_JP, Zen_Old_Mincho } from "next/font/google";
+import "@fontsource/cinzel/400.css";
+import "@fontsource/cinzel/600.css";
+import "@fontsource/cinzel/700.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/noto-sans-jp/300.css";
+import "@fontsource/noto-sans-jp/400.css";
+import "@fontsource/noto-sans-jp/500.css";
+import "@fontsource/noto-sans-jp/700.css";
+import "@fontsource/zen-old-mincho/400.css";
+import "@fontsource/zen-old-mincho/500.css";
+import "@fontsource/zen-old-mincho/600.css";
+import "@fontsource/zen-old-mincho/700.css";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
-  variable: "--font-cinzel",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-mono-jb",
-});
-
-/** Japanese UI: body / UI text (loaded when `data-opus-typography="ja"`). */
-const notoSansJp = Noto_Sans_JP({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  display: "swap",
-  variable: "--font-noto-sans-jp",
-  adjustFontFallback: true,
-});
-
-/** Japanese UI: headings / `.font-serif` (loaded when `data-opus-typography="ja"`). */
-const zenOldMincho = Zen_Old_Mincho({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  variable: "--font-zen-old-mincho",
-  adjustFontFallback: true,
-});
+/**
+ * ISO 27001 A.8.1.1 (§8) — supply chain: pinned npm font packages (SIL OFL), no runtime gstatic fetch.
+ * KO: 폰트 바이너리는 `@fontsource/*`로 빌드 산출물에 포함되어 동일 출처로 제공되며, 런타임에 Google Fonts CDN을 치지 않습니다.
+ * JA: フォントは `@fontsource/*` でビルド成果物に同梱され、ランタイムで Google Fonts CDN を参照しません。
+ * EN: Font binaries ship inside the app bundle via `@fontsource/*`; no runtime fetch to Google Fonts CDN.
+ */
 
 export const metadata: Metadata = {
   title: {
@@ -72,21 +59,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const lang = headerLocale(h.get("x-opus-locale"));
   const isJa = lang === "ja";
 
-  const fontVars = [
-    cinzel.variable,
-    jetbrainsMono.variable,
-    isJa ? notoSansJp.variable : "",
-    isJa ? zenOldMincho.variable : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <html
-      lang={lang}
-      data-opus-typography={isJa ? "ja" : undefined}
-      className={fontVars}
-    >
+    <html lang={lang} data-opus-typography={isJa ? "ja" : undefined}>
       <body className="font-sans">
         <Providers>{children}</Providers>
       </body>

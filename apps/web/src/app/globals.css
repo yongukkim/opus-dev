@@ -5,6 +5,14 @@
 :root {
   color-scheme: dark;
   /**
+   * Self-hosted families via `@fontsource/*` imports in `app/layout.tsx` (SIL OFL; bundled woff2).
+   * Tailwind `font-display` / `font-mono` and JA `globals.css` rules reference these variables.
+   */
+  --font-cinzel: "Cinzel", Georgia, Cambria, "Times New Roman", serif;
+  --font-mono-jb: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-noto-sans-jp: "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --font-zen-old-mincho: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  /**
    * Fixed chrome: `SiteHeader` + `TrustStrip` (see `SiteHeader.tsx`, `TrustStrip.tsx`).
    * Mobile uses a two-row header so primary nav can wrap without horizontal scroll;
    * `--opus-site-header-height` must match that layout’s block size (md+ stays single row).

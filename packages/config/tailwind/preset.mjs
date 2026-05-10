@@ -22,7 +22,7 @@ const preset = {
         },
       },
       fontFamily: {
-        /** Display/mono via Next `next/font` in apps/web (`--font-cinzel`, `--font-mono-jb`). Sans = system stack (no gstatic). */
+        /** Display/mono via CSS vars in apps/web (`--font-cinzel`, `--font-mono-jb`); fonts from `@fontsource/*` bundle. */
         display: [
           "var(--font-cinzel)",
           "Georgia",
