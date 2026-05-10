@@ -37,7 +37,7 @@ export default async function MobileBridgePage({ params, searchParams }: Props) 
   }
 
   return (
-    <main className="mx-auto max-w-lg px-6 py-16 md:py-24">
+    <main className="mx-auto min-h-screen max-w-lg px-6 pb-16 pt-[calc(var(--opus-header-plus-trust)+1.5rem)] md:pb-24 md:pt-[calc(var(--opus-header-plus-trust)+2.5rem)]">
       <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45">OPUS</p>
       <h1 className="mt-3 font-display text-2xl tracking-wide text-opus-warm md:text-3xl">{mv.bridgeTitle}</h1>
       <p className="mt-4 text-sm leading-relaxed text-opus-warm/60">{mv.bridgeLead}</p>

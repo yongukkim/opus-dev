@@ -1232,9 +1232,10 @@ export const ja: Messages = {
     immersiveKicker: "Immersive",
     immersiveTitle: "没入鑑賞（モバイル）",
     immersiveLead:
-      "短寿命のタイルセッション・トークンを発行します。タイルCDN接続は次のマイルストーンです。",
+      "Webでは透かし入りのプレビューで鑑賞します。高精細タイルは同じ画面に順次接続する予定です。",
+    immersivePreviewNote: "透かし・低解像度 WebP（Web方針）",
     immersiveNoAccess: "この作品の鑑賞権限がないか、まだ公開されていません。",
-    tileRequestCta: "タイルセッション・トークンを取得",
+    tileRequestCta: "高解像タイル接続を確認",
     tileResultLabel: "応答",
     tileErrorGeneric: "リクエストに失敗しました。時間をおいて再度お試しください。",
   },

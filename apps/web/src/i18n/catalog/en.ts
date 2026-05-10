@@ -1214,9 +1214,10 @@ export const en: Messages = {
     immersiveKicker: "Immersive",
     immersiveTitle: "Immersive viewing (mobile)",
     immersiveLead:
-      "Request a short-lived tile-session token. Wiring tiles to CDN is the next milestone.",
+      "On the web you view a watermarked, downsampled preview. High-fidelity tiles will land on this screen in a later step.",
+    immersivePreviewNote: "Watermarked · lower-resolution WebP (web policy)",
     immersiveNoAccess: "You do not have viewing rights for this work, or it is not published yet.",
-    tileRequestCta: "Request tile-session token",
+    tileRequestCta: "Check high-fidelity tile session",
     tileResultLabel: "Response",
     tileErrorGeneric: "The request failed. Please try again shortly.",
   },

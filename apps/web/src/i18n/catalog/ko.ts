@@ -1207,9 +1207,10 @@ export const ko: Messages = {
     immersiveKicker: "Immersive",
     immersiveTitle: "몰입 감상(모바일)",
     immersiveLead:
-      "짧은 수명의 타일 세션 토큰을 발급합니다. 타일 CDN 연동은 다음 마일스톤입니다.",
+      "웹에서는 워터마크가 입힌 미리보기로 감상합니다. 원본에 가까운 고해상 타일은 같은 화면에 순차적으로 연결할 예정입니다.",
+    immersivePreviewNote: "워터마크 · 저해상 WebP (웹 정책)",
     immersiveNoAccess: "이 작품에 대한 감상 권한이 없거나 아직 공개되지 않았습니다.",
-    tileRequestCta: "타일 세션 토큰 요청",
+    tileRequestCta: "고해상 타일 연결 확인",
     tileResultLabel: "응답",
     tileErrorGeneric: "요청에 실패했습니다. 잠시 후 다시 시도해 주세요.",
   },

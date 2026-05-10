@@ -1208,6 +1208,8 @@ export type Messages = {
     immersiveKicker: string;
     immersiveTitle: string;
     immersiveLead: string;
+    /** Caption under the watermarked preview image (web-safe derivative). */
+    immersivePreviewNote: string;
     immersiveNoAccess: string;
     tileRequestCta: string;
     tileResultLabel: string;
