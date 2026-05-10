@@ -63,7 +63,7 @@ export const ja: Messages = {
     provenanceAuctions: "オークション中",
     curation: "キュレーション",
     artists: "作家",
-    about: "概要",
+    about: "OPUSについて",
   },
   badge: {
     primary: "新作",

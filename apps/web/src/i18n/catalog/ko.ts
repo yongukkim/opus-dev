@@ -63,7 +63,7 @@ export const ko: Messages = {
     provenanceAuctions: "경매중",
     curation: "큐레이션",
     artists: "작가",
-    about: "소개",
+    about: "OPUS 소개",
   },
   badge: {
     primary: "신작",

@@ -63,7 +63,7 @@ export const en: Messages = {
     provenanceAuctions: "Live auctions",
     curation: "Curation",
     artists: "Artists",
-    about: "About",
+    about: "About OPUS",
   },
   badge: {
     primary: "New release",

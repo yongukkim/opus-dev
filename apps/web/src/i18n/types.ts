@@ -131,7 +131,7 @@ export type Messages = {
     curation: string;
     /** Featured artists index (PR-12). Single word per locale. */
     artists: string;
-    /** Primary nav → `/about` (service introduction for first-time visitors). */
+    /** Primary nav → `/about` (e.g. KO: OPUS 소개). */
     about: string;
   };
   /**
