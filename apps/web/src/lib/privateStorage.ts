@@ -24,13 +24,17 @@ export type SubmissionRecord = {
   description?: string;
   tags: string[];
   /** Moderation lifecycle: pending review → approved → (optional) changes requested / rejected. */
-  reviewStatus?: "pending_review" | "approved" | "changes_requested" | "rejected";
+  reviewStatus?: "pending_review" | "approved" | "changes_requested" | "rejected" | "withdrawn";
   /** Content rating for discovery/purchase gating. Option B: explicit is rejected; mature is age-gated. */
   contentRating?: "general" | "mature" | "explicit";
   /** Operator note (e.g., reason for rejection or change request). */
   reviewNote?: string;
   reviewedAt?: string;
   reviewedBy?: string;
+  /** When the artist last acknowledged the current operator review note (ISO); compared to `reviewedAt`. */
+  artistReviewNoticeAcknowledgedAt?: string;
+  /** Artist withdrew the submission while still pending review (ISO). */
+  artistWithdrawnAt?: string;
   editionMode: "unique" | "limited";
   editionTotal: number;
   initialMint: number;
@@ -297,10 +301,7 @@ export async function countArtistOperatorReviewNotices(artistId: string): Promis
   const subs = await listArtistSubmissions(artistId);
   let n = 0;
   for (const s of subs) {
-    const st = s.reviewStatus ?? "pending_review";
-    if (st !== "changes_requested" && st !== "rejected") continue;
-    if (!s.reviewNote?.trim()) continue;
-    n += 1;
+    if (artistOperatorNoticeNeedsAttention(s)) n += 1;
   }
   return n;
 }
@@ -315,5 +316,85 @@ export async function listApprovedArtistSubmissions(limit = 100): Promise<Submis
     if (out.length >= limit) break;
   }
   return out;
+}
+
+/** True when operator left a review note the artist has not yet acknowledged for this `reviewedAt`. */
+export function artistOperatorNoticeNeedsAttention(sub: SubmissionRecord): boolean {
+  const st = sub.reviewStatus ?? "pending_review";
+  if (st !== "changes_requested" && st !== "rejected") return false;
+  if (!sub.reviewNote?.trim()) return false;
+  const reviewedAt = sub.reviewedAt?.trim();
+  if (!reviewedAt) return false;
+  const ack = sub.artistReviewNoticeAcknowledgedAt?.trim();
+  if (!ack) return true;
+  return ack < reviewedAt;
+}
+
+/**
+ * ISO 27001 A.12.4.1 (§5) — append-only ledger; idempotent skip if already acknowledged for this review.
+ * KO: 작가가 운영 검수 메모를 확인한 시점을 JSONL에 기록해 알림 배지 조건을 해제합니다.
+ * JA: 作家が運営審査メモを確認した時刻をJSONLに記録し、通知バッジ条件を解除します。
+ * EN: Records when the artist acknowledged the operator review note in JSONL so nav badges clear.
+ */
+export async function acknowledgeArtistReviewNoticeIfNeeded(
+  submissionId: string,
+  artistUserId: string,
+): Promise<void> {
+  const uid = artistUserId.trim();
+  const id = submissionId.trim();
+  if (!uid || !id) return;
+  const sub = await getSubmissionById(id);
+  if (!sub || sub.artistId !== uid) return;
+  if (!artistOperatorNoticeNeedsAttention(sub)) return;
+  await appendSubmission({
+    ...sub,
+    artistReviewNoticeAcknowledgedAt: new Date().toISOString(),
+  });
+}
+
+/** Acknowledge every held submission that still needs attention (e.g. after visiting My artworks). */
+export async function acknowledgeAllArtistOperatorNotices(artistUserId: string): Promise<void> {
+  const uid = artistUserId.trim();
+  if (!uid) return;
+  const subs = await listArtistSubmissions(uid);
+  for (const s of subs) {
+    if (artistOperatorNoticeNeedsAttention(s)) {
+      await acknowledgeArtistReviewNoticeIfNeeded(s.id, uid);
+    }
+  }
+}
+
+export type WithdrawArtistPendingResult =
+  | { ok: true }
+  | { ok: false; error: "not_found" | "forbidden" | "not_pending" | "already_withdrawn" | "after_sale" };
+
+/**
+ * ISO 27001 A.9.2.1 (§4), A.14.2.1 (§1) — artist-only, pending_review only, no collector ownership.
+ * KO: 검수 대기 중인 제출만 작가가 철회(append-only)할 수 있으며, 소유 이력이 바뀐 뒤에는 허용하지 않습니다.
+ * JA: 審査待ちの提出のみ作家が取り下げ可能で、所蔵履歴が変わった後は禁止します。
+ * EN: Only pending-review submissions may be withdrawn by the artist; blocked after any ownership change.
+ */
+export async function withdrawArtistPendingSubmission(input: {
+  submissionId: string;
+  artistUserId: string;
+}): Promise<WithdrawArtistPendingResult> {
+  const uid = input.artistUserId.trim();
+  const id = input.submissionId.trim();
+  if (!uid || !id) return { ok: false, error: "not_found" };
+  const sub = await getSubmissionById(id);
+  if (!sub) return { ok: false, error: "not_found" };
+  if (sub.artistId !== uid) return { ok: false, error: "forbidden" };
+  const st = sub.reviewStatus ?? "pending_review";
+  if (st === "withdrawn") return { ok: false, error: "already_withdrawn" };
+  if (st !== "pending_review") return { ok: false, error: "not_pending" };
+  if (await hasCollectorOwnershipEvent(sub.id)) return { ok: false, error: "after_sale" };
+  const now = new Date().toISOString();
+  await appendSubmission({
+    ...sub,
+    reviewStatus: "withdrawn",
+    artistWithdrawnAt: now,
+    reviewedAt: now,
+  });
+  return { ok: true };
 }
 

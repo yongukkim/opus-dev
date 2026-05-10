@@ -852,6 +852,13 @@ export type Messages = {
     editionSaveConflict: string;
     editionSaveSaleLockNotice: string;
     editionSaveConfirmPrompt: string;
+    /** Withdraw submission while still pending operator review (upload cancel). */
+    withdrawPendingCta: string;
+    withdrawPendingConfirm: string;
+    withdrawPendingWorking: string;
+    withdrawPendingFailed: string;
+    withdrawnTitle: string;
+    withdrawnBody: string;
   };
   submitArtwork: {
     kicker: string;
@@ -970,6 +977,8 @@ export type Messages = {
     collectionNotApprovedHint: string;
     collectionStatusApproved: string;
     collectionStatusPending: string;
+    /** Artist withdrew upload before operator approval — not shown in collection grid. */
+    collectionStatusWithdrawn: string;
     collectionStatusOther: string;
     /** Chip when Chronicle owner role is artist (studio inventory). */
     collectionHeldBadgeArtist: string;
@@ -1251,6 +1260,7 @@ export type Messages = {
     filterApproved: string;
     filterChanges: string;
     filterRejected: string;
+    filterWithdrawn: string;
     filterAll: string;
     colArtwork: string;
     colArtist: string;

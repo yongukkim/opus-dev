@@ -28,9 +28,11 @@ function transferGenreLabel(ct: Messages["collectorTransfer"], key: string): str
   return map[key] || key || "—";
 }
 
-/** Collection chip: only “approved” vs “not released yet” (검수 대기). */
+/** Collection chip: approved vs pending vs artist-withdrawn (hidden from grid elsewhere). */
 function reviewStatusLabel(m: Messages["vault"], rec: SubmissionRecord): string {
-  if ((rec.reviewStatus ?? "pending_review") === "approved") return m.collectionStatusApproved;
+  const st = rec.reviewStatus ?? "pending_review";
+  if (st === "approved") return m.collectionStatusApproved;
+  if (st === "withdrawn") return m.collectionStatusWithdrawn;
   return m.collectionStatusPending;
 }
 
@@ -55,7 +57,10 @@ export default async function VaultCollectionPage({ params }: Props) {
     redirect(`${withLocale(locale, "/login")}?returnTo=${returnTo}`);
   }
 
-  const held = await listSubmissionsHeldByUser(session.user.id);
+  const heldRaw = await listSubmissionsHeldByUser(session.user.id);
+  const held = heldRaw.filter(
+    ({ submission: rec }) => (rec.reviewStatus ?? "pending_review") !== "withdrawn",
+  );
   const sessionUserId = session.user.id;
 
   return (

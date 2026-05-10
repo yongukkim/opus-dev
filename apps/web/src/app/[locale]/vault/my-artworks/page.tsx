@@ -6,7 +6,8 @@ import {
   OPUS_ARTIST_NICKNAME_COOKIE,
   decodeArtistNicknameFromCookie,
 } from "@/lib/artistSignupProfile";
-import { listArtistSubmissions } from "@/lib/privateStorage";
+import { ArtistPendingSubmissionWithdrawButton } from "@/components/vault/ArtistPendingSubmissionWithdrawButton";
+import { acknowledgeAllArtistOperatorNotices, listArtistSubmissions } from "@/lib/privateStorage";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -76,12 +77,17 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
     );
   }
 
-  const artistId = artistParam?.trim() || session?.user?.id || "";
+  const sessionArtistId = session?.user?.id?.trim() ?? "";
+  const artistId = artistParam?.trim() || sessionArtistId || "";
   const displayNameFromQuery = nameParam?.trim() ?? "";
   const signupNickname = decodeArtistNicknameFromCookie(
     cookieStore.get(OPUS_ARTIST_NICKNAME_COOKIE)?.value,
   );
 
+  /** Only the signed-in artist can acknowledge their own notices (ignore `?artist=` dev override). */
+  if (sessionArtistId) {
+    await acknowledgeAllArtistOperatorNotices(sessionArtistId);
+  }
   const submissions = artistId ? await listArtistSubmissions(artistId) : [];
   const displayName =
     signupNickname ||
@@ -134,7 +140,9 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
                     ? m.operatorReview.filterChanges
                     : reviewStatus === "rejected"
                       ? m.operatorReview.filterRejected
-                      : m.operatorReview.filterPending;
+                      : reviewStatus === "withdrawn"
+                        ? m.operatorReview.filterWithdrawn
+                        : m.operatorReview.filterPending;
               return (
                 <li key={rec.id}>
                   <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-opus-slate/30 shadow-opus-card">
@@ -169,14 +177,25 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
                         </span>
                       </p>
                       {editionEditable ? (
-                        <p className="mt-3">
+                        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
                           <Link
                             href={editEditionHref}
                             className="text-xs text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
                           >
                             {aa.editEditionCta}
                           </Link>
-                        </p>
+                          {reviewStatus === "pending_review" ? (
+                            <ArtistPendingSubmissionWithdrawButton
+                              submissionId={rec.id}
+                              labels={{
+                                cta: aa.withdrawPendingCta,
+                                confirm: aa.withdrawPendingConfirm,
+                                working: aa.withdrawPendingWorking,
+                                failed: aa.withdrawPendingFailed,
+                              }}
+                            />
+                          ) : null}
+                        </div>
                       ) : null}
                       {(reviewStatus === "changes_requested" || reviewStatus === "rejected") &&
                       rec.reviewNote?.trim() ? (

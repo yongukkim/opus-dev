@@ -30,6 +30,7 @@ function statusLabel(s: ReviewStatus): string {
     approved: "승인됨",
     changes_requested: "수정 요청",
     rejected: "반려",
+    withdrawn: "업로드 취소(작가)",
   };
   return m[s];
 }
@@ -478,6 +479,7 @@ export function ConsoleReviewWorkspace({
           <option value="approved">승인됨</option>
           <option value="changes_requested">수정 요청</option>
           <option value="rejected">반려</option>
+          <option value="withdrawn">업로드 취소(작가)</option>
           <option value="all">전체</option>
         </select>
       </div>
@@ -497,13 +499,16 @@ export function ConsoleReviewWorkspace({
                 ? "good"
                 : r.reviewStatus === "pending_review"
                   ? "neutral"
-                  : r.reviewStatus === "changes_requested"
-                    ? "warn"
-                    : "bad";
+                  : r.reviewStatus === "withdrawn"
+                    ? "neutral"
+                    : r.reviewStatus === "changes_requested"
+                      ? "warn"
+                      : "bad";
             const ratingKind =
               r.contentRating === "general" ? "neutral" : r.contentRating === "mature" ? "warn" : "bad";
             const busy = pending === r.id;
             const canRequestChanges = r.reviewStatus === "pending_review" || r.reviewStatus === "changes_requested";
+            const actionsLocked = r.reviewStatus === "withdrawn";
             return (
               <li
                 key={r.id}
@@ -530,7 +535,7 @@ export function ConsoleReviewWorkspace({
                 <div className="flex flex-wrap gap-1.5">
                   <button
                     type="button"
-                    disabled={readOnlyPreview || busy}
+                    disabled={readOnlyPreview || busy || actionsLocked}
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "approved", contentRating: "general" })}
                     className="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#F6F4F0]/80 hover:bg-white/10 disabled:opacity-50"
                   >
@@ -538,7 +543,7 @@ export function ConsoleReviewWorkspace({
                   </button>
                   <button
                     type="button"
-                    disabled={readOnlyPreview || busy}
+                    disabled={readOnlyPreview || busy || actionsLocked}
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "approved", contentRating: "mature" })}
                     className="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#F6F4F0]/80 hover:bg-white/10 disabled:opacity-50"
                   >
@@ -546,7 +551,7 @@ export function ConsoleReviewWorkspace({
                   </button>
                   <button
                     type="button"
-                    disabled={readOnlyPreview || busy || !canRequestChanges}
+                    disabled={readOnlyPreview || busy || !canRequestChanges || actionsLocked}
                     onClick={() =>
                       void applyReviewFromTable(r, { reviewStatus: "changes_requested", contentRating: r.contentRating })
                     }
@@ -556,7 +561,7 @@ export function ConsoleReviewWorkspace({
                   </button>
                   <button
                     type="button"
-                    disabled={readOnlyPreview || busy}
+                    disabled={readOnlyPreview || busy || actionsLocked}
                     onClick={() => void applyReviewFromTable(r, { reviewStatus: "rejected", contentRating: "explicit" })}
                     className="rounded border border-rose-700/40 bg-rose-950/40 px-2 py-1 text-xs text-rose-300 disabled:opacity-50"
                   >

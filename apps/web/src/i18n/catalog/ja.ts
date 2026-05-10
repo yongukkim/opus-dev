@@ -556,6 +556,7 @@ export const ja: Messages = {
     filterApproved: "承認",
     filterChanges: "修正依頼",
     filterRejected: "却下",
+    filterWithdrawn: "アップロード取消",
     filterAll: "すべて",
     colArtwork: "作品",
     colArtist: "作家",
@@ -941,6 +942,13 @@ export const ja: Messages = {
     editionSaveSaleLockNotice: "保存後に販売が発生すると、以後は編集できません。",
     editionSaveConfirmPrompt:
       "エディションが1点でも販売されると、全エディション設定の変更ができなくなります。保存しますか？",
+    withdrawPendingCta: "アップロード取り下げ",
+    withdrawPendingConfirm:
+      "審査待ちのこの提出を取り下げます。運営の審査が完了する前にのみ可能で、取り下げ後はこの提出で審査は続きません。実行しますか？",
+    withdrawPendingWorking: "処理中…",
+    withdrawPendingFailed: "取り下げできませんでした。しばらくしてから再度お試しください。",
+    withdrawnTitle: "この提出は取り下げ済みです",
+    withdrawnBody: "審査前に作家がアップロードを取り下げた記録です。エディション設定は変更できません。",
   },
   vault: {
     overviewKicker: "マイページ",
@@ -994,6 +1002,7 @@ export const ja: Messages = {
     collectionNotApprovedHint: "運営審査が承認されると、次の所蔵者を探す登録を開けます。",
     collectionStatusApproved: "審査済み",
     collectionStatusPending: "審査待ち",
+    collectionStatusWithdrawn: "アップロード取消",
     collectionStatusOther: "保留",
     collectionHeldBadgeArtist: "作家保有",
     collectionHeldBadgeCollector: "所蔵",

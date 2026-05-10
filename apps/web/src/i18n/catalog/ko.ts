@@ -552,6 +552,7 @@ export const ko: Messages = {
     filterApproved: "승인",
     filterChanges: "수정 요청",
     filterRejected: "반려",
+    filterWithdrawn: "업로드 취소",
     filterAll: "전체",
     colArtwork: "작품",
     colArtist: "작가",
@@ -919,6 +920,13 @@ export const ko: Messages = {
     editionSaveSaleLockNotice: "저장 후 판매가 이루어지면 수정이 불가합니다.",
     editionSaveConfirmPrompt:
       "작품 에디션이 1개라도 판매가 된다면 에디션 전체에 대한 수정이 불가합니다. 저장 하시겠습니까?",
+    withdrawPendingCta: "업로드 취소",
+    withdrawPendingConfirm:
+      "검수 대기 중인 이 제출을 취소합니다. 운영 검수 전에만 가능하며, 취소 후에는 이 제출로 검수를 받을 수 없습니다. 진행할까요?",
+    withdrawPendingWorking: "처리 중…",
+    withdrawPendingFailed: "취소할 수 없습니다. 잠시 후 다시 시도하거나 목록을 새로고침해 주세요.",
+    withdrawnTitle: "이 제출은 취소되었습니다",
+    withdrawnBody: "검수 전에 작가가 업로드를 취소한 기록입니다. 에디션 설정을 바꿀 수 없습니다.",
   },
   vault: {
     overviewKicker: "마이페이지",
@@ -972,6 +980,7 @@ export const ko: Messages = {
     collectionNotApprovedHint: "운영 검수가 완료되면 다음 수탁자를 찾는 등록을 열 수 있습니다.",
     collectionStatusApproved: "검수 완료",
     collectionStatusPending: "검수 대기",
+    collectionStatusWithdrawn: "업로드 취소",
     collectionStatusOther: "검수 보류",
     collectionHeldBadgeArtist: "작가 보유",
     collectionHeldBadgeCollector: "소장",

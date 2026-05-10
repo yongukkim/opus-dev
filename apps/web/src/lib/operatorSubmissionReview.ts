@@ -35,6 +35,9 @@ export async function runOperatorSubmissionReview(input: {
   if (!submission) {
     return { ok: false, status: 404, error: "not_found" };
   }
+  if ((submission.reviewStatus ?? "pending_review") === "withdrawn") {
+    return { ok: false, status: 409, error: "withdrawn" };
+  }
 
   let body: OperatorReviewRequestBody;
   if (rawBody !== null && typeof rawBody === "object") {

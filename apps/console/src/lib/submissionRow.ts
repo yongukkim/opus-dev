@@ -7,7 +7,7 @@ export type ReviewRow = {
   mime?: string;
   audienceCategory?: "male" | "female" | "none";
   priceJpy?: number;
-  reviewStatus: "pending_review" | "approved" | "changes_requested" | "rejected";
+  reviewStatus: "pending_review" | "approved" | "changes_requested" | "rejected" | "withdrawn";
   contentRating: "general" | "mature" | "explicit";
   reviewNote?: string;
   editionMode: "unique" | "limited";
@@ -18,7 +18,14 @@ export type ReviewRow = {
 };
 
 function asStatus(v: unknown): ReviewRow["reviewStatus"] {
-  if (v === "pending_review" || v === "approved" || v === "changes_requested" || v === "rejected") return v;
+  if (
+    v === "pending_review" ||
+    v === "approved" ||
+    v === "changes_requested" ||
+    v === "rejected" ||
+    v === "withdrawn"
+  )
+    return v;
   return "pending_review";
 }
 

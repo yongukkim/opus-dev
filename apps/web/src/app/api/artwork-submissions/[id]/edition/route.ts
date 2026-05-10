@@ -42,6 +42,9 @@ export async function PATCH(
 
   const status: NonNullable<SubmissionRecord["reviewStatus"]> =
     submission.reviewStatus ?? "pending_review";
+  if (status === "withdrawn") {
+    return NextResponse.json({ ok: false, error: "edition_locked" }, { status: 409 });
+  }
   if (status !== "pending_review" && status !== "changes_requested") {
     return NextResponse.json({ ok: false, error: "edition_locked" }, { status: 409 });
   }

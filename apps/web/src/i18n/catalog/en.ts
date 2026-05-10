@@ -554,6 +554,7 @@ export const en: Messages = {
     filterApproved: "Approved",
     filterChanges: "Changes requested",
     filterRejected: "Rejected",
+    filterWithdrawn: "Upload cancelled",
     filterAll: "All",
     colArtwork: "Artwork",
     colArtist: "Artist",
@@ -925,6 +926,13 @@ export const en: Messages = {
     editionSaveSaleLockNotice: "After you save, any sale will permanently lock edition edits.",
     editionSaveConfirmPrompt:
       "If even one edition is sold, all edition settings become locked. Save these changes now?",
+    withdrawPendingCta: "Cancel upload",
+    withdrawPendingConfirm:
+      "Withdraw this submission while it is still pending review. You can only do this before the team completes review; after withdrawal this submission will not continue in review. Continue?",
+    withdrawPendingWorking: "Working…",
+    withdrawPendingFailed: "Could not withdraw. Try again or refresh the list.",
+    withdrawnTitle: "This submission was withdrawn",
+    withdrawnBody: "You cancelled the upload before operator review. Edition settings cannot be changed.",
   },
   vault: {
     overviewKicker: "My Page",
@@ -978,6 +986,7 @@ export const en: Messages = {
     collectionNotApprovedHint: "Once operator review approves the work, you can open the transfer registration.",
     collectionStatusApproved: "Approved",
     collectionStatusPending: "Pending review",
+    collectionStatusWithdrawn: "Upload cancelled",
     collectionStatusOther: "On hold",
     collectionHeldBadgeArtist: "Artist custody",
     collectionHeldBadgeCollector: "In collection",
