@@ -5,7 +5,11 @@ import {
   getCurrentOwner,
   getSubmissionById,
 } from "@/lib/privateStorage";
-import { getLatestEditionCertificate, verifyEditionCertificateRecord } from "@/lib/editionCertificate";
+import {
+  ensureEditionCertificatesBackfill,
+  getLatestEditionCertificate,
+  verifyEditionCertificateRecord,
+} from "@/lib/editionCertificate";
 
 export const runtime = "nodejs";
 
@@ -41,7 +45,16 @@ export async function GET(
     return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
   }
 
-  const cert = await getLatestEditionCertificate(submissionId, editionNum);
+  let cert = await getLatestEditionCertificate(submissionId, editionNum);
+  if (
+    !cert &&
+    submission.reviewStatus === "approved" &&
+    editionNum >= 1 &&
+    editionNum <= submission.initialMint
+  ) {
+    await ensureEditionCertificatesBackfill(submission);
+    cert = await getLatestEditionCertificate(submissionId, editionNum);
+  }
   if (!cert) {
     return NextResponse.json({ ok: false, error: "certificate_not_found" }, { status: 404 });
   }

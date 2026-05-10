@@ -12,7 +12,12 @@ import {
   type Actor,
   type OpusRole,
 } from "@/lib/privateStorage";
-import { getLatestEditionCertificate, verifyEditionCertificateRecord } from "@/lib/editionCertificate";
+import {
+  ensureEditionCertificatesBackfill,
+  getLatestEditionCertificate,
+  verifyEditionCertificateRecord,
+} from "@/lib/editionCertificate";
+import { VaultCertificateScrollShell } from "@/components/vault/VaultCertificateScrollShell";
 
 export const dynamic = "force-dynamic";
 
@@ -76,12 +81,14 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
   const editionNum = Number.parseInt(edRaw ?? "", 10);
   if (!submissionId || !Number.isFinite(editionNum) || editionNum < 1) {
     return (
-      <CertificateNotice
-        title={v.certificateNotFoundTitle}
-        body={v.certificateNotFoundBody}
-        backHref={withLocale(locale, "/vault/collection")}
-        backLabel={v.certificateBackCollection}
-      />
+      <VaultCertificateScrollShell>
+        <CertificateNotice
+          title={v.certificateNotFoundTitle}
+          body={v.certificateNotFoundBody}
+          backHref={withLocale(locale, "/vault/collection")}
+          backLabel={v.certificateBackCollection}
+        />
+      </VaultCertificateScrollShell>
     );
   }
 
@@ -101,36 +108,51 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
   const submission = await getSubmissionById(submissionId);
   if (!submission) {
     return (
-      <CertificateNotice
-        title={v.certificateNotFoundTitle}
-        body={v.certificateNotFoundBody}
-        backHref={withLocale(locale, "/vault/collection")}
-        backLabel={v.certificateBackCollection}
-      />
+      <VaultCertificateScrollShell>
+        <CertificateNotice
+          title={v.certificateNotFoundTitle}
+          body={v.certificateNotFoundBody}
+          backHref={withLocale(locale, "/vault/collection")}
+          backLabel={v.certificateBackCollection}
+        />
+      </VaultCertificateScrollShell>
     );
   }
 
   const owner = await getCurrentOwner(submission.id, submission.artistId);
   if (!canAccessSubmission(actor, submission, owner)) {
     return (
-      <CertificateNotice
-        title={v.certificateForbiddenTitle}
-        body={v.certificateForbiddenBody}
-        backHref={withLocale(locale, "/vault/collection")}
-        backLabel={v.certificateBackCollection}
-      />
+      <VaultCertificateScrollShell>
+        <CertificateNotice
+          title={v.certificateForbiddenTitle}
+          body={v.certificateForbiddenBody}
+          backHref={withLocale(locale, "/vault/collection")}
+          backLabel={v.certificateBackCollection}
+        />
+      </VaultCertificateScrollShell>
     );
   }
 
-  const cert = await getLatestEditionCertificate(submissionId, editionNum);
+  let cert = await getLatestEditionCertificate(submissionId, editionNum);
+  if (
+    !cert &&
+    submission.reviewStatus === "approved" &&
+    editionNum >= 1 &&
+    editionNum <= submission.initialMint
+  ) {
+    await ensureEditionCertificatesBackfill(submission);
+    cert = await getLatestEditionCertificate(submissionId, editionNum);
+  }
   if (!cert) {
     return (
-      <CertificateNotice
-        title={v.certificateNotFoundTitle}
-        body={v.certificateNotFoundBody}
-        backHref={withLocale(locale, "/vault/collection")}
-        backLabel={v.certificateBackCollection}
-      />
+      <VaultCertificateScrollShell>
+        <CertificateNotice
+          title={v.certificateNotFoundTitle}
+          body={v.certificateNotFoundBody}
+          backHref={withLocale(locale, "/vault/collection")}
+          backLabel={v.certificateBackCollection}
+        />
+      </VaultCertificateScrollShell>
     );
   }
 
@@ -152,7 +174,8 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
   const jsonHref = `/api/edition-certificates/${encodeURIComponent(submission.id)}/${editionNum}`;
 
   return (
-    <main className="px-4 py-8 md:px-8 md:py-12">
+    <VaultCertificateScrollShell>
+      <main className="px-4 py-8 md:px-8 md:py-12">
       <div className="mx-auto max-w-2xl">
         <div className="overflow-hidden rounded-2xl border border-white/[0.1] bg-[linear-gradient(165deg,rgba(30,30,30,0.95)_0%,rgba(14,14,14,0.98)_45%,#0e0e0e_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
           <div className="border-b border-white/[0.06] px-6 py-5 md:px-10 md:py-7">
@@ -275,6 +298,7 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
         </div>
       </div>
     </main>
+    </VaultCertificateScrollShell>
   );
 }
 

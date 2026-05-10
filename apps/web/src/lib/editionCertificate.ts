@@ -147,6 +147,21 @@ export async function getLatestEditionCertificate(
  * JA: 承認時に initialMint 範囲の各エディションへ署名付き認証書v1を追記します（既存ならスキップ）。
  * EN: On approval, append a signed v1 certificate per edition in `initialMint` range (skip if already present).
  */
+/**
+ * ISO 27001 A.12.4.1 (§5)
+ * KO: 검수 완료 작품인데 인증서 행이 없을 때(배포 이전 승인·발행 시 부가기록 실패 등) 보기·JSON 요청에서 idempotent하게 보정합니다.
+ * JA: 審査済みだが認証書行がない場合に、閲覧・JSON取得時に冪等で補完します。
+ * EN: Idempotently append missing signed rows for approved submissions when read paths find none (pre-feature approvals or auxiliary write failures).
+ */
+export async function ensureEditionCertificatesBackfill(submission: SubmissionRecord): Promise<void> {
+  if (submission.reviewStatus !== "approved") return;
+  try {
+    await issueEditionCertificatesOnApproval(submission, null);
+  } catch {
+    /* signing secret misconfiguration or IO — leave absent; callers still show not-found */
+  }
+}
+
 export async function issueEditionCertificatesOnApproval(
   submission: SubmissionRecord,
   chronicleIssuanceId: string | null,
