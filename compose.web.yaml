@@ -9,6 +9,11 @@
 #       外部公開はCaddyが443/80のみで受け、opus-webはコンテナネットワーク内部のみで露出する。
 #   EN: DB secrets are injected at runtime from /etc/opus/opus.env, never baked in.
 #       Public traffic enters only through Caddy on 443/80; the app stays on the internal network.
+#
+# Staging / internal demo (no KOMOJU): set in /etc/opus/opus.env
+#   OPUS_DEMO_PRIMARY_PURCHASE=true
+# so collector “demo pay” on submission checkout records JSONL custody on /purchase/success.
+# Do not enable on public production without operator approval.
 
 services:
   opus-web:
