@@ -153,21 +153,40 @@ export function ImmersiveArtworkViewer({
     return () => cancelAnimationFrame(id);
   }, [open]);
 
+  const readViewportSize = useCallback(() => {
+    const el = viewportRef.current;
+    let w = el?.clientWidth ?? 0;
+    let h = el?.clientHeight ?? 0;
+    if (typeof window !== "undefined" && (w < 2 || h < 2)) {
+      const vv = window.visualViewport;
+      w = Math.max(w, Math.round(vv?.width ?? window.innerWidth));
+      h = Math.max(h, Math.round(vv?.height ?? window.innerHeight));
+    }
+    if (w > 0 && h > 0) setViewportPx({ w, h });
+  }, []);
+
   useLayoutEffect(() => {
     if (!open || !viewportRef.current) return;
     const el = viewportRef.current;
-    const ro = new ResizeObserver(() => {
-      setViewportPx({ w: el.clientWidth, h: el.clientHeight });
-    });
+    readViewportSize();
+    const ro = new ResizeObserver(() => readViewportSize());
     ro.observe(el);
-    setViewportPx({ w: el.clientWidth, h: el.clientHeight });
-    return () => ro.disconnect();
-  }, [open]);
+    const id0 = requestAnimationFrame(() => {
+      requestAnimationFrame(() => readViewportSize());
+    });
+    return () => {
+      cancelAnimationFrame(id0);
+      ro.disconnect();
+    };
+  }, [open, readViewportSize]);
 
-  const base = naturalSize && viewportPx.w > 0 ? fitContain(naturalSize.w, naturalSize.h, viewportPx.w, viewportPx.h) : { w: 0, h: 0 };
+  const base =
+    naturalSize && viewportPx.w > 1 && viewportPx.h > 1
+      ? fitContain(naturalSize.w, naturalSize.h, viewportPx.w, viewportPx.h)
+      : { w: 0, h: 0 };
 
   useEffect(() => {
-    if (base.w <= 0 || viewportPx.w <= 0) return;
+    if (base.w <= 0 || base.h <= 0 || viewportPx.w <= 0 || viewportPx.h <= 0) return;
     setPan((p) => clampPan(p.x, p.y, base.w, base.h, pinchScale, viewportPx.w, viewportPx.h));
   }, [base.w, base.h, pinchScale, viewportPx.w, viewportPx.h]);
 
@@ -184,7 +203,7 @@ export function ImmersiveArtworkViewer({
 
   const applyPan = useCallback(
     (nx: number, ny: number) => {
-      if (base.w <= 0 || viewportPx.w <= 0) return;
+      if (base.w <= 0 || base.h <= 0 || viewportPx.w <= 0 || viewportPx.h <= 0) return;
       setPan(clampPan(nx, ny, base.w, base.h, scaleRef.current, viewportPx.w, viewportPx.h));
     },
     [base.w, base.h, viewportPx.w, viewportPx.h],
@@ -240,7 +259,7 @@ export function ImmersiveArtworkViewer({
             });
             return;
           }
-          if (scaleRef.current > 1.02 && base.w > 0 && viewportPx.w > 0) {
+          if (scaleRef.current > 1.02 && base.w > 0 && base.h > 0 && viewportPx.w > 0 && viewportPx.h > 0) {
             e.preventDefault();
             setPan((p) =>
               clampPan(p.x - e.deltaX, p.y - e.deltaY, base.w, base.h, scaleRef.current, viewportPx.w, viewportPx.h),
@@ -305,37 +324,47 @@ export function ImmersiveArtworkViewer({
             <div className="flex max-h-full w-full max-w-full items-center justify-center px-4">
               <p className="max-w-sm text-center text-sm text-opus-warm/65">{loadErrorLabel}</p>
             </div>
-          ) : base.w > 0 && base.h > 0 ? (
+          ) : (
             <div className="will-change-transform" style={{ transform: `translate3d(${pan.x}px, ${pan.y}px, 0)` }}>
               <div
                 className="will-change-transform"
-                style={{
-                  width: base.w,
-                  height: base.h,
-                  transform: `scale(${pinchScale})`,
-                  transformOrigin: "center center",
-                }}
+                style={
+                  base.w > 0 && base.h > 0
+                    ? {
+                        width: base.w,
+                        height: base.h,
+                        transform: `scale(${pinchScale})`,
+                        transformOrigin: "center center",
+                      }
+                    : {
+                        transform: `scale(${pinchScale})`,
+                        transformOrigin: "center center",
+                      }
+                }
               >
                 <ProtectedArtworkSurface
                   key={displayTier}
                   src={immersivePreviewUrl(submissionId, displayTier)}
                   alt=""
-                  wrapperClassName="h-full w-full"
-                  imgClassName="block h-full w-full object-contain"
+                  wrapperClassName={
+                    base.w > 0 && base.h > 0 ? "h-full w-full" : "flex max-h-[min(85dvh,calc(100dvh-7rem))] max-w-[92vw] items-center justify-center"
+                  }
+                  imgClassName={
+                    base.w > 0 && base.h > 0
+                      ? "block h-full w-full object-contain"
+                      : "block h-auto max-h-[min(85dvh,calc(100dvh-7rem))] w-auto max-w-[92vw] object-contain"
+                  }
                   decoding="async"
                   onLoad={(ev) => {
                     const { naturalWidth, naturalHeight } = ev.currentTarget;
                     if (naturalWidth > 0 && naturalHeight > 0) {
                       setNaturalSize({ w: naturalWidth, h: naturalHeight });
                     }
+                    queueMicrotask(() => readViewportSize());
                   }}
                   onError={() => setImgErr(true)}
                 />
               </div>
-            </div>
-          ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <span className="text-[0.65rem] text-opus-warm/35">…</span>
             </div>
           )}
         </div>
