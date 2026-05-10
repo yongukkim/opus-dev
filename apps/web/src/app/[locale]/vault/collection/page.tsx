@@ -186,34 +186,6 @@ export default async function VaultCollectionPage({ params }: Props) {
                         >
                           {v.collectionImmersiveCta}
                         </Link>
-                        {rec.initialMint > 0 ? (
-                          rec.initialMint === 1 ? (
-                            <Link
-                              href={withLocale(
-                                locale,
-                                `/vault/certificate/${encodeURIComponent(rec.id)}/1`,
-                              )}
-                              className="inline-flex w-full items-center justify-center rounded-md border border-white/[0.1] bg-black/20 px-3 py-2 text-center text-xs font-medium text-opus-warm/80 transition hover:border-opus-gold/25 hover:bg-black/30"
-                            >
-                              {v.collectionCertificateViewCta}
-                            </Link>
-                          ) : (
-                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                              {Array.from({ length: rec.initialMint }, (_, i) => i + 1).map((n) => (
-                                <Link
-                                  key={`cert-cta-${n}`}
-                                  href={withLocale(
-                                    locale,
-                                    `/vault/certificate/${encodeURIComponent(rec.id)}/${n}`,
-                                  )}
-                                  className="inline-flex min-h-[2.25rem] items-center justify-center rounded-md border border-white/[0.1] bg-black/20 px-2 py-1.5 text-center text-[0.7rem] font-medium leading-tight text-opus-warm/80 transition hover:border-opus-gold/25 hover:bg-black/30"
-                                >
-                                  {v.collectionCertificateViewCtaEditionTpl.replace("{n}", String(n))}
-                                </Link>
-                              ))}
-                            </div>
-                          )
-                        ) : null}
                       </>
                     ) : (
                       <p className="rounded-md border border-white/[0.06] bg-black/15 px-3 py-2 text-center text-[0.7rem] leading-relaxed text-opus-warm/45">

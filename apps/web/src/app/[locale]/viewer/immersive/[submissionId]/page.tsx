@@ -23,6 +23,7 @@ export default async function ImmersiveViewerPage({ params }: Props) {
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const mv = m.mobileViewer;
+  const v = m.vault;
 
   const session = await auth();
   if (!session?.user?.id || !session.user.role) {
@@ -93,6 +94,31 @@ export default async function ImmersiveViewerPage({ params }: Props) {
           pinchHint={mv.artworkViewHint}
           loadErrorLabel={mv.artworkViewLoadError}
         />
+        {submission.initialMint > 0 ? (
+          submission.initialMint === 1 ? (
+            <Link
+              href={withLocale(locale, `/vault/certificate/${encodeURIComponent(submission.id)}/1`)}
+              className="mt-3 inline-flex w-full items-center justify-center rounded-lg border border-white/[0.1] bg-black/20 px-5 py-3 text-sm font-medium text-opus-warm/85 transition hover:border-opus-gold/25 hover:bg-black/30"
+            >
+              {v.collectionCertificateViewCta}
+            </Link>
+          ) : (
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {Array.from({ length: submission.initialMint }, (_, i) => i + 1).map((n) => (
+                <Link
+                  key={`immersive-cert-${n}`}
+                  href={withLocale(
+                    locale,
+                    `/vault/certificate/${encodeURIComponent(submission.id)}/${n}`,
+                  )}
+                  className="inline-flex min-h-[2.75rem] items-center justify-center rounded-lg border border-white/[0.1] bg-black/20 px-2 py-2 text-center text-[0.7rem] font-medium leading-tight text-opus-warm/85 transition hover:border-opus-gold/25 hover:bg-black/30"
+                >
+                  {v.collectionCertificateViewCtaEditionTpl.replace("{n}", String(n))}
+                </Link>
+              ))}
+            </div>
+          )
+        ) : null}
       </div>
 
       <p className="mt-10 text-center text-sm">
