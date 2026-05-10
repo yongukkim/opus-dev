@@ -920,10 +920,50 @@ export type Messages = {
     collectionTransferCta: string;
     /** CTA → `/viewer/immersive/[submissionId]` (mobile web high-fidelity path). */
     collectionImmersiveCta: string;
+    /** Primary card CTA → `/vault/certificate/.../1` when a single minted edition exists. */
+    collectionCertificateViewCta: string;
+    /** Compact certificate CTA per edition when `initialMint` > 1; `{n}` = edition number. */
+    collectionCertificateViewCtaEditionTpl: string;
     /** Short line above per-edition JSON download links (authenticated edition certificate). */
     collectionCertificateLead: string;
     /** Download label; placeholder `{n}` = edition number. */
     collectionCertificateEditionJson: string;
+    /** CTA → `/vault/certificate/[submissionId]/[n]`; `{n}` = edition number. */
+    collectionCertificateViewScreen: string;
+    /** Screen edition certificate (Vault) — document labels and notices. */
+    certificateEyebrow: string;
+    certificateHeading: string;
+    certificateArtistLabel: string;
+    certificateWorkTitleLabel: string;
+    certificateWorkRegisteredLabel: string;
+    certificateEditionRegisteredLabel: string;
+    certificateEditionLineUnique: string;
+    /** `{current}` / `{total}` — limited edition counts. */
+    certificateEditionLineLimitedTpl: string;
+    certificateEditionLabel: string;
+    certificateOpusRecordLabel: string;
+    certificateCertificateIdLabel: string;
+    certificateIssuedAtLabel: string;
+    certificateChronicleLabel: string;
+    certificateChronicleNone: string;
+    certificateFormatLabel: string;
+    certificateCustodyLabel: string;
+    certificateCustodyArtist: string;
+    certificateCustodyCollector: string;
+    certificateEventIssued: string;
+    certificateEventCustodyTransfer: string;
+    certificateIntegrityBlurb: string;
+    certificateLegalFooter: string;
+    certificateSealCaption: string;
+    certificateVerificationOk: string;
+    certificateVerificationFail: string;
+    certificateDigestLabel: string;
+    certificateNotFoundTitle: string;
+    certificateNotFoundBody: string;
+    certificateForbiddenTitle: string;
+    certificateForbiddenBody: string;
+    certificateBackCollection: string;
+    certificateJsonCta: string;
     collectionViewDetail: string;
     /** Title on disabled "detail" control when no public PDP exists yet (e.g. collector-held pending). */
     collectionViewDetailUnavailableTitle: string;
