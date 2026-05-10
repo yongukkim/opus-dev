@@ -57,10 +57,7 @@ export default async function VaultCollectionPage({ params }: Props) {
     redirect(`${withLocale(locale, "/login")}?returnTo=${returnTo}`);
   }
 
-  const heldRaw = await listSubmissionsHeldByUser(session.user.id);
-  const held = heldRaw.filter(
-    ({ submission: rec }) => (rec.reviewStatus ?? "pending_review") !== "withdrawn",
-  );
+  const held = await listSubmissionsHeldByUser(session.user.id);
   const sessionUserId = session.user.id;
 
   return (

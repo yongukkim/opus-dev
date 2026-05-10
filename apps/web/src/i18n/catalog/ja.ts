@@ -947,8 +947,6 @@ export const ja: Messages = {
       "審査待ちまたは修正依頼中のこの作品登録を取り消します。承認前にのみ可能で、取消後は同じ提出で審査を続けられません。実行しますか？",
     withdrawPendingWorking: "処理中…",
     withdrawPendingFailed: "登録を取り消せませんでした。しばらくしてから再度お試しください。",
-    withdrawnTitle: "この提出は取り下げ済みです",
-    withdrawnBody: "承認前に作家が登録を取り消した記録です。エディション設定は変更できません。",
   },
   vault: {
     overviewKicker: "マイページ",

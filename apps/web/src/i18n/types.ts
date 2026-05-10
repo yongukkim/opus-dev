@@ -857,8 +857,6 @@ export type Messages = {
     withdrawPendingConfirm: string;
     withdrawPendingWorking: string;
     withdrawPendingFailed: string;
-    withdrawnTitle: string;
-    withdrawnBody: string;
   };
   submitArtwork: {
     kicker: string;

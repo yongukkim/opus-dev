@@ -23,6 +23,9 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   if (!submission) {
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
   }
+  if ((submission.reviewStatus ?? "pending_review") === "withdrawn") {
+    return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+  }
 
   if (submission.artistId !== artistId) {
     return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });

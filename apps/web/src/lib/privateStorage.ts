@@ -195,7 +195,12 @@ export async function getCurrentOwner(submissionId: string, fallbackArtistId: st
   };
 }
 
-/** Latest `OwnershipState` per submission id (append order), then join to all submissions. */
+/**
+ * Latest `OwnershipState` per submission id (append order), then join to all submissions.
+ * KO: 작가가 등록 취소한(`withdrawn`) 제출은 소유가 남아 있어도 Vault 컬렉션 등 목록에서 제외합니다(원장 행은 유지).
+ * JA: 作家が登録取消した(`withdrawn`)提出は所有が残ってもVaultコレクション等の一覧から除外します（台帳行は保持）。
+ * EN: Artist-withdrawn submissions are omitted from held lists even if ownership rows remain; ledger rows stay for audit.
+ */
 export async function listSubmissionsHeldByUser(
   userId: string,
 ): Promise<{ submission: SubmissionRecord; owner: OwnershipState }[]> {
@@ -209,6 +214,7 @@ export async function listSubmissionsHeldByUser(
   const submissions = await listAllSubmissions();
   const held: { submission: SubmissionRecord; owner: OwnershipState }[] = [];
   for (const rec of submissions) {
+    if ((rec.reviewStatus ?? "pending_review") === "withdrawn") continue;
     const owner = ownerBySubmission.get(rec.id) ?? {
       submissionId: rec.id,
       ownerType: "artist" as const,
@@ -271,7 +277,12 @@ export async function hasCollectorOwnershipEvent(submissionId: string): Promise<
   return false;
 }
 
-/** Latest record per submission id (jsonl append order). */
+/**
+ * Latest record per submission id (jsonl append order), artist-held only.
+ * KO: `withdrawn` 제출은 내 작품 목록에서 제외합니다(append-only 원장에는 남음).
+ * JA: `withdrawn`提出はマイ作品一覧から除外します（append-only台帳には残ります）。
+ * EN: Withdrawn submissions are excluded from this list; append-only ledger rows remain.
+ */
 export async function listArtistSubmissions(artistId: string): Promise<SubmissionRecord[]> {
   if (!artistId.trim()) return [];
   const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
@@ -289,7 +300,7 @@ export async function listArtistSubmissions(artistId: string): Promise<Submissio
     }
   }
   out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-  return out;
+  return out.filter((r) => (r.reviewStatus ?? "pending_review") !== "withdrawn");
 }
 
 /**

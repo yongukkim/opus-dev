@@ -925,8 +925,6 @@ export const ko: Messages = {
       "검수 대기 또는 수정 요청 중인 이 작품 등록을 취소합니다. 승인 전에만 가능하며, 취소 후에는 같은 제출로 검수를 이어갈 수 없습니다. 진행할까요?",
     withdrawPendingWorking: "처리 중…",
     withdrawPendingFailed: "등록을 취소할 수 없습니다. 잠시 후 다시 시도하거나 목록을 새로고침해 주세요.",
-    withdrawnTitle: "이 제출은 취소되었습니다",
-    withdrawnBody: "승인 전에 작가가 등록을 취소한 기록입니다. 에디션 설정을 바꿀 수 없습니다.",
   },
   vault: {
     overviewKicker: "마이페이지",

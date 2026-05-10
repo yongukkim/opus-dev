@@ -931,8 +931,6 @@ export const en: Messages = {
       "Cancel this artwork registration while it is pending review or changes have been requested. Only possible before approval; after cancellation this submission will not continue in review. Continue?",
     withdrawPendingWorking: "Working…",
     withdrawPendingFailed: "Could not cancel registration. Try again or refresh the list.",
-    withdrawnTitle: "This submission was withdrawn",
-    withdrawnBody: "You cancelled registration before approval. Edition settings cannot be changed.",
   },
   vault: {
     overviewKicker: "My Page",

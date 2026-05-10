@@ -119,6 +119,19 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
     );
   }
 
+  if ((submission.reviewStatus ?? "pending_review") === "withdrawn") {
+    return (
+      <VaultCertificateScrollShell>
+        <CertificateNotice
+          title={v.certificateNotFoundTitle}
+          body={v.certificateNotFoundBody}
+          backHref={withLocale(locale, "/vault/collection")}
+          backLabel={v.certificateBackCollection}
+        />
+      </VaultCertificateScrollShell>
+    );
+  }
+
   const owner = await getCurrentOwner(submission.id, submission.artistId);
   if (!canAccessSubmission(actor, submission, owner)) {
     return (

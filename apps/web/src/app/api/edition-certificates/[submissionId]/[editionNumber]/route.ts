@@ -39,6 +39,12 @@ export async function GET(
   if (!submission) {
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
   }
+  if (
+    (submission.reviewStatus ?? "pending_review") === "withdrawn" &&
+    actor.role !== "operator"
+  ) {
+    return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+  }
 
   const owner = await getCurrentOwner(submission.id, submission.artistId);
   if (!canAccessSubmission(actor, submission, owner)) {

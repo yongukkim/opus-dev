@@ -59,22 +59,7 @@ export default async function VaultMyArtworkEditionEditPage({ params }: Props) {
 
   const reviewStatus = submission.reviewStatus ?? "pending_review";
   if (reviewStatus === "withdrawn") {
-    const listBackHref = `${withLocale(locale, "/vault/my-artworks")}?artist=${encodeURIComponent(artistId)}`;
-    return (
-      <main className="flex-1 p-6 pb-24 text-opus-warm/80 md:p-10">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm uppercase tracking-[0.35em] text-opus-warm/45">{aa.editEditionKicker}</p>
-          <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{aa.withdrawnTitle}</h1>
-          <p className="mx-auto mt-4 max-w-lg text-sm text-opus-warm/60">{aa.withdrawnBody}</p>
-          <Link
-            href={listBackHref}
-            className="mt-8 inline-block text-sm text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
-          >
-            {aa.backToMyArtworks}
-          </Link>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   await acknowledgeArtistReviewNoticeIfNeeded(submission.id, artistId);
