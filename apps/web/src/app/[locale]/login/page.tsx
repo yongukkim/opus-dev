@@ -21,8 +21,9 @@ export default async function LoginPage({
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const loginRole = roleParam === "artist" ? "artist" : "collector";
+  /** Collector default after Google/email login: home (not vault collection). */
   const fallbackReturnTo =
-    loginRole === "artist" ? withLocale(locale, "/vault/submit") : withLocale(locale, "/vault/collection");
+    loginRole === "artist" ? withLocale(locale, "/vault/submit") : withLocale(locale, "/");
   const returnTo = sanitizeReturnTo(returnToParam, fallbackReturnTo);
 
   const collectorLoginHref = `${withLocale(locale, "/login")}?${new URLSearchParams({
