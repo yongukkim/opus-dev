@@ -926,13 +926,13 @@ export const en: Messages = {
     editionSaveSaleLockNotice: "After you save, any sale will permanently lock edition edits.",
     editionSaveConfirmPrompt:
       "If even one edition is sold, all edition settings become locked. Save these changes now?",
-    withdrawPendingCta: "Cancel upload",
+    withdrawPendingCta: "Cancel registration",
     withdrawPendingConfirm:
-      "Withdraw this submission while it is still pending review. You can only do this before the team completes review; after withdrawal this submission will not continue in review. Continue?",
+      "Cancel this artwork registration while it is pending review or changes have been requested. Only possible before approval; after cancellation this submission will not continue in review. Continue?",
     withdrawPendingWorking: "Working…",
-    withdrawPendingFailed: "Could not withdraw. Try again or refresh the list.",
+    withdrawPendingFailed: "Could not cancel registration. Try again or refresh the list.",
     withdrawnTitle: "This submission was withdrawn",
-    withdrawnBody: "You cancelled the upload before operator review. Edition settings cannot be changed.",
+    withdrawnBody: "You cancelled registration before approval. Edition settings cannot be changed.",
   },
   vault: {
     overviewKicker: "My Page",

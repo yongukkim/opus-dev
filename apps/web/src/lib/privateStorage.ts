@@ -366,13 +366,13 @@ export async function acknowledgeAllArtistOperatorNotices(artistUserId: string):
 
 export type WithdrawArtistPendingResult =
   | { ok: true }
-  | { ok: false; error: "not_found" | "forbidden" | "not_pending" | "already_withdrawn" | "after_sale" };
+  | { ok: false; error: "not_found" | "forbidden" | "not_withdrawable" | "already_withdrawn" | "after_sale" };
 
 /**
- * ISO 27001 A.9.2.1 (§4), A.14.2.1 (§1) — artist-only, pending_review only, no collector ownership.
- * KO: 검수 대기 중인 제출만 작가가 철회(append-only)할 수 있으며, 소유 이력이 바뀐 뒤에는 허용하지 않습니다.
- * JA: 審査待ちの提出のみ作家が取り下げ可能で、所蔵履歴が変わった後は禁止します。
- * EN: Only pending-review submissions may be withdrawn by the artist; blocked after any ownership change.
+ * ISO 27001 A.9.2.1 (§4), A.14.2.1 (§1) — artist-only while review not finalized; no collector ownership.
+ * KO: 검수 대기·수정 요청 단계의 제출만 작가가 등록 철회(append-only)할 수 있으며, 소유 이력이 바뀐 뒤에는 허용하지 않습니다.
+ * JA: 審査待ち・修正依頼段階の提出のみ作家が登録取下げ可能で、所蔵履歴が変わった後は禁止します。
+ * EN: Artist may withdraw registration only while pending review or changes-requested; blocked after ownership changes.
  */
 export async function withdrawArtistPendingSubmission(input: {
   submissionId: string;
@@ -386,7 +386,7 @@ export async function withdrawArtistPendingSubmission(input: {
   if (sub.artistId !== uid) return { ok: false, error: "forbidden" };
   const st = sub.reviewStatus ?? "pending_review";
   if (st === "withdrawn") return { ok: false, error: "already_withdrawn" };
-  if (st !== "pending_review") return { ok: false, error: "not_pending" };
+  if (st !== "pending_review" && st !== "changes_requested") return { ok: false, error: "not_withdrawable" };
   if (await hasCollectorOwnershipEvent(sub.id)) return { ok: false, error: "after_sale" };
   const now = new Date().toISOString();
   await appendSubmission({

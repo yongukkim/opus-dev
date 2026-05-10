@@ -942,13 +942,13 @@ export const ja: Messages = {
     editionSaveSaleLockNotice: "保存後に販売が発生すると、以後は編集できません。",
     editionSaveConfirmPrompt:
       "エディションが1点でも販売されると、全エディション設定の変更ができなくなります。保存しますか？",
-    withdrawPendingCta: "アップロード取り下げ",
+    withdrawPendingCta: "登録取消",
     withdrawPendingConfirm:
-      "審査待ちのこの提出を取り下げます。運営の審査が完了する前にのみ可能で、取り下げ後はこの提出で審査は続きません。実行しますか？",
+      "審査待ちまたは修正依頼中のこの作品登録を取り消します。承認前にのみ可能で、取消後は同じ提出で審査を続けられません。実行しますか？",
     withdrawPendingWorking: "処理中…",
-    withdrawPendingFailed: "取り下げできませんでした。しばらくしてから再度お試しください。",
+    withdrawPendingFailed: "登録を取り消せませんでした。しばらくしてから再度お試しください。",
     withdrawnTitle: "この提出は取り下げ済みです",
-    withdrawnBody: "審査前に作家がアップロードを取り下げた記録です。エディション設定は変更できません。",
+    withdrawnBody: "承認前に作家が登録を取り消した記録です。エディション設定は変更できません。",
   },
   vault: {
     overviewKicker: "マイページ",

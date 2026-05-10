@@ -184,7 +184,7 @@ export default async function VaultMyArtworksPage({ params, searchParams }: Prop
                           >
                             {aa.editEditionCta}
                           </Link>
-                          {reviewStatus === "pending_review" ? (
+                          {reviewStatus === "pending_review" || reviewStatus === "changes_requested" ? (
                             <ArtistPendingSubmissionWithdrawButton
                               submissionId={rec.id}
                               labels={{

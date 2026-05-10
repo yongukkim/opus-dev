@@ -42,7 +42,7 @@ export function ArtistPendingSubmissionWithdrawButton({
       type="button"
       disabled={pending}
       onClick={() => void onWithdraw()}
-      className="text-xs text-opus-warm/50 underline-offset-4 transition hover:text-opus-warm/80 hover:underline disabled:opacity-40"
+      className="rounded-md border border-white/[0.14] bg-black/25 px-2.5 py-1.5 text-xs font-medium text-opus-warm/85 shadow-sm transition hover:border-opus-gold/35 hover:bg-opus-gold/[0.06] hover:text-opus-gold-light disabled:opacity-45"
     >
       {pending ? labels.working : labels.cta}
     </button>

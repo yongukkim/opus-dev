@@ -7,9 +7,9 @@ export const runtime = "nodejs";
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.2.1 (§4) Least Privilege RBAC
- *   KO: 검수 대기 제출의 철회는 해당 작가 세션만 수행할 수 있습니다.
- *   JA: 審査待ち提出の取下げは当該作家セッションのみが実行できます。
- *   EN: Only the owning artist session may withdraw a submission while it is pending review.
+ *   KO: 검수 대기·수정 요청 제출의 등록 철회는 해당 작가 세션만 수행할 수 있습니다.
+ *   JA: 審査待ち・修正依頼の提出の登録取下げは当該作家セッションのみが実行できます。
+ *   EN: Only the owning artist session may withdraw registration while pending review or changes-requested.
  *
  * - A.12.4.1 (§5) Audit trail
  *   KO: 철회는 append-only 제출 원장에 `withdrawn` 상태로 기록됩니다.
@@ -37,7 +37,9 @@ export async function POST(
         ? 404
         : result.error === "forbidden"
           ? 403
-          : result.error === "after_sale" || result.error === "not_pending" || result.error === "already_withdrawn"
+          : result.error === "after_sale" ||
+              result.error === "not_withdrawable" ||
+              result.error === "already_withdrawn"
             ? 409
             : 400;
     return NextResponse.json({ ok: false, error: result.error }, { status });
