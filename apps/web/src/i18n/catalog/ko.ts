@@ -1207,11 +1207,12 @@ export const ko: Messages = {
     immersiveKicker: "Immersive",
     immersiveTitle: "몰입 감상(모바일)",
     immersiveLead:
-      "웹에서는 워터마크가 입힌 미리보기로 감상합니다. 원본에 가까운 고해상 타일은 같은 화면에 순차적으로 연결할 예정입니다.",
+      "웹에서는 워터마크가 입힌 미리보기로 감상합니다. 아래에서 전체 화면 감상을 열면 화면에 맞춘 단계별 해상도로 더 선명하게 볼 수 있습니다.",
     immersivePreviewNote: "워터마크 · 저해상 WebP (웹 정책)",
     immersiveNoAccess: "이 작품에 대한 감상 권한이 없거나 아직 공개되지 않았습니다.",
-    tileRequestCta: "고해상 타일 연결 확인",
-    tileResultLabel: "응답",
-    tileErrorGeneric: "요청에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    artworkViewCta: "작품감상",
+    artworkViewClose: "닫기",
+    artworkViewHint: "두 손가락으로 확대하면 더 선명한 워터마크 미리보기로 전환됩니다.",
+    artworkViewLoadError: "이미지를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
   },
 };

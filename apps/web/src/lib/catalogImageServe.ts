@@ -14,6 +14,10 @@ const PUBLIC_PREVIEW_WEBP_QUALITY = 40;
 const VAULT_PREVIEW_MAX_PX = 1280;
 const VAULT_PREVIEW_WEBP_QUALITY = 62;
 
+/** Mobile immersive “fit screen” tier — still derivative bytes, not master. */
+const IMMERSIVE_FIT_MAX_PX = 900;
+const IMMERSIVE_FIT_WEBP_QUALITY = 56;
+
 /**
  * Resolve a readable file path under `public/local-artworks` or `public/sample-artworks` only.
  * ISO 27001 A.14.2.1 (§1)
@@ -150,5 +154,81 @@ export async function renderCatalogVaultPreviewWatermarked(absPath: string): Pro
   return sharp(resized)
     .composite([{ input: watermarkSvg(w, h, "vault"), blend: "over" }])
     .webp({ quality: VAULT_PREVIEW_WEBP_QUALITY, effort: 4 })
+    .toBuffer();
+}
+
+async function renderVideoImmersivePlaceholderWatermarked(
+  width: number,
+  height: number,
+  webpQuality: number,
+): Promise<Buffer> {
+  const w = width;
+  const h = height;
+  const base = await sharp({
+    create: {
+      width: w,
+      height: h,
+      channels: 3,
+      background: { r: 22, g: 22, b: 24 },
+    },
+  })
+    .png()
+    .toBuffer();
+  const caption = Buffer.from(
+    `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <text x="${Math.round(w / 2)}" y="${h - 36}" font-family="Georgia, 'Times New Roman', serif" font-size="13" font-weight="600"
+    text-anchor="middle" fill="rgba(246,244,240,0.45)">Motion</text>
+</svg>`,
+    "utf8",
+  );
+  return sharp(base)
+    .composite([
+      { input: watermarkSvg(w, h, "vault"), blend: "over" },
+      { input: caption, blend: "over" },
+    ])
+    .webp({ quality: webpQuality, effort: 4 })
+    .toBuffer();
+}
+
+/**
+ * Owner-only mobile immersive tiers: watermarked WebP derivatives (never raw master).
+ * ISO 27001 A.9.2.1 (§4) / A.13.1.3 (§6)
+ * KO: 모바일 몰입 감상용으로 해상도 단계만 달리 하되, 항상 워터마크 파생만 반환합니다.
+ * JA: モバイル没入鑑賞向けに解像度段階のみ変え、常に透かし入り派生のみを返します。
+ * EN: Tiered resolution for mobile immersive viewing; always returns watermarked derivatives only.
+ */
+export async function renderSubmissionImmersiveOwnerPreview(
+  absPath: string,
+  mime: string | undefined,
+  tier: "fit" | "zoom",
+): Promise<Buffer> {
+  if (isVideoSubmissionMaster(absPath, mime)) {
+    if (tier === "zoom") {
+      const w = VAULT_PREVIEW_MAX_PX;
+      const h = Math.round((w * 5) / 4);
+      return renderVideoImmersivePlaceholderWatermarked(w, h, VAULT_PREVIEW_WEBP_QUALITY);
+    }
+    const w = IMMERSIVE_FIT_MAX_PX;
+    const h = Math.round((w * 5) / 4);
+    return renderVideoImmersivePlaceholderWatermarked(w, h, IMMERSIVE_FIT_WEBP_QUALITY);
+  }
+
+  if (tier === "zoom") {
+    return renderCatalogVaultPreviewWatermarked(absPath);
+  }
+
+  const resized = await sharp(absPath)
+    .rotate()
+    .resize(IMMERSIVE_FIT_MAX_PX, IMMERSIVE_FIT_MAX_PX, { fit: "inside", withoutEnlargement: true })
+    .toBuffer();
+
+  const meta = await sharp(resized).metadata();
+  const w = meta.width ?? IMMERSIVE_FIT_MAX_PX;
+  const h = meta.height ?? IMMERSIVE_FIT_MAX_PX;
+
+  return sharp(resized)
+    .composite([{ input: watermarkSvg(w, h, "vault"), blend: "over" }])
+    .webp({ quality: IMMERSIVE_FIT_WEBP_QUALITY, effort: 4 })
     .toBuffer();
 }

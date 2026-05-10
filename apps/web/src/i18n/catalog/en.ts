@@ -1214,11 +1214,12 @@ export const en: Messages = {
     immersiveKicker: "Immersive",
     immersiveTitle: "Immersive viewing (mobile)",
     immersiveLead:
-      "On the web you view a watermarked, downsampled preview. High-fidelity tiles will land on this screen in a later step.",
+      "On the web you view a watermarked, downsampled preview. Open fullscreen viewing below for a stage-matched layout and a sharper tier after you zoom.",
     immersivePreviewNote: "Watermarked · lower-resolution WebP (web policy)",
     immersiveNoAccess: "You do not have viewing rights for this work, or it is not published yet.",
-    tileRequestCta: "Check high-fidelity tile session",
-    tileResultLabel: "Response",
-    tileErrorGeneric: "The request failed. Please try again shortly.",
+    artworkViewCta: "View artwork",
+    artworkViewClose: "Close",
+    artworkViewHint: "Pinch to zoom in — a sharper watermarked tier loads when you enlarge.",
+    artworkViewLoadError: "Could not load the image. Please try again shortly.",
   },
 };

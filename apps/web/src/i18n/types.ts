@@ -1211,9 +1211,11 @@ export type Messages = {
     /** Caption under the watermarked preview image (web-safe derivative). */
     immersivePreviewNote: string;
     immersiveNoAccess: string;
-    tileRequestCta: string;
-    tileResultLabel: string;
-    tileErrorGeneric: string;
+    /** Fullscreen viewer entry (mobile web). */
+    artworkViewCta: string;
+    artworkViewClose: string;
+    artworkViewHint: string;
+    artworkViewLoadError: string;
   };
   operatorReview: {
     title: string;

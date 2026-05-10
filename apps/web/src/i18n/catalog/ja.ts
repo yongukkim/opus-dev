@@ -1232,11 +1232,12 @@ export const ja: Messages = {
     immersiveKicker: "Immersive",
     immersiveTitle: "没入鑑賞（モバイル）",
     immersiveLead:
-      "Webでは透かし入りのプレビューで鑑賞します。高精細タイルは同じ画面に順次接続する予定です。",
+      "Webでは透かし入りのプレビューで鑑賞します。下の全画面鑑賞では画面に合わせた段階的な解像度で、拡大時により鮮明な派生画像に切り替わります。",
     immersivePreviewNote: "透かし・低解像度 WebP（Web方針）",
     immersiveNoAccess: "この作品の鑑賞権限がないか、まだ公開されていません。",
-    tileRequestCta: "高解像タイル接続を確認",
-    tileResultLabel: "応答",
-    tileErrorGeneric: "リクエストに失敗しました。時間をおいて再度お試しください。",
+    artworkViewCta: "作品を鑑賞",
+    artworkViewClose: "閉じる",
+    artworkViewHint: "ピンチで拡大すると、より鮮明な透かし入りプレビューに切り替わります。",
+    artworkViewLoadError: "画像を読み込めませんでした。時間をおいて再度お試しください。",
   },
 };

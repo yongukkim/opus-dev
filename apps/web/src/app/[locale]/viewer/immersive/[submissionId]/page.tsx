@@ -2,7 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
-import { ImmersiveTileSessionButton } from "@/components/viewer/ImmersiveTileSessionButton";
+import { ImmersiveArtworkViewer } from "@/components/viewer/ImmersiveArtworkViewer";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { isLikelyMobileWebClient } from "@/lib/mobileUserAgent";
@@ -87,11 +87,12 @@ export default async function ImmersiveViewerPage({ params }: Props) {
       <p className="mt-2 font-mono text-[0.58rem] uppercase tracking-[0.18em] text-opus-warm/40">{mv.immersivePreviewNote}</p>
 
       <div className="mt-8 rounded-2xl border border-white/[0.08] bg-opus-charcoal/40 p-6">
-        <ImmersiveTileSessionButton
+        <ImmersiveArtworkViewer
           submissionId={submission.id}
-          requestCta={mv.tileRequestCta}
-          resultLabel={mv.tileResultLabel}
-          errorLabel={mv.tileErrorGeneric}
+          ctaLabel={mv.artworkViewCta}
+          closeLabel={mv.artworkViewClose}
+          pinchHint={mv.artworkViewHint}
+          loadErrorLabel={mv.artworkViewLoadError}
         />
       </div>
 
