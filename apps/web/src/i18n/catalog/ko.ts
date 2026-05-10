@@ -909,6 +909,10 @@ export const ko: Messages = {
       "결제를 완료하셨다면 잠시 후 상태가 반영됩니다. 새로고침하거나 마이페이지에서 주문을 확인해 주세요.",
     paymentFailedTitle: "결제가 완료되지 않았습니다",
     paymentFailedBody: "주문이 완료되지 않았거나 취소되었습니다. 다시 체크아웃을 시도하거나 고객 지원으로 문의해 주세요.",
+    demoCustodyRecorded:
+      "데모: 실결제 없이 The Chronicle 원장에 소장 이전을 반영했습니다. 컬렉션에서 작품을 확인한 뒤 모바일 몰입 감상을 열 수 있습니다.",
+    demoCustodyFailed:
+      "데모 소장 반영에 실패했거나, 이미 다른 분에게 넘어간 작품일 수 있습니다. 운영자에게 문의하거나 다른 작품을 선택해 주세요.",
   },
   artistArtworks: {
     title: "Artworks",

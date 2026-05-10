@@ -926,6 +926,10 @@ export const ja: Messages = {
     paymentFailedTitle: "決済が完了していません",
     paymentFailedBody:
       "注文が未払い、またはキャンセルされています。チェックアウトを再試行するか、サポートへお問い合わせください。",
+    demoCustodyRecorded:
+      "デモ: 本決済なしで The Chronicle 台帳に所蔵移転を記録しました。マイページのコレクションで確認し、モバイル没入鑑賞を開けます。",
+    demoCustodyFailed:
+      "デモの所蔵反映に失敗したか、作家スタジオ保管でない状態です。運営へ確認するか、別作品を選んでください。",
   },
   artistArtworks: {
     title: "Artworks",

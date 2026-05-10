@@ -1,18 +1,21 @@
 import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { attemptDemoPrimaryPurchaseSettle } from "@/lib/demoPrimaryPurchase";
 import { prisma } from "@/lib/prisma";
+import type { OpusRole } from "@/lib/privateStorage";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ artwork?: string; returnTo?: string; orderId?: string }>;
+  searchParams: Promise<{ artwork?: string; returnTo?: string; orderId?: string; fromSubmission?: string }>;
 };
 
 export default async function PurchaseSuccessPage({ params, searchParams }: Props) {
   const { locale: raw } = await params;
-  const { artwork: artworkParam, returnTo: returnToParam, orderId: orderIdParam } = await searchParams;
+  const { artwork: artworkParam, returnTo: returnToParam, orderId: orderIdParam, fromSubmission: fromSubmissionParam } =
+    await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const p = m.purchaseSuccess;
@@ -20,10 +23,26 @@ export default async function PurchaseSuccessPage({ params, searchParams }: Prop
   const artwork = (artworkParam ?? "").trim();
   const vaultHref = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault/collection"));
   const orderId = (orderIdParam ?? "").trim();
+  const fromSubmission = (fromSubmissionParam ?? "").trim();
+
+  const session = await auth();
+
+  let demoNotice: "recorded" | "failed" | null = null;
+  if (!orderId && fromSubmission && session?.user?.id) {
+    const role = session.user.role as OpusRole | undefined;
+    const outcome = await attemptDemoPrimaryPurchaseSettle({
+      submissionId: fromSubmission,
+      buyerUserId: session.user.id,
+      buyerRole: role ?? "collector",
+    });
+    if (outcome === "settled") demoNotice = "recorded";
+    else if (outcome === "transfer_error" || outcome === "not_available" || outcome === "invalid_submission") {
+      demoNotice = "failed";
+    }
+  }
 
   let paymentState: "ok" | "pending" | "failed" | "none" = "none";
   if (orderId) {
-    const session = await auth();
     if (session?.user?.id) {
       const order = await prisma.order.findUnique({
         where: { id: orderId },
@@ -67,6 +86,16 @@ export default async function PurchaseSuccessPage({ params, searchParams }: Prop
           <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">{p.kicker}</p>
           {body ? (
             <p className="mt-5 font-sans text-sm leading-relaxed text-opus-warm/75">{body}</p>
+          ) : null}
+          {demoNotice === "recorded" ? (
+            <p className="mt-4 rounded-lg border border-opus-gold/20 bg-opus-gold/5 px-4 py-3 text-left text-xs leading-relaxed text-opus-gold-light/90">
+              {p.demoCustodyRecorded}
+            </p>
+          ) : null}
+          {demoNotice === "failed" ? (
+            <p className="mt-4 rounded-lg border border-white/[0.08] bg-black/25 px-4 py-3 text-left text-xs leading-relaxed text-opus-warm/55">
+              {p.demoCustodyFailed}
+            </p>
           ) : null}
 
           <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">

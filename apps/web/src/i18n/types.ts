@@ -687,6 +687,10 @@ export type Messages = {
     paymentPendingBody: string;
     paymentFailedTitle: string;
     paymentFailedBody: string;
+    /** Shown when demo checkout recorded custody in JSONL (OPUS_DEMO_PRIMARY_PURCHASE). */
+    demoCustodyRecorded: string;
+    /** Shown when demo custody could not be applied (wrong state / IO error). */
+    demoCustodyFailed: string;
   };
   artistKyc: {
     consentTitle: string;

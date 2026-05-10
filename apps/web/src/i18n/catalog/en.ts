@@ -914,6 +914,10 @@ export const en: Messages = {
       "If you completed payment, status may take a moment. Refresh or check your order from My Page.",
     paymentFailedTitle: "Payment not completed",
     paymentFailedBody: "This order is not paid or was cancelled. Try checkout again or contact support.",
+    demoCustodyRecorded:
+      "Demo: recorded a custody transfer in The Chronicle ledger without live payment. Open My Page → Collection, then mobile immersive viewing.",
+    demoCustodyFailed:
+      "Demo custody update did not apply, or this edition is no longer in the artist’s studio inventory. Contact the operator or pick another work.",
   },
   artistArtworks: {
     title: "Artworks",

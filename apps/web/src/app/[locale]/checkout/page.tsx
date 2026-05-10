@@ -47,9 +47,13 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
   const priceParts = priceValid ? formatListPriceForLocale(locale, priceParsed) : null;
 
   const safeReturn = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault/collection"));
-  const successHref = `${withLocale(locale, "/purchase/success")}?returnTo=${encodeURIComponent(
-    safeReturn,
-  )}${artwork ? `&artwork=${encodeURIComponent(artwork)}` : ""}`;
+  const slug = (slugParam ?? "").trim();
+  const fromSubmission = (fromSubmissionParam ?? "").trim();
+  const successParams = new URLSearchParams();
+  successParams.set("returnTo", safeReturn);
+  if (artwork.trim()) successParams.set("artwork", artwork.trim());
+  if (fromSubmission.trim()) successParams.set("fromSubmission", fromSubmission.trim());
+  const successHref = `${withLocale(locale, "/purchase/success")}?${successParams.toString()}`;
 
   const session = await auth();
 
@@ -61,8 +65,6 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
     payNotConfigured: c.payNotConfigured,
   };
 
-  const slug = (slugParam ?? "").trim();
-  const fromSubmission = (fromSubmissionParam ?? "").trim();
   const a = m.artworks;
 
   let sameArtistCatalog: { file: string; globalIndex: number }[] = [];
