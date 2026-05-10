@@ -442,6 +442,24 @@ export function ArtworkSubmissionForm({
           </div>
         </div>
 
+        <div className="mt-5">
+          <p className={labelClass()}>{s.uploadLabel}</p>
+          <input
+            type="file"
+            name="file"
+            onChange={onFile}
+            onBlur={() => markTouched("file")}
+            className="mt-2 block w-full cursor-pointer rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75 file:mr-4 file:rounded file:border-0 file:bg-opus-gold/15 file:px-3 file:py-2 file:text-sm file:text-opus-gold hover:border-opus-gold/40"
+            accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
+          />
+          <p className={hintClass()}>{s.uploadHint}</p>
+          {fileMeta ? (
+            <p className="mt-2 font-mono text-[0.7rem] text-opus-warm/50">
+              {fileMeta.name} · {fileMeta.type || "unknown"} · {bytesLabel(fileMeta.size)}
+            </p>
+          ) : null}
+        </div>
+
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
             <p className={labelClass()}>{s.artworkTitleLabel}</p>
@@ -671,24 +689,6 @@ export function ArtworkSubmissionForm({
             <p className="mt-2 text-sm text-opus-gold-light">{editionPreview.headline}</p>
             <p className="mt-1 text-xs text-opus-warm/65">{editionPreview.sub}</p>
           </div>
-        </div>
-
-        <div className="mt-6">
-          <p className={labelClass()}>{s.uploadLabel}</p>
-          <input
-            type="file"
-            name="file"
-            onChange={onFile}
-            onBlur={() => markTouched("file")}
-            className="mt-2 block w-full cursor-pointer rounded-md border border-white/[0.12] bg-black/15 px-3 py-2 text-sm text-opus-warm/75 file:mr-4 file:rounded file:border-0 file:bg-opus-gold/15 file:px-3 file:py-2 file:text-sm file:text-opus-gold hover:border-opus-gold/40"
-            accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
-          />
-          <p className={hintClass()}>{s.uploadHint}</p>
-          {fileMeta ? (
-            <p className="mt-2 font-mono text-[0.7rem] text-opus-warm/50">
-              {fileMeta.name} · {fileMeta.type || "unknown"} · {bytesLabel(fileMeta.size)}
-            </p>
-          ) : null}
         </div>
 
         <div className="mt-6 rounded-lg border border-white/[0.08] bg-black/15 p-4">
