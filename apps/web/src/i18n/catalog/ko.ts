@@ -361,6 +361,7 @@ export const ko: Messages = {
   vaultNav: {
     collection: "컬렉션",
     activity: "활동",
+    activityReviewNoticeAria: "운영 검수 안내 메시지가 {count}건 있습니다. 내 작품에서 확인할 수 있습니다.",
     submit: "작품 등록",
     myArtworks: "내 작품",
     payouts: "정산/계좌",
@@ -976,6 +977,10 @@ export const ko: Messages = {
     collectionHeldBadgeCollector: "소장",
     activityTitle: "활동",
     activityBody: "찜한 작품과 구매 내역을 한 화면에서 확인합니다.",
+    activityArtistReviewNoticeTitle: "운영 검수 안내가 있습니다",
+    activityArtistReviewNoticeBody:
+      "수정 요청 또는 반려와 함께 남긴 메모가 {count}건 있습니다. 아래에서 내 작품으로 이동해 내용을 확인하세요.",
+    activityArtistReviewNoticeCta: "내 작품에서 메모 확인",
     activityWishlistHeading: "찜한 작품",
     activityWishlistBody: "상세에서 ‘찜 목록에 추가’한 작품입니다. 이 브라우저에만 저장됩니다.",
     activityWishlistEmpty: "아직 찜한 작품이 없습니다.",

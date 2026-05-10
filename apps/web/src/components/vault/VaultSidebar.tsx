@@ -20,6 +20,7 @@ export function VaultSidebar({
   vaultRole,
   sessionIsArtist,
   isOperator,
+  activityOperatorReviewNoticeCount,
 }: {
   locale: Locale;
   m: Messages;
@@ -27,6 +28,8 @@ export function VaultSidebar({
   /** DB / session role: artist registration complete. */
   sessionIsArtist: boolean;
   isOperator: boolean;
+  /** Submissions with operator `reviewNote` in changes_requested / rejected (artist-held, JSONL). */
+  activityOperatorReviewNoticeCount: number;
 }) {
   const pathname = usePathname();
   const ja = locale === "ja";
@@ -53,7 +56,11 @@ export function VaultSidebar({
       }
       return true;
     })
-    .map(({ path, label }) => ({ href: withLocale(locale, path), label }));
+    .map(({ path, label }) => ({
+      path,
+      href: withLocale(locale, path),
+      label,
+    }));
 
   function linkActive(href: string): boolean {
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -65,12 +72,20 @@ export function VaultSidebar({
       aria-label={m.a11y.vaultNav}
     >
       <nav className="flex gap-1 overflow-x-auto p-3 md:flex-col md:overflow-visible md:p-4">
-        {links.map(({ href, label }) => {
+        {links.map(({ path, href, label }) => {
           const active = linkActive(href);
+          const showActivityReviewDot =
+            path === "/vault/activity" &&
+            sessionIsArtist &&
+            activityOperatorReviewNoticeCount > 0;
+          const activityAriaExtra = showActivityReviewDot
+            ? ` — ${nav.activityReviewNoticeAria.replace("{count}", String(activityOperatorReviewNoticeCount))}`
+            : "";
           return (
             <Link
               key={href}
               href={href}
+              aria-label={showActivityReviewDot ? `${label}${activityAriaExtra}` : undefined}
               className={`whitespace-nowrap rounded-md px-3 py-2 font-sans text-xs transition md:px-3 ${
                 ja ? "break-keep tracking-tight" : ""
               } ${
@@ -81,7 +96,16 @@ export function VaultSidebar({
                   : "text-opus-warm/55 hover:bg-white/[0.04] hover:text-opus-warm"
               }`}
             >
-              {label}
+              <span className="inline-flex items-center gap-1.5">
+                <span>{label}</span>
+                {showActivityReviewDot ? (
+                  <span
+                    aria-hidden
+                    className="size-1.5 shrink-0 rounded-full bg-opus-gold shadow-[0_0_0_1px_rgba(0,0,0,0.35)]"
+                    title={nav.activityReviewNoticeAria.replace("{count}", String(activityOperatorReviewNoticeCount))}
+                  />
+                ) : null}
+              </span>
             </Link>
           );
         })}

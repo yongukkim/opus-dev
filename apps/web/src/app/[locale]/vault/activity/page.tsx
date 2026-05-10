@@ -6,6 +6,7 @@ import { getDictionary } from "@/i18n/catalog";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { OPUS_DEMO_CART_KEY, OPUS_DEMO_WISHLIST_KEY } from "@/lib/demoLists";
 import { prisma } from "@/lib/prisma";
+import { countArtistOperatorReviewNotices } from "@/lib/privateStorage";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -21,18 +22,23 @@ export default async function VaultActivityPage({ params }: Props) {
     redirect(`${withLocale(locale, "/login")}?returnTo=${returnTo}`);
   }
 
-  const orders = await prisma.order.findMany({
-    where: { buyerUserId: session.user.id },
-    orderBy: { createdAt: "desc" },
-    take: 40,
-    select: {
-      id: true,
-      title: true,
-      amountJpy: true,
-      status: true,
-      createdAt: true,
-    },
-  });
+  const [orders, operatorReviewNoticeCount] = await Promise.all([
+    prisma.order.findMany({
+      where: { buyerUserId: session.user.id },
+      orderBy: { createdAt: "desc" },
+      take: 40,
+      select: {
+        id: true,
+        title: true,
+        amountJpy: true,
+        status: true,
+        createdAt: true,
+      },
+    }),
+    session.user.role === "artist"
+      ? countArtistOperatorReviewNotices(session.user.id)
+      : Promise.resolve(0),
+  ]);
 
   const money = new Intl.NumberFormat(locale === "ja" ? "ja-JP" : "ko-KR");
   const time = new Intl.DateTimeFormat(locale === "ja" ? "ja-JP" : "ko-KR", {
@@ -55,6 +61,26 @@ export default async function VaultActivityPage({ params }: Props) {
     <main className="p-6 md:p-10">
       <h1 className="font-display text-2xl text-opus-warm md:text-3xl">{v.activityTitle}</h1>
       <p className="mt-3 max-w-2xl font-sans text-sm text-opus-warm/55">{v.activityBody}</p>
+
+      {operatorReviewNoticeCount > 0 ? (
+        <div
+          className="mt-6 max-w-2xl rounded-xl border border-opus-gold/25 bg-opus-gold/[0.06] px-4 py-4 shadow-opus-card"
+          role="status"
+        >
+          <p className="font-display text-sm font-medium tracking-wide text-opus-gold">
+            {v.activityArtistReviewNoticeTitle}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-opus-warm/75">
+            {v.activityArtistReviewNoticeBody.replace("{count}", String(operatorReviewNoticeCount))}
+          </p>
+          <Link
+            href={withLocale(locale, "/vault/my-artworks")}
+            className="mt-3 inline-flex text-sm font-medium text-opus-gold/90 underline-offset-4 transition hover:text-opus-gold-light hover:underline"
+          >
+            {v.activityArtistReviewNoticeCta}
+          </Link>
+        </div>
+      ) : null}
 
       <section className="mt-10 border-t border-white/[0.06] pt-7">
         <h2 className="font-display text-xl text-opus-warm">{v.activityWishlistHeading}</h2>

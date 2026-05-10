@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { VaultDevSessionUserIdPanel } from "@/components/vault/VaultDevSessionUserIdPanel";
 import { VaultSidebar } from "@/components/vault/VaultSidebar";
 import { getDictionary } from "@/i18n/catalog";
+import { countArtistOperatorReviewNotices } from "@/lib/privateStorage";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { normalizeLocale } from "@/i18n/paths";
 
@@ -24,6 +25,11 @@ export default async function VaultLayout({ children, params }: Props) {
   const isOperator = session?.user?.role === "operator";
   const sessionIsArtist = session?.user?.role === "artist";
 
+  let activityOperatorReviewNoticeCount = 0;
+  if (sessionIsArtist && session?.user?.id) {
+    activityOperatorReviewNoticeCount = await countArtistOperatorReviewNotices(session.user.id);
+  }
+
   const devPanelUserId = session?.user?.id;
   const showDevUserIdPanel =
     Boolean(devPanelUserId) &&
@@ -37,6 +43,7 @@ export default async function VaultLayout({ children, params }: Props) {
         vaultRole={vaultRole}
         sessionIsArtist={sessionIsArtist}
         isOperator={isOperator}
+        activityOperatorReviewNoticeCount={activityOperatorReviewNoticeCount}
       />
       <div className="flex min-w-0 flex-1 flex-col border-t border-white/[0.05] md:border-l md:border-t-0">
         {showDevUserIdPanel && devPanelUserId ? (

@@ -362,6 +362,8 @@ export const en: Messages = {
   vaultNav: {
     collection: "Collection",
     activity: "Activity",
+    activityReviewNoticeAria:
+      "{count} work(s) have an operator review message. Open My artworks to read the note.",
     submit: "Submit artwork",
     myArtworks: "My artworks",
     payouts: "Payouts",
@@ -981,6 +983,10 @@ export const en: Messages = {
     collectionHeldBadgeCollector: "In collection",
     activityTitle: "Activity",
     activityBody: "Review wishlisted works and purchase records in one place.",
+    activityArtistReviewNoticeTitle: "Operator review message",
+    activityArtistReviewNoticeBody:
+      "{count} submission(s) have a revision request or rejection note from the team. Open My artworks to read the memo.",
+    activityArtistReviewNoticeCta: "Open My artworks",
     activityWishlistHeading: "Wishlisted works",
     activityWishlistBody: "Works added from detail pages. Saved on this browser only.",
     activityWishlistEmpty: "No wishlisted works yet.",

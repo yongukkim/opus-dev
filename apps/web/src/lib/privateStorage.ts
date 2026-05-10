@@ -288,6 +288,23 @@ export async function listArtistSubmissions(artistId: string): Promise<Submissio
   return out;
 }
 
+/**
+ * KO: 작가가 여전히 소유한 제출 중, 운영 검수 메모가 붙은 수정 요청·반려 건수(JSONL 기준).
+ * JA: 作家がまだ保有する提出のうち、運営審査メモ付きの修正依頼・却下件数（JSONL基準）。
+ * EN: Count of artist-held submissions with operator review note in changes-requested or rejected state (JSONL source).
+ */
+export async function countArtistOperatorReviewNotices(artistId: string): Promise<number> {
+  const subs = await listArtistSubmissions(artistId);
+  let n = 0;
+  for (const s of subs) {
+    const st = s.reviewStatus ?? "pending_review";
+    if (st !== "changes_requested" && st !== "rejected") continue;
+    if (!s.reviewNote?.trim()) continue;
+    n += 1;
+  }
+  return n;
+}
+
 /** Approved submissions for public release surfaces (including transferred ownership). */
 export async function listApprovedArtistSubmissions(limit = 100): Promise<SubmissionRecord[]> {
   const records = await listAllSubmissions();

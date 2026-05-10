@@ -364,6 +364,8 @@ export const ja: Messages = {
   vaultNav: {
     collection: "コレクション",
     activity: "アクティビティ",
+    activityReviewNoticeAria:
+      "運営からの審査メモが{count}件あります。マイ作品で内容を確認できます。",
     submit: "作品登録",
     myArtworks: "自分の作品",
     payouts: "精算/口座",
@@ -997,6 +999,10 @@ export const ja: Messages = {
     collectionHeldBadgeCollector: "所蔵",
     activityTitle: "アクティビティ",
     activityBody: "ほしいものと購入履歴を1画面で確認できます。",
+    activityArtistReviewNoticeTitle: "運営からの審査メモがあります",
+    activityArtistReviewNoticeBody:
+      "修正依頼または却下に伴うメモが{count}件あります。下のリンクからマイ作品で内容を確認してください。",
+    activityArtistReviewNoticeCta: "マイ作品でメモを確認",
     activityWishlistHeading: "ほしいもの",
     activityWishlistBody: "作品詳細の「ほしいものリストに追加」から保存した作品です。このブラウザのみに保存されます。",
     activityWishlistEmpty: "ほしいものはまだありません。",

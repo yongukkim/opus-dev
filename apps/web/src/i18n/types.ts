@@ -435,6 +435,8 @@ export type Messages = {
   vaultNav: {
     collection: string;
     activity: string;
+    /** Screen reader / title: `{count}` replaced with integer — operator review note on Activity nav. */
+    activityReviewNoticeAria: string;
     submit: string;
     myArtworks: string;
     payouts: string;
@@ -975,6 +977,10 @@ export type Messages = {
     collectionHeldBadgeCollector: string;
     activityTitle: string;
     activityBody: string;
+    /** Activity page — artist banner when operator left a review note (replace `{count}`). */
+    activityArtistReviewNoticeTitle: string;
+    activityArtistReviewNoticeBody: string;
+    activityArtistReviewNoticeCta: string;
     activityWishlistHeading: string;
     activityWishlistBody: string;
     activityWishlistEmpty: string;
