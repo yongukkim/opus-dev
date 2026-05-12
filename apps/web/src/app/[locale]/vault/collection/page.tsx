@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import type { Messages } from "@/i18n/types";
+import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import {
   listSubmissionsHeldByUser,
@@ -13,20 +14,6 @@ import {
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ locale: string }> };
-
-function transferGenreLabel(ct: Messages["collectorTransfer"], key: string): string {
-  const map: Record<string, string> = {
-    "digital-painting": ct.genreOptDigitalPainting,
-    illustration: ct.genreOptIllustration,
-    photography: ct.genreOptPhotography,
-    "3d": ct.genreOpt3d,
-    generative: ct.genreOptGenerative,
-    video: ct.genreOptVideo,
-    "mixed-media": ct.genreOptMixedMedia,
-    other: ct.genreOptOther,
-  };
-  return map[key] || key || "—";
-}
 
 /** Collection chip: approved vs pending vs artist-withdrawn (hidden from grid elsewhere). */
 function reviewStatusLabel(m: Messages["vault"], rec: SubmissionRecord): string {
@@ -121,7 +108,7 @@ export default async function VaultCollectionPage({ params }: Props) {
                       </p>
                       <p className="mt-1 text-xs text-opus-warm/55">{pen}</p>
                       <p className="mt-1 font-mono text-[0.65rem] text-opus-warm/45">
-                        {transferGenreLabel(ct, rec.genre)} · {editionLine(rec)}
+                        {opusArtworkGenreLabel(ct, rec.genre)} · {editionLine(rec)}
                         {yearLabel ? ` · ${yearLabel}` : ""}
                       </p>
                     </div>

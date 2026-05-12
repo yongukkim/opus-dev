@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ProvenanceListingPreviewImage } from "@/components/provenance/ProvenanceListingPreviewImage";
 import { getDictionary } from "@/i18n/catalog";
-import type { Messages } from "@/i18n/types";
+import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import {
   getPreviewSubmissionIdsForListings,
@@ -55,20 +55,6 @@ function remainingLabel(ms: number): string | null {
   if (hours < 48) return `${hours}h`;
   const days = Math.floor(hours / 24);
   return `${days}d`;
-}
-
-function transferGenreLabel(ct: Messages["collectorTransfer"], key: string): string {
-  const map: Record<string, string> = {
-    "digital-painting": ct.genreOptDigitalPainting,
-    illustration: ct.genreOptIllustration,
-    photography: ct.genreOptPhotography,
-    "3d": ct.genreOpt3d,
-    generative: ct.genreOptGenerative,
-    video: ct.genreOptVideo,
-    "mixed-media": ct.genreOptMixedMedia,
-    other: ct.genreOptOther,
-  };
-  return map[key] || key || "—";
 }
 
 export default async function CollectorTransferListingsPage({ params, searchParams }: Props) {
@@ -161,7 +147,7 @@ export default async function CollectorTransferListingsPage({ params, searchPara
                         <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-opus-warm/35">
                           {t.listingsGenre}
                         </span>{" "}
-                        {transferGenreLabel(t, r.genre)}
+                        {opusArtworkGenreLabel(t, r.genre)}
                       </span>
                     ) : null}
                     {r.year ? (

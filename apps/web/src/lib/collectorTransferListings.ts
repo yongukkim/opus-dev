@@ -4,17 +4,21 @@ import { appendJsonl, listSubmissionsHeldByUser, type SubmissionRecord } from "@
 
 export const COLLECTOR_TRANSFER_LISTINGS_FILE = AUX_LEDGER_FILES.collectorTransferListings;
 
-/** Must match artwork submission genre keys (`ArtworkSubmissionForm`, API POST). */
-export const COLLECTOR_TRANSFER_GENRES = new Set([
-  "digital-painting",
-  "photography",
-  "3d",
-  "generative",
+/** Stable slug keys for artwork submission + collector transfer forms (KO labels in i18n). */
+export const OPUS_ARTWORK_GENRE_KEYS = [
   "illustration",
-  "video",
-  "mixed-media",
-  "other",
-]);
+  "pixel-art",
+  "sf",
+  "anime-style",
+  "manga-style",
+  "animated-gif",
+  "character-art",
+] as const;
+
+export type OpusArtworkGenreKey = (typeof OPUS_ARTWORK_GENRE_KEYS)[number];
+
+/** Must match artwork submission genre keys (`ArtworkSubmissionForm`, API POST). */
+export const COLLECTOR_TRANSFER_GENRES = new Set<string>(OPUS_ARTWORK_GENRE_KEYS);
 
 export type CollectorTransferAuctionOptions = {
   /** Auction end time (ISO). */

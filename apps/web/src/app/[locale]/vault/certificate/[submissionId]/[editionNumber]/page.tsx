@@ -3,8 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
-import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
+import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import {
   canAccessSubmission,
   getCurrentOwner,
@@ -24,20 +24,6 @@ export const dynamic = "force-dynamic";
 type Props = {
   params: Promise<{ locale: string; submissionId: string; editionNumber: string }>;
 };
-
-function genreLabel(ct: Messages["collectorTransfer"], key: string): string {
-  const map: Record<string, string> = {
-    "digital-painting": ct.genreOptDigitalPainting,
-    illustration: ct.genreOptIllustration,
-    photography: ct.genreOptPhotography,
-    "3d": ct.genreOpt3d,
-    generative: ct.genreOptGenerative,
-    video: ct.genreOptVideo,
-    "mixed-media": ct.genreOptMixedMedia,
-    other: ct.genreOptOther,
-  };
-  return map[key] || key || "—";
-}
 
 function formatLocaleDateTime(iso: string, locale: "en" | "ja" | "ko"): string {
   const tag = locale === "ja" ? "ja-JP" : locale === "ko" ? "ko-KR" : "en-US";
@@ -261,7 +247,7 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
               </div>
               <div className="grid gap-1 border-b border-white/[0.06] pb-3">
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateFormatLabel}</dt>
-                <dd className="text-opus-warm/80">{genreLabel(ct, submission.genre)}</dd>
+                <dd className="text-opus-warm/80">{opusArtworkGenreLabel(ct, submission.genre)}</dd>
               </div>
               <div className="grid gap-1">
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateCustodyLabel}</dt>

@@ -4,17 +4,10 @@ import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
 import type { Messages } from "@/i18n/types";
+import { OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/collectorTransferListings";
+import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 
-type Genre =
-  | ""
-  | "digital-painting"
-  | "photography"
-  | "3d"
-  | "generative"
-  | "illustration"
-  | "video"
-  | "mixed-media"
-  | "other";
+type Genre = "" | OpusArtworkGenreKey;
 
 type EditionMode = "unique" | "limited";
 type NumberingPolicy = "auto" | "manual";
@@ -308,7 +301,9 @@ export function ArtworkSubmissionForm({
 
   const preview = useMemo(() => {
     const safe = (v: string) => v.trim() || "—";
-    const genre = draft.genre || "—";
+    const genreDisplay = draft.genre
+      ? opusArtworkGenreLabel(m.collectorTransfer, draft.genre)
+      : "—";
     const year = draft.year.trim() || "—";
     const total = draft.editionTotal.trim() || "—";
     const initialMint = draft.initialMint.trim() || "—";
@@ -336,7 +331,7 @@ export function ArtworkSubmissionForm({
       artistName: artistNameDisplay,
       nickname: safe(artistPenName),
       artworkTitle: safe(draft.artworkTitle),
-      genre,
+      genre: genreDisplay,
       audienceDisplay,
       year,
       priceJpyDisplay,
@@ -346,7 +341,7 @@ export function ArtworkSubmissionForm({
       editionMode,
       tags,
     };
-  }, [artistPenName, draft, s]);
+  }, [artistPenName, draft, m.collectorTransfer, s]);
 
   const editionPreview = useMemo(() => {
     const total = Number.parseInt(draft.editionTotal || "0", 10);
@@ -482,14 +477,11 @@ export function ArtworkSubmissionForm({
               className={inputClass(invalid("genre"))}
             >
               <option value="">{s.genrePlaceholder}</option>
-              <option value="digital-painting">Digital painting</option>
-              <option value="illustration">Illustration</option>
-              <option value="photography">Photography</option>
-              <option value="3d">3D</option>
-              <option value="generative">Generative</option>
-              <option value="video">Video</option>
-              <option value="mixed-media">Mixed media</option>
-              <option value="other">Other</option>
+              {OPUS_ARTWORK_GENRE_KEYS.map((key) => (
+                <option key={key} value={key}>
+                  {opusArtworkGenreLabel(m.collectorTransfer, key)}
+                </option>
+              ))}
             </select>
           </div>
 

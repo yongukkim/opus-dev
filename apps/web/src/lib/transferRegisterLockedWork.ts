@@ -37,7 +37,7 @@ export function artworkFieldsFromSubmission(
   | "tags"
   | "editionRef"
 > {
-  const genre = COLLECTOR_TRANSFER_GENRES.has(rec.genre) ? rec.genre : "other";
+  const genre = COLLECTOR_TRANSFER_GENRES.has(rec.genre) ? rec.genre : "illustration";
   const year = rec.year != null && Number.isFinite(rec.year) ? String(rec.year) : "";
   const tags = Array.isArray(rec.tags) ? rec.tags.map((x) => x.trim()).filter(Boolean).join(", ") : "";
   const editionRef =

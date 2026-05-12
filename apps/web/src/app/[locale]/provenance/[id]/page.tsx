@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ProvenanceListingPreviewImage } from "@/components/provenance/ProvenanceListingPreviewImage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/catalog";
-import type { Messages } from "@/i18n/types";
+import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { findArtistByPenName } from "@/lib/artistsCatalog";
 import {
@@ -53,23 +53,6 @@ import { buildProvenanceListingJsonLd } from "@/lib/jsonLdPdp";
  */
 
 type Props = { params: Promise<{ locale: string; id: string }> };
-
-function transferGenreLabel(
-  ct: Messages["collectorTransfer"],
-  key: string,
-): string {
-  const map: Record<string, string> = {
-    "digital-painting": ct.genreOptDigitalPainting,
-    illustration: ct.genreOptIllustration,
-    photography: ct.genreOptPhotography,
-    "3d": ct.genreOpt3d,
-    generative: ct.genreOptGenerative,
-    video: ct.genreOptVideo,
-    "mixed-media": ct.genreOptMixedMedia,
-    other: ct.genreOptOther,
-  };
-  return map[key] || key || "—";
-}
 
 function dateLabel(iso: string, locale: string): string {
   const d = new Date(iso);
@@ -252,7 +235,7 @@ export default async function ProvenanceDetailPage({ params }: Props) {
                 {t.listingsGenre}
               </p>
               <p className="mt-1 text-sm text-opus-warm/80">
-                {transferGenreLabel(t, listing.genre)}
+                {opusArtworkGenreLabel(t, listing.genre)}
               </p>
             </div>
           ) : null}

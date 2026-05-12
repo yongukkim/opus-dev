@@ -5,19 +5,12 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
 import type { TransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
+import { COLLECTOR_TRANSFER_GENRES, OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/collectorTransferListings";
+import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import Link from "next/link";
 import { withLocale } from "@/i18n/paths";
 
-type Genre =
-  | ""
-  | "digital-painting"
-  | "photography"
-  | "3d"
-  | "generative"
-  | "illustration"
-  | "video"
-  | "mixed-media"
-  | "other";
+type Genre = "" | OpusArtworkGenreKey;
 
 type Draft = {
   userId: string;
@@ -78,7 +71,10 @@ function initialDraft(
     artistLegalName: locked.artistLegalNameRedacted ? "" : locked.artistLegalName,
     artistPenName: locked.artistPenName,
     artworkTitle: locked.artworkTitle,
-    genre: (locked.genre || "other") as Genre,
+    genre: (() => {
+      const g = locked.genre?.trim() ?? "";
+      return (COLLECTOR_TRANSFER_GENRES.has(g) ? g : "illustration") as Genre;
+    })(),
     year: locked.year,
     description: locked.description,
     tags: locked.tags,
@@ -297,24 +293,7 @@ export function CollectorTransferRegisterForm({
 
   const preview = useMemo(() => {
     const safe = (s: string, fb: string) => (s.trim() ? s.trim() : fb);
-    const genreLabel =
-      draft.genre === "digital-painting"
-        ? t.genreOptDigitalPainting
-        : draft.genre === "illustration"
-          ? t.genreOptIllustration
-          : draft.genre === "photography"
-            ? t.genreOptPhotography
-            : draft.genre === "3d"
-              ? t.genreOpt3d
-              : draft.genre === "generative"
-                ? t.genreOptGenerative
-                : draft.genre === "video"
-                  ? t.genreOptVideo
-                  : draft.genre === "mixed-media"
-                    ? t.genreOptMixedMedia
-                    : draft.genre === "other"
-                      ? t.genreOptOther
-                      : "—";
+    const genreLabel = draft.genre ? opusArtworkGenreLabel(t, draft.genre) : "—";
     const priceJpyDisplay = draft.priceJpy.trim()
       ? `¥${Number(draft.priceJpy).toLocaleString("ja-JP")}`
       : "—";
@@ -704,14 +683,11 @@ export function CollectorTransferRegisterForm({
               className={`${inputClass(invalid("genre"))} mt-2`}
             >
               <option value="">{t.genrePlaceholder}</option>
-              <option value="digital-painting">{t.genreOptDigitalPainting}</option>
-              <option value="illustration">{t.genreOptIllustration}</option>
-              <option value="photography">{t.genreOptPhotography}</option>
-              <option value="3d">{t.genreOpt3d}</option>
-              <option value="generative">{t.genreOptGenerative}</option>
-              <option value="video">{t.genreOptVideo}</option>
-              <option value="mixed-media">{t.genreOptMixedMedia}</option>
-              <option value="other">{t.genreOptOther}</option>
+              {OPUS_ARTWORK_GENRE_KEYS.map((key) => (
+                <option key={key} value={key}>
+                  {opusArtworkGenreLabel(t, key)}
+                </option>
+              ))}
             </select>
             {invalid("genre") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
           </div>
