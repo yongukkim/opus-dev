@@ -762,6 +762,8 @@ export type Messages = {
     kicker: string;
     title: string;
     body: string;
+    /** After submit: 승인 대기 중 등록취소는 내 작품에서. */
+    withdrawHint: string;
     toMyArtworks: string;
     toVault: string;
   };
@@ -917,6 +919,8 @@ export type Messages = {
     saveDraft: string;
     submit: string;
     previewTitle: string;
+    /** 승인 대기·수정 요청 중 전면 수정은 내 작품에서 등록취소 후 재등록. */
+    withdrawWhilePendingHint: string;
   };
   vault: {
     overviewKicker: string;

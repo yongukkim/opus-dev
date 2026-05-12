@@ -478,6 +478,8 @@ export const ja: Messages = {
     kicker: "Submission",
     title: "提出完了",
     body: "作品の提出が完了しました。「自分の作品」で提出履歴とプレビューを確認できます。",
+    withdrawHint:
+      "現在は審査待ちです。ファイルや説明を差し替える場合は「自分の作品」で該当カードの登録取消を押し、作品登録画面から再度提出してください。",
     toMyArtworks: "自分の作品へ",
     toVault: "マイページへ",
   },
@@ -711,6 +713,8 @@ export const ja: Messages = {
     saveDraft: "下書きを保存する",
     submit: "提出する",
     previewTitle: "プレビュー",
+    withdrawWhilePendingHint:
+      "審査待ちまたは修正依頼中の登録は、画像・説明を変える場合は「自分の作品」で登録取消のうえ、この画面から再提出してください。エディション数値のみ変更する場合は「自分の作品」のエディション設定をご利用ください。",
   },
   hero: {
     kicker: "認証された代替不可能なデジタルアート・エディション",

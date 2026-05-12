@@ -474,6 +474,8 @@ export const ko: Messages = {
     kicker: "Submission",
     title: "제출 완료",
     body: "작품 제출이 완료되었습니다. 내 작품에서 제출 내역과 미리보기를 확인할 수 있습니다.",
+    withdrawHint:
+      "지금 상태는 검수 대기입니다. 파일·설명을 바꾸려면 내 작품에서 해당 카드의 등록취소를 누른 뒤, 작품 등록 화면에서 새로 올려 주세요.",
     toMyArtworks: "내 작품 보기",
     toVault: "마이페이지로",
   },
@@ -702,6 +704,8 @@ export const ko: Messages = {
     saveDraft: "초안 저장",
     submit: "작품 등록",
     previewTitle: "미리보기",
+    withdrawWhilePendingHint:
+      "승인 대기 중이거나 수정 요청을 받은 등록은, 이미지·설명 등을 바꾸려면 내 작품에서 등록취소한 뒤 이 화면에서 새로 등록해 주세요. 에디션 수치만 조정할 때는 내 작품의 에디션 설정을 이용할 수 있습니다.",
   },
   hero: {
     kicker: "인증된 대체 불가능 디지털 아트 에디션",

@@ -69,6 +69,10 @@ export default async function VaultSubmitSuccessPage({ params, searchParams }: P
         <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{m.submitSuccess.title}</h1>
         <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">{m.submitSuccess.body}</p>
 
+        <p className="mt-4 max-w-2xl rounded-xl border border-white/[0.08] bg-opus-slate/25 px-4 py-3 text-sm leading-relaxed text-opus-warm/70">
+          {m.submitSuccess.withdrawHint}
+        </p>
+
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
           <Link
             href={myArtworksHref}

@@ -476,6 +476,8 @@ export const en: Messages = {
     kicker: "Submission",
     title: "Submitted",
     body: "Submission is complete. Review your registered works in My artworks.",
+    withdrawHint:
+      "Your work is now pending review. To replace the file or description, open My artworks, use Cancel registration on that card, then submit again from this form.",
     toMyArtworks: "Go to My artworks",
     toVault: "Back to My Page",
   },
@@ -705,6 +707,8 @@ export const en: Messages = {
     saveDraft: "Save draft",
     submit: "Submit",
     previewTitle: "Preview",
+    withdrawWhilePendingHint:
+      "While a registration is pending review or has changes requested, replace the image or text by cancelling registration in My artworks, then submit again here. For edition numbers only, use Edition settings in My artworks.",
   },
   hero: {
     kicker: "Authenticated non-fungible digital art editions",

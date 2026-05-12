@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
 import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { getArtistKycFromCookies } from "@/lib/artistKyc";
-import { normalizeLocale } from "@/i18n/paths";
+import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -52,6 +52,9 @@ export default async function VaultSubmitArtworkPage({ params }: Props) {
 
   const s = m.submitArtwork;
   const artistPenName = session.user.name?.trim() ?? "";
+  const myArtworksHref = session.user.id
+    ? `${withLocale(locale, "/vault/my-artworks")}?artist=${encodeURIComponent(session.user.id)}`
+    : withLocale(locale, "/vault/my-artworks");
 
   if (!artistPenName) {
     return (
@@ -92,6 +95,18 @@ export default async function VaultSubmitArtworkPage({ params }: Props) {
       <p className="opus-text-metallic-soft font-mono text-[0.65rem] uppercase tracking-[0.28em]">{s.kicker}</p>
       <h1 className="mt-3 font-display text-2xl text-opus-warm md:text-3xl">{s.title}</h1>
       <p className="mt-4 max-w-2xl font-sans text-sm leading-relaxed text-opus-warm/55">{s.subtitle}</p>
+
+      <div className="mt-6 max-w-2xl rounded-xl border border-opus-gold/20 bg-opus-gold/[0.05] px-4 py-3 text-sm leading-relaxed text-opus-warm/75">
+        <p>{s.withdrawWhilePendingHint}</p>
+        <p className="mt-2">
+          <Link
+            href={myArtworksHref}
+            className="font-medium text-opus-gold/90 underline-offset-4 transition hover:text-opus-gold-light hover:underline"
+          >
+            {m.vaultNav.myArtworks} →
+          </Link>
+        </p>
+      </div>
 
       <div className="mt-10">
         <ArtworkSubmissionForm locale={locale} m={m} artistLegalName={session.user.name?.trim() ?? ""} artistPenName={artistPenName} />
