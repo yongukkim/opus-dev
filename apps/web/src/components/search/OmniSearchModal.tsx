@@ -52,15 +52,19 @@ function formatJpy(n: number): string {
 
 function tokenize(query: string): string[] {
   return query
-    .toLowerCase()
     .split(/\s+/)
-    .map((t) => t.trim())
+    .map((t) => foldToken(t))
     .filter(Boolean);
+}
+
+/** NFC + lowercase for reliable substring checks (CJK + Latin). */
+function foldToken(s: string): string {
+  return s.normalize("NFC").trim().toLowerCase();
 }
 
 function matches(haystack: string, tokens: readonly string[]): boolean {
   if (tokens.length === 0) return true;
-  const lower = haystack.toLowerCase();
+  const lower = foldToken(haystack);
   for (const t of tokens) if (!lower.includes(t)) return false;
   return true;
 }
@@ -114,7 +118,7 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
 
     const artworks = wantArtworks
       ? index.artworks.filter((a) => {
-          const hay = `${a.title} ${a.artistPenName} ${a.slug}`;
+          const hay = `${a.title} ${a.artistPenName} ${a.slug} ${a.genreSearchText ?? ""}`;
           const textMatch = matches(hay, tokens);
           const g = a.genre;
           const genreMatch =
@@ -128,7 +132,7 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
       : [];
     const listings = wantListings
       ? index.listings.filter((l) => {
-          const hay = `${l.artworkTitle} ${l.artistPenName}`;
+          const hay = `${l.artworkTitle} ${l.artistPenName} ${l.genreSearchText ?? ""}`;
           const textMatch = matches(hay, tokens);
           const g = l.genre;
           const genreMatch =
@@ -201,7 +205,7 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
         <div
           role="tablist"
           aria-label={t.scopeAria}
-          className="flex flex-wrap gap-1.5 border-b border-white/[0.06] px-3 py-2"
+          className="flex w-full flex-wrap justify-evenly gap-2 border-b border-white/[0.06] px-2 py-2 sm:px-3"
         >
           {scopes.map((s) => {
             const active = scope === s.id;

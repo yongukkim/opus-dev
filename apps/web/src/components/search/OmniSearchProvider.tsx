@@ -34,8 +34,8 @@ type Ctx = {
   toggle: () => void;
   index: SearchIndex | null;
   loadStatus: LoadStatus;
-  /** Trigger a fetch (idempotent). Modal call this on first open. */
-  ensureLoaded: () => void;
+  /** Load index once by default; pass `{ force: true }` to refresh (e.g. each modal open). */
+  ensureLoaded: (opts?: { force?: boolean }) => void;
 };
 
 const OmniSearchContext = createContext<Ctx | null>(null);
@@ -69,13 +69,14 @@ export function OmniSearchProvider({ children }: { children: ReactNode }) {
   // requests the index in the same tick.
   const inFlightRef = useRef<Promise<void> | null>(null);
 
-  const ensureLoaded = useCallback(() => {
-    if (loadStatus === "ready" || loadStatus === "loading") return;
+  const ensureLoaded = useCallback((opts?: { force?: boolean }) => {
+    const force = Boolean(opts?.force);
+    if (!force && (loadStatus === "ready" || loadStatus === "loading")) return;
     if (inFlightRef.current) return;
     setLoadStatus("loading");
     inFlightRef.current = (async () => {
       try {
-        const res = await fetch(SEARCH_INDEX_PATH, { cache: "force-cache" });
+        const res = await fetch(SEARCH_INDEX_PATH, { cache: "no-store" });
         if (!res.ok) throw new Error(`status ${res.status}`);
         const json = (await res.json()) as SearchIndex;
         setIndex(json);
@@ -91,13 +92,13 @@ export function OmniSearchProvider({ children }: { children: ReactNode }) {
 
   const open = useCallback(() => {
     setIsOpen(true);
-    ensureLoaded();
+    ensureLoaded({ force: true });
   }, [ensureLoaded]);
 
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => {
     setIsOpen((prev) => {
-      if (!prev) ensureLoaded();
+      if (!prev) ensureLoaded({ force: true });
       return !prev;
     });
   }, [ensureLoaded]);

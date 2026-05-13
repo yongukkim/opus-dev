@@ -15,7 +15,7 @@ import { buildSearchIndex } from "@/lib/searchIndex";
  *   the load: this is publicly cacheable (no per-user content).
  */
 export const runtime = "nodejs";
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export async function GET(): Promise<Response> {
   try {
@@ -23,7 +23,7 @@ export async function GET(): Promise<Response> {
     return NextResponse.json(index, {
       status: 200,
       headers: {
-        "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+        "Cache-Control": "public, max-age=120, stale-while-revalidate=600",
       },
     });
   } catch (error) {

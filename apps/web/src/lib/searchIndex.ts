@@ -9,6 +9,7 @@ import {
 } from "@/lib/collectorTransferListings";
 import { loadArtists } from "@/lib/artistsCatalog";
 import { listApprovedPrimaryReleasesForRail } from "@/lib/primaryReleasesForRail";
+import { buildGenreSearchTextBlob } from "@/lib/genreQuickKeywords";
 import type {
   SearchArtist,
   SearchArtwork,
@@ -28,11 +29,9 @@ export { SEARCH_INDEX_PATH } from "./searchIndex.types";
  * Omni-search index — PR-8 (spec §4.3 / §4.4 of
  * `docs/home-redesign-curation-rails-and-omnisearch.md`).
  *
- * MVP: built per-request on the server with `revalidate=3600` and
- * shipped as a single static-feeling JSON to the client. The client
- * caches it in memory after the first modal open and runs substring
- * matching itself (no external fuzzy library — keeps the bundle thin
- * and lets us guard the matching surface for forbidden vocabulary).
+ * MVP: built per-request on the server (route `revalidate` + Cache-Control)
+ * and shipped as JSON; the client refetches when the modal opens so new
+ * `genre` / keyword fields are not stuck behind a stale first fetch.
  *
  * PII contract (ISO 27001 A.18.1.4 / SECURITY_GOVERNANCE.md §1):
  *   - artworks: filename-derived catalog rows (optional) plus approved
@@ -90,6 +89,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     href: localelessHref(`/releases/submission/${rec.id}`),
     badge: "primary",
     genre: rec.genre,
+    genreSearchText: buildGenreSearchTextBlob(rec.genre),
   }));
   const catalogArtworks = buildArtworks(files);
   const artworks = [...submissionArtworks, ...catalogArtworks];
@@ -113,6 +113,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     href: localelessHref(`/provenance/${encodeURIComponent(r.id)}`),
     badge: "secondary",
     genre: r.genre,
+    genreSearchText: buildGenreSearchTextBlob(r.genre),
   }));
   return {
     generatedAt: new Date().toISOString(),

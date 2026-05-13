@@ -17,6 +17,8 @@ export type SearchArtwork = {
   badge: "primary";
   /** OPUS genre slug when row comes from an approved submission; catalog files omit this. */
   genre?: string;
+  /** Quick-pick + slug tokens for substring search (server-built; no PII beyond public genre labels). */
+  genreSearchText?: string;
 };
 
 export type SearchArtist = {
@@ -39,6 +41,8 @@ export type SearchListing = {
   badge: "secondary";
   /** OPUS genre slug from listing JSONL (optional for older index payloads). */
   genre?: string;
+  /** Quick-pick + slug tokens for substring search. */
+  genreSearchText?: string;
 };
 
 /**

@@ -102,6 +102,24 @@ export const GENRE_QUICK_ROW_TARGET_GENRE: readonly OpusArtworkGenreKey[] = [
   "manga-style",
 ];
 
+/**
+ * Space-separated keywords + slug for omni-search substring matching (any locale).
+ * KO: 해당 장르 슬러그에 대응하는 퀵 키워드·슬러그를 한 문자열로 묶어 검색 헤이스택에 넣는다.
+ */
+export function buildGenreSearchTextBlob(genre: string | undefined): string | undefined {
+  const s = genre?.trim();
+  if (!s) return undefined;
+  const parts = [s, s.replace(/-/g, " ")];
+  const n = GENRE_QUICK_ROW_TARGET_GENRE.length;
+  for (let i = 0; i < n; i++) {
+    if (GENRE_QUICK_ROW_TARGET_GENRE[i] === s) {
+      parts.push(GENRE_QUICK_KEYWORDS_KO[i]!, GENRE_QUICK_KEYWORDS_JA[i]!, GENRE_QUICK_KEYWORDS_EN[i]!);
+    }
+  }
+  const uniq = [...new Set(parts.map((p) => p.trim()).filter(Boolean))];
+  return uniq.length ? uniq.join(" ") : undefined;
+}
+
 export function genreQuickKeywordsForLocale(locale: Locale): readonly string[] {
   switch (locale) {
     case "ko":
