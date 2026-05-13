@@ -7,6 +7,8 @@ import type { VaultUiRole } from "@/lib/vaultRole";
 import type { TransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 import { COLLECTOR_TRANSFER_GENRES, OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/opusArtworkGenres";
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
+import { genreQuickKeywordsForLocale } from "@/lib/genreQuickKeywords";
+import { GenreKeywordQuickPick } from "@/components/forms/GenreKeywordQuickPick";
 import Link from "next/link";
 import { withLocale } from "@/i18n/paths";
 
@@ -183,6 +185,8 @@ export function CollectorTransferRegisterForm({
     if (error === "invalid:rightsConfirmed") return t.transferRegisterApiInvalidRightsConfirm;
     return `${t.errorBanner} (${error})`;
   }
+
+  const genreQuickKeywords = useMemo(() => [...genreQuickKeywordsForLocale(locale)], [locale]);
 
   const errors = useMemo(() => {
     if (artistPrimaryInventory) return {};
@@ -690,6 +694,17 @@ export function CollectorTransferRegisterForm({
               ))}
             </select>
             {invalid("genre") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
+            <GenreKeywordQuickPick
+              label={t.genreKeywordsLabel}
+              hint={t.genreKeywordsHint}
+              keywords={genreQuickKeywords}
+              tags={draft.tags}
+              disabled={artworkLocked}
+              onTagsChange={(next) => {
+                setDraft((d) => ({ ...d, tags: next }));
+                markTouched("tags");
+              }}
+            />
           </div>
 
           <div>

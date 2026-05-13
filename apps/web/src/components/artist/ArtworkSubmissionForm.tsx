@@ -6,6 +6,8 @@ import { withLocale } from "@/i18n/paths";
 import type { Messages } from "@/i18n/types";
 import { OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/opusArtworkGenres";
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
+import { genreQuickKeywordsForLocale } from "@/lib/genreQuickKeywords";
+import { GenreKeywordQuickPick } from "@/components/forms/GenreKeywordQuickPick";
 
 type Genre = "" | OpusArtworkGenreKey;
 
@@ -106,6 +108,8 @@ export function ArtworkSubmissionForm({
 
   const [touched, setTouched] = useState<Partial<Record<keyof Draft, boolean>>>({});
   const [banner, setBanner] = useState<string | null>(null);
+
+  const genreQuickKeywords = useMemo(() => [...genreQuickKeywordsForLocale(locale)], [locale]);
 
   const fileMeta = useMemo(() => {
     if (!draft.file) return null;
@@ -483,6 +487,16 @@ export function ArtworkSubmissionForm({
                 </option>
               ))}
             </select>
+            <GenreKeywordQuickPick
+              label={s.genreKeywordsLabel}
+              hint={s.genreKeywordsHint}
+              keywords={genreQuickKeywords}
+              tags={draft.tags}
+              onTagsChange={(next) => {
+                setDraft((d) => ({ ...d, tags: next }));
+                markTouched("tags");
+              }}
+            />
           </div>
 
           <div>

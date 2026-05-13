@@ -8,6 +8,7 @@ import {
   maskSellerId,
 } from "@/lib/collectorTransferListings";
 import { loadArtists } from "@/lib/artistsCatalog";
+import { listApprovedPrimaryReleasesForRail } from "@/lib/primaryReleasesForRail";
 import type {
   SearchArtist,
   SearchArtwork,
@@ -34,8 +35,9 @@ export { SEARCH_INDEX_PATH } from "./searchIndex.types";
  * and lets us guard the matching surface for forbidden vocabulary).
  *
  * PII contract (ISO 27001 A.18.1.4 / SECURITY_GOVERNANCE.md §1):
- *   - artworks: filename-derived title + filename-derived pen name
- *     (`parseTitleArtist`). No legal name reaches the index.
+ *   - artworks: filename-derived catalog rows (optional) plus approved
+ *     primary-release submissions (`/releases/submission/<id>`) with
+ *     `genre` for quick-keyword omni-search (see `genreKeywordSearchMap`).
  *   - artists: pen name only. Operator picks from
  *     `data/featured-artists.ts` carry the same pen-name-only contract.
  *   - listings: `sellerId` is reduced to `maskSellerId(sellerId)` BEFORE
@@ -75,12 +77,22 @@ function buildArtworks(files: readonly string[]): SearchArtwork[] {
 
 export async function buildSearchIndex(): Promise<SearchIndex> {
   const { files } = await loadCatalogFiles();
-  const [rawListings, artistEntries] = await Promise.all([
+  const [rawListings, artistEntries, primaryReleases] = await Promise.all([
     listOpenCollectorTransferListings(),
     loadArtists(),
+    listApprovedPrimaryReleasesForRail(),
   ]);
 
-  const artworks = buildArtworks(files);
+  const submissionArtworks: SearchArtwork[] = primaryReleases.map((rec) => ({
+    slug: `submission:${rec.id}`,
+    title: rec.artworkTitle,
+    artistPenName: (rec.nickname?.trim() || rec.artistName).trim() || "—",
+    href: localelessHref(`/releases/submission/${rec.id}`),
+    badge: "primary",
+    genre: rec.genre,
+  }));
+  const catalogArtworks = buildArtworks(files);
+  const artworks = [...submissionArtworks, ...catalogArtworks];
   // Artist results now point at the real `/artist/<slug>` page (PR-10
   // cutover). The selection rule + slug encoding live in
   // `lib/artistsCatalog` so Rail C, the artist page, and the omni-search
@@ -100,6 +112,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     sellerMasked: maskSellerId(r.sellerId),
     href: localelessHref(`/provenance/${encodeURIComponent(r.id)}`),
     badge: "secondary",
+    genre: r.genre,
   }));
   return {
     generatedAt: new Date().toISOString(),

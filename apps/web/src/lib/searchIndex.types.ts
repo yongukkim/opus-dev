@@ -8,13 +8,15 @@
 export const SEARCH_INDEX_PATH = "/api/search/index.json";
 
 export type SearchArtwork = {
-  /** URL-safe slug used by /releases/<slug>. */
+  /** URL-safe slug used by /releases/<slug> or `submission:<id>` for submission releases. */
   slug: string;
   title: string;
   artistPenName: string;
   /** Locale-less href; the modal prepends the active locale at click time. */
   href: string;
   badge: "primary";
+  /** OPUS genre slug when row comes from an approved submission; catalog files omit this. */
+  genre?: string;
 };
 
 export type SearchArtist = {
@@ -35,6 +37,8 @@ export type SearchListing = {
   sellerMasked: string;
   href: string;
   badge: "secondary";
+  /** OPUS genre slug from listing JSONL (optional for older index payloads). */
+  genre?: string;
 };
 
 /**

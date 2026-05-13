@@ -12,6 +12,7 @@ import type {
   SearchArtwork,
   SearchListing,
 } from "@/lib/searchIndex.types";
+import { collectGenreSlugsFromKeywordQuery } from "@/lib/genreKeywordSearchMap";
 import { useOmniSearch } from "./OmniSearchProvider";
 
 /**
@@ -97,6 +98,7 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
   }, []);
 
   const tokens = useMemo(() => tokenize(query), [query]);
+  const genreSlugHits = useMemo(() => collectGenreSlugsFromKeywordQuery(query), [query]);
 
   const filtered = useMemo(() => {
     const empty = {
@@ -111,22 +113,32 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
     const wantListings = scope === "all" || scope === "listing";
 
     const artworks = wantArtworks
-      ? index.artworks.filter((a) =>
-          matches(`${a.title} ${a.artistPenName} ${a.slug}`, tokens),
-        )
+      ? index.artworks.filter((a) => {
+          const hay = `${a.title} ${a.artistPenName} ${a.slug}`;
+          const textMatch = matches(hay, tokens);
+          const genreMatch =
+            genreSlugHits != null && Boolean(a.genre) && genreSlugHits.has(a.genre);
+          if (!genreSlugHits) return textMatch;
+          return genreMatch || textMatch;
+        })
       : [];
     const artists = wantArtists
       ? index.artists.filter((a) => matches(a.penName, tokens))
       : [];
     const listings = wantListings
-      ? index.listings.filter((l) =>
-          matches(`${l.artworkTitle} ${l.artistPenName}`, tokens),
-        )
+      ? index.listings.filter((l) => {
+          const hay = `${l.artworkTitle} ${l.artistPenName}`;
+          const textMatch = matches(hay, tokens);
+          const genreMatch =
+            genreSlugHits != null && Boolean(l.genre) && genreSlugHits.has(l.genre);
+          if (!genreSlugHits) return textMatch;
+          return genreMatch || textMatch;
+        })
       : [];
     const shelves = [] as never[];
 
     return { artworks, artists, listings, shelves };
-  }, [index, scope, tokens, locale]);
+  }, [index, scope, tokens, genreSlugHits, locale]);
 
   const totalCount =
     filtered.artworks.length +

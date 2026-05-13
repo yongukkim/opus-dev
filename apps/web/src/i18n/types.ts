@@ -878,6 +878,9 @@ export type Messages = {
     artworkTitleLabel: string;
     genreLabel: string;
     genrePlaceholder: string;
+    /** Quick-pick chips under genre → toggle tokens in the tags field. */
+    genreKeywordsLabel: string;
+    genreKeywordsHint: string;
     audienceLabel: string;
     audienceMale: string;
     audienceFemale: string;
@@ -1098,6 +1101,8 @@ export type Messages = {
     artworkTitleLabel: string;
     genreLabel: string;
     genrePlaceholder: string;
+    genreKeywordsLabel: string;
+    genreKeywordsHint: string;
     genreOptIllustration: string;
     genreOptPixelArt: string;
     genreOptSf: string;
