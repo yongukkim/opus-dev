@@ -116,8 +116,9 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
       ? index.artworks.filter((a) => {
           const hay = `${a.title} ${a.artistPenName} ${a.slug}`;
           const textMatch = matches(hay, tokens);
+          const g = a.genre;
           const genreMatch =
-            genreSlugHits != null && Boolean(a.genre) && genreSlugHits.has(a.genre);
+            genreSlugHits != null && g !== undefined && g !== "" && genreSlugHits.has(g);
           if (!genreSlugHits) return textMatch;
           return genreMatch || textMatch;
         })
@@ -129,8 +130,9 @@ function OmniSearchModalInner({ locale, t, badge }: ModalProps) {
       ? index.listings.filter((l) => {
           const hay = `${l.artworkTitle} ${l.artistPenName}`;
           const textMatch = matches(hay, tokens);
+          const g = l.genre;
           const genreMatch =
-            genreSlugHits != null && Boolean(l.genre) && genreSlugHits.has(l.genre);
+            genreSlugHits != null && g !== undefined && g !== "" && genreSlugHits.has(g);
           if (!genreSlugHits) return textMatch;
           return genreMatch || textMatch;
         })
