@@ -1107,6 +1107,7 @@ export const ko: Messages = {
     genreOptMangaStyle: "망가 스타일",
     genreOptAnimatedGif: "움직이는 gif",
     genreOptCharacterArt: "캐릭터 아트",
+    genreOptCinemagraph: "시네마그래프",
     yearLabel: "제작 연도",
     yearHint: "선택. 비워 두어도 됩니다.",
     descriptionLabel: "작품 설명",

@@ -1105,6 +1105,7 @@ export type Messages = {
     genreOptMangaStyle: string;
     genreOptAnimatedGif: string;
     genreOptCharacterArt: string;
+    genreOptCinemagraph: string;
     yearLabel: string;
     yearHint: string;
     descriptionLabel: string;

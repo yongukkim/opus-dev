@@ -13,6 +13,7 @@ export const OPUS_ARTWORK_GENRE_KEYS = [
   "manga-style",
   "animated-gif",
   "character-art",
+  "cinemagraph",
 ] as const;
 
 export type OpusArtworkGenreKey = (typeof OPUS_ARTWORK_GENRE_KEYS)[number];

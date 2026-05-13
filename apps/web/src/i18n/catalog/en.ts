@@ -1114,6 +1114,7 @@ export const en: Messages = {
     genreOptMangaStyle: "Manga style",
     genreOptAnimatedGif: "Animated GIF",
     genreOptCharacterArt: "Character art",
+    genreOptCinemagraph: "Cinemagraph",
     yearLabel: "Year created",
     yearHint: "Optional.",
     descriptionLabel: "Description",

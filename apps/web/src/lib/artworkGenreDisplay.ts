@@ -24,6 +24,8 @@ export function opusArtworkGenreLabel(ct: Messages["collectorTransfer"], genre: 
       return ct.genreOptAnimatedGif;
     case "character-art":
       return ct.genreOptCharacterArt;
+    case "cinemagraph":
+      return ct.genreOptCinemagraph;
     default:
       return g;
   }

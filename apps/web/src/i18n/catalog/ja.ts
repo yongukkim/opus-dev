@@ -1130,6 +1130,7 @@ export const ja: Messages = {
     genreOptMangaStyle: "マンガ調",
     genreOptAnimatedGif: "動くGIF",
     genreOptCharacterArt: "キャラクターアート",
+    genreOptCinemagraph: "シネマグラフ",
     yearLabel: "制作年",
     yearHint: "任意。空欄可。",
     descriptionLabel: "作品説明",
