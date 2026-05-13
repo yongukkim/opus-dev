@@ -1,4 +1,9 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
+
+/** Directory of this config (`apps/web`) — Turbopack must not infer `src/app` as the root. */
+const TURBOPACK_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -20,6 +25,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  turbopack: {
+    root: TURBOPACK_ROOT,
+  },
   // Allow LAN preview host to receive dev HMR updates.
   allowedDevOrigins: ["172.30.1.53"],
   transpilePackages: ["@opus/ui", "@opus/api"],

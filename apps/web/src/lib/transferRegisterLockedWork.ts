@@ -1,4 +1,4 @@
-import { COLLECTOR_TRANSFER_GENRES } from "@/lib/collectorTransferListings";
+import { COLLECTOR_TRANSFER_GENRES } from "@/lib/opusArtworkGenres";
 import { getCurrentOwner, getSubmissionById, type SubmissionRecord } from "@/lib/privateStorage";
 
 /**

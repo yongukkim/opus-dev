@@ -4,7 +4,7 @@ import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
 import type { Messages } from "@/i18n/types";
-import { OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/collectorTransferListings";
+import { OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/opusArtworkGenres";
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 
 type Genre = "" | OpusArtworkGenreKey;

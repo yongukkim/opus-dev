@@ -5,7 +5,7 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
 import type { TransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
-import { COLLECTOR_TRANSFER_GENRES, OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/collectorTransferListings";
+import { COLLECTOR_TRANSFER_GENRES, OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/opusArtworkGenres";
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import Link from "next/link";
 import { withLocale } from "@/i18n/paths";

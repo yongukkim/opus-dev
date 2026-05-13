@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   appendCollectorTransferListing,
-  COLLECTOR_TRANSFER_GENRES,
   type CollectorTransferAuctionOptions,
   type CollectorTransferListing,
 } from "@/lib/collectorTransferListings";
+import { COLLECTOR_TRANSFER_GENRES } from "@/lib/opusArtworkGenres";
 import { readActorFromRequest } from "@/lib/authContext";
 import { resolveTransferRegisterLockedWork } from "@/lib/transferRegisterLockedWork";
 import { getSubmissionById } from "@/lib/privateStorage";
