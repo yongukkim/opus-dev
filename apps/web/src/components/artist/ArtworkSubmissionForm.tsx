@@ -487,16 +487,6 @@ export function ArtworkSubmissionForm({
                 </option>
               ))}
             </select>
-            <GenreKeywordQuickPick
-              label={s.genreKeywordsLabel}
-              hint={s.genreKeywordsHint}
-              keywords={genreQuickKeywords}
-              tags={draft.tags}
-              onTagsChange={(next) => {
-                setDraft((d) => ({ ...d, tags: next }));
-                markTouched("tags");
-              }}
-            />
           </div>
 
           <div>
@@ -509,6 +499,19 @@ export function ArtworkSubmissionForm({
               className={inputClass(invalid("year"))}
               inputMode="numeric"
               placeholder="2026"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <GenreKeywordQuickPick
+              label={s.genreKeywordsLabel}
+              hint={s.genreKeywordsHint}
+              keywords={genreQuickKeywords}
+              tags={draft.tags}
+              onTagsChange={(next) => {
+                setDraft((d) => ({ ...d, tags: next }));
+                markTouched("tags");
+              }}
             />
           </div>
 

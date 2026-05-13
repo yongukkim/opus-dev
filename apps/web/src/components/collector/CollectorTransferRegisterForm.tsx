@@ -694,17 +694,6 @@ export function CollectorTransferRegisterForm({
               ))}
             </select>
             {invalid("genre") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
-            <GenreKeywordQuickPick
-              label={t.genreKeywordsLabel}
-              hint={t.genreKeywordsHint}
-              keywords={genreQuickKeywords}
-              tags={draft.tags}
-              disabled={artworkLocked}
-              onTagsChange={(next) => {
-                setDraft((d) => ({ ...d, tags: next }));
-                markTouched("tags");
-              }}
-            />
           </div>
 
           <div>
@@ -721,6 +710,20 @@ export function CollectorTransferRegisterForm({
             />
             <p className={hintClass()}>{t.yearHint}</p>
             {invalid("year") ? <p className="mt-1 text-xs text-red-300/70">Invalid</p> : null}
+          </div>
+
+          <div className="md:col-span-2">
+            <GenreKeywordQuickPick
+              label={t.genreKeywordsLabel}
+              hint={t.genreKeywordsHint}
+              keywords={genreQuickKeywords}
+              tags={draft.tags}
+              disabled={artworkLocked}
+              onTagsChange={(next) => {
+                setDraft((d) => ({ ...d, tags: next }));
+                markTouched("tags");
+              }}
+            />
           </div>
 
           <div className="md:col-span-2">
