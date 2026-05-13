@@ -4,7 +4,7 @@ import { commaTagsContain, toggleCommaTag } from "@/lib/toggleCommaTag";
 
 function chipClass(active: boolean, disabled: boolean): string {
   const base =
-    "rounded-full border px-2.5 py-1 text-left text-xs font-sans transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-opus-gold/50";
+    "inline-flex h-full min-h-[2.25rem] w-full min-w-0 items-center justify-center rounded-full border px-2 py-1 text-center text-xs font-sans transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-opus-gold/50";
   if (disabled) {
     return `${base} cursor-not-allowed border-white/[0.08] text-opus-warm/35`;
   }
@@ -35,21 +35,27 @@ export function GenreKeywordQuickPick({
   if (keywords.length === 0) return null;
 
   return (
-    <div className="mt-2">
+    <div className="mt-2 w-full max-w-full">
       <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/50">{label}</p>
-      <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label={label}>
+      {/* auto-fill grid uses horizontal space evenly; chips stretch per cell (truncate + title for long labels). */}
+      <div
+        className="mt-2 grid w-full gap-2 [grid-template-columns:repeat(auto-fill,minmax(7rem,1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr))]"
+        role="group"
+        aria-label={label}
+      >
         {keywords.map((kw) => {
           const active = commaTagsContain(tags, kw);
           return (
             <button
               key={kw}
               type="button"
+              title={kw}
               disabled={disabled}
               aria-pressed={active}
               onClick={() => onTagsChange(toggleCommaTag(tags, kw))}
               className={chipClass(active, disabled)}
             >
-              {kw}
+              <span className="block min-w-0 max-w-full truncate">{kw}</span>
             </button>
           );
         })}
