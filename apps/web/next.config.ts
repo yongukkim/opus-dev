@@ -1,9 +1,36 @@
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 
-/** Directory of this config (`apps/web`) — Turbopack must not infer `src/app` as the root. */
-const TURBOPACK_ROOT = path.dirname(fileURLToPath(import.meta.url));
+/**
+ * Turbopack `root` must be an absolute path (see next.config `turbopack.root`).
+ * - In Docker/pnpm hoisted layouts, `next` lives under the repo root (`/app/node_modules`);
+ *   the root must include that directory or resolution fails.
+ * - Do not rely only on `import.meta.url`: Next may load a compiled copy of this config.
+ */
+function turbopackRootForNext(): string {
+  const cwd = path.resolve(process.cwd());
+  let webDir: string;
+  if (fs.existsSync(path.join(cwd, "next.config.ts"))) {
+    webDir = cwd;
+  } else if (fs.existsSync(path.join(cwd, "apps", "web", "next.config.ts"))) {
+    webDir = path.resolve(cwd, "apps", "web");
+  } else {
+    webDir = path.dirname(fileURLToPath(import.meta.url));
+  }
+
+  const repoRoot = path.resolve(webDir, "..", "..");
+  if (
+    fs.existsSync(path.join(repoRoot, "pnpm-workspace.yaml")) &&
+    fs.existsSync(path.join(repoRoot, "pnpm-lock.yaml"))
+  ) {
+    return repoRoot;
+  }
+  return webDir;
+}
+
+const TURBOPACK_ROOT = turbopackRootForNext();
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },

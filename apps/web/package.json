@@ -6,7 +6,7 @@
   "scripts": {
     "predev": "prisma generate",
     "predev:fixed": "prisma generate",
-    "build": "next build",
+    "build": "next build --webpack",
     "dev": "next dev --turbopack",
     "dev:fixed": "next dev --turbopack -p 4321",
     "dev:report": "sh -c '(sleep 5 && sh ../../infrastructure/scripts/notify.sh) & exec next dev --turbopack'",
