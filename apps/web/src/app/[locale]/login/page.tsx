@@ -3,6 +3,7 @@ import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
+import { storefrontSsoConfigured } from "@/lib/storefrontSso";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -15,9 +16,9 @@ export const dynamic = "force-dynamic";
 export default async function LoginPage({
   params,
   searchParams,
-}: Props & { searchParams: Promise<{ returnTo?: string; role?: string }> }) {
+}: Props & { searchParams: Promise<{ returnTo?: string; role?: string; verify?: string }> }) {
   const { locale: raw } = await params;
-  const { returnTo: returnToParam, role: roleParam } = await searchParams;
+  const { returnTo: returnToParam, role: roleParam, verify: verifyParam } = await searchParams;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
   const loginRole = roleParam === "artist" ? "artist" : "collector";
@@ -39,9 +40,9 @@ export default async function LoginPage({
       ? `${withLocale(locale, "/artist-signup")}?returnTo=${encodeURIComponent(returnTo)}`
       : `${withLocale(locale, "/signup")}?returnTo=${encodeURIComponent(returnTo)}`;
   const signupLabel = loginRole === "artist" ? m.artistSignup.title : m.signup.title;
-  const googleOAuthConfigured = Boolean(
-    process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
-  );
+  const sso = storefrontSsoConfigured();
+  const verifyBanner =
+    verifyParam === "ok" || verifyParam === "invalid" || verifyParam === "expired" ? verifyParam : null;
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -51,6 +52,21 @@ export default async function LoginPage({
           {m.auth.title}
         </h1>
         <p className="mt-3 text-center text-sm text-opus-warm/55">{m.auth.subtitle}</p>
+        {verifyBanner === "ok" ? (
+          <p className="mt-4 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-center text-sm text-emerald-200/90">
+            {m.auth.verifyEmailOkBanner}
+          </p>
+        ) : null}
+        {verifyBanner === "invalid" ? (
+          <p className="mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-center text-sm text-red-200/90">
+            {m.auth.verifyEmailInvalidBanner}
+          </p>
+        ) : null}
+        {verifyBanner === "expired" ? (
+          <p className="mt-4 rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-100/90">
+            {m.auth.verifyEmailExpiredBanner}
+          </p>
+        ) : null}
         <div className="mt-6 rounded-xl border border-white/[0.08] bg-opus-slate/25 p-2">
           <p className="px-2 pb-2 text-[0.7rem] text-opus-warm/45">{m.auth.roleLabel}</p>
           <div className="grid grid-cols-2 gap-2">
@@ -81,7 +97,7 @@ export default async function LoginPage({
           variant="login"
           locale={locale}
           returnTo={returnTo}
-          googleOAuthConfigured={googleOAuthConfigured}
+          sso={sso}
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}

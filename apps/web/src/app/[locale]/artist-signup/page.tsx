@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
+import { storefrontSsoConfigured } from "@/lib/storefrontSso";
 import { ArtistUpgradeForm } from "@/components/auth/ArtistUpgradeForm";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -24,9 +25,7 @@ export default async function ArtistSignupPage({
   const s = m.artistSignup ?? m.signup;
   const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/artist/onboarding/profile"));
   const loginHref = `${withLocale(locale, "/login")}?role=artist&returnTo=${encodeURIComponent(returnTo)}`;
-  const googleOAuthConfigured = Boolean(
-    process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
-  );
+  const sso = storefrontSsoConfigured();
 
   // If already logged in as artist or operator, redirect to returnTo directly.
   const session = await auth();
@@ -76,7 +75,7 @@ export default async function ArtistSignupPage({
           variant="artist-signup"
           locale={locale}
           returnTo={returnTo}
-          googleOAuthConfigured={googleOAuthConfigured}
+          sso={sso}
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}

@@ -6,8 +6,13 @@ type SignupMessages = {
   roleArtist: string;
   displayNameLabel: string;
   emailLabel: string;
+  /** Shown under the email field — use an inbox you can open for verification / future notices. */
+  emailRecoverabilityHint: string;
+  emailConfirmLabel: string;
   passwordLabel: string;
   passwordConfirmLabel: string;
+  /** Email and confirmation differ. */
+  emailConfirmMismatchAlert: string;
   /** Shown when password and confirmation differ on submit. */
   passwordMismatchAlert: string;
   createAccount: string;
@@ -15,6 +20,21 @@ type SignupMessages = {
   consentPreamble: string;
   /** After consent, when submit clicked but signup API is not wired. */
   signupNotReadyAlert: string;
+  /** Email/password registration — generic failure. */
+  registerFailedAlert: string;
+  registerEmailTaken: string;
+  /** Same email already used with SNS; sign in with that provider instead. */
+  registerOAuthEmailExists: string;
+  registerPasswordWeak: string;
+  registerEmailInvalid: string;
+  registerConsentRequired: string;
+  registering: string;
+  /** After sign-up: check inbox for verification link. */
+  registerVerificationSent: string;
+  registerVerificationCheckSpam: string;
+  /** Dev: SMTP not set — link is printed in server logs. */
+  registerVerificationDevHint: string;
+  registerVerificationSendFailed: string;
   alreadyHaveAccount: string;
   signInLink: string;
   note: string;
@@ -356,8 +376,8 @@ export type Messages = {
     consentRequiredAlert: string;
     /** Server-side consent cookie failed. */
     consentPrecheckFailedAlert: string;
-    /** OAuth client env missing. */
-    googleNotConfiguredAlert: string;
+    /** OAuth client env missing — use `{name}` token (Google / Apple / LINE). */
+    providerNotConfigured: string;
     signOut: string;
     /** Shown when SSO is clicked after consent but OAuth is not wired. */
     ssoNotReadyAlert: string;
@@ -365,6 +385,18 @@ export type Messages = {
     emailDividerLabel: string;
     emailLabel: string;
     passwordLabel: string;
+    signInWithEmail: string;
+    signingIn: string;
+    loginInvalidCredentialsAlert: string;
+    /** After email verification link — login page banner. */
+    verifyEmailOkBanner: string;
+    verifyEmailInvalidBanner: string;
+    verifyEmailExpiredBanner: string;
+    resendVerificationSummary: string;
+    resendVerificationSubmit: string;
+    resendVerificationSending: string;
+    resendVerificationDone: string;
+    resendVerificationFailed: string;
     note: string;
   };
   signup: SignupMessages;

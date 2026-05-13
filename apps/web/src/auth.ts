@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import { AuthError } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { cookies } from "next/headers";
 import { defaultLocale } from "@/i18n/config";
@@ -14,17 +16,20 @@ const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set([
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.4.2 (§2) Authentication & session — JWT sessions, HttpOnly cookies via Auth.js; no client-visible secrets.
- *   KO: Google OAuth + JWT 세션을 사용하고, 토큰은 프레임워크가 안전한 쿠키로만 다룬다.
- *   JA: Google OAuthとJWTセッションを用い、トークンはフレームワークが安全なクッキーのみで扱う。
- *   EN: Google OAuth with JWT sessions; the framework stores tokens only in secure cookies.
+ *   KO: Google·Apple·LINE OAuth 및 이메일+비밀번호(Credentials)와 JWT 세션을 사용하며, 토큰은 프레임워크 쿠키로만 다룬다.
+ *   JA: Google/Apple/LINE OAuth とメール+パスワード(Credentials)とJWTセッションを用い、トークンはフレームワークのクッキーのみで扱う。
+ *   EN: Google, Apple, LINE OAuth plus email/password (Credentials) with JWT sessions; tokens stay in framework cookies only.
+ *   KO (Credentials): 이메일+비밀번호 로그인은 DB에 `emailVerified`가 있는 계정만 허용한다(가입 직후 메일 인증 필요).
+ *   JA (Credentials): メール+パスワードログインはDBで emailVerified があるアカウントのみ許可する(登録直後はメール認証が必要)。
+ *   EN (Credentials): Email/password sign-in is allowed only when `emailVerified` is set (inbox verification required after sign-up).
  * - A.9.2.1 (§4) RBAC — application role is loaded from the database at sign-in (default COLLECTOR).
  *   KO: 세션의 역할은 DB의 OpusRole에서만 결정되며 클라이언트 표시값을 신뢰하지 않는다.
  *   JA: セッションの権限はDBのOpusRoleのみから決まり、クライアント表示を信頼しない。
  *   EN: Session role comes only from `OpusRole` in the database — never trust client-supplied roles.
- * - A.18.1.4 (§7) APPI — new accounts require a signed pre-OAuth consent cookie (ToS, Privacy, overseas transfer, 18+).
- *   KO: 신규 계정은 OAuth 직전 동의 쿠키가 없으면 가입을 거절한다.
- *   JA: 新規アカウントはOAuth直前の同意クッキーがなければ拒否する。
- *   EN: New sign-ups are rejected unless the short-lived signed consent cookie is present.
+ * - A.18.1.4 (§7) APPI — new OAuth accounts require a signed pre-OAuth consent cookie (ToS, Privacy, overseas transfer, 18+).
+ *   KO: 신규 SNS 계정은 OAuth 직전 동의 쿠키가 없으면 가입을 거절한다(이메일 가입은 /api/auth/register에서 동의를 직접 검증).
+ *   JA: 新規SNSアカウントはOAuth直前の同意クッキーがなければ拒否する(メール登録は /api/auth/register で同意を検証)。
+ *   EN: New OAuth accounts are rejected without the short-lived signed consent cookie; email sign-up validates consent in `/api/auth/register`.
  *
  * NOTE: This file uses Node-only modules (Prisma, node:crypto via cookie verifier) and MUST NOT be
  * imported from Edge contexts (middleware). Edge code must import `@/auth.config` instead.
@@ -53,24 +58,80 @@ async function ensureBootstrapOperatorRoleByEmail(email: string): Promise<void> 
   const normalized = email.trim().toLowerCase();
   if (!OPUS_BOOTSTRAP_OPERATOR_EMAILS.has(normalized)) return;
   await prisma.user.updateMany({
-    where: { email, NOT: { role: "OPERATOR" } },
+    where: { email: { equals: email.trim(), mode: "insensitive" }, NOT: { role: "OPERATOR" } },
     data: { role: "OPERATOR" },
   });
 }
 
+/** OAuth providers that share the same APPI pre-consent cookie gate as Google. */
+const STOREFRONT_OAUTH_WITH_CONSENT = new Set(["google", "apple", "line"]);
+
 const { handlers, auth: authInternal, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
+  providers: [
+    ...authConfig.providers,
+    Credentials({
+      id: "credentials",
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const email = typeof credentials?.email === "string" ? credentials.email.trim() : "";
+        const password = typeof credentials?.password === "string" ? credentials.password : "";
+        if (!email || !password) return null;
+
+        const user = await prisma.user.findFirst({
+          where: { email: { equals: email, mode: "insensitive" } },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            image: true,
+            passwordHash: true,
+            emailVerified: true,
+          },
+        });
+        if (!user?.passwordHash || !user.email) return null;
+        if (!user.emailVerified) return null;
+
+        const ok = await compare(password, user.passwordHash);
+        if (!ok) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name ?? undefined,
+          image: user.image ?? undefined,
+        };
+      },
+    }),
+  ],
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider !== "google") return true;
+      const provider = account?.provider;
+
+      if (provider === "credentials") {
+        const email = user.email?.trim();
+        if (email) await ensureBootstrapOperatorRoleByEmail(email);
+        return true;
+      }
+
+      if (!provider || !STOREFRONT_OAUTH_WITH_CONSENT.has(provider)) {
+        return false;
+      }
+
       const email = user.email?.trim();
-      if (!email) return false;
+      if (!email) {
+        return `/${defaultLocale}/signup?error=oauth_email_required`;
+      }
 
       const jar = await cookies();
       const consent = readOAuthConsentFromCookieJar(jar);
-      const existing = await prisma.user.findUnique({
-        where: { email },
+      const existing = await prisma.user.findFirst({
+        where: { email: { equals: email, mode: "insensitive" } },
         select: { id: true, role: true },
       });
       if (existing) {

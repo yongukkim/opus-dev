@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  serverExternalPackages: ["nodemailer"],
   turbopack: {
     root: TURBOPACK_ROOT,
   },

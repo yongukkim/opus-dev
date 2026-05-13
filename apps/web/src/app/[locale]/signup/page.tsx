@@ -3,6 +3,7 @@ import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { sanitizeReturnTo } from "@/lib/returnTo";
 import Link from "next/link";
 import { UnifiedAuthSection } from "@/components/auth/UnifiedAuthSection";
+import { storefrontSsoConfigured } from "@/lib/storefrontSso";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -19,9 +20,7 @@ export default async function SignupPage({
   const m = getDictionary(locale);
   const returnTo = sanitizeReturnTo(returnToParam, withLocale(locale, "/vault/collection"));
   const loginHref = `${withLocale(locale, "/login")}?returnTo=${encodeURIComponent(returnTo)}`;
-  const googleOAuthConfigured = Boolean(
-    process.env["AUTH_GOOGLE_ID"]?.trim() && process.env["AUTH_GOOGLE_SECRET"]?.trim(),
-  );
+  const sso = storefrontSsoConfigured();
 
   return (
     <main className="min-h-screen bg-opus-charcoal px-6 pb-24 pt-[calc(var(--opus-header-plus-trust)+4rem)] text-opus-warm/80">
@@ -36,7 +35,7 @@ export default async function SignupPage({
           variant="signup"
           locale={locale}
           returnTo={returnTo}
-          googleOAuthConfigured={googleOAuthConfigured}
+          sso={sso}
           termsHref={withLocale(locale, "/terms")}
           privacyHref={withLocale(locale, "/privacy")}
           termsLabel={m.footer.terms}
