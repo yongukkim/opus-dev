@@ -99,7 +99,7 @@ export function SsoProviderButtons({
       <ProviderButton
         icon={<IconApple />}
         label={strings.continueWithApple}
-        hint={strings.hintSoon}
+        hint={appleInactive ? strings.hintSoon : strings.hintActive}
         inactive={appleInactive}
         onClick={onAppleClick}
       />
@@ -113,7 +113,7 @@ export function SsoProviderButtons({
       <ProviderButton
         icon={<IconLine />}
         label={strings.continueWithLine}
-        hint={strings.hintSoon}
+        hint={lineInactive ? strings.hintSoon : strings.hintActive}
         inactive={lineInactive}
         onClick={onLineClick}
       />

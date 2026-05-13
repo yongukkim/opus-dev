@@ -2,6 +2,11 @@ import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
 import LineProvider from "@/lib/lineOAuthProvider";
+import {
+  storefrontAppleCredentials,
+  storefrontGoogleConfigured,
+  storefrontLineCredentials,
+} from "@/lib/storefrontOAuthEnv";
 
 /**
  * ISO 27001 A.9.4.2 / A.13.1.3 (§2, §6) Edge-safe Auth.js config.
@@ -13,17 +18,11 @@ import LineProvider from "@/lib/lineOAuthProvider";
  * Credentials (email + password) are appended only in `auth.ts` (Node) because bcrypt runs in `authorize`.
  *
  * Env (no values in repo): AUTH_GOOGLE_ID/SECRET, AUTH_APPLE_ID/SECRET (JWT client secret per Apple),
- * AUTH_LINE_ID/SECRET (LINE Login channel id/secret). Callback: `{AUTH_URL}/api/auth/callback/{provider}`.
+ * AUTH_LINE_ID/SECRET or LINE_LOGIN_CHANNEL_ID/SECRET. Callback: `{AUTH_URL}/api/auth/callback/{provider}`.
  */
-const googleOn =
-  Boolean(process.env["AUTH_GOOGLE_ID"]?.trim()) &&
-  Boolean(process.env["AUTH_GOOGLE_SECRET"]?.trim());
-const appleOn =
-  Boolean(process.env["AUTH_APPLE_ID"]?.trim()) &&
-  Boolean(process.env["AUTH_APPLE_SECRET"]?.trim());
-const lineOn =
-  Boolean(process.env["AUTH_LINE_ID"]?.trim()) &&
-  Boolean(process.env["AUTH_LINE_SECRET"]?.trim());
+const googleOn = storefrontGoogleConfigured();
+const apple = storefrontAppleCredentials();
+const line = storefrontLineCredentials();
 
 export const authConfig = {
   trustHost: true,
@@ -37,19 +36,19 @@ export const authConfig = {
           }),
         ]
       : []),
-    ...(appleOn
+    ...(apple
       ? [
           Apple({
-            clientId: process.env["AUTH_APPLE_ID"]!,
-            clientSecret: process.env["AUTH_APPLE_SECRET"]!,
+            clientId: apple.id,
+            clientSecret: apple.secret,
           }),
         ]
       : []),
-    ...(lineOn
+    ...(line
       ? [
           LineProvider({
-            clientId: process.env["AUTH_LINE_ID"]!,
-            clientSecret: process.env["AUTH_LINE_SECRET"]!,
+            clientId: line.id,
+            clientSecret: line.secret,
           }),
         ]
       : []),
