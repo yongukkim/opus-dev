@@ -8,11 +8,8 @@ type SignupMessages = {
   emailLabel: string;
   /** Shown under the email field — use an inbox you can open for verification / future notices. */
   emailRecoverabilityHint: string;
-  emailConfirmLabel: string;
   passwordLabel: string;
   passwordConfirmLabel: string;
-  /** Email and confirmation differ. */
-  emailConfirmMismatchAlert: string;
   /** Shown when password and confirmation differ on submit. */
   passwordMismatchAlert: string;
   createAccount: string;

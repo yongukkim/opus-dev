@@ -199,8 +199,6 @@ export const ko: Messages = {
     emailLabel: "이메일",
     emailRecoverabilityHint:
       "비밀번호 재설정 등 안내를 받을 수 있는 주소를 입력해 주세요. 가입 후 인증 메일을 열어야 로그인할 수 있습니다.",
-    emailConfirmLabel: "이메일 확인",
-    emailConfirmMismatchAlert: "이메일과 이메일 확인이 일치하지 않습니다.",
     passwordLabel: "비밀번호",
     passwordConfirmLabel: "비밀번호 확인",
     passwordMismatchAlert: "비밀번호와 비밀번호 확인이 일치하지 않습니다.",
@@ -234,8 +232,6 @@ export const ko: Messages = {
     emailLabel: "이메일",
     emailRecoverabilityHint:
       "비밀번호 재설정 등 안내를 받을 수 있는 주소를 입력해 주세요. 가입 후 인증 메일을 열어야 로그인할 수 있습니다.",
-    emailConfirmLabel: "이메일 확인",
-    emailConfirmMismatchAlert: "이메일과 이메일 확인이 일치하지 않습니다.",
     passwordLabel: "비밀번호",
     passwordConfirmLabel: "비밀번호 확인",
     passwordMismatchAlert: "비밀번호와 비밀번호 확인이 일치하지 않습니다.",

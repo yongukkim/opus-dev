@@ -49,7 +49,6 @@ export async function POST(req: Request): Promise<Response> {
       flow?: string;
       locale?: string;
       email?: string;
-      emailConfirm?: string;
       password?: string;
       passwordConfirm?: string;
       displayName?: string;
@@ -86,7 +85,6 @@ export async function POST(req: Request): Promise<Response> {
     }
 
     const email = normalizeEmail(typeof body.email === "string" ? body.email : "");
-    const emailConfirm = normalizeEmail(typeof body.emailConfirm === "string" ? body.emailConfirm : "");
     const password = typeof body.password === "string" ? body.password : "";
     const passwordConfirm = typeof body.passwordConfirm === "string" ? body.passwordConfirm : "";
     const displayName =
@@ -94,9 +92,6 @@ export async function POST(req: Request): Promise<Response> {
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ ok: false, error: "email_invalid" }, { status: 400 });
-    }
-    if (email !== emailConfirm) {
-      return NextResponse.json({ ok: false, error: "email_mismatch" }, { status: 400 });
     }
     if (password !== passwordConfirm) {
       return NextResponse.json({ ok: false, error: "password_mismatch" }, { status: 400 });

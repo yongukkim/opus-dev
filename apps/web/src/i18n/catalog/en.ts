@@ -200,8 +200,6 @@ export const en: Messages = {
     emailLabel: "Email",
     emailRecoverabilityHint:
       "Use an address you can open for notices (for example password recovery). After sign-up you must open the verification email before signing in.",
-    emailConfirmLabel: "Confirm email",
-    emailConfirmMismatchAlert: "Email and confirmation do not match.",
     passwordLabel: "Password",
     passwordConfirmLabel: "Confirm password",
     passwordMismatchAlert: "Password and confirmation do not match.",
@@ -235,8 +233,6 @@ export const en: Messages = {
     emailLabel: "Email",
     emailRecoverabilityHint:
       "Use an address you can open for notices (for example password recovery). After sign-up you must open the verification email before signing in.",
-    emailConfirmLabel: "Confirm email",
-    emailConfirmMismatchAlert: "Email and confirmation do not match.",
     passwordLabel: "Password",
     passwordConfirmLabel: "Confirm password",
     passwordMismatchAlert: "Password and confirmation do not match.",

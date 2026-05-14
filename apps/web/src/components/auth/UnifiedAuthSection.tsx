@@ -59,7 +59,6 @@ export function UnifiedAuthSection({
   const [pendingOAuth, setPendingOAuth] = useState(false);
 
   const [email, setEmail] = useState("");
-  const [emailConfirm, setEmailConfirm] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -183,8 +182,6 @@ export function UnifiedAuthSection({
         return signupCopy.registerConsentRequired;
       case "password_mismatch":
         return signupCopy.passwordMismatchAlert;
-      case "email_mismatch":
-        return signupCopy.emailConfirmMismatchAlert;
       case "verification_send_failed":
         return signupCopy.registerVerificationSendFailed;
       default:
@@ -195,12 +192,6 @@ export function UnifiedAuthSection({
   async function handleEmailSignup() {
     if (!consentSatisfied) {
       window.alert(m.auth.consentRequiredAlert);
-      return;
-    }
-    const e1 = email.trim().toLowerCase();
-    const e2 = emailConfirm.trim().toLowerCase();
-    if (e1 !== e2) {
-      window.alert(signupCopy.emailConfirmMismatchAlert);
       return;
     }
     if (password !== passwordConfirm) {
@@ -217,7 +208,6 @@ export function UnifiedAuthSection({
           flow: variant,
           locale,
           email: email.trim(),
-          emailConfirm: emailConfirm.trim(),
           password,
           passwordConfirm,
           displayName: displayName.trim(),
@@ -319,21 +309,6 @@ export function UnifiedAuthSection({
         </label>
         {!isLogin && (
           <p className="text-xs leading-relaxed text-opus-warm/50">{signupCopy.emailRecoverabilityHint}</p>
-        )}
-        {!isLogin && (
-          <label className="block">
-            <span className="mb-1 block text-[0.7rem] uppercase tracking-[0.18em] text-opus-warm/45">
-              {signupCopy.emailConfirmLabel}
-            </span>
-            <input
-              type="email"
-              autoComplete="email"
-              value={emailConfirm}
-              onChange={(e) => setEmailConfirm(e.target.value)}
-              disabled={credentialsSignupBlocked}
-              className="w-full rounded-lg border border-white/[0.12] bg-opus-charcoal/80 px-3 py-2.5 text-sm text-opus-warm outline-none ring-opus-gold/30 placeholder:text-opus-warm/35 focus:ring-2 disabled:opacity-45"
-            />
-          </label>
         )}
         <label className="block">
           <span className="mb-1 block text-[0.7rem] uppercase tracking-[0.18em] text-opus-warm/45">

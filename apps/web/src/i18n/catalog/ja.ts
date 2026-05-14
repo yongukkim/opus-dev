@@ -201,8 +201,6 @@ export const ja: Messages = {
     emailLabel: "メールアドレス",
     emailRecoverabilityHint:
       "パスワード再設定などの通知を受け取れるアドレスを入力してください。登録後、認証メールのリンクを開いてからログインできます。",
-    emailConfirmLabel: "メールアドレス（確認）",
-    emailConfirmMismatchAlert: "メールアドレスと確認用が一致しません。",
     passwordLabel: "パスワード",
     passwordConfirmLabel: "パスワード（確認）",
     passwordMismatchAlert: "パスワードと確認用パスワードが一致しません。",
@@ -237,8 +235,6 @@ export const ja: Messages = {
     emailLabel: "メールアドレス",
     emailRecoverabilityHint:
       "パスワード再設定などの通知を受け取れるアドレスを入力してください。登録後、認証メールのリンクを開いてからログインできます。",
-    emailConfirmLabel: "メールアドレス（確認）",
-    emailConfirmMismatchAlert: "メールアドレスと確認用が一致しません。",
     passwordLabel: "パスワード",
     passwordConfirmLabel: "パスワード（確認）",
     passwordMismatchAlert: "パスワードと確認用パスワードが一致しません。",
