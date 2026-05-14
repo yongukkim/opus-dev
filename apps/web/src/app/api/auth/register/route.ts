@@ -4,7 +4,7 @@ import { defaultLocale, locales } from "@/i18n/config";
 import { OPUS_PRIVACY_VERSION, OPUS_TERMS_VERSION } from "@/lib/legalVersions";
 import { prisma } from "@/lib/prisma";
 import type { OAuthConsentFlow } from "@/lib/oauthConsentCookie";
-import { sendStorefrontVerificationEmail } from "@/lib/storefrontMail";
+import { sendStorefrontVerificationEmail, StorefrontMailNotConfiguredError } from "@/lib/storefrontMail";
 import { storefrontPublicOrigin } from "@/lib/storefrontOrigin";
 import {
   hashVerificationToken,
@@ -156,7 +156,8 @@ export async function POST(req: Request): Promise<Response> {
           prisma.user.delete({ where: { id: created } }),
         ])
         .catch(() => undefined);
-      return NextResponse.json({ ok: false, error: "verification_send_failed" }, { status: 503 });
+      const code = e instanceof StorefrontMailNotConfiguredError ? "mail_not_configured" : "verification_send_failed";
+      return NextResponse.json({ ok: false, error: code }, { status: 503 });
     }
 
     const smtpUrl = process.env["OPUS_WEB_SMTP_URL"]?.trim();

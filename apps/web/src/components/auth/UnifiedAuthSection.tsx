@@ -184,6 +184,8 @@ export function UnifiedAuthSection({
         return signupCopy.passwordMismatchAlert;
       case "verification_send_failed":
         return signupCopy.registerVerificationSendFailed;
+      case "mail_not_configured":
+        return signupCopy.registerMailNotConfigured;
       default:
         return signupCopy.registerFailedAlert;
     }

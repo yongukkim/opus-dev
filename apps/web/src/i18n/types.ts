@@ -32,6 +32,8 @@ type SignupMessages = {
   /** Dev: SMTP not set — link is printed in server logs. */
   registerVerificationDevHint: string;
   registerVerificationSendFailed: string;
+  /** When server has no Resend/SMTP configured in production (ops must set env). */
+  registerMailNotConfigured: string;
   alreadyHaveAccount: string;
   signInLink: string;
   note: string;

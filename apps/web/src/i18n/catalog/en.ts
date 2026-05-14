@@ -219,6 +219,8 @@ export const en: Messages = {
     registerVerificationDevHint:
       "(Development) If SMTP is not configured, the verification link is printed in the server terminal log only.",
     registerVerificationSendFailed: "We could not send the verification email. Please try again shortly.",
+    registerMailNotConfigured:
+      "Email delivery is not configured on the server yet. Please try again later or contact support.",
     alreadyHaveAccount: "Already have an account?",
     signInLink: "Sign in",
     note: "Sign in with a social account or email. Email sign-up requires inbox verification first; required consents are recorded with a timestamp for audit purposes.",
@@ -252,6 +254,8 @@ export const en: Messages = {
     registerVerificationDevHint:
       "(Development) If SMTP is not configured, the verification link is printed in the server terminal log only.",
     registerVerificationSendFailed: "We could not send the verification email. Please try again shortly.",
+    registerMailNotConfigured:
+      "Email delivery is not configured on the server yet. Please try again later or contact support.",
     alreadyHaveAccount: "Already have an account?",
     signInLink: "Sign in",
     note: "Register with a social account or email. Email sign-up requires inbox verification before sign-in; further artist checks are communicated separately.",

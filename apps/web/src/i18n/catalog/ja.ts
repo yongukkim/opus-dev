@@ -220,6 +220,8 @@ export const ja: Messages = {
     registerVerificationDevHint:
       "（開発）SMTP が未設定の場合、認証リンクはサーバーのターミナルログにのみ出力されます。",
     registerVerificationSendFailed: "認証メールの送信に失敗しました。しばらくしてから再度お試しください。",
+    registerMailNotConfigured:
+      "メール送信がサーバー側で未設定のため、認証メールを送れません。時間をおいて再試行するか、サポートへお問い合わせください。",
     alreadyHaveAccount: "すでにアカウントをお持ちですか？",
     signInLink: "ログイン",
     note: "SNS またはメールで認証します。メール登録は受信確認後にログインでき、必須の同意は監査のためタイムスタンプとともに記録されます。",
@@ -254,6 +256,8 @@ export const ja: Messages = {
     registerVerificationDevHint:
       "（開発）SMTP が未設定の場合、認証リンクはサーバーのターミナルログにのみ出力されます。",
     registerVerificationSendFailed: "認証メールの送信に失敗しました。しばらくしてから再度お試しください。",
+    registerMailNotConfigured:
+      "メール送信がサーバー側で未設定のため、認証メールを送れません。時間をおいて再試行するか、サポートへお問い合わせください。",
     alreadyHaveAccount: "すでにアカウントをお持ちですか？",
     signInLink: "ログイン",
     note: "SNS またはメールで登録できます。メール登録は受信確認後にログインし、その後の作家向け検証は別途ご案内します。",

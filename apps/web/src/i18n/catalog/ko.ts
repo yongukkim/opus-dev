@@ -218,6 +218,8 @@ export const ko: Messages = {
     registerVerificationDevHint:
       "(개발) SMTP가 설정되어 있지 않으면 인증 링크는 서버 터미널 로그에만 출력됩니다.",
     registerVerificationSendFailed: "인증 메일 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    registerMailNotConfigured:
+      "이메일 인증을 하려면 서버에 메일 발송 설정이 필요합니다. 잠시 후 다시 시도하거나 고객 지원으로 문의해 주세요.",
     alreadyHaveAccount: "이미 계정이 있나요?",
     signInLink: "로그인",
     note: "SNS 또는 이메일로 인증합니다. 이메일 가입은 수신 확인 후 로그인할 수 있으며, 필수 동의는 감사 목적의 타임스탬프와 함께 기록됩니다.",
@@ -251,6 +253,8 @@ export const ko: Messages = {
     registerVerificationDevHint:
       "(개발) SMTP가 설정되어 있지 않으면 인증 링크는 서버 터미널 로그에만 출력됩니다.",
     registerVerificationSendFailed: "인증 메일 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    registerMailNotConfigured:
+      "이메일 인증을 하려면 서버에 메일 발송 설정이 필요합니다. 잠시 후 다시 시도하거나 고객 지원으로 문의해 주세요.",
     alreadyHaveAccount: "이미 계정이 있나요?",
     signInLink: "로그인",
     note: "SNS 또는 이메일로 가입할 수 있습니다. 이메일 가입은 수신 확인 후 로그인하며, 이후 작가 검증 절차는 별도로 안내됩니다.",
