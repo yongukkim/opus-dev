@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { useEffect, useId, useState } from "react";
 
 export type SiteHeaderNavLink = {
@@ -21,6 +22,7 @@ export type SiteHeaderNavItem =
 
 /**
  * Mobile primary navigation — hamburger opens a right-hand drawer on charcoal (no page bleed-through).
+ * Drawer is portaled to `document.body` so `fixed` is not trapped by `backdrop-filter` / opacity on `TrustStrip`.
  */
 export function SiteHeaderMobileNav({
   items,
@@ -82,62 +84,65 @@ export function SiteHeaderMobileNav({
         )}
       </button>
 
-      {open ? (
-        <>
-          <button
-            type="button"
-            className="fixed inset-0 z-[60] bg-opus-charcoal/80 backdrop-blur-sm md:hidden"
-            aria-label={closeLabel}
-            onClick={() => setOpen(false)}
-          />
-          <nav
-            id={panelId}
-            className="fixed inset-y-0 right-0 z-[61] flex w-[min(100%,18.5rem)] flex-col border-l border-white/[0.12] bg-opus-charcoal px-5 pb-8 pt-[calc(var(--opus-header-plus-trust)+0.5rem)] shadow-2xl md:hidden"
-            aria-label={menuLabel}
-          >
-            <ul className="divide-y divide-white/[0.07]">
-              {items.map((item) =>
-                item.kind === "link" ? (
-                  <li key={item.href}>
-                    <Link href={item.href} className={linkClass} onClick={() => setOpen(false)}>
-                      {item.label}
-                    </Link>
-                  </li>
-                ) : (
-                  <li key="vault-group">
-                    <details className="group">
-                      <summary
-                        className={`${linkClass} flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden`}
-                        aria-label={item.expandAria}
-                      >
-                        <span>{item.label}</span>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden
-                          className="shrink-0 stroke-opus-warm/45 transition group-open:rotate-180 group-open:stroke-opus-gold/70"
-                        >
-                          <path d="M3.5 5.25L7 8.75l3.5-3.5" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </summary>
-                      <ul className="space-y-0.5 pb-2 pt-1" aria-label={item.subNavAria}>
-                        {item.children.map((child) => (
-                          <li key={child.href}>
-                            <Link href={child.href} className={subLinkClass} onClick={() => setOpen(false)}>
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </li>
-                ),
-              )}
-            </ul>
-          </nav>
-        </>
-      ) : null}
+      {open && typeof document !== "undefined"
+        ? createPortal(
+            <>
+              <button
+                type="button"
+                className="fixed inset-0 z-[100] bg-[#0E0E0E]/92 backdrop-blur-sm md:hidden"
+                aria-label={closeLabel}
+                onClick={() => setOpen(false)}
+              />
+              <nav
+                id={panelId}
+                className="fixed inset-y-0 right-0 z-[101] flex w-[min(100%,18.5rem)] flex-col border-l border-white/[0.12] bg-[#0E0E0E] px-5 pb-8 pt-[calc(var(--opus-header-plus-trust)+0.5rem)] shadow-2xl md:hidden"
+                aria-label={menuLabel}
+              >
+                <ul className="divide-y divide-white/[0.07]">
+                  {items.map((item) =>
+                    item.kind === "link" ? (
+                      <li key={item.href}>
+                        <Link href={item.href} className={linkClass} onClick={() => setOpen(false)}>
+                          {item.label}
+                        </Link>
+                      </li>
+                    ) : (
+                      <li key="vault-group">
+                        <details className="group">
+                          <summary
+                            className={`${linkClass} flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden`}
+                            aria-label={item.expandAria}
+                          >
+                            <span>{item.label}</span>
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 14 14"
+                              aria-hidden
+                              className="shrink-0 stroke-opus-warm/45 transition group-open:rotate-180 group-open:stroke-opus-gold/70"
+                            >
+                              <path d="M3.5 5.25L7 8.75l3.5-3.5" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </summary>
+                          <ul className="space-y-0.5 pb-2 pt-1" aria-label={item.subNavAria}>
+                            {item.children.map((child) => (
+                              <li key={child.href}>
+                                <Link href={child.href} className={subLinkClass} onClick={() => setOpen(false)}>
+                                  {child.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </nav>
+            </>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
