@@ -41,13 +41,41 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
       className="fixed inset-x-0 top-0 z-50 h-[var(--opus-site-header-height)] border-b border-white/[0.09] bg-opus-charcoal/72 backdrop-blur-xl"
       role="banner"
     >
-      <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between gap-2 px-4 sm:px-6 md:gap-3 md:px-10">
-        <Link
-          href={withLocale(locale, "/")}
-          className="opus-text-metallic shrink-0 font-display text-lg font-semibold tracking-[0.42em] transition hover:opacity-90 md:text-xl"
-        >
-          OPUS
-        </Link>
+      <div className="mx-auto flex h-full w-full max-w-6xl flex-col justify-center gap-1 px-4 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-3 md:px-10">
+        <div className="flex w-full min-w-0 shrink-0 items-center justify-between md:w-auto md:shrink-0">
+          <Link
+            href={withLocale(locale, "/")}
+            className="opus-text-metallic shrink-0 font-display text-lg font-semibold tracking-[0.42em] transition hover:opacity-90 md:text-xl"
+          >
+            OPUS
+          </Link>
+          <div className="flex shrink-0 items-center gap-x-2 gap-y-1 md:hidden">
+            <SiteHeaderAuth
+              variant="compact"
+              locale={locale}
+              signInLabel={m.auth.signIn}
+              signUpLabel={m.signup.title}
+              signOutLabel={m.auth.signOut}
+              userEmail={session?.user?.email}
+            />
+            {!isArtist ? (
+              <Link href={withLocale(locale, "/artist-signup")} className={authItemClassMobile}>
+                {artistSignupLabel}
+              </Link>
+            ) : null}
+            <LocaleSwitcher ariaLabel={m.a11y.language} />
+          </div>
+        </div>
+
+        <div className="flex w-full shrink-0 justify-start md:hidden">
+          <SiteHeaderMobileNav
+            links={primaryNavLinks}
+            menuLabel={m.a11y.primaryNav}
+            openLabel={m.a11y.openMenu}
+            closeLabel={m.a11y.closeMenu}
+            ja={ja}
+          />
+        </div>
 
         <nav
           className="hidden min-w-0 flex-1 flex-nowrap items-center justify-end gap-5 overflow-x-auto py-1 [-ms-overflow-style:none] [scrollbar-width:none] md:flex lg:gap-8 [&::-webkit-scrollbar]:hidden"
@@ -60,47 +88,20 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-x-2 gap-y-1 md:gap-3">
-          <SiteHeaderMobileNav
-            links={primaryNavLinks}
-            menuLabel={m.a11y.primaryNav}
-            openLabel={m.a11y.openMenu}
-            closeLabel={m.a11y.closeMenu}
-            ja={ja}
+        <div className="hidden shrink-0 items-center gap-2 md:flex md:gap-3">
+          <SiteHeaderAuth
+            locale={locale}
+            signInLabel={m.auth.signIn}
+            signUpLabel={m.signup.title}
+            signOutLabel={m.auth.signOut}
+            userEmail={session?.user?.email}
           />
-          <div className="md:hidden">
-            <SiteHeaderAuth
-              variant="compact"
-              locale={locale}
-              signInLabel={m.auth.signIn}
-              signUpLabel={m.signup.title}
-              signOutLabel={m.auth.signOut}
-              userEmail={session?.user?.email}
-            />
-          </div>
           {!isArtist ? (
-            <Link href={withLocale(locale, "/artist-signup")} className={`${authItemClassMobile} md:hidden`}>
+            <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
               {artistSignupLabel}
             </Link>
           ) : null}
-          <div className="hidden items-center gap-2 md:flex md:gap-3">
-            <SiteHeaderAuth
-              locale={locale}
-              signInLabel={m.auth.signIn}
-              signUpLabel={m.signup.title}
-              signOutLabel={m.auth.signOut}
-              userEmail={session?.user?.email}
-            />
-            {!isArtist ? (
-              <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
-                {artistSignupLabel}
-              </Link>
-            ) : null}
-            <LocaleSwitcher ariaLabel={m.a11y.language} />
-          </div>
-          <div className="md:hidden">
-            <LocaleSwitcher ariaLabel={m.a11y.language} />
-          </div>
+          <LocaleSwitcher ariaLabel={m.a11y.language} />
         </div>
       </div>
     </header>

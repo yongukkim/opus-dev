@@ -9,7 +9,7 @@ export type SiteHeaderNavLink = {
 };
 
 /**
- * Mobile primary navigation — hamburger opens a right-hand drawer (Classic Luxury chrome).
+ * Mobile primary navigation — hamburger opens a right-hand drawer on solid black (no page bleed-through).
  */
 export function SiteHeaderMobileNav({
   links,
@@ -71,13 +71,13 @@ export function SiteHeaderMobileNav({
         <>
           <button
             type="button"
-            className="fixed inset-0 z-[60] bg-black/65 backdrop-blur-[1px] md:hidden"
+            className="fixed inset-0 z-[60] bg-black md:hidden"
             aria-label={closeLabel}
             onClick={() => setOpen(false)}
           />
           <nav
             id={panelId}
-            className="fixed inset-y-0 right-0 z-[61] flex w-[min(100%,18.5rem)] flex-col border-l border-white/[0.1] bg-opus-charcoal/96 px-5 pb-8 pt-[calc(var(--opus-site-header-height)+0.5rem)] shadow-2xl backdrop-blur-xl md:hidden"
+            className="fixed inset-y-0 right-0 z-[61] flex w-[min(100%,18.5rem)] flex-col border-l border-white/[0.12] bg-black px-5 pb-8 pt-[calc(var(--opus-site-header-height)+0.5rem)] shadow-2xl md:hidden"
             aria-label={menuLabel}
           >
             <ul className="divide-y divide-white/[0.07]">
