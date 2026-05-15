@@ -1049,6 +1049,19 @@ export const en: Messages = {
     certificateVerificationOk: "Signature check: OK",
     certificateVerificationFail: "Signature check: failed — contact support with the certificate ID",
     certificateDigestLabel: "Record digest",
+    certificateTimeAnchorTitle: "Time anchor · public commitment",
+    certificateTimeAnchorBlurb:
+      "The value below is a SHA-256 commitment reproducible from the public fields in the certificate JSON. Together with the OPUS-signed record digest, it helps independent checks of the same content and issuance row. It does not replace or guarantee administrative effects such as Japan Copyright Act “kakutei hizuke” (date certification). On-chain anchors or qualified timestamps can later be linked via optional fields such as chainId and txHash.",
+    certificateTimeAnchorCommitmentLabel: "Public commitment (SHA-256)",
+    certificateTimeAnchorAnchoredAtLabel: "Anchor reference time",
+    certificateTimeAnchorChainLabel: "Chain (CAIP-2)",
+    certificateTimeAnchorTxLabel: "On-chain transaction",
+    certificateTimeAnchorExternalRefLabel: "External attestation reference",
+    certificateTimeAnchorVerifyOk: "Commitment check: stored value matches recomputation.",
+    certificateTimeAnchorVerifyMismatch:
+      "Commitment check: mismatch — the row may be altered or fields may not match. Contact support.",
+    certificateTimeAnchorVerifyLegacy:
+      "This row was issued before the time-anchor field was added. The commitment below is recomputed from current public fields.",
     certificateNotFoundTitle: "Certificate not available",
     certificateNotFoundBody: "No signed certificate exists for this edition yet, or the edition number is out of range.",
     certificateForbiddenTitle: "Access restricted",

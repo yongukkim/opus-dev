@@ -9,6 +9,7 @@ import {
   ensureEditionCertificatesBackfill,
   getLatestEditionCertificate,
   verifyEditionCertificateRecord,
+  verifyEditionCertificateTimeAnchor,
 } from "@/lib/editionCertificate";
 
 export const runtime = "nodejs";
@@ -66,7 +67,8 @@ export async function GET(
   }
 
   const verified = verifyEditionCertificateRecord(cert);
-  const body = { ok: true as const, verified, certificate: cert };
+  const timeAnchorVerification = verifyEditionCertificateTimeAnchor(cert);
+  const body = { ok: true as const, verified, certificate: cert, timeAnchorVerification };
   const filename = `opus-edition-certificate-${submissionId}-e${editionNum}-v${cert.version}.json`;
 
   return new NextResponse(JSON.stringify(body, null, 2), {

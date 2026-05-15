@@ -5,8 +5,30 @@ import { appendJsonl, getSubmissionById, type SubmissionRecord } from "@/lib/pri
 
 const CERT_FILE = LEDGER_FILES.editionCertificates;
 const SCHEMA = "opus.edition_certificate.v1" as const;
+/** Public commitment inputs (SHA-256) — independent of the HMAC certificate signature. */
+const TIME_ANCHOR_SCHEMA = "opus.time_anchor.v1" as const;
 
 export type EditionCertificateEvent = "ISSUED" | "CUSTODY_TRANSFER";
+
+/**
+ * Optional time-binding / third-party anchor metadata (JSONL row).
+ * KO: 온체인·TSA 등 외부 고정은 선택 필드로 두고, commitment는 공개 필드만으로 재계산 가능합니다.
+ * JA: オンチェーン・TSA 等は任意。commitment は公開フィールドのみで再計算できます。
+ * EN: External anchors are optional; `commitmentHex` is reproducible from public certificate fields alone.
+ */
+export type EditionCertificateTimeAnchor = {
+  schema: typeof TIME_ANCHOR_SCHEMA;
+  /** SHA-256 hex over canonical time-anchor payload (binds signed `payloadDigest` + edition binding). */
+  commitmentHex: string;
+  /** When OPUS attached this anchor row (usually issuance instant). */
+  anchoredAtIso: string;
+  /** CAIP-2 chain id when an on-chain anchor exists (e.g. `eip155:1`). */
+  chainId?: string;
+  /** Public transaction hash when anchored on-chain. */
+  txHash?: string;
+  /** Opaque handle to a TSA token / attestation blob (future). */
+  externalAttestationRef?: string;
+};
 
 /**
  * ISO 27001 A.10.1.1 (§3) / A.12.4.1 (§5) / A.9.2.1 (§4)
@@ -49,6 +71,8 @@ export type EditionCertificateRecord = {
   priorPayloadDigest: string;
   payloadDigest: string;
   signature: string;
+  /** Present on rows issued after time-anchor support; older JSONL lines omit this field. */
+  timeAnchor?: EditionCertificateTimeAnchor;
 };
 
 export function editionBindingKey(submissionId: string, editionNumber: number): string {
@@ -70,6 +94,65 @@ function canonicalSigningPayload(input: Record<string, string | number>): string
   return JSON.stringify(ordered);
 }
 
+/**
+ * ISO 27001 A.10.1.1 (§3) / A.12.4.1 (§5)
+ * KO: 공개 필드만으로 commitment를 재계산하면 무결한 JSON과 OPUS 서명(`payloadDigest` 검증)이 암시적으로 연결됩니다.
+ * JA: 公開フィールドのみで commitment を再計算し、整合する JSON と OPUS 署名（`payloadDigest` 検証）とを結びつけます。
+ * EN: Recomputing the commitment from public fields ties the JSON row to the OPUS signature via `payloadDigest`.
+ */
+export function computeEditionCertificateTimeAnchorCommitment(
+  record: Pick<
+    EditionCertificateRecord,
+    "payloadDigest" | "bindingKey" | "id" | "chronicleIssuanceId" | "issuedAtIso" | "version" | "event"
+  >,
+): string {
+  const body = canonicalSigningPayload({
+    schema: TIME_ANCHOR_SCHEMA,
+    bindingKey: record.bindingKey,
+    certificateId: record.id,
+    chronicleIssuanceId: record.chronicleIssuanceId,
+    event: record.event,
+    issuedAtIso: record.issuedAtIso,
+    payloadDigest: record.payloadDigest,
+    version: record.version,
+  });
+  return sha256Hex(body);
+}
+
+export type EditionTimeAnchorVerifyStatus = "ok" | "mismatch" | "legacy";
+
+export function verifyEditionCertificateTimeAnchor(record: EditionCertificateRecord): {
+  status: EditionTimeAnchorVerifyStatus;
+  computedCommitmentHex: string;
+  stored?: EditionCertificateTimeAnchor;
+} {
+  const computedCommitmentHex = computeEditionCertificateTimeAnchorCommitment(record);
+  const stored = record.timeAnchor;
+  if (!stored?.commitmentHex) {
+    return { status: "legacy", computedCommitmentHex };
+  }
+  if (stored.schema !== TIME_ANCHOR_SCHEMA) {
+    return { status: "mismatch", computedCommitmentHex, stored };
+  }
+  if (stored.commitmentHex !== computedCommitmentHex) {
+    return { status: "mismatch", computedCommitmentHex, stored };
+  }
+  return { status: "ok", computedCommitmentHex, stored };
+}
+
+function buildEditionCertificateTimeAnchor(
+  record: Pick<
+    EditionCertificateRecord,
+    "payloadDigest" | "bindingKey" | "id" | "chronicleIssuanceId" | "issuedAtIso" | "version" | "event"
+  >,
+): EditionCertificateTimeAnchor {
+  return {
+    schema: TIME_ANCHOR_SCHEMA,
+    commitmentHex: computeEditionCertificateTimeAnchorCommitment(record),
+    anchoredAtIso: record.issuedAtIso,
+  };
+}
+
 async function readAllCertificates(): Promise<EditionCertificateRecord[]> {
   try {
     const raw = await readFile(CERT_FILE, "utf8");
@@ -86,14 +169,20 @@ async function readAllCertificates(): Promise<EditionCertificateRecord[]> {
 function isRecord(x: unknown): x is EditionCertificateRecord {
   if (!x || typeof x !== "object") return false;
   const r = x as EditionCertificateRecord;
-  return (
-    typeof r.bindingKey === "string" &&
-    typeof r.version === "number" &&
-    typeof r.payloadDigest === "string" &&
-    typeof r.signature === "string" &&
-    typeof r.submissionId === "string" &&
-    typeof r.editionNumber === "number"
-  );
+  if (
+    typeof r.bindingKey !== "string" ||
+    typeof r.version !== "number" ||
+    typeof r.payloadDigest !== "string" ||
+    typeof r.signature !== "string" ||
+    typeof r.submissionId !== "string" ||
+    typeof r.editionNumber !== "number"
+  ) {
+    return false;
+  }
+  if (r.timeAnchor !== undefined && r.timeAnchor !== null) {
+    if (typeof r.timeAnchor !== "object") return false;
+  }
+  return true;
 }
 
 export function verifyEditionCertificateRecord(record: EditionCertificateRecord): boolean {
@@ -199,7 +288,7 @@ export async function issueEditionCertificatesOnApproval(
     });
     const payloadDigest = sha256Hex(signing);
     const signature = signDigest(secret, payloadDigest);
-    const row: EditionCertificateRecord = {
+    const rowBase: EditionCertificateRecord = {
       id: `${Date.now().toString(36)}-${randomBytes(6).toString("hex")}`,
       bindingKey,
       version: 1,
@@ -219,6 +308,10 @@ export async function issueEditionCertificatesOnApproval(
       priorPayloadDigest: "",
       payloadDigest,
       signature,
+    };
+    const row: EditionCertificateRecord = {
+      ...rowBase,
+      timeAnchor: buildEditionCertificateTimeAnchor(rowBase),
     };
     await appendJsonl(CERT_FILE, row);
   }
@@ -275,7 +368,7 @@ export async function reissueEditionCertificatesOnCustodyTransfer(input: {
     });
     const payloadDigest = sha256Hex(signing);
     const signature = signDigest(secret, payloadDigest);
-    const row: EditionCertificateRecord = {
+    const rowBase: EditionCertificateRecord = {
       id: `${Date.now().toString(36)}-${randomBytes(6).toString("hex")}`,
       bindingKey: latest.bindingKey,
       version: nextVersion,
@@ -295,6 +388,10 @@ export async function reissueEditionCertificatesOnCustodyTransfer(input: {
       priorPayloadDigest: latest.payloadDigest,
       payloadDigest,
       signature,
+    };
+    const row: EditionCertificateRecord = {
+      ...rowBase,
+      timeAnchor: buildEditionCertificateTimeAnchor(rowBase),
     };
     await appendJsonl(CERT_FILE, row);
   }

@@ -1041,6 +1041,17 @@ export type Messages = {
     certificateVerificationOk: string;
     certificateVerificationFail: string;
     certificateDigestLabel: string;
+    /** Time anchor — public SHA-256 commitment (binds signed digest); optional on-chain/TSA fields later. */
+    certificateTimeAnchorTitle: string;
+    certificateTimeAnchorBlurb: string;
+    certificateTimeAnchorCommitmentLabel: string;
+    certificateTimeAnchorAnchoredAtLabel: string;
+    certificateTimeAnchorChainLabel: string;
+    certificateTimeAnchorTxLabel: string;
+    certificateTimeAnchorExternalRefLabel: string;
+    certificateTimeAnchorVerifyOk: string;
+    certificateTimeAnchorVerifyMismatch: string;
+    certificateTimeAnchorVerifyLegacy: string;
     certificateNotFoundTitle: string;
     certificateNotFoundBody: string;
     certificateForbiddenTitle: string;

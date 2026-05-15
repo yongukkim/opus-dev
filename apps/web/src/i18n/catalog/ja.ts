@@ -1066,6 +1066,19 @@ export const ja: Messages = {
     certificateVerificationOk: "署名検証: 正常",
     certificateVerificationFail: "署名検証: 失敗 — 認証書番号を添えてサポートへご連絡ください",
     certificateDigestLabel: "記録ダイジェスト",
+    certificateTimeAnchorTitle: "時点固定 · 公開検証（commitment）",
+    certificateTimeAnchorBlurb:
+      "下記は認証書JSONの公開フィールドのみから再計算できるSHA-256のcommitmentです。OPUS署名で保護される記録ダイジェストと組み合わせ、同一内容・時点の独立検証を補助します。日本の著作権法上の「確定日付」など行政・制度上の効力を代替・保証するものではありません。オンチェーンや公的タイムスタンプは、将来 chainId・txHash などの任意フィールドで接続できます。",
+    certificateTimeAnchorCommitmentLabel: "公開 commitment（SHA-256）",
+    certificateTimeAnchorAnchoredAtLabel: "記録基準時刻",
+    certificateTimeAnchorChainLabel: "チェーン（CAIP-2）",
+    certificateTimeAnchorTxLabel: "オンチェーン取引",
+    certificateTimeAnchorExternalRefLabel: "外部証跡参照",
+    certificateTimeAnchorVerifyOk: "commitment検証: 保存値と再計算値が一致しました。",
+    certificateTimeAnchorVerifyMismatch:
+      "commitment検証: 不一致 — 改ざんかフィールド不一致の可能性があります。サポートへご連絡ください。",
+    certificateTimeAnchorVerifyLegacy:
+      "time-anchor フィールド導入前に発行された行です。下記の commitment は現在の公開フィールドから再計算した値です。",
     certificateNotFoundTitle: "認証書を表示できません",
     certificateNotFoundBody: "当該エディションに署名済み認証書がないか、エディション番号が範囲外です。",
     certificateForbiddenTitle: "アクセスが制限されています",
