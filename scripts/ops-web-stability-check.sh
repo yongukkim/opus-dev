@@ -166,6 +166,41 @@ PY
   fi
 }
 
+run_mail_config_checks() {
+  if [[ ! -d "$APP_DIR" || ! -f "$APP_DIR/$COMPOSE_FILE" ]]; then
+    warn "skip mail config checks (APP_DIR/compose missing): $APP_DIR/$COMPOSE_FILE"
+    return
+  fi
+
+  cd "$APP_DIR" || return
+  cid="$(dc -f "$COMPOSE_FILE" ps -q opus-web 2>/dev/null || true)"
+  if [[ -z "$cid" ]]; then
+    warn "skip mail config checks (opus-web container id not found)"
+    return
+  fi
+
+  log "Storefront mail env checks (names only, no secrets)"
+  mail_env="$(
+    docker inspect "$cid" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null \
+      | grep -E '^(OPUS_WEB_RESEND_API_KEY|RESEND_API_KEY|OPUS_WEB_SMTP_URL|OPUS_WEB_MAIL_FROM|OPUS_WEB_PUBLIC_ORIGIN)=' \
+      | cut -d= -f1 \
+      | sort -u \
+      | tr '\n' ' ' \
+      || true
+  )"
+  has_from=0 has_delivery=0
+  docker inspect "$cid" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null \
+    | grep -qE '^OPUS_WEB_MAIL_FROM=.+' && has_from=1 || true
+  docker inspect "$cid" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null \
+    | grep -qE '^(OPUS_WEB_RESEND_API_KEY|RESEND_API_KEY|OPUS_WEB_SMTP_URL)=.+' && has_delivery=1 || true
+
+  if [[ $has_from -eq 1 && $has_delivery -eq 1 ]]; then
+    ok "storefront mail env present (${mail_env})"
+  else
+    fail "storefront mail not configured — add OPUS_WEB_RESEND_API_KEY (or OPUS_WEB_SMTP_URL) + OPUS_WEB_MAIL_FROM to /etc/opus/opus.env and recreate opus-web"
+  fi
+}
+
 run_exposure_boundary_checks() {
   if [[ ! -d "$APP_DIR" || ! -f "$APP_DIR/$COMPOSE_FILE" ]]; then
     warn "skip exposure boundary checks (APP_DIR/compose missing): $APP_DIR/$COMPOSE_FILE"
@@ -231,6 +266,7 @@ PY
 
 run_http_checks
 run_container_checks
+run_mail_config_checks
 run_backup_checks
 run_storage_checks
 run_exposure_boundary_checks
