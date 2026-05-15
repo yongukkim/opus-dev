@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { withLocale } from "@/i18n/paths";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 
@@ -33,6 +34,7 @@ export function ArtistOnboardingProfileForm({
   const [accountNumber, setAccountNumber] = useState(initialAccountNumber);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [fieldModalOpen, setFieldModalOpen] = useState(false);
 
   const displayNameLocked = Boolean(initialDisplayName.trim());
 
@@ -43,6 +45,12 @@ export function ArtistOnboardingProfileForm({
         e.preventDefault();
         if (pending) return;
         setError("");
+        const digits = accountNumber.replace(/\D/g, "");
+        const needDisplay = !displayNameLocked && !displayName.trim();
+        if (needDisplay || !bankName.trim() || !accountHolder.trim() || digits.length < 6) {
+          setFieldModalOpen(true);
+          return;
+        }
         setPending(true);
         try {
           const res = await fetch("/api/artist/onboarding-profile", {
@@ -146,6 +154,15 @@ export function ArtistOnboardingProfileForm({
           {pending ? o.savingCta : o.saveAndContinueCta}
         </button>
       </div>
+
+      <FormMessageModal
+        open={fieldModalOpen}
+        title={m.formUi.validationTitle}
+        message={o.requiredFieldsMissingBody}
+        confirmLabel={m.formUi.confirm}
+        variant="neutral"
+        onClose={() => setFieldModalOpen(false)}
+      />
     </form>
   );
 }

@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 /**
  * ISO 27001 A.18.1.4 (§7) Privacy by Design · APPI
@@ -100,14 +101,16 @@ function GoldCheckbox({
 export type SellerVerifyConsentFormProps = {
   locale: Locale;
   strings: Messages["sellerVerifyConsent"];
+  formUi: Messages["formUi"];
 };
 
-export function SellerVerifyConsentForm({ locale, strings: s }: SellerVerifyConsentFormProps) {
+export function SellerVerifyConsentForm({ locale, strings: s, formUi }: SellerVerifyConsentFormProps) {
   const router = useRouter();
   const [agreeCollection, setAgreeCollection] = useState(false);
   const [agreeSensitiveId, setAgreeSensitiveId] = useState(false);
   const [agreeThirdParty, setAgreeThirdParty] = useState(false);
   const [connecting, setConnecting] = useState(false);
+  const [notice, setNotice] = useState<{ message: string; variant: "neutral" | "error" } | null>(null);
 
   const allChecked = agreeCollection && agreeSensitiveId && agreeThirdParty;
 
@@ -126,7 +129,7 @@ export function SellerVerifyConsentForm({ locale, strings: s }: SellerVerifyCons
       });
       if (!res.ok) {
         setConnecting(false);
-        alert(s.alertConsentFail);
+        setNotice({ message: s.alertConsentFail, variant: "error" });
         return;
       }
       window.setTimeout(() => {
@@ -134,9 +137,9 @@ export function SellerVerifyConsentForm({ locale, strings: s }: SellerVerifyCons
       }, 2200);
     } catch {
       setConnecting(false);
-      alert(s.alertNetwork);
+      setNotice({ message: s.alertNetwork, variant: "error" });
     }
-  }, [allChecked, connecting, locale, router, s.alertConsentFail, s.alertNetwork]);
+  }, [allChecked, connecting, formUi, locale, router, s.alertConsentFail, s.alertNetwork]);
 
   return (
     <main className="min-h-screen bg-[#060606] px-5 py-10 text-[#e8e0d4]/88 sm:px-8 sm:py-14 md:px-12 md:py-16 lg:px-16 lg:py-20">
@@ -269,6 +272,15 @@ export function SellerVerifyConsentForm({ locale, strings: s }: SellerVerifyCons
           </p>
         </article>
       </div>
+
+      <FormMessageModal
+        open={notice !== null}
+        title={notice?.variant === "error" ? formUi.errorTitle : formUi.validationTitle}
+        message={notice?.message ?? ""}
+        confirmLabel={formUi.confirm}
+        variant={notice?.variant === "error" ? "error" : "neutral"}
+        onClose={() => setNotice(null)}
+      />
     </main>
   );
 }

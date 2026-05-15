@@ -79,3 +79,8 @@ export function normalizeSubmissionRecord(raw: unknown): ReviewRow | null {
 export function normalizeSubmissionList(rows: unknown[]): ReviewRow[] {
   return rows.map(normalizeSubmissionRecord).filter((x): x is ReviewRow => x !== null);
 }
+
+/** Matches `ConsoleReviewWorkspace` actionable queue (operator must act). */
+export function countActionableSubmissions(rows: ReviewRow[]): number {
+  return rows.filter((r) => r.reviewStatus === "pending_review" || r.reviewStatus === "changes_requested").length;
+}

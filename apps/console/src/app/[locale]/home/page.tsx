@@ -5,6 +5,9 @@ import { getDictionary } from "@/i18n/catalog";
 import { isSupportedLocale } from "@/i18n/config";
 import { ConsoleChrome } from "@/components/ConsoleChrome";
 import { devPreviewChromeUser, isConsoleDevPreview } from "@/lib/devPreview";
+import { devPreviewDemoRows } from "@/lib/devPreviewDemoRows";
+import { countActionableSubmissions, normalizeSubmissionList } from "@/lib/submissionRow";
+import { fetchSubmissionsForOperator } from "@/lib/webInternal";
 
 export default async function ConsoleHomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -21,6 +24,18 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
 
   const chromeUser = preview ? devPreviewChromeUser() : session!.user;
 
+  let pendingSubmissionCount: number | null = null;
+  if (preview) {
+    pendingSubmissionCount = countActionableSubmissions(devPreviewDemoRows());
+  } else {
+    try {
+      const rawList = await fetchSubmissionsForOperator(session!.user.id);
+      pendingSubmissionCount = countActionableSubmissions(normalizeSubmissionList(rawList));
+    } catch {
+      pendingSubmissionCount = null;
+    }
+  }
+
   return (
     <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome} langLabels={t.lang}>
       <div className="border-b border-white/10 bg-[#141414] px-6 py-8">
@@ -32,7 +47,24 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
           href={`/${locale}/review`}
           className="group flex flex-col rounded-lg border border-white/10 bg-[#161616] p-5 shadow-sm transition hover:border-[#DEB892]/35 hover:bg-[#1a1a1a]"
         >
-          <h2 className="text-sm font-semibold text-[#F6F4F0]">{t.dashboard.cardSubmissionsTitle}</h2>
+          <div className="flex items-start justify-between gap-3">
+            <h2 className="text-sm font-semibold text-[#F6F4F0]">{t.dashboard.cardSubmissionsTitle}</h2>
+            {pendingSubmissionCount !== null ? (
+              <span
+                className="shrink-0 rounded-full border border-[#DEB892]/35 bg-[#DEB892]/10 px-2.5 py-0.5 text-center text-xs font-medium tabular-nums text-[#DEB892]"
+                title={t.dashboard.cardSubmissionsBody}
+              >
+                {t.dashboard.cardSubmissionsPendingCountTpl.replace("{count}", String(pendingSubmissionCount))}
+              </span>
+            ) : (
+              <span
+                className="shrink-0 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-0.5 text-xs text-[#F6F4F0]/45"
+                title={t.dashboard.cardSubmissionsCountUnavailable}
+              >
+                —
+              </span>
+            )}
+          </div>
           <p className="mt-2 flex-1 text-sm text-[#F6F4F0]/65">{t.dashboard.cardSubmissionsBody}</p>
           <span className="mt-4 text-sm font-medium text-[#DEB892] group-hover:underline">{t.dashboard.cardSubmissionsCta} →</span>
         </Link>

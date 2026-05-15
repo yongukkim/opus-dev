@@ -10,6 +10,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthConsentBlock } from "@/components/auth/AuthConsentBlock";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 
@@ -38,12 +39,17 @@ export function ArtistUpgradeForm({
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [consentModalOpen, setConsentModalOpen] = useState(false);
 
   const consentSatisfied = termsPrivacy && ageConfirmed;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!consentSatisfied || pending) return;
+    if (!consentSatisfied) {
+      setConsentModalOpen(true);
+      return;
+    }
+    if (pending) return;
     setPending(true);
     setError(null);
     try {
@@ -98,6 +104,15 @@ export function ArtistUpgradeForm({
       >
         {pending ? "…" : "작가 등록 완료"}
       </button>
+
+      <FormMessageModal
+        open={consentModalOpen}
+        title={m.formUi.validationTitle}
+        message={m.auth.consentRequiredAlert}
+        confirmLabel={m.formUi.confirm}
+        variant="neutral"
+        onClose={() => setConsentModalOpen(false)}
+      />
     </form>
   );
 }

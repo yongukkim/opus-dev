@@ -190,6 +190,13 @@ export const en: Messages = {
     resendVerificationFailed: "Could not send. Please try again shortly.",
     note: "Social sign-in activates when each provider’s OAuth credentials are set. Email sign-up requires opening the verification link before you can sign in.",
   },
+  formUi: {
+    validationTitle: "Check your input",
+    errorTitle: "Notice",
+    confirm: "OK",
+    validationIntro: "Please review the following.",
+    payoutRequiredBody: "Enter your bank name, account holder, and account number (at least 6 digits).",
+  },
   signup: {
     title: "Sign up",
     subtitle: "Create an account with a social provider or email (required consents match Sign in).",
@@ -467,6 +474,8 @@ export const en: Messages = {
     savingCta: "Saving...",
     saveFailedBanner: "Failed to save. Please check your inputs.",
     penNameLockedError: "Your pen name is already locked and cannot be changed.",
+    requiredFieldsMissingBody:
+      "Display name is missing, or bank name, account holder, or account number (at least 6 digits) is incomplete. Please fill all required fields.",
     backToHome: "← Home",
   },
   payouts: {
@@ -753,6 +762,9 @@ export const en: Messages = {
     apiSaveErr: "Save failed. Please check your inputs and file.",
     saveDraft: "Save draft",
     submit: "Submit",
+    validationErrRequired: "Required",
+    validationErrInvalid: "Please check this value",
+    validationErrRights: "Please confirm rights",
     previewTitle: "Preview",
     withdrawWhilePendingHint:
       "While a registration is pending review or has changes requested, replace the image or text by cancelling registration in My artworks, then submit again here. For edition numbers only, use Edition settings in My artworks.",

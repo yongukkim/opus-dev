@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import { PayoutBankAccountForm } from "@/components/account/PayoutBankAccountForm";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 function labelClass(): string {
   return "block font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45";
@@ -30,6 +31,7 @@ export function AccountSettingsPanel({ locale, m }: { locale: Locale; m: Message
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const mismatch = newPassword.length > 0 && confirmPassword.length > 0 && newPassword !== confirmPassword;
+  const [passwordMismatchModal, setPasswordMismatchModal] = useState(false);
   const [withdrawConfirmText, setWithdrawConfirmText] = useState("");
   const [withdrawing, setWithdrawing] = useState(false);
   const [withdrawError, setWithdrawError] = useState("");
@@ -148,7 +150,7 @@ export function AccountSettingsPanel({ locale, m }: { locale: Locale; m: Message
           onSubmit={(e) => {
             e.preventDefault();
             if (mismatch) {
-              window.alert(s.passwordMismatchAlert);
+              setPasswordMismatchModal(true);
               return;
             }
             setCurrentPassword("");
@@ -396,6 +398,15 @@ export function AccountSettingsPanel({ locale, m }: { locale: Locale; m: Message
           </button>
         </form>
       </section>
+
+      <FormMessageModal
+        open={passwordMismatchModal}
+        title={m.formUi.validationTitle}
+        message={s.passwordMismatchAlert}
+        confirmLabel={m.formUi.confirm}
+        variant="neutral"
+        onClose={() => setPasswordMismatchModal(false)}
+      />
     </div>
   );
 }

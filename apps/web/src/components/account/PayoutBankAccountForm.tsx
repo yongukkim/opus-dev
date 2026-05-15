@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Messages } from "@/i18n/types";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 function labelClass(): string {
   return "block font-mono text-[0.65rem] uppercase tracking-[0.22em] text-opus-warm/45";
@@ -59,6 +60,7 @@ export function PayoutBankAccountForm({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [requiredModalOpen, setRequiredModalOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,6 +92,7 @@ export function PayoutBankAccountForm({
   }, [loadErrorBanner]);
 
   return (
+    <>
     <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card">
       <div className="border-b border-white/[0.06] px-6 py-6">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/45">{heading}</p>
@@ -100,6 +103,11 @@ export function PayoutBankAccountForm({
         onSubmit={async (e) => {
           e.preventDefault();
           if (saving) return;
+          const digits = accountNumber.replace(/\D/g, "");
+          if (!bankName.trim() || !accountHolder.trim() || digits.length < 6) {
+            setRequiredModalOpen(true);
+            return;
+          }
           setError("");
           setSuccess(false);
           setSaving(true);
@@ -183,5 +191,14 @@ export function PayoutBankAccountForm({
         ) : null}
       </form>
     </div>
+    <FormMessageModal
+      open={requiredModalOpen}
+      title={m.formUi.validationTitle}
+      message={m.formUi.payoutRequiredBody}
+      confirmLabel={m.formUi.confirm}
+      variant="neutral"
+      onClose={() => setRequiredModalOpen(false)}
+    />
+    </>
   );
 }

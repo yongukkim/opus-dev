@@ -16,6 +16,7 @@ const OPUS_BOOTSTRAP_OPERATOR_EMAILS = new Set([
 /**
  * ISO 27001 / OPUS Security Coding Standards
  * - A.9.4.2 (§2) Authentication & session — JWT sessions, HttpOnly cookies via Auth.js; no client-visible secrets.
+ *   Session wall-clock max age: `storefrontSessionMaxAgeSeconds()` / `OPUS_WEB_SESSION_MAX_AGE_SECONDS` (default 8h).
  *   KO: Google·Apple·LINE OAuth 및 이메일+비밀번호(Credentials)와 JWT 세션을 사용하며, 토큰은 프레임워크 쿠키로만 다룬다.
  *   JA: Google/Apple/LINE OAuth とメール+パスワード(Credentials)とJWTセッションを用い、トークンはフレームワークのクッキーのみで扱う。
  *   EN: Google, Apple, LINE OAuth plus email/password (Credentials) with JWT sessions; tokens stay in framework cookies only.

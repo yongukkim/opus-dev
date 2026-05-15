@@ -191,6 +191,13 @@ export const ja: Messages = {
     resendVerificationFailed: "送信に失敗しました。しばらくしてから再度お試しください。",
     note: "SNSログインは各プロバイダの OAuth 設定があるときに有効になります。メール登録は認証リンク確認後にログインできます。",
   },
+  formUi: {
+    validationTitle: "入力の確認",
+    errorTitle: "お知らせ",
+    confirm: "OK",
+    validationIntro: "以下をご確認ください。",
+    payoutRequiredBody: "金融機関名・口座名義・口座番号（6桁以上）をすべて入力してください。",
+  },
   signup: {
     title: "会員登録",
     subtitle: "SNS アカウントまたはメールで登録します（必須の同意はログインと同様に適用されます）。",
@@ -470,6 +477,8 @@ export const ja: Messages = {
     savingCta: "保存中...",
     saveFailedBanner: "保存に失敗しました。入力内容をご確認ください。",
     penNameLockedError: "筆名はすでに確定しており変更できません。",
+    requiredFieldsMissingBody:
+      "表示名（筆名）が未入力、または金融機関名・口座名義・口座番号（6桁以上）が不足しています。必須項目をすべて入力してください。",
     backToHome: "← ホームへ",
   },
   payouts: {
@@ -760,6 +769,9 @@ export const ja: Messages = {
     apiSaveErr: "保存に失敗しました。入力内容とファイルをご確認ください。",
     saveDraft: "下書きを保存する",
     submit: "提出する",
+    validationErrRequired: "必須",
+    validationErrInvalid: "内容をご確認ください",
+    validationErrRights: "権利確認に同意してください",
     previewTitle: "プレビュー",
     withdrawWhilePendingHint:
       "審査待ちまたは修正依頼中の登録は、画像・説明を変える場合は「自分の作品」で登録取消のうえ、この画面から再提出してください。エディション数値のみ変更する場合は「自分の作品」のエディション設定をご利用ください。",

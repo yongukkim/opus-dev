@@ -23,5 +23,5 @@ export default async function SellerVerifyConsentPage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = normalizeLocale(raw);
   const m = getDictionary(locale);
-  return <SellerVerifyConsentForm locale={locale} strings={m.sellerVerifyConsent} />;
+  return <SellerVerifyConsentForm locale={locale} strings={m.sellerVerifyConsent} formUi={m.formUi} />;
 }

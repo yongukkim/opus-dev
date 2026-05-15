@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { AuthConsentBlock } from "@/components/auth/AuthConsentBlock";
 import { SsoProviderButtons } from "@/components/auth/SsoProviderButtons";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { OAuthConsentFlow } from "@/lib/oauthConsentCookie";
@@ -64,6 +65,21 @@ export function UnifiedAuthSection({
   const [displayName, setDisplayName] = useState("");
   const [pendingCredentials, setPendingCredentials] = useState(false);
   const [resendState, setResendState] = useState<ResendState>("idle");
+  const [dialog, setDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    variant: "neutral" | "error";
+  }>({ open: false, title: "", message: "", variant: "neutral" });
+
+  function openFormDialog(
+    message: string,
+    kind: "validation" | "notice",
+    variant: "neutral" | "error" = "neutral",
+  ) {
+    const title = kind === "validation" ? m.formUi.validationTitle : m.formUi.errorTitle;
+    setDialog({ open: true, title, message, variant });
+  }
 
   const consentSatisfied = isLogin ? true : termsPrivacy && ageConfirmed;
   const ssoBlocked = !consentSatisfied || pendingOAuth;
@@ -95,11 +111,11 @@ export function UnifiedAuthSection({
 
   async function handleOAuth(providerId: "google" | "apple" | "line", configured: boolean, brand: string) {
     if (!configured) {
-      window.alert(providerNotConfiguredMessage(brand));
+      openFormDialog(providerNotConfiguredMessage(brand), "notice", "error");
       return;
     }
     if (!consentSatisfied) {
-      window.alert(m.auth.consentRequiredAlert);
+      openFormDialog(m.auth.consentRequiredAlert, "validation");
       return;
     }
     if (pendingOAuth) return;
@@ -108,13 +124,13 @@ export function UnifiedAuthSection({
       if (!isLogin) {
         const ok = await runPrecheck();
         if (!ok) {
-          window.alert(m.auth.consentPrecheckFailedAlert);
+          openFormDialog(m.auth.consentPrecheckFailedAlert, "notice", "error");
           return;
         }
       }
       await signIn(providerId, { callbackUrl: returnTo });
     } catch {
-      window.alert(m.auth.consentPrecheckFailedAlert);
+      openFormDialog(m.auth.consentPrecheckFailedAlert, "notice", "error");
     } finally {
       setPendingOAuth(false);
     }
@@ -122,7 +138,7 @@ export function UnifiedAuthSection({
 
   async function handleCredentialsLogin() {
     if (!email.trim() || !password) {
-      window.alert(m.auth.loginInvalidCredentialsAlert);
+      openFormDialog(m.auth.loginInvalidCredentialsAlert, "validation");
       return;
     }
     if (pendingCredentials) return;
@@ -135,14 +151,14 @@ export function UnifiedAuthSection({
         callbackUrl: returnTo,
       });
       if (res?.error) {
-        window.alert(m.auth.loginInvalidCredentialsAlert);
+        openFormDialog(m.auth.loginInvalidCredentialsAlert, "notice", "error");
         return;
       }
       if (res?.ok && res.url) {
         window.location.assign(res.url);
       }
     } catch {
-      window.alert(m.auth.loginInvalidCredentialsAlert);
+      openFormDialog(m.auth.loginInvalidCredentialsAlert, "notice", "error");
     } finally {
       setPendingCredentials(false);
     }
@@ -193,11 +209,11 @@ export function UnifiedAuthSection({
 
   async function handleEmailSignup() {
     if (!consentSatisfied) {
-      window.alert(m.auth.consentRequiredAlert);
+      openFormDialog(m.auth.consentRequiredAlert, "validation");
       return;
     }
     if (password !== passwordConfirm) {
-      window.alert(signupCopy.passwordMismatchAlert);
+      openFormDialog(signupCopy.passwordMismatchAlert, "validation");
       return;
     }
     if (pendingCredentials) return;
@@ -226,18 +242,18 @@ export function UnifiedAuthSection({
         emailVerification?: "sent" | "dev_logged";
       };
       if (!res.ok || !data.ok) {
-        window.alert(mapRegisterError(data.error));
+        openFormDialog(mapRegisterError(data.error), "notice", "error");
         return;
       }
       let msg = `${signupCopy.registerVerificationSent}\n\n${signupCopy.registerVerificationCheckSpam}`;
       if (data.emailVerification === "dev_logged") {
         msg += `\n\n${signupCopy.registerVerificationDevHint}`;
       }
-      window.alert(msg);
+      openFormDialog(msg, "notice");
       setPassword("");
       setPasswordConfirm("");
     } catch {
-      window.alert(signupCopy.registerFailedAlert);
+      openFormDialog(signupCopy.registerFailedAlert, "notice", "error");
     } finally {
       setPendingCredentials(false);
     }
@@ -396,6 +412,15 @@ export function UnifiedAuthSection({
           </div>
         )}
       </div>
+
+      <FormMessageModal
+        open={dialog.open}
+        title={dialog.title}
+        message={dialog.message}
+        confirmLabel={m.formUi.confirm}
+        variant={dialog.variant}
+        onClose={() => setDialog((d) => ({ ...d, open: false }))}
+      />
     </div>
   );
 }

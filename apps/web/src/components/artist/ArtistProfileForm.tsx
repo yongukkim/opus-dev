@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Messages } from "@/i18n/types";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 type Props = {
   m: Messages;
@@ -19,14 +20,17 @@ export function ArtistProfileForm({
   initialSsoImageUrl,
 }: Props) {
   const a = m.artistProfile;
+  const sa = m.submitArtwork;
   const [displayName, setDisplayName] = useState(initialDisplayName);
   const [bio, setBio] = useState(initialBio);
   const [useSsoImage, setUseSsoImage] = useState(initialUseSsoImage);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [displayNameModalOpen, setDisplayNameModalOpen] = useState(false);
 
   return (
+    <>
     <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-opus-slate/20 shadow-opus-card">
       <div className="border-b border-white/[0.06] px-6 py-6">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-opus-warm/45">{a.heading}</p>
@@ -37,6 +41,10 @@ export function ArtistProfileForm({
         className="space-y-4 px-6 py-6"
         onSubmit={async (e) => {
           e.preventDefault();
+          if (!displayName.trim()) {
+            setDisplayNameModalOpen(true);
+            return;
+          }
           setSaved(false);
           setError("");
           setSaving(true);
@@ -131,6 +139,16 @@ export function ArtistProfileForm({
         <p className="text-center text-xs text-opus-warm/45">{a.note}</p>
       </form>
     </div>
+
+    <FormMessageModal
+      open={displayNameModalOpen}
+      title={m.formUi.validationTitle}
+      message={`${m.formUi.validationIntro}\n\n· ${a.displayNameLabel}: ${sa.validationErrRequired}`}
+      confirmLabel={m.formUi.confirm}
+      variant="neutral"
+      onClose={() => setDisplayNameModalOpen(false)}
+    />
+    </>
   );
 }
 

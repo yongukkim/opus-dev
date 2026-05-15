@@ -65,6 +65,10 @@ export type ConsoleMessages = {
     subtitle: string;
     cardSubmissionsTitle: string;
     cardSubmissionsBody: string;
+    /** `{count}` = items in pending_review + changes_requested (same as review queue). */
+    cardSubmissionsPendingCountTpl: string;
+    /** When the storefront submissions list could not be loaded (home card badge). */
+    cardSubmissionsCountUnavailable: string;
     cardSubmissionsCta: string;
     cardPaymentsTitle: string;
     cardPaymentsBody: string;

@@ -398,6 +398,16 @@ export type Messages = {
     resendVerificationFailed: string;
     note: string;
   };
+  /** Shared dialog copy for client-side validation modals (storefront forms). */
+  formUi: {
+    validationTitle: string;
+    errorTitle: string;
+    confirm: string;
+    /** Lead line before optional bullet list of fields. */
+    validationIntro: string;
+    /** Payout / bank account forms — all fields required before save. */
+    payoutRequiredBody: string;
+  };
   signup: SignupMessages;
   artistSignup: SignupMessages;
   artistSubmissionGuide: ArtistSubmissionGuideMessages;
@@ -745,6 +755,8 @@ export type Messages = {
     savingCta: string;
     saveFailedBanner: string;
     penNameLockedError: string;
+    /** Client-side check before POST — display name (if not locked) + bank fields. */
+    requiredFieldsMissingBody: string;
     backToHome: string;
   };
   payouts: {
@@ -952,6 +964,9 @@ export type Messages = {
     apiSaveErr: string;
     saveDraft: string;
     submit: string;
+    validationErrRequired: string;
+    validationErrInvalid: string;
+    validationErrRights: string;
     previewTitle: string;
     /** 승인 대기·수정 요청 중 전면 수정은 내 작품에서 등록취소 후 재등록. */
     withdrawWhilePendingHint: string;

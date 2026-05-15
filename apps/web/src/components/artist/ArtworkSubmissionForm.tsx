@@ -8,6 +8,7 @@ import { OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGenreKey } from "@/lib/opusArt
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { genreQuickKeywordsForLocale } from "@/lib/genreQuickKeywords";
 import { GenreKeywordQuickPick } from "@/components/forms/GenreKeywordQuickPick";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 type Genre = "" | OpusArtworkGenreKey;
 
@@ -73,6 +74,51 @@ function tpl(template: string, vars: Record<string, string | number>): string {
   return template.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ""));
 }
 
+function labelForDraftKey(k: keyof Draft, s: Messages["submitArtwork"]): string {
+  switch (k) {
+    case "artistName":
+      return s.artistNameLabel;
+    case "artworkTitle":
+      return s.artworkTitleLabel;
+    case "genre":
+      return s.genreLabel;
+    case "audienceCategory":
+      return s.audienceLabel;
+    case "year":
+      return s.yearLabel;
+    case "priceJpy":
+      return s.priceLabel;
+    case "editionTotal":
+      return s.editionTotalLabel;
+    case "initialMint":
+      return s.initialMintLabel;
+    case "file":
+      return s.uploadLabel;
+    case "rightsConfirmed":
+      return s.rightsConfirmLabel;
+    default:
+      return String(k);
+  }
+}
+
+function formatArtworkValidationModal(
+  errors: Partial<Record<keyof Draft, string>>,
+  s: Messages["submitArtwork"],
+  intro: string,
+): string {
+  const keys = Object.keys(errors) as (keyof Draft)[];
+  if (keys.length === 0) return intro;
+  const lines = keys.map((k) => {
+    const raw = errors[k];
+    let detail = raw ?? "";
+    if (detail === "Required") detail = s.validationErrRequired;
+    else if (detail === "Invalid" || detail === "Invalid year") detail = s.validationErrInvalid;
+    else if (detail === "Confirm required") detail = s.validationErrRights;
+    return `· ${labelForDraftKey(k, s)}: ${detail}`;
+  });
+  return `${intro}\n\n${lines.join("\n")}`;
+}
+
 export function ArtworkSubmissionForm({
   locale,
   m,
@@ -108,6 +154,7 @@ export function ArtworkSubmissionForm({
 
   const [touched, setTouched] = useState<Partial<Record<keyof Draft, boolean>>>({});
   const [banner, setBanner] = useState<string | null>(null);
+  const [validationModal, setValidationModal] = useState<{ open: boolean; body: string }>({ open: false, body: "" });
 
   const genreQuickKeywords = useMemo(() => [...genreQuickKeywordsForLocale(locale)], [locale]);
 
@@ -251,7 +298,10 @@ export function ArtworkSubmissionForm({
     });
 
     if (hasErrors) {
-      setBanner(s.apiSaveErr);
+      setValidationModal({
+        open: true,
+        body: formatArtworkValidationModal(errors, s, m.formUi.validationIntro),
+      });
       return;
     }
 
@@ -776,6 +826,15 @@ export function ArtworkSubmissionForm({
           </p>
         </div>
       </aside>
+
+      <FormMessageModal
+        open={validationModal.open}
+        title={m.formUi.validationTitle}
+        message={validationModal.body}
+        confirmLabel={m.formUi.confirm}
+        variant="neutral"
+        onClose={() => setValidationModal({ open: false, body: "" })}
+      />
     </div>
   );
 }

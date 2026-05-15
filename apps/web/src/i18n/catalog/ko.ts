@@ -189,6 +189,13 @@ export const ko: Messages = {
     resendVerificationFailed: "요청에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     note: "SNS 로그인은 각 제공자의 OAuth 설정이 있을 때 활성화됩니다. 이메일 가입은 인증 링크 확인 후 로그인할 수 있습니다.",
   },
+  formUi: {
+    validationTitle: "입력 확인",
+    errorTitle: "알림",
+    confirm: "확인",
+    validationIntro: "다음 항목을 확인해 주세요.",
+    payoutRequiredBody: "은행명, 예금주, 계좌번호(6자리 이상)를 모두 입력해 주세요.",
+  },
   signup: {
     title: "회원가입",
     subtitle: "SNS 계정 또는 이메일로 가입합니다(필수 동의는 로그인과 동일하게 적용됩니다).",
@@ -465,6 +472,8 @@ export const ko: Messages = {
     savingCta: "저장 중...",
     saveFailedBanner: "저장에 실패했습니다. 입력값을 확인해 주세요.",
     penNameLockedError: "필명은 이미 확정되어 변경할 수 없습니다.",
+    requiredFieldsMissingBody:
+      "필명(또는 표시 이름)이 비어 있거나, 은행·예금주·계좌번호(6자리 이상)가 올바르지 않습니다. 필수 항목을 모두 입력해 주세요.",
     backToHome: "← 홈으로",
   },
   payouts: {
@@ -750,6 +759,9 @@ export const ko: Messages = {
     apiSaveErr: "저장에 실패했습니다. 입력값과 파일을 확인해 주세요.",
     saveDraft: "초안 저장",
     submit: "작품 등록",
+    validationErrRequired: "필수 입력",
+    validationErrInvalid: "값을 확인해 주세요",
+    validationErrRights: "권리 확인에 동의해 주세요",
     previewTitle: "미리보기",
     withdrawWhilePendingHint:
       "승인 대기 중이거나 수정 요청을 받은 등록은, 이미지·설명 등을 바꾸려면 내 작품에서 등록취소한 뒤 이 화면에서 새로 등록해 주세요. 에디션 수치만 조정할 때는 내 작품의 에디션 설정을 이용할 수 있습니다.",

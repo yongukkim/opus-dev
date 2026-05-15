@@ -7,6 +7,7 @@ import {
   storefrontGoogleConfigured,
   storefrontLineCredentials,
 } from "@/lib/storefrontOAuthEnv";
+import { storefrontSessionMaxAgeSeconds } from "@/lib/storefrontSession";
 
 /**
  * ISO 27001 A.9.4.2 / A.13.1.3 (§2, §6) Edge-safe Auth.js config.
@@ -19,6 +20,11 @@ import {
  *
  * Env (no values in repo): AUTH_GOOGLE_ID/SECRET, AUTH_APPLE_ID/SECRET (JWT client secret per Apple),
  * AUTH_LINE_ID/SECRET or LINE_LOGIN_CHANNEL_ID/SECRET. Callback: `{AUTH_URL}/api/auth/callback/{provider}`.
+ *
+ * ISO 27001 A.9.4.2 (§2) — JWT `session.maxAge` caps wall-clock session length (see `OPUS_WEB_SESSION_MAX_AGE_SECONDS`).
+ * KO: 세션 만료는 Edge·Node 공통 `auth.config`의 maxAge로만 제한한다(비밀은 env).
+ * JA: セション期限は Edge/Node 共通の auth.config の maxAge のみで制限する（秘密は env）。
+ * EN: Session expiry is enforced only via shared `auth.config` maxAge on Edge and Node (secrets in env).
  */
 const googleOn = storefrontGoogleConfigured();
 const apple = storefrontAppleCredentials();
@@ -26,7 +32,7 @@ const line = storefrontLineCredentials();
 
 export const authConfig = {
   trustHost: true,
-  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 30 },
+  session: { strategy: "jwt", maxAge: storefrontSessionMaxAgeSeconds() },
   providers: [
     ...(googleOn
       ? [

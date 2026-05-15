@@ -9,6 +9,7 @@ import { COLLECTOR_TRANSFER_GENRES, OPUS_ARTWORK_GENRE_KEYS, type OpusArtworkGen
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { genreQuickKeywordsForLocale } from "@/lib/genreQuickKeywords";
 import { GenreKeywordQuickPick } from "@/components/forms/GenreKeywordQuickPick";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 import Link from "next/link";
 import { withLocale } from "@/i18n/paths";
 
@@ -147,7 +148,11 @@ export function CollectorTransferRegisterForm({
 
   const [touched, setTouched] = useState<Partial<Record<keyof Draft, boolean>>>({});
   const [banner, setBanner] = useState<"ok" | "err" | string | null>(null);
-  const [errorModalMessage, setErrorModalMessage] = useState<string | null>(null);
+  const [errorModal, setErrorModal] = useState<{
+    message: string;
+    title: string;
+    variant: "neutral" | "error";
+  } | null>(null);
   const [pending, setPending] = useState(false);
   const [previewThumbFailed, setPreviewThumbFailed] = useState(false);
 
@@ -393,12 +398,20 @@ export function CollectorTransferRegisterForm({
     );
 
     if (!draft.rightsConfirmed) {
-      window.alert(t.consentRequiredAlert);
+      setErrorModal({
+        message: t.consentRequiredAlert,
+        title: m.formUi.validationTitle,
+        variant: "neutral",
+      });
       return;
     }
 
     if (hasErrors) {
-      setErrorModalMessage(mapClientValidationError(errors));
+      setErrorModal({
+        message: mapClientValidationError(errors),
+        title: m.formUi.validationTitle,
+        variant: "neutral",
+      });
       return;
     }
 
@@ -448,7 +461,11 @@ export function CollectorTransferRegisterForm({
       });
       const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok) {
-        setErrorModalMessage(mapApiErrorToBanner(body.error));
+        setErrorModal({
+          message: mapApiErrorToBanner(body.error),
+          title: m.formUi.errorTitle,
+          variant: "error",
+        });
         return;
       }
       setBanner("ok");
@@ -484,7 +501,7 @@ export function CollectorTransferRegisterForm({
       );
       setTouched({});
     } catch {
-      setErrorModalMessage(t.errorBanner);
+      setErrorModal({ message: t.errorBanner, title: m.formUi.errorTitle, variant: "error" });
     } finally {
       setPending(false);
     }
@@ -992,22 +1009,15 @@ export function CollectorTransferRegisterForm({
         </div>
       </aside>
 
-      {errorModalMessage ? (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/65 px-4" role="dialog" aria-modal="true">
-          <div className="w-full max-w-lg rounded-xl border border-red-400/30 bg-opus-charcoal p-5 shadow-opus-card">
-            <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-red-200/75">Submission Error</p>
-            <p className="mt-3 text-sm leading-relaxed text-opus-warm/85">{errorModalMessage}</p>
-            <div className="mt-5 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setErrorModalMessage(null)}
-                className="rounded-md border border-white/[0.18] px-4 py-2 text-sm text-opus-warm/85 transition hover:border-opus-gold/35 hover:text-opus-gold-light"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
+      {errorModal ? (
+        <FormMessageModal
+          open
+          title={errorModal.title}
+          message={errorModal.message}
+          confirmLabel={m.formUi.confirm}
+          variant={errorModal.variant}
+          onClose={() => setErrorModal(null)}
+        />
       ) : null}
     </div>
   );

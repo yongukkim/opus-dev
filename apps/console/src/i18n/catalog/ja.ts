@@ -68,6 +68,8 @@ export const ja: ConsoleMessages = {
       "公開ストアから分離したバックオフィスです。承認待ちの審査は今すぐ利用でき、決済・照合ツールは KOMOJU 連携後に段階的に提供します。",
     cardSubmissionsTitle: "承認待ち",
     cardSubmissionsBody: "作品登録の提出を審査し承認します。",
+    cardSubmissionsPendingCountTpl: "待ち {count} 件",
+    cardSubmissionsCountUnavailable: "件数を取得できませんでした",
     cardSubmissionsCta: "承認待ちへ",
     cardPaymentsTitle: "決済・照合",
     cardPaymentsBody:

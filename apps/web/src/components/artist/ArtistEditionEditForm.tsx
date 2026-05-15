@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import { withLocale } from "@/i18n/paths";
 import type { Messages } from "@/i18n/types";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 type EditionMode = "unique" | "limited";
 type NumberingPolicy = "auto" | "manual";
@@ -86,6 +87,10 @@ export function ArtistEditionEditForm({
   const [touched, setTouched] = useState<Partial<Record<keyof Draft, boolean>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [editionValidationModal, setEditionValidationModal] = useState<{ open: boolean; body: string }>({
+    open: false,
+    body: "",
+  });
 
   const errors = useMemo(() => editionDraftErrors(draft), [draft]);
 
@@ -160,7 +165,17 @@ export function ArtistEditionEditForm({
       numberingPolicy: true,
       lockEdition: true,
     });
-    if (Object.keys(editionDraftErrors(draft)).length > 0) return;
+    const editionErrors = editionDraftErrors(draft);
+    if (Object.keys(editionErrors).length > 0) {
+      const lines: string[] = [];
+      if (editionErrors.editionTotal) lines.push(`· ${s.editionTotalLabel}: ${s.validationErrInvalid}`);
+      if (editionErrors.initialMint) lines.push(`· ${s.initialMintLabel}: ${s.validationErrInvalid}`);
+      setEditionValidationModal({
+        open: true,
+        body: `${m.formUi.validationIntro}\n\n${lines.join("\n")}`,
+      });
+      return;
+    }
     if (!window.confirm(aa.editionSaveConfirmPrompt)) return;
 
     setSubmitting(true);
@@ -191,6 +206,7 @@ export function ArtistEditionEditForm({
   }
 
   return (
+    <>
     <form onSubmit={onSubmit} className="mt-8 max-w-xl space-y-6">
       <p className="font-display text-lg text-opus-warm/90">{artworkTitle}</p>
 
@@ -317,5 +333,15 @@ export function ArtistEditionEditForm({
       </div>
       <p className="text-xs leading-relaxed text-opus-warm/50">{aa.editionSaveSaleLockNotice}</p>
     </form>
+
+    <FormMessageModal
+      open={editionValidationModal.open}
+      title={m.formUi.validationTitle}
+      message={editionValidationModal.body}
+      confirmLabel={m.formUi.confirm}
+      variant="neutral"
+      onClose={() => setEditionValidationModal({ open: false, body: "" })}
+    />
+    </>
   );
 }

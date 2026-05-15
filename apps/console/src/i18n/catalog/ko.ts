@@ -68,6 +68,8 @@ export const ko: ConsoleMessages = {
       "공개 스토어와 분리된 백오피스입니다. 승인 대기 검수는 지금 사용할 수 있으며, 결제·대사 도구는 KOMOJU 연동 후 단계적으로 열립니다.",
     cardSubmissionsTitle: "승인 대기",
     cardSubmissionsBody: "작품 등록 신청을 검토하고 승인합니다.",
+    cardSubmissionsPendingCountTpl: "대기 {count}건",
+    cardSubmissionsCountUnavailable: "목록을 불러오지 못함",
     cardSubmissionsCta: "승인 대기로 이동",
     cardPaymentsTitle: "결제·대사",
     cardPaymentsBody:

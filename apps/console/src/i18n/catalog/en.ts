@@ -67,6 +67,8 @@ export const en: ConsoleMessages = {
       "Back office separated from the public storefront. Pending approval review is available now; payment records and reconciliation will roll out with KOMOJU in phases.",
     cardSubmissionsTitle: "Pending Approval",
     cardSubmissionsBody: "Review and approve artwork registration submissions.",
+    cardSubmissionsPendingCountTpl: "{count} awaiting review",
+    cardSubmissionsCountUnavailable: "Count unavailable",
     cardSubmissionsCta: "Open pending items",
     cardPaymentsTitle: "Payments & reconciliation",
     cardPaymentsBody:

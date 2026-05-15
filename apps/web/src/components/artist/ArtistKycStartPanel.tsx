@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
+import { FormMessageModal } from "@/components/forms/FormMessageModal";
 
 export function ArtistKycStartPanel({
   locale,
@@ -15,6 +16,7 @@ export function ArtistKycStartPanel({
   returnTo: string;
 }) {
   const [pending, setPending] = useState(false);
+  const [failModalOpen, setFailModalOpen] = useState(false);
   const router = useRouter();
 
   async function completeDemoKyc() {
@@ -23,13 +25,13 @@ export function ArtistKycStartPanel({
     try {
       const res = await fetch("/api/artist/kyc/complete", { method: "POST" });
       if (!res.ok) {
-        window.alert(m.artistKyc.startNotReadyAlert);
+        setFailModalOpen(true);
         return;
       }
       router.push(returnTo);
       router.refresh();
     } catch {
-      window.alert(m.artistKyc.startNotReadyAlert);
+      setFailModalOpen(true);
     } finally {
       setPending(false);
     }
@@ -57,6 +59,15 @@ export function ArtistKycStartPanel({
         </button>
         <p className="mt-4 text-center text-xs text-opus-warm/45">{m.artistKyc.startNote}</p>
       </div>
+
+      <FormMessageModal
+        open={failModalOpen}
+        title={m.formUi.errorTitle}
+        message={m.artistKyc.startNotReadyAlert}
+        confirmLabel={m.formUi.confirm}
+        variant="error"
+        onClose={() => setFailModalOpen(false)}
+      />
     </div>
   );
 }
