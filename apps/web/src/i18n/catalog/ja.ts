@@ -357,7 +357,8 @@ export const ja: Messages = {
     ariaSiteFooter: "サイトフッター",
     ariaServiceNav: "サービスリンク",
     ariaLegalNav: "法務文書",
-    contactPlaceholder: "プレースホルダー — 公開前に差し替えてください。",
+    contactPlaceholder:
+      "事業者情報（商号・所在地・代表者等）は整備中です。お問い合わせは下記メールへご連絡ください。",
     contactChannelGeneral: "一般",
     contactChannelLegal: "法務・プライバシー",
   },

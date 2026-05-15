@@ -8,7 +8,7 @@ This policy describes how OPUS (the "Service") collects, uses, stores, and dispo
 
 - **Operating entity (tentative)**: [Insert legal name]
 - **Data Protection Officer / Personal Information Protection Manager (tentative)**: [Insert role, name, or contact window]
-- **Contact**: [Insert email address or dedicated form URL]
+- **Contact**: **admin@opus-store.com** (a dedicated form URL will be published separately when available)
 
 ---
 

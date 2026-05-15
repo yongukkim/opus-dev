@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
+import { OPUS_PUBLIC_CONTACT_EMAIL } from "@/lib/siteContact";
 
 /**
  * Deep charcoal footer, four-column IA. LEGAL links to public docs + Terms.
@@ -136,14 +137,14 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
             <p className="mt-6 text-sm leading-relaxed text-opus-gold/42">{m.footer.contactPlaceholder}</p>
             <p className="mt-4 font-mono text-xs text-opus-gold/45">
               <span className="block text-opus-gold/35">{m.footer.contactChannelGeneral}</span>
-              <a href="mailto:support@opus.example" className="mt-1 inline-block hover:text-opus-gold/80">
-                support@opus.example
+              <a href={`mailto:${OPUS_PUBLIC_CONTACT_EMAIL}`} className="mt-1 inline-block hover:text-opus-gold/80">
+                {OPUS_PUBLIC_CONTACT_EMAIL}
               </a>
             </p>
             <p className="mt-3 font-mono text-xs text-opus-gold/45">
               <span className="block text-opus-gold/35">{m.footer.contactChannelLegal}</span>
-              <a href="mailto:legal@opus.example" className="mt-1 inline-block hover:text-opus-gold/80">
-                legal@opus.example
+              <a href={`mailto:${OPUS_PUBLIC_CONTACT_EMAIL}`} className="mt-1 inline-block hover:text-opus-gold/80">
+                {OPUS_PUBLIC_CONTACT_EMAIL}
               </a>
             </p>
           </div>

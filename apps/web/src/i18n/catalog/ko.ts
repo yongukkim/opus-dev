@@ -355,7 +355,8 @@ export const ko: Messages = {
     ariaSiteFooter: "사이트 푸터",
     ariaServiceNav: "서비스 링크",
     ariaLegalNav: "법적 문서",
-    contactPlaceholder: "플레이스홀더 — 런칭 전 교체 예정입니다.",
+    contactPlaceholder:
+      "사업자 상세(상호·주소·대표 등)는 정리 중입니다. 문의는 아래 이메일로 보내 주시면 됩니다.",
     contactChannelGeneral: "일반",
     contactChannelLegal: "법무·개인정보",
   },

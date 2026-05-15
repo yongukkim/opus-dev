@@ -355,7 +355,8 @@ export const en: Messages = {
     ariaSiteFooter: "Site footer",
     ariaServiceNav: "Service links",
     ariaLegalNav: "Legal documents",
-    contactPlaceholder: "Placeholder — replace before launch.",
+    contactPlaceholder:
+      "Operator details (legal name, address, representative, etc.) are being finalized. Use the email below for inquiries.",
     contactChannelGeneral: "General",
     contactChannelLegal: "Legal & privacy",
   },

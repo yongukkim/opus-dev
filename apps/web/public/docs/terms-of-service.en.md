@@ -197,5 +197,5 @@ The Company exercises reasonable care to:
 - **Company name**: [Insert legal entity]
 - **Representative**: [Insert representative name]
 - **Address**: [Insert place of business]
-- **Contact**: [Insert support email or contact URL]
+- **Contact**: **admin@opus-store.com** (a dedicated form URL will be published separately when available)
 - **Registration numbers (business registration, telecommunications sales-provider filing, etc.)**: [Insert if applicable]

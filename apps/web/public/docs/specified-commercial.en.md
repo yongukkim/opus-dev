@@ -41,7 +41,7 @@ Hours: **[e.g. Weekdays 10:00–18:00 JST; closed weekends and public holidays]*
 
 ## Email
 
-**[support@example.com or equivalent]**
+**admin@opus-store.com**
 
 ---
 
@@ -84,7 +84,7 @@ Hours: **[e.g. Weekdays 10:00–18:00 JST; closed weekends and public holidays]*
 
 - **Given the nature of digital content**, returns or cancellations **initiated by the buyer after download begins / after delivery is complete** may **not be accepted**, subject to **[statutory exceptions as required]**.
 - Where there is **non-conformity with the contract** (e.g. inability to deliver, material defect): **[refund / re-delivery policy]**
-- Process: **[support email / contact form URL]**
+- Process: **admin@opus-store.com** (a dedicated form URL will be published separately when available)
 
 ---
 

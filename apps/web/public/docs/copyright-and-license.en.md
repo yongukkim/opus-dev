@@ -34,5 +34,5 @@ Distributed-ledger technology used for editions is a **technical means** to evid
 
 ## 4. Contact & updates
 
-- For takedown requests or licensing questions, use the **legal / copyright contact** published by operations (placeholders such as `legal@opus.example` may appear until launch).
+- For takedown requests or licensing questions, contact **admin@opus-store.com**.
 - This notice may be **updated** as policies and contracts change.
