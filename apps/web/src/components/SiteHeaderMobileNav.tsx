@@ -8,17 +8,28 @@ export type SiteHeaderNavLink = {
   label: string;
 };
 
+/** Flat link or expandable My Page block (AhnLab CloudMate–style nested mobile nav). */
+export type SiteHeaderNavItem =
+  | { kind: "link"; href: string; label: string }
+  | {
+      kind: "vault";
+      label: string;
+      expandAria: string;
+      subNavAria: string;
+      children: SiteHeaderNavLink[];
+    };
+
 /**
  * Mobile primary navigation — hamburger opens a right-hand drawer on solid black (no page bleed-through).
  */
 export function SiteHeaderMobileNav({
-  links,
+  items,
   menuLabel,
   openLabel,
   closeLabel,
   ja,
 }: {
-  links: SiteHeaderNavLink[];
+  items: SiteHeaderNavItem[];
   menuLabel: string;
   openLabel: string;
   closeLabel: string;
@@ -44,6 +55,10 @@ export function SiteHeaderMobileNav({
   const linkClass = ja
     ? "block py-3.5 text-base font-medium tracking-tight break-keep text-opus-warm/88 transition hover:text-opus-gold"
     : "block py-3.5 text-sm font-medium uppercase tracking-[0.22em] text-opus-warm/88 transition hover:text-opus-gold";
+
+  const subLinkClass = ja
+    ? "block border-l border-opus-gold/25 py-2.5 pl-4 text-sm font-medium tracking-tight break-keep text-opus-warm/72 transition hover:text-opus-gold"
+    : "block border-l border-opus-gold/25 py-2.5 pl-4 text-xs font-medium uppercase tracking-[0.18em] text-opus-warm/72 transition hover:text-opus-gold";
 
   return (
     <>
@@ -81,13 +96,44 @@ export function SiteHeaderMobileNav({
             aria-label={menuLabel}
           >
             <ul className="divide-y divide-white/[0.07]">
-              {links.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} className={linkClass} onClick={() => setOpen(false)}>
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {items.map((item) =>
+                item.kind === "link" ? (
+                  <li key={item.href}>
+                    <Link href={item.href} className={linkClass} onClick={() => setOpen(false)}>
+                      {item.label}
+                    </Link>
+                  </li>
+                ) : (
+                  <li key="vault-group">
+                    <details className="group">
+                      <summary
+                        className={`${linkClass} flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden`}
+                        aria-label={item.expandAria}
+                      >
+                        <span>{item.label}</span>
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          aria-hidden
+                          className="shrink-0 stroke-opus-warm/45 transition group-open:rotate-180 group-open:stroke-opus-gold/70"
+                        >
+                          <path d="M3.5 5.25L7 8.75l3.5-3.5" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </summary>
+                      <ul className="space-y-0.5 pb-2 pt-1" aria-label={item.subNavAria}>
+                        {item.children.map((child) => (
+                          <li key={child.href}>
+                            <Link href={child.href} className={subLinkClass} onClick={() => setOpen(false)}>
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                ),
+              )}
             </ul>
           </nav>
         </>

@@ -55,6 +55,8 @@ export const en: Messages = {
     cta: "Call to action",
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    expandMyPageSubmenu: "Expand or collapse My Page submenu",
+    vaultMobileSubNav: "My Page sub-links",
   },
   nav: {
     releases: "Releases",
@@ -796,6 +798,14 @@ export const en: Messages = {
     buyCta: "Purchase & pay",
     legalLink: "Commercial disclosures (Japan)",
     comingSoon: "Coming soon",
+    discoveryStrip: {
+      eyebrow: "Explore",
+      ariaLabel: "Primary discovery links",
+      cardAboutBody: "Learn how OPUS presents authenticated digital editions and the collector experience.",
+      cardReleasesBody: "Browse first public editions from participating artists.",
+      cardArtistsBody: "Meet artists publishing work on OPUS.",
+      cta: "View more",
+    },
     railReleases: {
       title: "Releases — latest primary editions",
       body: "Approved artist registrations still held in the artist account as primary inventory. Next-custodian listings appear under Provenance.",

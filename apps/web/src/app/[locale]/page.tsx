@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { HomeDiscoveryStrip } from "@/components/home/HomeDiscoveryStrip";
 import { RailFeaturedArtists } from "@/components/home/RailFeaturedArtists";
 import { RailProvenance } from "@/components/home/RailProvenance";
 import { RailReleases } from "@/components/home/RailReleases";
@@ -35,6 +36,9 @@ export const dynamic = "force-dynamic";
  * - §3.2 `OmniSearchHintCard` between `Hero` and `<main>`: search-bar
  *   affordance that calls the same `open()` as ⌘K / the header trigger
  *   (`OmniSearchProvider` in `[locale]/layout.tsx`).
+ * - `HomeDiscoveryStrip` after the hint card: three-up “Business row”-style
+ *   links (About / Releases / Artists) in OPUS chrome; pattern reference
+ *   enterprise landings such as [AhnLab CloudMate](https://ahnlabcloudmate.com/).
  */
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
@@ -50,6 +54,7 @@ export default async function HomePage({ params }: Props) {
         chip={m.search.triggerChip}
         ja={locale === "ja"}
       />
+      <HomeDiscoveryStrip locale={locale} m={m} />
       <main
         id="main-content"
         className="border-t border-opus-gold/10 bg-gradient-to-b from-opus-charcoal via-[#141414] to-opus-charcoal"

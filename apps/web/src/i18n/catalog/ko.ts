@@ -55,6 +55,8 @@ export const ko: Messages = {
     cta: "행동 유도",
     openMenu: "메뉴 열기",
     closeMenu: "메뉴 닫기",
+    expandMyPageSubmenu: "마이페이지 하위 메뉴 펼치기·접기",
+    vaultMobileSubNav: "마이페이지 하위 링크",
   },
   nav: {
     releases: "신작공개",
@@ -793,6 +795,14 @@ export const ko: Messages = {
     buyCta: "구매·결제하기",
     legalLink: "특정상거래법 표시",
     comingSoon: "곧 공개",
+    discoveryStrip: {
+      eyebrow: "탐색",
+      ariaLabel: "주요 안내 링크",
+      cardAboutBody: "OPUS와 인증·감상 경험을 한눈에 살펴보세요.",
+      cardReleasesBody: "작가가 최초로 공개하는 1차 에디션 목록으로 이동합니다.",
+      cardArtistsBody: "작품을 공개하는 작가 목록을 만나 보세요.",
+      cta: "더 보기",
+    },
     railReleases: {
       title: "신작공개 · 최신 1차 에디션",
       body: "검수 승인된 작가 등록분 중, 작가 계정이 아직 소장 중인 1차 한정 에디션입니다. 다음 수탁자를 찾는 공개 안내는 소장품에서 보실 수 있습니다.",

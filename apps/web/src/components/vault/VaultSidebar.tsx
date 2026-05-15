@@ -5,15 +5,12 @@ import { usePathname } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import type { VaultUiRole } from "@/lib/vaultRole";
-import { withLocale } from "@/i18n/paths";
+import { getVaultNavItems } from "@/lib/vaultNavLinks";
 import { VaultRoleDemoSwitch } from "./VaultRoleDemoSwitch";
 
 /**
  * Account sidebar (pattern: Web_Template 2135_mini_finance dashboard nav).
  */
-const ARTIST_ONLY_PATHS = ["/vault/submit", "/vault/my-artworks", "/vault/artist-profile"] as const;
-const OPERATOR_ONLY_PATHS = ["/vault/authority"] as const;
-
 export function VaultSidebar({
   locale,
   m,
@@ -35,32 +32,7 @@ export function VaultSidebar({
   const ja = locale === "ja";
   const nav = m.vaultNav;
   const vaultCopy = m.vault;
-  const links = [
-    { path: "/vault/collection" as const, label: nav.collection },
-    { path: "/vault/transfer/register" as const, label: nav.transferRegister },
-    { path: "/vault/activity" as const, label: nav.activity },
-    { path: "/vault/submit" as const, label: nav.submit },
-    { path: "/vault/my-artworks" as const, label: nav.myArtworks },
-    { path: "/vault/payouts" as const, label: nav.payouts },
-    { path: "/vault/artist-profile" as const, label: nav.artistProfile },
-    { path: "/vault/authority" as const, label: nav.authoritySettings },
-    { path: "/vault/settings" as const, label: nav.settings },
-  ]
-    .filter(({ path }) => {
-      const showArtistNav = sessionIsArtist && vaultRole === "artist";
-      if (!showArtistNav && (ARTIST_ONLY_PATHS as readonly string[]).includes(path)) {
-        return false;
-      }
-      if (!isOperator && (OPERATOR_ONLY_PATHS as readonly string[]).includes(path)) {
-        return false;
-      }
-      return true;
-    })
-    .map(({ path, label }) => ({
-      path,
-      href: withLocale(locale, path),
-      label,
-    }));
+  const links = getVaultNavItems(locale, m, { sessionIsArtist, vaultRole, isOperator });
 
   function linkActive(href: string): boolean {
     return pathname === href || pathname.startsWith(`${href}/`);

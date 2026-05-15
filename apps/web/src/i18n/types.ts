@@ -140,6 +140,10 @@ export type Messages = {
     openMenu: string;
     /** Hamburger control — close primary nav drawer (mobile). */
     closeMenu: string;
+    /** `<summary>` for expandable My Page block in mobile drawer. */
+    expandMyPageSubmenu: string;
+    /** Nested vault links list in mobile drawer (SR only / aria-label). */
+    vaultMobileSubNav: string;
   };
   nav: {
     releases: string;
@@ -526,6 +530,21 @@ export type Messages = {
     legalLink: string;
     /** Shared "Coming soon" badge used on rail / chronicle placeholders below. */
     comingSoon: string;
+    /**
+     * Home strip below search hint — short “Business row”-style cards (B2B landing pattern);
+     * copy stays OPUS positioning (authenticated editions, collector experience).
+     */
+    discoveryStrip: {
+      /** Small mono label above the three cards (e.g. Explore / 探索). */
+      eyebrow: string;
+      /** Section landmark for screen readers. */
+      ariaLabel: string;
+      cardAboutBody: string;
+      cardReleasesBody: string;
+      cardArtistsBody: string;
+      /** Card footer CTA (VIEW MORE–style). */
+      cta: string;
+    };
     /**
      * Curation rail copy introduced in PR-3 (home IA rebuild) and progressively
      * filled in by PR-4..PR-7. Rails that already have their data wired add the

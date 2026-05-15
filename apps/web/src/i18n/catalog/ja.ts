@@ -55,6 +55,8 @@ export const ja: Messages = {
     cta: "行動喚起",
     openMenu: "メニューを開く",
     closeMenu: "メニューを閉じる",
+    expandMyPageSubmenu: "マイページのサブメニューを開閉",
+    vaultMobileSubNav: "マイページのサブリンク",
   },
   nav: {
     releases: "新作公開",
@@ -808,6 +810,14 @@ export const ja: Messages = {
     buyCta: "購入・決済へ進む",
     legalLink: "特定商取引法に基づく表記",
     comingSoon: "近日公開",
+    discoveryStrip: {
+      eyebrow: "探索",
+      ariaLabel: "主要な案内リンク",
+      cardAboutBody: "OPUSと認証・鑑賞体験の概要をご覧いただけます。",
+      cardReleasesBody: "作家が初めて公開する一次エディション一覧へ。",
+      cardArtistsBody: "作品を公開する作家をご覧ください。",
+      cta: "詳しく見る",
+    },
     railReleases: {
       title: "新作公開・最新の一次エディション",
       body: "審査承認済みで、作家アカウントがまだ所蔵する一次の限定エディションです。次の所蔵者を求める公開は来歴でご覧いただけます。",
