@@ -10,8 +10,17 @@
    */
   --font-cinzel: "Cinzel", Georgia, Cambria, "Times New Roman", serif;
   --font-mono-jb: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  /** Latin UI (EN + Latin snippets in KO/JA pages) — bundled via `@fontsource/noto-sans`. */
+  --font-noto-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  /** Korean UI — bundled via `@fontsource/noto-sans-kr`. */
+  --font-noto-sans-kr: "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
   --font-noto-sans-jp: "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
   --font-zen-old-mincho: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  /**
+   * UI sans resolved per locale so Mac/Windows match (no Segoe/SF-first stacks).
+   * Overridden on `html[data-opus-typography]`; default matches EN until layout sets attribute.
+   */
+  --font-opus-ui-sans: var(--font-noto-sans);
   /**
    * Fixed chrome: `SiteHeader` + `TrustStrip` (see `SiteHeader.tsx`, `TrustStrip.tsx`).
    * Mobile: single logo/auth row; hamburger sits in `TrustStrip` left of My Page. md+ single-row primary nav.
@@ -40,27 +49,54 @@
     text-rendering: optimizeLegibility;
   }
 
-  /**
-   * Japanese locale: Noto Sans JP for body / UI sans; Zen Old Mincho for `.font-serif` titles.
-   * KO: ja 레이아웃에서 본문은 Noto Sans JP, 제목용 유틸 `.font-serif`는 명조 계열로 통일한다.
-   * JA: 日本語UIでは本文をNoto Sans JP、`.font-serif`見出しをZen Old Minchoに揃える。
-   * EN: For `data-opus-typography="ja"`, body uses Noto Sans JP; `.font-serif` uses Zen Old Mincho.
-   */
-  html[data-opus-typography="ja"] body {
-    font-family: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
+  html[data-opus-typography="ko"] {
+    --font-opus-ui-sans: var(--font-noto-sans-kr);
   }
 
+  html[data-opus-typography="ja"] {
+    --font-opus-ui-sans: var(--font-noto-sans-jp);
+  }
+
+  html[data-opus-typography="en"] {
+    --font-opus-ui-sans: var(--font-noto-sans);
+  }
+
+  /**
+   * Per-locale UI sans: all bundled Noto families (Mac/Windows consistent).
+   * KO: `font-sans`는 Tailwind에서 `var(--font-opus-ui-sans)`로 연결되며, 로케일별 Noto를 씁니다.
+   * JA: `font-sans` は `--font-opus-ui-sans` 経由でロケール別 Noto に固定します。
+   * EN: `font-sans` resolves to `--font-opus-ui-sans` (Noto per locale), not OS UI fonts.
+   */
+  /**
+   * Japanese locale: `.font-serif` titles use Zen Old Mincho (bundled).
+   * KO: 일본어 UI에서만 `.font-serif` 유틸을 명조 계열로 둡니다.
+   * JA: 日本語UIでは `.font-serif` 見出しを Zen Old Mincho に揃えます。
+   * EN: For `data-opus-typography="ja"`, `.font-serif` uses Zen Old Mincho.
+   */
   html[data-opus-typography="ja"] .font-serif {
     font-family: var(--font-zen-old-mincho), "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
   }
 
   /**
-   * Japanese UI: CJK line breaking (keep word units); nav/buttons add `tracking-tight` in components.
+   * KO/EN: optional `.font-serif` — match display serif stack (Cinzel) for rare use outside JA.
+   * JA: 上記 `ja` ルールが優先されます。
+   */
+  html[data-opus-typography="ko"] .font-serif,
+  html[data-opus-typography="en"] .font-serif {
+    font-family: var(--font-cinzel);
+  }
+
+  /**
+   * Japanese + Korean UI: CJK line breaking (keep word units).
    * JA: 日本語は全角幅が広いため、メニュー・ボタンで詰め字と keep-all を併用する。
+   * KO: 한글·한자 혼용 UI에서 단어 단위 줄바꿈을 유지합니다.
    */
   html[data-opus-typography="ja"] main,
   html[data-opus-typography="ja"] header,
-  html[data-opus-typography="ja"] footer {
+  html[data-opus-typography="ja"] footer,
+  html[data-opus-typography="ko"] main,
+  html[data-opus-typography="ko"] header,
+  html[data-opus-typography="ko"] footer {
     word-break: keep-all;
     overflow-wrap: break-word;
   }
@@ -178,48 +214,15 @@ body {
   }
 
   /**
-   * Seller eKYC consent body — one weight, no synthetic bold; script-first stacks reduce per-glyph fallback mismatch.
-   * KO: 괄호·라틴 혼용 줄에서 글리프별 폰트가 갈라져 굵기가 달라 보이는 현상을 완화한다.
-   * JA: 括弧内やラテン混在でグリフごとに別フォントになり太さが変わる現象を抑える。
-   * EN: Mitigate mixed-script lines where fallback fonts change apparent weight.
+   * Seller eKYC consent body — one weight, no synthetic bold; uses same bundled UI sans as the rest of the app.
+   * KO: 본문과 동일한 `--font-opus-ui-sans`로 OS별 폰트 갈림을 줄입니다.
+   * JA: 本文と同じ `--font-opus-ui-sans` で OS 依存のブレを抑えます。
+   * EN: Uses `--font-opus-ui-sans` like the global body to avoid OS-specific UI font mixing.
    */
   .opus-seller-verify-uniform {
     font-synthesis: none;
     font-weight: 300;
-  }
-
-  .opus-seller-verify-uniform[data-locale="ja"] {
-    font-family:
-      var(--font-noto-sans-jp),
-      "Hiragino Kaku Gothic ProN",
-      "Hiragino Sans",
-      "Noto Sans JP",
-      ui-sans-serif,
-      system-ui,
-      sans-serif;
-  }
-
-  .opus-seller-verify-uniform[data-locale="ko"] {
-    font-family:
-      "Apple SD Gothic Neo",
-      "Malgun Gothic",
-      "Noto Sans KR",
-      ui-sans-serif,
-      system-ui,
-      sans-serif;
-  }
-
-  .opus-seller-verify-uniform[data-locale="en"] {
-    font-family:
-      ui-sans-serif,
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      sans-serif;
+    font-family: var(--font-opus-ui-sans);
   }
 
   .opus-seller-verify-uniform :is(b, strong) {

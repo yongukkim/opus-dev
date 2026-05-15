@@ -75,10 +75,10 @@ importers:
         version: 10.4.27(postcss@8.5.8)
       eslint:
         specifier: ^9.39.0
-        version: 9.39.4(jiti@1.21.7)
+        version: 9.39.4(jiti@2.6.1)
       eslint-config-next:
         specifier: ^16.2.1
-        version: 16.2.1(@typescript-eslint/parser@8.57.1(eslint@9.39.4(jiti@1.21.7))(typescript@5.9.3))(eslint@9.39.4(jiti@1.21.7))(typescript@5.9.3)
+        version: 16.2.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
       postcss:
         specifier: ^8.5.3
         version: 8.5.8
@@ -93,7 +93,7 @@ importers:
         version: 5.9.3
       typescript-eslint:
         specifier: ^8.25.0
-        version: 8.57.1(eslint@9.39.4(jiti@1.21.7))(typescript@5.9.3)
+        version: 8.57.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
 
   apps/mobile:
     dependencies:
@@ -221,7 +221,13 @@ importers:
       '@fontsource/jetbrains-mono':
         specifier: ^5.2.8
         version: 5.2.8
+      '@fontsource/noto-sans':
+        specifier: ^5.2.9
+        version: 5.2.10
       '@fontsource/noto-sans-jp':
+        specifier: ^5.2.9
+        version: 5.2.9
+      '@fontsource/noto-sans-kr':
         specifier: ^5.2.9
         version: 5.2.9
       '@fontsource/zen-old-mincho':
@@ -305,10 +311,10 @@ importers:
         version: 10.4.27(postcss@8.5.8)
       eslint:
         specifier: ^9.39.0
-        version: 9.39.4(jiti@2.6.1)
+        version: 9.39.4(jiti@1.21.7)
       eslint-config-next:
         specifier: ^16.2.1
-        version: 16.2.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
+        version: 16.2.1(@typescript-eslint/parser@8.57.1(eslint@9.39.4(jiti@1.21.7))(typescript@5.9.3))(eslint@9.39.4(jiti@1.21.7))(typescript@5.9.3)
       postcss:
         specifier: ^8.5.3
         version: 8.5.8
@@ -323,7 +329,7 @@ importers:
         version: 5.9.3
       typescript-eslint:
         specifier: ^8.25.0
-        version: 8.57.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
+        version: 8.57.1(eslint@9.39.4(jiti@1.21.7))(typescript@5.9.3)
 
   packages/api:
     dependencies:
@@ -1167,6 +1173,12 @@ packages:
 
   '@fontsource/noto-sans-jp@5.2.9':
     resolution: {integrity: sha512-6yVGiofnrnbiJjU8ch4JGSs2HqyozxMvsVyVmFwOnDH3u//qQKLqmKM4n0lqN0637uaJNzUW9nIJqbbMgHVQzw==}
+
+  '@fontsource/noto-sans-kr@5.2.9':
+    resolution: {integrity: sha512-pbF8F0rUzKkDmnk/KYGAbxjgW4TrIHdFKnV6OQ+kUC9ELCn5utrAURcEgMqq3J9SRX+FvjOz+aBCmfcC8/r7cw==}
+
+  '@fontsource/noto-sans@5.2.10':
+    resolution: {integrity: sha512-J58RVfS/C0Z2VBF+PoU260Tx8cdRGYuS+e3yQe4hYaIYDl0sEVn5CzlLo5zVRvQD0HaIUTV8AZMfqR7rtdEpqQ==}
 
   '@fontsource/zen-old-mincho@5.2.8':
     resolution: {integrity: sha512-ZMnFdz7/a97kdeR5KNfjiBJZc26BZhyI7+wgO87Z6lh+g6WtTJBvUokHyeQgjiCyXCXybpEuFLmc4zEZtzdNYA==}
@@ -6718,6 +6730,10 @@ snapshots:
   '@fontsource/jetbrains-mono@5.2.8': {}
 
   '@fontsource/noto-sans-jp@5.2.9': {}
+
+  '@fontsource/noto-sans-kr@5.2.9': {}
+
+  '@fontsource/noto-sans@5.2.10': {}
 
   '@fontsource/zen-old-mincho@5.2.8': {}
 

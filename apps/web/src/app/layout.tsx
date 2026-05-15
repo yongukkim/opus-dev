@@ -4,6 +4,14 @@ import "@fontsource/cinzel/600.css";
 import "@fontsource/cinzel/700.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/noto-sans/300.css";
+import "@fontsource/noto-sans/400.css";
+import "@fontsource/noto-sans/500.css";
+import "@fontsource/noto-sans/700.css";
+import "@fontsource/noto-sans-kr/300.css";
+import "@fontsource/noto-sans-kr/400.css";
+import "@fontsource/noto-sans-kr/500.css";
+import "@fontsource/noto-sans-kr/700.css";
 import "@fontsource/noto-sans-jp/300.css";
 import "@fontsource/noto-sans-jp/400.css";
 import "@fontsource/noto-sans-jp/500.css";
@@ -23,6 +31,7 @@ import "./globals.css";
  * KO: 폰트 바이너리는 `@fontsource/*`로 빌드 산출물에 포함되어 동일 출처로 제공되며, 런타임에 Google Fonts CDN을 치지 않습니다.
  * JA: フォントは `@fontsource/*` でビルド成果物に同梱され、ランタイムで Google Fonts CDN を参照しません。
  * EN: Font binaries ship inside the app bundle via `@fontsource/*`; no runtime fetch to Google Fonts CDN.
+ * KO/EN/JA UI sans: Noto Sans / Noto Sans KR / Noto Sans JP (`globals.css` `--font-opus-ui-sans`)로 OS별 기본 서체 차이를 줄입니다.
  */
 
 export const metadata: Metadata = {
@@ -57,10 +66,9 @@ function headerLocale(value: string | null): Locale {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const h = await headers();
   const lang = headerLocale(h.get("x-opus-locale"));
-  const isJa = lang === "ja";
 
   return (
-    <html lang={lang} data-opus-typography={isJa ? "ja" : undefined}>
+    <html lang={lang} data-opus-typography={lang}>
       <body className="font-sans">
         <Providers>{children}</Providers>
       </body>
