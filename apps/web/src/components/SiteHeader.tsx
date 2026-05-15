@@ -1,25 +1,20 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { auth } from "@/auth";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
-import { getVaultNavItems } from "@/lib/vaultNavLinks";
-import { getVaultUiRoleFromCookies } from "@/lib/vaultRole";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SiteHeaderAuth } from "./SiteHeaderAuth";
-import { SiteHeaderMobileNav, type SiteHeaderNavItem, type SiteHeaderNavLink } from "./SiteHeaderMobileNav";
+import type { SiteHeaderNavLink } from "./SiteHeaderMobileNav";
 
 /**
  * Fixed top bar — charcoal glass, gold accents (Classic Luxury).
  * Locale control: KO / EN / JA (pattern: marketplace.aline.team header language control).
- * Mobile: single row with hamburger drawer; md+: inline primary nav.
+ * Mobile: logo + auth row; hamburger lives in `TrustStrip` beside My Page. md+: inline primary nav.
  */
 export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
   const session = await auth();
   const isArtist = session?.user?.role === "artist";
-  const isOperator = session?.user?.role === "operator";
-  const vaultRole = getVaultUiRoleFromCookies(await cookies());
   const ja = locale === "ja";
   const artistSignupLabel = m.artistSignup?.title ?? m.signup.title;
   const navItemClass = ja
@@ -39,27 +34,6 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
     { href: withLocale(locale, "/provenance?saleMode=fixed"), label: m.nav.provenanceOnSale },
     { href: withLocale(locale, "/provenance?saleMode=auction"), label: m.nav.provenanceAuctions },
     { href: withLocale(locale, "/vault/collection"), label: m.nav.vault },
-  ];
-
-  const vaultMobileChildren = getVaultNavItems(locale, m, {
-    sessionIsArtist: isArtist,
-    vaultRole,
-    isOperator,
-  }).map(({ href, label }) => ({ href, label }));
-
-  const mobileNavItems: SiteHeaderNavItem[] = [
-    { kind: "link", href: withLocale(locale, "/about"), label: m.nav.about },
-    { kind: "link", href: withLocale(locale, "/releases"), label: m.nav.releases },
-    { kind: "link", href: withLocale(locale, "/featured-artists"), label: m.nav.artists },
-    { kind: "link", href: withLocale(locale, "/provenance?saleMode=fixed"), label: m.nav.provenanceOnSale },
-    { kind: "link", href: withLocale(locale, "/provenance?saleMode=auction"), label: m.nav.provenanceAuctions },
-    {
-      kind: "vault",
-      label: m.nav.vault,
-      expandAria: `${m.nav.vault}. ${m.a11y.expandMyPageSubmenu}`,
-      subNavAria: m.a11y.vaultMobileSubNav,
-      children: vaultMobileChildren,
-    },
   ];
 
   return (
@@ -91,16 +65,6 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
             ) : null}
             <LocaleSwitcher ariaLabel={m.a11y.language} />
           </div>
-        </div>
-
-        <div className="flex w-full shrink-0 justify-start md:hidden">
-            <SiteHeaderMobileNav
-            items={mobileNavItems}
-            menuLabel={m.a11y.primaryNav}
-            openLabel={m.a11y.openMenu}
-            closeLabel={m.a11y.closeMenu}
-            ja={ja}
-          />
         </div>
 
         <nav

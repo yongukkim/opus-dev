@@ -14,10 +14,10 @@
   --font-zen-old-mincho: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
   /**
    * Fixed chrome: `SiteHeader` + `TrustStrip` (see `SiteHeader.tsx`, `TrustStrip.tsx`).
-   * Mobile: logo row + hamburger row (flush left under logo); md+ single-row primary nav.
+   * Mobile: single logo/auth row; hamburger sits in `TrustStrip` left of My Page. md+ single-row primary nav.
    */
   --opus-trust-strip-height: 2.25rem;
-  --opus-site-header-height: 5.25rem;
+  --opus-site-header-height: 4.25rem;
   --opus-header-plus-trust: calc(var(--opus-site-header-height) + var(--opus-trust-strip-height));
   /**
    * Brighter champagne brass — multi-stop gradients for surface light / shade.
@@ -28,12 +28,6 @@
   --opus-brass-body: #d6bc96;
   --opus-brass-shadow: #c4a06e;
   --opus-brass-accent: #deb892;
-}
-
-@media (min-width: 768px) {
-  :root {
-    --opus-site-header-height: 4.25rem;
-  }
 }
 
 @layer base {
