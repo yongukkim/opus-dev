@@ -14,11 +14,10 @@
   --font-zen-old-mincho: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
   /**
    * Fixed chrome: `SiteHeader` + `TrustStrip` (see `SiteHeader.tsx`, `TrustStrip.tsx`).
-   * Mobile uses a two-row header so primary nav can wrap without horizontal scroll;
-   * `--opus-site-header-height` must match that layout’s block size (md+ stays single row).
+   * Mobile: single-row header + hamburger drawer; md+ inline primary nav.
    */
   --opus-trust-strip-height: 2.25rem;
-  --opus-site-header-height: 6.25rem;
+  --opus-site-header-height: 3.75rem;
   --opus-header-plus-trust: calc(var(--opus-site-header-height) + var(--opus-trust-strip-height));
   /**
    * Brighter champagne brass — multi-stop gradients for surface light / shade.

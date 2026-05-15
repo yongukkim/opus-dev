@@ -53,6 +53,8 @@ export const en: Messages = {
     hero: "OPUS hero",
     stats: "Trust metrics",
     cta: "Call to action",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
   },
   nav: {
     releases: "Releases",
@@ -60,6 +62,7 @@ export const en: Messages = {
     legal: "Legal",
     chronicle: "The Chronicle",
     provenance: "Provenance",
+    provenanceOnSale: "On sale",
     provenanceAuctions: "Live auctions",
     curation: "Curation",
     artists: "Artists",

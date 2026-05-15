@@ -136,6 +136,10 @@ export type Messages = {
     hero: string;
     stats: string;
     cta: string;
+    /** Hamburger control — open primary nav drawer (mobile). */
+    openMenu: string;
+    /** Hamburger control — close primary nav drawer (mobile). */
+    closeMenu: string;
   };
   nav: {
     releases: string;
@@ -146,6 +150,8 @@ export type Messages = {
     provenance: string;
     /** Primary nav — custody transfers listed in auction mode (`/provenance?saleMode=auction`). */
     provenanceAuctions: string;
+    /** Primary nav — custody transfers listed in fixed-price mode (`/provenance?saleMode=fixed`). */
+    provenanceOnSale: string;
     /** Operator-curated shelves index (PR-11). Single word per locale. */
     curation: string;
     /** Featured artists index (PR-12). Single word per locale. */

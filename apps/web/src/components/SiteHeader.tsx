@@ -5,11 +5,12 @@ import type { Messages } from "@/i18n/types";
 import { withLocale } from "@/i18n/paths";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SiteHeaderAuth } from "./SiteHeaderAuth";
+import { SiteHeaderMobileNav, type SiteHeaderNavLink } from "./SiteHeaderMobileNav";
 
 /**
  * Fixed top bar — charcoal glass, gold accents (Classic Luxury).
  * Locale control: KO / EN / JA (pattern: marketplace.aline.team header language control).
- * Narrow viewports: brand + locale on row 1, primary nav wraps on row 2 (no horizontal scroll).
+ * Mobile: single row with hamburger drawer; md+: inline primary nav.
  */
 export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages }) {
   const session = await auth();
@@ -26,20 +27,48 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
     ? "inline shrink-0 font-mono text-[0.65rem] tracking-tight break-keep text-opus-warm/55 transition hover:text-opus-gold"
     : "inline shrink-0 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-opus-warm/55 transition hover:text-opus-gold";
 
+  const primaryNavLinks: SiteHeaderNavLink[] = [
+    { href: withLocale(locale, "/about"), label: m.nav.about },
+    { href: withLocale(locale, "/releases"), label: m.nav.releases },
+    { href: withLocale(locale, "/featured-artists"), label: m.nav.artists },
+    { href: withLocale(locale, "/provenance?saleMode=fixed"), label: m.nav.provenanceOnSale },
+    { href: withLocale(locale, "/provenance?saleMode=auction"), label: m.nav.provenanceAuctions },
+    { href: withLocale(locale, "/vault/collection"), label: m.nav.vault },
+  ];
+
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 min-h-[var(--opus-site-header-height)] border-b border-white/[0.09] bg-opus-charcoal/72 backdrop-blur-xl md:flex md:h-[var(--opus-site-header-height)] md:min-h-0"
+      className="fixed inset-x-0 top-0 z-50 h-[var(--opus-site-header-height)] border-b border-white/[0.09] bg-opus-charcoal/72 backdrop-blur-xl"
       role="banner"
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-1.5 px-4 py-2 sm:px-6 md:h-full md:min-h-0 md:flex-row md:items-center md:justify-between md:gap-3 md:py-0 md:px-10">
-        <div className="flex min-h-0 min-w-0 items-center justify-between gap-2 md:shrink-0">
-          <Link
-            href={withLocale(locale, "/")}
-            className="opus-text-metallic shrink-0 font-display text-lg font-semibold tracking-[0.42em] transition hover:opacity-90 md:text-xl"
-          >
-            OPUS
-          </Link>
-          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-x-2 gap-y-1 md:hidden">
+      <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between gap-2 px-4 sm:px-6 md:gap-3 md:px-10">
+        <Link
+          href={withLocale(locale, "/")}
+          className="opus-text-metallic shrink-0 font-display text-lg font-semibold tracking-[0.42em] transition hover:opacity-90 md:text-xl"
+        >
+          OPUS
+        </Link>
+
+        <nav
+          className="hidden min-w-0 flex-1 flex-nowrap items-center justify-end gap-5 overflow-x-auto py-1 [-ms-overflow-style:none] [scrollbar-width:none] md:flex lg:gap-8 [&::-webkit-scrollbar]:hidden"
+          aria-label={m.a11y.primaryNav}
+        >
+          {primaryNavLinks.map((item) => (
+            <Link key={item.href} href={item.href} className={navItemClass}>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex shrink-0 items-center gap-x-2 gap-y-1 md:gap-3">
+          <SiteHeaderMobileNav
+            links={primaryNavLinks}
+            menuLabel={m.a11y.primaryNav}
+            openLabel={m.a11y.openMenu}
+            closeLabel={m.a11y.closeMenu}
+            ja={ja}
+          />
+          <div className="md:hidden">
             <SiteHeaderAuth
               variant="compact"
               locale={locale}
@@ -48,40 +77,13 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
               signOutLabel={m.auth.signOut}
               userEmail={session?.user?.email}
             />
-            {isArtist ? (
-              <Link href={withLocale(locale, "/vault/collection")} className={authItemClassMobile}>
-                {m.nav.vault}
-              </Link>
-            ) : (
-              <Link href={withLocale(locale, "/artist-signup")} className={authItemClassMobile}>
-                {artistSignupLabel}
-              </Link>
-            )}
-            <LocaleSwitcher ariaLabel={m.a11y.language} />
           </div>
-        </div>
-
-        <div className="flex min-w-0 flex-1 flex-col gap-2 md:h-full md:flex-row md:items-center md:justify-end md:gap-3 md:py-0">
-          <nav
-            className="flex w-full flex-wrap justify-center gap-x-2 gap-y-1.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-x-3 md:max-w-[min(100%,calc(100vw-11rem))] md:flex-nowrap md:justify-end md:gap-5 md:overflow-x-auto md:py-1 lg:gap-8 lg:gap-10 [&::-webkit-scrollbar]:hidden"
-            aria-label={m.a11y.primaryNav}
-          >
-            {/* Primary nav: About → Releases → … (About orients first-time visitors). */}
-            <Link href={withLocale(locale, "/about")} className={navItemClass}>
-              {m.nav.about}
+          {!isArtist ? (
+            <Link href={withLocale(locale, "/artist-signup")} className={`${authItemClassMobile} md:hidden`}>
+              {artistSignupLabel}
             </Link>
-            <Link href={withLocale(locale, "/releases")} className={navItemClass}>
-              {m.nav.releases}
-            </Link>
-            <Link href={withLocale(locale, "/featured-artists")} className={navItemClass}>
-              {m.nav.artists}
-            </Link>
-            {/* Chronicle + Provenance: deep links removed from primary nav (pages unchanged). */}
-            <Link href={withLocale(locale, "/provenance?saleMode=auction")} className={navItemClass}>
-              {m.nav.provenanceAuctions}
-            </Link>
-          </nav>
-          <div className="hidden shrink-0 items-center gap-2 md:flex md:gap-3">
+          ) : null}
+          <div className="hidden items-center gap-2 md:flex md:gap-3">
             <SiteHeaderAuth
               locale={locale}
               signInLabel={m.auth.signIn}
@@ -89,15 +91,14 @@ export async function SiteHeader({ locale, m }: { locale: Locale; m: Messages })
               signOutLabel={m.auth.signOut}
               userEmail={session?.user?.email}
             />
-            {isArtist ? (
-              <Link href={withLocale(locale, "/vault/collection")} className={authItemClass}>
-                {m.nav.vault}
-              </Link>
-            ) : (
+            {!isArtist ? (
               <Link href={withLocale(locale, "/artist-signup")} className={authItemClass}>
                 {artistSignupLabel}
               </Link>
-            )}
+            ) : null}
+            <LocaleSwitcher ariaLabel={m.a11y.language} />
+          </div>
+          <div className="md:hidden">
             <LocaleSwitcher ariaLabel={m.a11y.language} />
           </div>
         </div>

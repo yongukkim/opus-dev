@@ -53,6 +53,8 @@ export const ko: Messages = {
     hero: "OPUS 히어로",
     stats: "신뢰 지표",
     cta: "행동 유도",
+    openMenu: "메뉴 열기",
+    closeMenu: "메뉴 닫기",
   },
   nav: {
     releases: "신작공개",
@@ -60,6 +62,7 @@ export const ko: Messages = {
     legal: "법적 고지",
     chronicle: "The Chronicle",
     provenance: "소장품",
+    provenanceOnSale: "판매중",
     provenanceAuctions: "경매중",
     curation: "큐레이션",
     artists: "작가",

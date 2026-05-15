@@ -53,6 +53,8 @@ export const ja: Messages = {
     hero: "OPUSヒーロー",
     stats: "信頼指標",
     cta: "行動喚起",
+    openMenu: "メニューを開く",
+    closeMenu: "メニューを閉じる",
   },
   nav: {
     releases: "新作公開",
@@ -60,6 +62,7 @@ export const ja: Messages = {
     legal: "法的情報",
     chronicle: "The Chronicle",
     provenance: "来歴",
+    provenanceOnSale: "販売中",
     provenanceAuctions: "オークション中",
     curation: "キュレーション",
     artists: "作家",
