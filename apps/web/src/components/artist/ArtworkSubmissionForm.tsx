@@ -9,6 +9,7 @@ import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { genreQuickKeywordsForLocale } from "@/lib/genreQuickKeywords";
 import { GenreKeywordQuickPick } from "@/components/forms/GenreKeywordQuickPick";
 import { FormMessageModal } from "@/components/forms/FormMessageModal";
+import { OpusArtworkGenreSelect } from "@/components/forms/OpusArtworkGenreSelect";
 
 type Genre = "" | OpusArtworkGenreKey;
 
@@ -157,6 +158,11 @@ export function ArtworkSubmissionForm({
   const [validationModal, setValidationModal] = useState<{ open: boolean; body: string }>({ open: false, body: "" });
 
   const genreQuickKeywords = useMemo(() => [...genreQuickKeywordsForLocale(locale)], [locale]);
+
+  const genreOptions = useMemo(
+    () => OPUS_ARTWORK_GENRE_KEYS.map((key) => ({ key, label: opusArtworkGenreLabel(m.collectorTransfer, key) })),
+    [m.collectorTransfer],
+  );
 
   const fileMeta = useMemo(() => {
     if (!draft.file) return null;
@@ -523,20 +529,18 @@ export function ArtworkSubmissionForm({
 
           <div>
             <p className={labelClass()}>{s.genreLabel}</p>
-            <select
-              name="genre"
+            <OpusArtworkGenreSelect
               value={draft.genre}
-              onChange={onText}
+              onChange={(next) => {
+                setDraft((d) => ({ ...d, genre: next }));
+              }}
               onBlur={() => markTouched("genre")}
-              className={inputClass(invalid("genre"))}
-            >
-              <option value="">{s.genrePlaceholder}</option>
-              {OPUS_ARTWORK_GENRE_KEYS.map((key) => (
-                <option key={key} value={key}>
-                  {opusArtworkGenreLabel(m.collectorTransfer, key)}
-                </option>
-              ))}
-            </select>
+              invalid={invalid("genre")}
+              placeholder={s.genrePlaceholder}
+              options={genreOptions}
+              triggerClassName={inputClass(invalid("genre"))}
+              ariaLabel={s.genreLabel}
+            />
           </div>
 
           <div>

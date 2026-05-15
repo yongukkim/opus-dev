@@ -10,6 +10,7 @@ import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import { genreQuickKeywordsForLocale } from "@/lib/genreQuickKeywords";
 import { GenreKeywordQuickPick } from "@/components/forms/GenreKeywordQuickPick";
 import { FormMessageModal } from "@/components/forms/FormMessageModal";
+import { OpusArtworkGenreSelect } from "@/components/forms/OpusArtworkGenreSelect";
 import Link from "next/link";
 import { withLocale } from "@/i18n/paths";
 
@@ -192,6 +193,11 @@ export function CollectorTransferRegisterForm({
   }
 
   const genreQuickKeywords = useMemo(() => [...genreQuickKeywordsForLocale(locale)], [locale]);
+
+  const genreOptions = useMemo(
+    () => OPUS_ARTWORK_GENRE_KEYS.map((key) => ({ key, label: opusArtworkGenreLabel(t, key) })),
+    [t],
+  );
 
   const errors = useMemo(() => {
     if (artistPrimaryInventory) return {};
@@ -695,21 +701,19 @@ export function CollectorTransferRegisterForm({
 
           <div>
             <p className={labelClass()}>{t.genreLabel}</p>
-            <select
-              name="genre"
+            <OpusArtworkGenreSelect
               value={draft.genre}
-              onChange={onText}
+              onChange={(next) => {
+                setDraft((d) => ({ ...d, genre: next }));
+              }}
               onBlur={() => markTouched("genre")}
+              invalid={invalid("genre")}
               disabled={artworkLocked}
-              className={`${inputClass(invalid("genre"))} mt-2`}
-            >
-              <option value="">{t.genrePlaceholder}</option>
-              {OPUS_ARTWORK_GENRE_KEYS.map((key) => (
-                <option key={key} value={key}>
-                  {opusArtworkGenreLabel(t, key)}
-                </option>
-              ))}
-            </select>
+              placeholder={t.genrePlaceholder}
+              options={genreOptions}
+              triggerClassName={`${inputClass(invalid("genre"))} mt-2`}
+              ariaLabel={t.genreLabel}
+            />
             {invalid("genre") ? <p className="mt-1 text-xs text-red-300/70">Required</p> : null}
           </div>
 
