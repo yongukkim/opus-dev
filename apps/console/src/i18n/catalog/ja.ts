@@ -62,6 +62,28 @@ export const ja: ConsoleMessages = {
     loadError:
       "承認待ちリストを読み込めませんでした。OPUS_WEB_ORIGIN、OPUS_INTERNAL_API_SECRET、ネットワークを確認してください。",
   },
+  members: {
+    title: "全会員",
+    subtitle: "共有データベースに登録されたアカウント一覧です。運用者（OPERATOR）専用です。",
+    loadError:
+      "会員一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
+    totalTpl: "合計 {count} 名",
+    searchLabel: "検索",
+    searchPlaceholder: "メール / 名前 / ユーザーID",
+    empty: "条件に一致する会員がいません。",
+    colName: "名前",
+    colEmail: "メール",
+    colRole: "役割",
+    colCreated: "登録日",
+    colVerified: "メール認証",
+    colUserId: "ユーザーID",
+    verifiedYes: "済",
+    verifiedNo: "未",
+    roleCollector: "一般会員",
+    roleArtist: "作家",
+    roleOperator: "運用者",
+    backToDashboard: "ダッシュボードへ",
+  },
   dashboard: {
     title: "ダッシュボード",
     subtitle:

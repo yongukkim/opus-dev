@@ -38,6 +38,39 @@ export type ConsoleDashboardStats = {
   certificatesIssuedTotal: number;
 };
 
+export type ConsoleMemberRow = {
+  id: string;
+  name: string;
+  email: string;
+  role: "collector" | "artist" | "operator";
+  createdAt: string;
+  emailVerified: boolean;
+};
+
+export async function fetchMembersForOperator(actingUserId: string): Promise<{
+  users: ConsoleMemberRow[];
+  total: number;
+}> {
+  const origin = requireWebOrigin();
+  const res = await fetch(`${origin}/api/internal/operator/users`, {
+    headers: internalOperatorHeaders(actingUserId),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`members_list_failed:${res.status}`);
+  }
+  const body = (await res.json()) as {
+    ok?: boolean;
+    users?: ConsoleMemberRow[];
+    total?: number;
+    error?: string;
+  };
+  if (!body?.ok || !Array.isArray(body.users)) {
+    throw new Error(`members_list_invalid:${body?.error ?? "unknown"}`);
+  }
+  return { users: body.users, total: body.total ?? body.users.length };
+}
+
 export async function fetchDashboardStatsForOperator(actingUserId: string): Promise<ConsoleDashboardStats> {
   const origin = requireWebOrigin();
   const res = await fetch(`${origin}/api/internal/operator/dashboard-stats`, {

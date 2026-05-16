@@ -60,6 +60,27 @@ export type ConsoleMessages = {
     subtitle: string;
     loadError: string;
   };
+  members: {
+    title: string;
+    subtitle: string;
+    loadError: string;
+    totalTpl: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    empty: string;
+    colName: string;
+    colEmail: string;
+    colRole: string;
+    colCreated: string;
+    colVerified: string;
+    colUserId: string;
+    verifiedYes: string;
+    verifiedNo: string;
+    roleCollector: string;
+    roleArtist: string;
+    roleOperator: string;
+    backToDashboard: string;
+  };
   dashboard: {
     title: string;
     subtitle: string;

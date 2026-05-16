@@ -61,6 +61,28 @@ export const en: ConsoleMessages = {
     subtitle: "Review artwork registrations using the same data as the storefront operator tools.",
     loadError: "Could not load pending items. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and network access.",
   },
+  members: {
+    title: "All members",
+    subtitle: "Accounts registered in the shared database. Operator (OPERATOR) access only.",
+    loadError:
+      "Could not load the member list. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
+    totalTpl: "{count} accounts total",
+    searchLabel: "Search",
+    searchPlaceholder: "Email / name / user ID",
+    empty: "No members match your query.",
+    colName: "Name",
+    colEmail: "Email",
+    colRole: "Role",
+    colCreated: "Joined",
+    colVerified: "Email verified",
+    colUserId: "User ID",
+    verifiedYes: "Yes",
+    verifiedNo: "No",
+    roleCollector: "Collector",
+    roleArtist: "Artist",
+    roleOperator: "Operator",
+    backToDashboard: "Back to dashboard",
+  },
   dashboard: {
     title: "Dashboard",
     subtitle:

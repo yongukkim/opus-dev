@@ -67,11 +67,11 @@ export function ConsoleSidebarNav({
       </p>
       <ul className="flex flex-col gap-0.5" aria-label={statsNav.sectionHeading}>
         {statsNav.items.map((item) => {
-          const href = `${home}#${item.id}`;
-          const active = onHome && hash === `#${item.id}`;
+          const hashOnly = item.href.includes("#");
+          const active = hashOnly ? onHome && hash === `#${item.id}` : pathname === item.href || pathname === `${item.href}/`;
           return (
             <li key={item.id}>
-              <Link href={href} className={statsNavClass(active)}>
+              <Link href={item.href} className={statsNavClass(active)}>
                 {item.label}
               </Link>
             </li>

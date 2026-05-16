@@ -62,6 +62,28 @@ export const ko: ConsoleMessages = {
     loadError:
       "승인 대기 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 네트워크를 확인하세요.",
   },
+  members: {
+    title: "전체 회원",
+    subtitle: "공용 데이터베이스에 등록된 계정 목록입니다. 운영자(OPERATOR) 전용 화면입니다.",
+    loadError:
+      "회원 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 스토어 가용성을 확인하세요.",
+    totalTpl: "총 {count}명",
+    searchLabel: "검색",
+    searchPlaceholder: "이메일 / 이름 / 사용자 ID",
+    empty: "조건에 맞는 회원이 없습니다.",
+    colName: "이름",
+    colEmail: "이메일",
+    colRole: "역할",
+    colCreated: "가입일",
+    colVerified: "이메일 인증",
+    colUserId: "사용자 ID",
+    verifiedYes: "완료",
+    verifiedNo: "미완료",
+    roleCollector: "일반 회원",
+    roleArtist: "작가",
+    roleOperator: "운영자",
+    backToDashboard: "대시보드로",
+  },
   dashboard: {
     title: "대시보드",
     subtitle:

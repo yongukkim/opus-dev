@@ -24,7 +24,7 @@ export function ConsoleChrome({
   langLabels: ConsoleMessages["lang"];
 }) {
   const signOutCallback = encodeURIComponent(`/${locale}/login`);
-  const statsNav = buildConsoleStatsNavItems(getDictionary(locale).dashboard);
+  const statsNav = buildConsoleStatsNavItems(locale, getDictionary(locale).dashboard);
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0E0E0E] text-[#F6F4F0]">
