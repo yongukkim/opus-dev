@@ -190,7 +190,8 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
             <h1 className="mt-3 font-display text-2xl tracking-wide text-opus-warm md:text-3xl">{v.certificateHeading}</h1>
           </div>
 
-          <div className="grid gap-8 px-6 py-8 md:grid-cols-[7.5rem_1fr] md:gap-10 md:px-10 md:py-10">
+          <div className="flex flex-col gap-8 px-6 py-8 md:gap-10 md:px-10 md:py-10">
+            <div className="grid min-w-0 gap-8 md:grid-cols-[7.5rem_minmax(0,1fr)] md:gap-10">
             <div className="mx-auto w-28 shrink-0 md:mx-0 md:w-[7.5rem]">
               <div className="relative aspect-square overflow-hidden rounded-lg border border-white/[0.12] bg-opus-slate/30 shadow-inner">
                 {/* eslint-disable-next-line @next/next/no-img-element -- same-origin API preview; matches collection card */}
@@ -202,7 +203,7 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
               </div>
             </div>
 
-            <dl className="grid gap-4 text-sm">
+              <dl className="min-w-0 grid gap-4 text-sm">
               <div className="grid gap-1 border-b border-white/[0.06] pb-3">
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateArtistLabel}</dt>
                 <dd className="font-display text-base text-opus-warm/95">{cert.artistDisplayName}</dd>
@@ -257,7 +258,8 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateCustodyLabel}</dt>
                 <dd className="text-opus-warm/80">{custodyLabel}</dd>
               </div>
-            </dl>
+              </dl>
+            </div>
             <EditionCertificateTimeAnchorAccordion
               cert={cert}
               locale={locale}
@@ -334,7 +336,7 @@ function EditionCertificateTimeAnchorAccordion({
   digestShort: (hex: string) => string;
 }) {
   return (
-    <details className="group mt-4 border-t border-white/[0.06] pt-4">
+    <details className="group w-full min-w-0 border-t border-white/[0.06] pt-4">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-md py-1 text-left outline-none transition hover:text-opus-warm focus-visible:ring-1 focus-visible:ring-opus-gold/40 [&::-webkit-details-marker]:hidden">
         <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/55 group-open:text-opus-gold-light/90">
           {v.certificateTimeAnchorAccordionSummary}
@@ -378,53 +380,54 @@ function EditionCertificateTimeAnchorPanel({
 }) {
   const timeAnchorVerify = verifyEditionCertificateTimeAnchor(cert);
   return (
-    <div className="grid gap-2 border-b border-white/[0.06] pb-3">
-      <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateTimeAnchorTitle}</dt>
-      <dd className="space-y-3 text-opus-warm/80">
-        <p className="text-xs leading-relaxed text-opus-warm/52">{v.certificateTimeAnchorBlurb}</p>
-        <div className="grid gap-1">
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
-            {v.certificateTimeAnchorCommitmentLabel}
-          </span>
-          <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">
-            {shortHex(timeAnchorVerify.computedCommitmentHex)}
-          </span>
-        </div>
+    <div className="w-full min-w-0 space-y-4 border-b border-white/[0.06] pb-3 text-sm text-opus-warm/80">
+      <div>
+        <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateTimeAnchorTitle}</p>
+        <p className="mt-2 text-xs leading-relaxed text-opus-warm/52">{v.certificateTimeAnchorBlurb}</p>
+      </div>
+      <div className="min-w-0 space-y-1">
+        <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+          {v.certificateTimeAnchorCommitmentLabel}
+        </p>
+        <p className="break-all font-mono text-[0.72rem] leading-relaxed text-opus-warm/70">
+          {timeAnchorVerify.computedCommitmentHex}
+        </p>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
         {cert.timeAnchor?.anchoredAtIso ? (
-          <div className="grid gap-1">
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+          <div className="min-w-0 space-y-1">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
               {v.certificateTimeAnchorAnchoredAtLabel}
-            </span>
-            <span className="text-sm">{fmt(cert.timeAnchor.anchoredAtIso, locale)}</span>
+            </p>
+            <p className="text-sm">{fmt(cert.timeAnchor.anchoredAtIso, locale)}</p>
           </div>
         ) : null}
         {cert.timeAnchor?.chainId?.trim() ? (
-          <div className="grid gap-1">
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+          <div className="min-w-0 space-y-1">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
               {v.certificateTimeAnchorChainLabel}
-            </span>
-            <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.chainId}</span>
+            </p>
+            <p className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.chainId}</p>
           </div>
         ) : null}
         {cert.timeAnchor?.txHash?.trim() ? (
-          <div className="grid gap-1">
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+          <div className="min-w-0 space-y-1 sm:col-span-2">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
               {v.certificateTimeAnchorTxLabel}
-            </span>
-            <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.txHash}</span>
+            </p>
+            <p className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.txHash}</p>
           </div>
         ) : null}
         {cert.timeAnchor?.externalAttestationRef?.trim() ? (
-          <div className="grid gap-1">
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+          <div className="min-w-0 space-y-1 sm:col-span-2">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
               {v.certificateTimeAnchorExternalRefLabel}
-            </span>
-            <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">
-              {cert.timeAnchor.externalAttestationRef}
-            </span>
+            </p>
+            <p className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.externalAttestationRef}</p>
           </div>
         ) : null}
-        <p
+      </div>
+      <p
           className={`font-mono text-[0.65rem] ${
             timeAnchorVerify.status === "ok"
               ? "text-emerald-400/90"
@@ -439,8 +442,7 @@ function EditionCertificateTimeAnchorPanel({
             : timeAnchorVerify.status === "mismatch"
               ? v.certificateTimeAnchorVerifyMismatch
               : v.certificateTimeAnchorVerifyLegacy}
-        </p>
-      </dd>
+      </p>
     </div>
   );
 }
