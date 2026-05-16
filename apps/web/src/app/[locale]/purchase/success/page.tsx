@@ -98,6 +98,17 @@ export default async function PurchaseSuccessPage({ params, searchParams }: Prop
             </p>
           ) : null}
 
+          <p className="mt-6 text-center text-xs leading-relaxed text-opus-warm/50">
+            {p.collectorGuideBeforeLink}
+            <Link
+              href={withLocale(locale, "/legal/collector-guide")}
+              className="text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+            >
+              {p.collectorGuideLink}
+            </Link>
+            {p.collectorGuideAfterLink}
+          </p>
+
           <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href={vaultHref}

@@ -15,6 +15,9 @@ export const en: Messages = {
     copyrightTitle: "Copyright & permitted use",
     copyrightDescription:
       "How rights in authenticated editions listed on OPUS are held and what personal use covers. General notice draft pending legal review.",
+    collectorGuideTitle: "Collector guide — copyright & sharing",
+    collectorGuideDescription:
+      "How to share safely while protecting scarcity and market value, with context under international copyright and applicable law. Draft pending legal review.",
     curationIndexTitle: "Curated shelves",
     curationIndexDescription:
       "Operator-curated shelves grouping OPUS works by theme. A second reading of the archive.",
@@ -345,6 +348,7 @@ export const en: Messages = {
     privacy: "Privacy policy",
     terms: "Terms of use",
     copyright: "Copyright & permitted use",
+    collectorGuide: "Collector guide",
     chronicleTrust: "Verified by The Chronicle Technology",
     securedByLine: "Secured by OPUS",
     colService: "Service",
@@ -380,6 +384,13 @@ export const en: Messages = {
     lead: "Copyright in each work remains with the artist. This summary appears when the markdown source cannot be loaded.",
     body:
       "Non-fungible digital art shown on OPUS is offered for personal appreciation and custody within the scope the artist grants. Copying, redistribution, or commercial exploitation without permission is prohibited. Check each edition’s detail page together with the terms of use. This notice will be updated after legal review.",
+  },
+  legalCollectorGuide: {
+    back: "← Back home",
+    title: "Collector guide",
+    lead: "Summary shown when the public markdown cannot be loaded.",
+    body:
+      "Use watermarked or downsampled images in public channels; keep masters inside OPUS-only flows you are entitled to use. Unauthorized copying or distribution may have serious legal consequences under international copyright treaties and applicable national law. Full text will be updated after legal review.",
   },
   aboutPage: {
     back: "← Back home",
@@ -960,6 +971,16 @@ export const en: Messages = {
     payNotConfigured: "Until KOMOJU is connected, only demo checkout is available. This notice will change when live payments open.",
     note: "Live payments are planned via KOMOJU in JPY. Displayed amounts follow registration policy; tax and commercial disclosures follow operating policy and the payment partner’s settings.",
     back: "← Back to Archive",
+    collectorGuideHeading: "Protect your collection online",
+    collectorGuideIntro:
+      "Scarcity and market value are easier to protect when public sharing follows a simple rule set. Please review before you pay.",
+    collectorGuideBullets: [
+      "On public feeds, use watermarked or downsampled captures — do not repost masters or high-resolution files outside OPUS without permission.",
+      "Unauthorized copying or distribution may attract serious legal consequences under international copyright treaties and applicable national law.",
+      "Read the full collector guide together with the copyright notice and terms.",
+    ],
+    collectorGuideLink: "Open the collector guide",
+    collectorGuideBoxAria: "Copyright and sharing reminder before checkout",
   },
   purchaseSuccess: {
     kicker: "My Page",
@@ -978,6 +999,9 @@ export const en: Messages = {
       "Demo: recorded a custody transfer in The Chronicle ledger without live payment. Open My Page → Collection, then mobile immersive viewing.",
     demoCustodyFailed:
       "Demo custody update did not apply, or this edition is no longer in the artist’s studio inventory. Contact the operator or pick another work.",
+    collectorGuideBeforeLink: "Before posting certificate screens or captures publicly, review the ",
+    collectorGuideLink: "collector guide",
+    collectorGuideAfterLink: ".",
   },
   artistArtworks: {
     title: "Artworks",
@@ -1044,6 +1068,9 @@ export const en: Messages = {
     certificateEventCustodyTransfer: "Custody update",
     certificateIntegrityBlurb:
       "This document reflects an OPUS-signed record bound to the edition. When custody updates, newer signed rows may appear for the same binding key.",
+    certificateCollectorGuideBeforeLink: "Before sharing in public channels, see the ",
+    certificateCollectorGuideLink: "collector guide",
+    certificateCollectorGuideAfterLink: " for copyright-safe habits.",
     certificateLegalFooter:
       "This certificate supports viewing and collection records; it is not a financial product statement. Copyright and permitted use follow OPUS terms and notices.",
     certificateSealCaption: "OPUS approval",

@@ -15,6 +15,9 @@ export const ko: Messages = {
     copyrightTitle: "저작권·이용 안내",
     copyrightDescription:
       "OPUS에 게시·발매되는 인증 에디션의 저작권 귀속과 이용 범위에 대한 안내입니다. 법무 확정 전 일반 안내 초안입니다.",
+    collectorGuideTitle: "소장자 가이드 · 저작권·공유",
+    collectorGuideDescription:
+      "희소성·시장 가치를 지키면서 SNS 등에 안전하게 올리는 방법, 대한민국 저작권법 맥락을 담은 일반 안내 초안입니다.",
     curationIndexTitle: "큐레이션 셸프",
     curationIndexDescription:
       "운영팀이 주제별로 엮은 큐레이션 셸프 모음입니다. OPUS의 작품을 새로운 시선으로 만나보세요.",
@@ -345,6 +348,7 @@ export const ko: Messages = {
     privacy: "개인정보 처리방침",
     terms: "이용약관",
     copyright: "저작권·이용 안내",
+    collectorGuide: "소장자 가이드",
     chronicleTrust: "The Chronicle 기술을 통한 기록 무결성 검증",
     securedByLine: "OPUS로 보호됩니다",
     colService: "서비스",
@@ -380,6 +384,13 @@ export const ko: Messages = {
     lead: "각 작품의 저작권은 작가에게 귀속됩니다. 본 페이지는 마크다운 원고를 불러올 수 없을 때 표시되는 요약입니다.",
     body:
       "OPUS에 표시되는 복제 불가능한 디지털 아트는 작가가 부여한 범위 내에서 개인적 감상·소장 목적의 이용을 전제로 합니다. 무단 복제·배포·상업적 이용은 금지됩니다. 에디션별 세부 조건은 작품 상세 및 이용약관을 함께 확인하십시오. 법적 확정은 법무 검토 후 갱신됩니다.",
+  },
+  legalCollectorGuide: {
+    back: "← 홈으로",
+    title: "소장자 가이드",
+    lead: "공개 마크다운을 불러올 수 없을 때 표시되는 요약입니다.",
+    body:
+      "SNS 등에는 워터마크·저해상 이미지를, 원본·고해상은 마이페이지 등 허용된 경로에서만 이용하세요. 무단 복제·배포는 대한민국 저작권법 등에 따라 강한 법적 제재의 대상이 될 수 있습니다. 전문은 법무 검토 후 갱신됩니다.",
   },
   aboutPage: {
     back: "← 홈으로",
@@ -954,6 +965,16 @@ export const ko: Messages = {
     payNotConfigured: "KOMOJU 연동 전까지는 데모 결제만 가능합니다. 본 결제가 열리면 이 안내가 바뀝니다.",
     note: "본 결제는 KOMOJU(JPY)로 처리할 예정입니다. 표시 금액은 등록 기준이며, 세금·표시는 운영 정책 및 결제 파트너 설정에 따릅니다.",
     back: "← 아카이브로",
+    collectorGuideHeading: "소장 기록·저작권 안내",
+    collectorGuideIntro:
+      "희소성과 시장 가치를 지키려면 공개 공유 방식을 정리해 두는 것이 좋습니다. 결제 전에 아래를 확인해 주세요.",
+    collectorGuideBullets: [
+      "공개 채널에는 워터마크·저해상 파생만 — 원본·고해상 파일은 서비스 밖으로 무단 배포하지 마세요.",
+      "무단 복제·배포는 대한민국 저작권법 등에 따라 강한 법적 제재의 대상이 될 수 있습니다.",
+      "전체 안내는 소장자 가이드와 저작권·이용 안내를 함께 읽어 주세요.",
+    ],
+    collectorGuideLink: "소장자 가이드 전문 보기",
+    collectorGuideBoxAria: "결제 전 소장자 저작권·공유 안내",
   },
   purchaseSuccess: {
     kicker: "마이페이지",
@@ -972,6 +993,9 @@ export const ko: Messages = {
       "데모: 실결제 없이 The Chronicle 원장에 소장 이전을 반영했습니다. 컬렉션에서 작품을 확인한 뒤 모바일 몰입 감상을 열 수 있습니다.",
     demoCustodyFailed:
       "데모 소장 반영에 실패했거나, 이미 다른 분에게 넘어간 작품일 수 있습니다. 운영자에게 문의하거나 다른 작품을 선택해 주세요.",
+    collectorGuideBeforeLink: "인증 화면·캡처를 외부에 올리기 전 ",
+    collectorGuideLink: "소장자 가이드",
+    collectorGuideAfterLink: "를 확인해 주세요.",
   },
   artistArtworks: {
     title: "Artworks",
@@ -1038,6 +1062,9 @@ export const ko: Messages = {
     certificateEventCustodyTransfer: "수탁 갱신",
     certificateIntegrityBlurb:
       "본 문서는 해당 에디션에 고정된 OPUS 서명 기록을 반영합니다. 수탁이 바뀌면 동일 결합 키에 대한 서명 기록이 새 버전으로 이어질 수 있습니다.",
+    certificateCollectorGuideBeforeLink: "공개 채널에 올리기 전 ",
+    certificateCollectorGuideLink: "소장자 가이드",
+    certificateCollectorGuideAfterLink: "를 참고하세요.",
     certificateLegalFooter:
       "본 인증서는 감상·소장 기록을 위한 전자 문서이며 금융 상품이나 투자를 의미하지 않습니다. 저작권·이용 범위는 약관 및 저작권 안내를 따릅니다.",
     certificateSealCaption: "OPUS 승인",

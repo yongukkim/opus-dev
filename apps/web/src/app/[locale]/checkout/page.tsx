@@ -117,6 +117,28 @@ export default async function CheckoutPage({ params, searchParams }: Props) {
             ) : null}
           </div>
           <div className="px-6 py-6">
+            <section
+              className="mb-6 rounded-lg border border-opus-gold/15 bg-opus-gold/[0.04] px-4 py-4 text-left"
+              aria-label={c.collectorGuideBoxAria}
+            >
+              <p className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-opus-gold/70">
+                {c.collectorGuideHeading}
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-opus-warm/65">{c.collectorGuideIntro}</p>
+              <ul className="mt-3 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-opus-warm/60">
+                {c.collectorGuideBullets.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+              <p className="mt-3">
+                <Link
+                  href={withLocale(locale, "/legal/collector-guide")}
+                  className="text-xs font-medium text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+                >
+                  {c.collectorGuideLink}
+                </Link>
+              </p>
+            </section>
             {priceValid ? (
               <CheckoutPayButton
                 locale={locale}

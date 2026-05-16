@@ -93,6 +93,9 @@ export type Messages = {
     termsDescription: string;
     copyrightTitle: string;
     copyrightDescription: string;
+    /** `/legal/collector-guide` — sharing & copyright habits for collectors. */
+    collectorGuideTitle: string;
+    collectorGuideDescription: string;
     /** PR-16: public-route metadata. Titles are appended with ` | OPUS`
      *  by the root `title.template`, so these are the leading phrase. */
     curationIndexTitle: string;
@@ -435,6 +438,8 @@ export type Messages = {
     terms: string;
     /** Footer link to copyright & permitted-use notice for listed editions. */
     copyright: string;
+    /** Footer → `/legal/collector-guide` (sharing / watermark habits). */
+    collectorGuide: string;
     /** Technical integrity line (Chronicle); KO/JA/EN per locale. */
     chronicleTrust: string;
     /** Strapline under the enclosure mark in the site footer. */
@@ -455,6 +460,8 @@ export type Messages = {
   legalPrivacy: { back: string; title: string; lead: string; body: string };
   legalTerms: { back: string; title: string; lead: string; body: string };
   legalCopyright: { back: string; title: string; lead: string; body: string };
+  /** `/legal/collector-guide` — fallback when markdown missing. */
+  legalCollectorGuide: { back: string; title: string; lead: string; body: string };
   /** Public `/about` — service story (KO/JA/EN). */
   aboutPage: {
     back: string;
@@ -724,6 +731,12 @@ export type Messages = {
     payNotConfigured: string;
     note: string;
     back: string;
+    /** Short box above pay CTA — link to full collector guide. */
+    collectorGuideHeading: string;
+    collectorGuideIntro: string;
+    collectorGuideBullets: readonly string[];
+    collectorGuideLink: string;
+    collectorGuideBoxAria: string;
   };
   purchaseSuccess: {
     kicker: string;
@@ -741,6 +754,10 @@ export type Messages = {
     demoCustodyRecorded: string;
     /** Shown when demo custody could not be applied (wrong state / IO error). */
     demoCustodyFailed: string;
+    /** Line on success: `{before}` [link] `{after}` → `/legal/collector-guide`. */
+    collectorGuideBeforeLink: string;
+    collectorGuideLink: string;
+    collectorGuideAfterLink: string;
   };
   artistKyc: {
     consentTitle: string;
@@ -1036,6 +1053,10 @@ export type Messages = {
     certificateEventIssued: string;
     certificateEventCustodyTransfer: string;
     certificateIntegrityBlurb: string;
+    /** One line after integrity blurb: `{before}` [link] `{after}`. */
+    certificateCollectorGuideBeforeLink: string;
+    certificateCollectorGuideLink: string;
+    certificateCollectorGuideAfterLink: string;
     certificateLegalFooter: string;
     certificateSealCaption: string;
     certificateVerificationOk: string;

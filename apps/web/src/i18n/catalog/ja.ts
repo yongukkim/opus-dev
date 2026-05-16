@@ -15,6 +15,9 @@ export const ja: Messages = {
     copyrightTitle: "著作権・利用について",
     copyrightDescription:
       "OPUSに掲載・提供される認定エディションの著作権帰属と利用範囲の案内です。法務確定前の一般案内です。",
+    collectorGuideTitle: "所蔵者ガイド · 著作権・共有",
+    collectorGuideDescription:
+      "希少性・市場価値を守りながら安全に共有する要点と、日本の著作権法等の文脈を含む一般案内（ドラフト）です。",
     curationIndexTitle: "キュレーションシェルフ",
     curationIndexDescription:
       "運営チームがテーマ別にまとめたキュレーションシェルフの一覧です。OPUSの作品を新しい切り口で。",
@@ -347,6 +350,7 @@ export const ja: Messages = {
     privacy: "プライバシーポリシー",
     terms: "利用規約",
     copyright: "著作権・利用について",
+    collectorGuide: "所蔵者ガイド",
     chronicleTrust: "The Chronicle Technology により検証されています。",
     securedByLine: "OPUSで保護されています",
     colService: "サービス",
@@ -384,6 +388,13 @@ export const ja: Messages = {
     lead: "各作品の著作権は作家に帰属します。Markdown原稿を読み込めない場合に表示される要約です。",
     body:
       "OPUSで表示される複製不可のデジタルアートは、作家が付与した範囲内での個人的鑑賞・所蔵を前提とします。無断複製・頒布・商用利用は禁止されます。エディションごとの条件は作品詳細および利用規約もあわせてご確認ください。法務確定後に更新します。",
+  },
+  legalCollectorGuide: {
+    back: "← トップへ",
+    title: "所蔵者ガイド",
+    lead: "公開Markdownを読み込めない場合に表示される要約です。",
+    body:
+      "公開チャネルにはウォーターマーク付き・低解像度の派生のみを用い、原本・高解像データは許可されたOPUS内の経路でのみご利用ください。無断複製・頒布は日本の著作権法等に基づき厳しい法的措置の対象となり得ます。全文は法務確定後に更新します。",
   },
   aboutPage: {
     back: "← トップへ",
@@ -972,6 +983,16 @@ export const ja: Messages = {
     payNotConfigured: "KOMOJU連携までの間はデモ決済のみ可能です。本番が開くとこの案内が更新されます。",
     note: "本番の決済はKOMOJU（JPY）で処理する予定です。表示金額は登録基準であり、税・表示は運用方針と決済パートナーの設定に従います。",
     back: "← アーカイブへ",
+    collectorGuideHeading: "所蔵記録・著作権のお願い",
+    collectorGuideIntro:
+      "希少性や市場価値を大切にするには、公開時の共有ルールをそろえることが助けになります。お支払い前にご確認ください。",
+    collectorGuideBullets: [
+      "公開SNS等にはウォーターマーク付き・低解像度のみ。原本・高解像ファイルをサービス外へ無断で配布しないでください。",
+      "無断複製・頒布は、日本の著作権法等に基づき厳しい法的措置の対象となり得ます。",
+      "詳しくは所蔵者ガイドと著作権表示・利用規約をあわせてご覧ください。",
+    ],
+    collectorGuideLink: "所蔵者ガイドを開く",
+    collectorGuideBoxAria: "決済前の著作権・共有に関する注意",
   },
   purchaseSuccess: {
     kicker: "マイページ",
@@ -991,6 +1012,9 @@ export const ja: Messages = {
       "デモ: 本決済なしで The Chronicle 台帳に所蔵移転を記録しました。マイページのコレクションで確認し、モバイル没入鑑賞を開けます。",
     demoCustodyFailed:
       "デモの所蔵反映に失敗したか、作家スタジオ保管でない状態です。運営へ確認するか、別作品を選んでください。",
+    collectorGuideBeforeLink: "認証画面やキャプチャを公開する前に ",
+    collectorGuideLink: "所蔵者ガイド",
+    collectorGuideAfterLink: "をご確認ください。",
   },
   artistArtworks: {
     title: "Artworks",
@@ -1061,6 +1085,9 @@ export const ja: Messages = {
     certificateEventCustodyTransfer: "保管更新",
     certificateIntegrityBlurb:
       "本文書は当該エディションに固定されたOPUS署名記録を示します。保管が移ると、同一結合キーに対する署名記録が新しいバージョンとして続く場合があります。",
+    certificateCollectorGuideBeforeLink: "公開チャネルへ掲載する前に ",
+    certificateCollectorGuideLink: "所蔵者ガイド",
+    certificateCollectorGuideAfterLink: "をご参照ください。",
     certificateLegalFooter:
       "本認証書は鑑賞・所蔵記録用の電子文書であり、金融商品や投資を意味しません。著作権・利用範囲は規約および著作権表示に従います。",
     certificateSealCaption: "OPUS承認",

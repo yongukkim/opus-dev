@@ -335,6 +335,16 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
               {v.certificateSealCaption}
             </p>
             <p className="mx-auto mt-6 max-w-md text-center text-xs leading-relaxed text-opus-warm/50">{v.certificateIntegrityBlurb}</p>
+            <p className="mx-auto mt-4 max-w-md text-center text-xs leading-relaxed text-opus-warm/50">
+              {v.certificateCollectorGuideBeforeLink}
+              <Link
+                href={withLocale(locale, "/legal/collector-guide")}
+                className="text-opus-gold underline-offset-4 hover:text-opus-gold-light hover:underline"
+              >
+                {v.certificateCollectorGuideLink}
+              </Link>
+              {v.certificateCollectorGuideAfterLink}
+            </p>
             <p
               className={`mt-3 font-mono text-[0.65rem] ${verified ? "text-emerald-400/90" : "text-amber-400/95"}`}
               role="status"

@@ -129,6 +129,9 @@ export function Footer({ locale, m }: { locale: Locale; m: Messages }) {
               <Link href={withLocale(locale, "/legal/copyright")} className={linkClass}>
                 {m.footer.copyright}
               </Link>
+              <Link href={withLocale(locale, "/legal/collector-guide")} className={linkClass}>
+                {m.footer.collectorGuide}
+              </Link>
             </nav>
           </div>
 
