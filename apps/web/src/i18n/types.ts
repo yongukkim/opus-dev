@@ -1063,6 +1063,8 @@ export type Messages = {
     certificateVerificationFail: string;
     certificateDigestLabel: string;
     /** Time anchor — public SHA-256 commitment (binds signed digest); optional on-chain/TSA fields later. */
+    /** Collapsed `<summary>` label for the optional technical disclosure accordion. */
+    certificateTimeAnchorAccordionSummary: string;
     certificateTimeAnchorTitle: string;
     certificateTimeAnchorBlurb: string;
     certificateTimeAnchorCommitmentLabel: string;

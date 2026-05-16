@@ -25,14 +25,6 @@ import { VaultCertificateScrollShell } from "@/components/vault/VaultCertificate
 
 export const dynamic = "force-dynamic";
 
-/**
- * Public-facing edition certificate: hide SHA-256 / chain / TSA technical panel for collector experience.
- * KO: 일반 소장자 인증서 화면에서는 commitment 기술 블록을 숨기고, `editionCertificate`·JSON API 등 코드 경로는 유지한다.
- * JA: 一般向け認証書UIでは commitment の技術ブロックを隠し、editionCertificate・JSON API 等のコードパスは維持する。
- * EN: Omit the time-anchor technical block on the public certificate view; keep verification code in lib/API.
- */
-const SHOW_EDITION_CERTIFICATE_TIME_ANCHOR_PANEL = false;
-
 type Props = {
   params: Promise<{ locale: string; submissionId: string; editionNumber: string }>;
 };
@@ -257,15 +249,6 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
                   {cert.chronicleIssuanceId?.trim() ? cert.chronicleIssuanceId : v.certificateChronicleNone}
                 </dd>
               </div>
-              {SHOW_EDITION_CERTIFICATE_TIME_ANCHOR_PANEL ? (
-                <EditionCertificateTimeAnchorPanel
-                  cert={cert}
-                  locale={locale}
-                  v={v}
-                  formatLocaleDateTime={formatLocaleDateTime}
-                  digestShort={digestShort}
-                />
-              ) : null}
               <div className="grid gap-1 border-b border-white/[0.06] pb-3">
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateFormatLabel}</dt>
                 <dd className="text-opus-warm/80">{opusArtworkGenreLabel(ct, submission.genre)}</dd>
@@ -275,6 +258,13 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
                 <dd className="text-opus-warm/80">{custodyLabel}</dd>
               </div>
             </dl>
+            <EditionCertificateTimeAnchorAccordion
+              cert={cert}
+              locale={locale}
+              v={v}
+              formatLocaleDateTime={formatLocaleDateTime}
+              digestShort={digestShort}
+            />
           </div>
 
           <div className="flex flex-col items-center border-t border-white/[0.06] px-6 py-8 md:px-10">
@@ -325,7 +315,51 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
 }
 
 /**
- * Optional time-anchor disclosure (off on the public certificate UI by default).
+ * Collapsed-by-default technical disclosure for time-anchor / commitment fields.
+ * KO: 기본 접힘 — 원할 때만 펼쳐 commitment·온체인·외부 증빙 필드를 확인합니다.
+ * JA: 既定は折りたたみ — 必要時のみ commitment 等の技術詳細を開きます。
+ * EN: Collapsed by default; collectors expand to review commitment and optional anchor fields.
+ */
+function EditionCertificateTimeAnchorAccordion({
+  cert,
+  locale,
+  v,
+  formatLocaleDateTime,
+  digestShort,
+}: {
+  cert: EditionCertificateRecord;
+  locale: Locale;
+  v: Messages["vault"];
+  formatLocaleDateTime: (iso: string, loc: Locale) => string;
+  digestShort: (hex: string) => string;
+}) {
+  return (
+    <details className="group mt-4 border-t border-white/[0.06] pt-4">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-md py-1 text-left outline-none transition hover:text-opus-warm focus-visible:ring-1 focus-visible:ring-opus-gold/40 [&::-webkit-details-marker]:hidden">
+        <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/55 group-open:text-opus-gold-light/90">
+          {v.certificateTimeAnchorAccordionSummary}
+        </span>
+        <span
+          className="shrink-0 font-mono text-[0.65rem] text-opus-gold/70 transition-transform duration-200 group-open:rotate-180"
+          aria-hidden
+        >
+          ▾
+        </span>
+      </summary>
+      <div className="mt-3">
+        <EditionCertificateTimeAnchorPanel
+          cert={cert}
+          locale={locale}
+          v={v}
+          formatLocaleDateTime={formatLocaleDateTime}
+          digestShort={digestShort}
+        />
+      </div>
+    </details>
+  );
+}
+
+/**
  * ISO 27001 A.12.4.1 (§5) — public commitment binds the signed digest; optional chain/TSA fields extend later without breaking HMAC payload.
  * KO: 타임 앵커는 서명 페이로드 밖의 보조 증빙으로 두어 기존 서명 검증과 호환됩니다.
  */

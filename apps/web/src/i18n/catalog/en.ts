@@ -1078,6 +1078,7 @@ export const en: Messages = {
     certificateVerificationOk: "Signature check: OK",
     certificateVerificationFail: "Signature check: failed — contact support with the certificate ID",
     certificateDigestLabel: "Record digest",
+    certificateTimeAnchorAccordionSummary: "Time anchor · public verification (technical details)",
     certificateTimeAnchorTitle: "Time anchor · public commitment",
     certificateTimeAnchorBlurb:
       "The value below is a SHA-256 commitment reproducible from the public fields in the certificate JSON. Together with the OPUS-signed record digest, it helps independent checks of the same content and issuance row. It does not replace or guarantee administrative effects such as Japan Copyright Act “kakutei hizuke” (date certification). On-chain anchors or qualified timestamps can later be linked via optional fields such as chainId and txHash.",
