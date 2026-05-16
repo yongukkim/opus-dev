@@ -28,3 +28,27 @@ export async function fetchSubmissionsForOperator(actingUserId: string): Promise
   }
   return res.json() as Promise<unknown[]>;
 }
+
+export type ConsoleDashboardStats = {
+  membersTotal: number;
+  artistsTotal: number;
+  artworksTotal: number;
+  provenanceAuctionsTotal: number;
+  provenanceFixedPriceTotal: number;
+};
+
+export async function fetchDashboardStatsForOperator(actingUserId: string): Promise<ConsoleDashboardStats> {
+  const origin = requireWebOrigin();
+  const res = await fetch(`${origin}/api/internal/operator/dashboard-stats`, {
+    headers: internalOperatorHeaders(actingUserId),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`dashboard_stats_failed:${res.status}`);
+  }
+  const body = (await res.json()) as { ok?: boolean; stats?: ConsoleDashboardStats; error?: string };
+  if (!body?.ok || !body.stats) {
+    throw new Error(`dashboard_stats_invalid:${body?.error ?? "unknown"}`);
+  }
+  return body.stats;
+}

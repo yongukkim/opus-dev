@@ -63,6 +63,23 @@ export type ConsoleMessages = {
   dashboard: {
     title: string;
     subtitle: string;
+    statsSectionHeading: string;
+    statsLoadError: string;
+    statsMembersTitle: string;
+    statsMembersBody: string;
+    statsMembersSuffix: string;
+    statsArtistsTitle: string;
+    statsArtistsBody: string;
+    statsArtistsSuffix: string;
+    statsArtworksTitle: string;
+    statsArtworksBody: string;
+    statsArtworksSuffix: string;
+    statsAuctionsTitle: string;
+    statsAuctionsBody: string;
+    statsAuctionsSuffix: string;
+    statsCustodyFixedTitle: string;
+    statsCustodyFixedBody: string;
+    statsCustodyFixedSuffix: string;
     cardSubmissionsTitle: string;
     cardSubmissionsBody: string;
     /** `{count}` = items in pending_review + changes_requested (same as review queue). */
