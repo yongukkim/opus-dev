@@ -84,6 +84,10 @@ export const ja: ConsoleMessages = {
     statsCustodyFixedTitle: "来歴 · 固定価格出品",
     statsCustodyFixedBody: "来歴の公開一覧のうち、固定価格（saleMode=fixed）で公開中の件数です。",
     statsCustodyFixedSuffix: "件",
+    statsCertificatesTitle: "発行済み認定書の枚数",
+    statsCertificatesBody:
+      "カタログDBで正式発行済み（isIssued）となったエディション数です。公開のエディション認定書に概ね対応します。",
+    statsCertificatesSuffix: "枚",
     cardSubmissionsTitle: "承認待ち",
     cardSubmissionsBody: "作品登録の提出を審査し承認します。",
     cardSubmissionsPendingCountTpl: "待ち {count} 件",

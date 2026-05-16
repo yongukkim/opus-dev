@@ -80,6 +80,9 @@ export type ConsoleMessages = {
     statsCustodyFixedTitle: string;
     statsCustodyFixedBody: string;
     statsCustodyFixedSuffix: string;
+    statsCertificatesTitle: string;
+    statsCertificatesBody: string;
+    statsCertificatesSuffix: string;
     cardSubmissionsTitle: string;
     cardSubmissionsBody: string;
     /** `{count}` = items in pending_review + changes_requested (same as review queue). */

@@ -35,6 +35,7 @@ export type ConsoleDashboardStats = {
   artworksTotal: number;
   provenanceAuctionsTotal: number;
   provenanceFixedPriceTotal: number;
+  certificatesIssuedTotal: number;
 };
 
 export async function fetchDashboardStatsForOperator(actingUserId: string): Promise<ConsoleDashboardStats> {

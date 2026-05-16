@@ -83,6 +83,10 @@ export const en: ConsoleMessages = {
     statsCustodyFixedTitle: "Provenance — fixed price",
     statsCustodyFixedBody: "Open provenance listings published at a fixed asking price.",
     statsCustodyFixedSuffix: "live",
+    statsCertificatesTitle: "Edition certificates issued",
+    statsCertificatesBody:
+      "Editions marked formally issued in the catalog database (`isIssued`). Aligns with the public edition certificate view.",
+    statsCertificatesSuffix: "issued",
     cardSubmissionsTitle: "Pending Approval",
     cardSubmissionsBody: "Review and approve artwork registration submissions.",
     cardSubmissionsPendingCountTpl: "{count} awaiting review",

@@ -17,6 +17,7 @@ const PREVIEW_DASHBOARD_STATS: ConsoleDashboardStats = {
   artworksTotal: 62,
   provenanceAuctionsTotal: 4,
   provenanceFixedPriceTotal: 11,
+  certificatesIssuedTotal: 28,
 };
 
 export default async function ConsoleHomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -95,7 +96,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             unavailableLabel={d.statsLoadError}
           />
         </div>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DashboardMetricCard
             title={d.statsAuctionsTitle}
             body={d.statsAuctionsBody}
@@ -108,6 +109,13 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             body={d.statsCustodyFixedBody}
             value={dashboardStats?.provenanceFixedPriceTotal ?? null}
             suffix={d.statsCustodyFixedSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            title={d.statsCertificatesTitle}
+            body={d.statsCertificatesBody}
+            value={dashboardStats?.certificatesIssuedTotal ?? null}
+            suffix={d.statsCertificatesSuffix}
             unavailableLabel={d.statsLoadError}
           />
         </div>
