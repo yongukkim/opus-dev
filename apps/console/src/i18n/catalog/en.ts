@@ -69,6 +69,7 @@ export const en: ConsoleMessages = {
     cardSubmissionsBody: "Review and approve artwork registration submissions.",
     cardSubmissionsPendingCountTpl: "{count} awaiting review",
     cardSubmissionsCountUnavailable: "Count unavailable",
+    cardSubmissionsCountSuffix: "in queue",
     cardSubmissionsCta: "Open pending items",
     cardPaymentsTitle: "Payments & reconciliation",
     cardPaymentsBody:

@@ -45,28 +45,43 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
       <div className="grid gap-4 px-6 py-8 md:grid-cols-3">
         <Link
           href={`/${locale}/review`}
-          className="group flex flex-col rounded-lg border border-white/10 bg-[#161616] p-5 shadow-sm transition hover:border-[#DEB892]/35 hover:bg-[#1a1a1a]"
+          aria-label={
+            pendingSubmissionCount !== null
+              ? t.dashboard.cardSubmissionsPendingCountTpl.replace("{count}", String(pendingSubmissionCount))
+              : `${t.dashboard.cardSubmissionsTitle}. ${t.dashboard.cardSubmissionsCountUnavailable}`
+          }
+          className="group grid grid-cols-1 gap-4 rounded-lg border border-white/10 bg-[#161616] p-5 shadow-sm transition hover:border-[#DEB892]/35 hover:bg-[#1a1a1a] md:grid-cols-[minmax(0,1fr)_minmax(5.5rem,32%)] md:items-stretch md:gap-6 md:p-6"
         >
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex min-h-0 min-w-0 flex-col">
             <h2 className="text-sm font-semibold text-[#F6F4F0]">{t.dashboard.cardSubmissionsTitle}</h2>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-[#F6F4F0]/65">{t.dashboard.cardSubmissionsBody}</p>
+            <span className="mt-4 text-sm font-medium text-[#DEB892] group-hover:underline">{t.dashboard.cardSubmissionsCta} →</span>
+          </div>
+          <div className="flex flex-col items-center justify-center border-t border-white/10 pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
             {pendingSubmissionCount !== null ? (
-              <span
-                className="shrink-0 rounded-full border border-[#DEB892]/35 bg-[#DEB892]/10 px-2.5 py-0.5 text-center text-xs font-medium tabular-nums text-[#DEB892]"
-                title={t.dashboard.cardSubmissionsBody}
-              >
-                {t.dashboard.cardSubmissionsPendingCountTpl.replace("{count}", String(pendingSubmissionCount))}
-              </span>
+              <div className="flex w-full max-w-[12rem] flex-col items-center md:max-w-none md:items-end">
+                <span
+                  className="font-display text-[clamp(2.75rem,10vw,4.5rem)] font-semibold leading-none tracking-tight text-[#DEB892] tabular-nums md:text-[clamp(3rem,4.2vw,4.75rem)]"
+                  aria-hidden
+                >
+                  {pendingSubmissionCount}
+                </span>
+                <span
+                  className="mt-2 text-center font-mono text-[0.65rem] font-medium uppercase tracking-[0.28em] text-[#F6F4F0]/40 md:text-right"
+                  aria-hidden
+                >
+                  {t.dashboard.cardSubmissionsCountSuffix}
+                </span>
+              </div>
             ) : (
               <span
-                className="shrink-0 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-0.5 text-xs text-[#F6F4F0]/45"
+                className="font-mono text-3xl font-semibold text-[#F6F4F0]/35"
                 title={t.dashboard.cardSubmissionsCountUnavailable}
               >
                 —
               </span>
             )}
           </div>
-          <p className="mt-2 flex-1 text-sm text-[#F6F4F0]/65">{t.dashboard.cardSubmissionsBody}</p>
-          <span className="mt-4 text-sm font-medium text-[#DEB892] group-hover:underline">{t.dashboard.cardSubmissionsCta} →</span>
         </Link>
         <Link
           href={`/${locale}/payments`}

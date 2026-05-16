@@ -69,6 +69,8 @@ export type ConsoleMessages = {
     cardSubmissionsPendingCountTpl: string;
     /** When the storefront submissions list could not be loaded (home card badge). */
     cardSubmissionsCountUnavailable: string;
+    /** Shown under the large numeric count on the home “pending” card (e.g. 건 / 件). */
+    cardSubmissionsCountSuffix: string;
     cardSubmissionsCta: string;
     cardPaymentsTitle: string;
     cardPaymentsBody: string;

@@ -70,6 +70,7 @@ export const ko: ConsoleMessages = {
     cardSubmissionsBody: "작품 등록 신청을 검토하고 승인합니다.",
     cardSubmissionsPendingCountTpl: "대기 {count}건",
     cardSubmissionsCountUnavailable: "목록을 불러오지 못함",
+    cardSubmissionsCountSuffix: "건",
     cardSubmissionsCta: "승인 대기로 이동",
     cardPaymentsTitle: "결제·대사",
     cardPaymentsBody:

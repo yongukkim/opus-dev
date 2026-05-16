@@ -70,6 +70,7 @@ export const ja: ConsoleMessages = {
     cardSubmissionsBody: "作品登録の提出を審査し承認します。",
     cardSubmissionsPendingCountTpl: "待ち {count} 件",
     cardSubmissionsCountUnavailable: "件数を取得できませんでした",
+    cardSubmissionsCountSuffix: "件",
     cardSubmissionsCta: "承認待ちへ",
     cardPaymentsTitle: "決済・照合",
     cardPaymentsBody:
