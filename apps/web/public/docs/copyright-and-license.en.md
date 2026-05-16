@@ -15,8 +15,8 @@ This notice explains how **copyright and related rights** apply to **authenticat
 
 The following describes **typical expectations**; conditions set for a specific edition or artwork may override this summary.
 
-- **Personal appreciation and custody** of an edition you lawfully acquired, including private viewing.
-- **In-product features** OPUS provides (for example high-fidelity viewing in the mobile app, sharing UI where explicitly allowed).
+- **Personal appreciation and custody** of an edition you lawfully acquired, including private viewing. **High-fidelity viewing** is intended through **authenticated smartphone and tablet mobile web**; **print output** and use aimed at **large external monitors, TVs, or similar displays** are **not** within the service’s intended scope.
+- **In-product features** OPUS provides (for example **authenticated mobile web** high-fidelity tiled viewing, sharing UI where explicitly allowed).
 
 ---
 

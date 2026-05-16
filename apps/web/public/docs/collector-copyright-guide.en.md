@@ -6,7 +6,13 @@ This guide helps you **protect the experience and integrity of your collection**
 
 ## Scarcity and market value
 
-Limited editions derive **scarcity** and, for many collectors, a sense of pride tied to **market value**. Unauthorized copying, public redistribution, or commercial reuse can dilute that impression and conflict with the artist’s and platform’s permitted uses. For **public** channels, prefer **watermarked or downsampled derivatives**; keep **original or high-fidelity files** within OPUS flows you are entitled to use (for example **Vault** and approved viewing features).
+Limited editions derive **scarcity** and, for many collectors, a sense of pride tied to **market value**. Unauthorized copying, public redistribution, or commercial reuse can dilute that impression and conflict with the artist’s and platform’s permitted uses. For **public** channels, prefer **watermarked or downsampled derivatives**; keep **original or high-fidelity files** within OPUS flows you are entitled to use (for example **Vault** and approved viewing on **authenticated smartphone and tablet mobile web**).
+
+---
+
+## Where high-fidelity viewing is intended
+
+**Authenticated high-fidelity / tiled viewing** on OPUS is designed for **smartphone and tablet mobile web** sessions. **Print output** and playback aimed at **large external monitors, TVs, or projectors** are **not** within the service’s intended scope, and unauthorized reproduction or communication for those purposes may still raise copyright issues.
 
 ---
 
@@ -16,6 +22,7 @@ Limited editions derive **scarcity** and, for many collectors, a sense of pride 
 | --- | --- |
 | Use **watermarked / lower-resolution** images on social feeds and blogs | Repost **masters or high-resolution** files outside the service without permission |
 | View and manage your records through **Vault** and contractually allowed features | Circumvent technical protections or **misrepresent provenance or edition labels** |
+| Use **authenticated smartphone / tablet mobile web** for permitted high-fidelity viewing | **Print** or drive **large monitors / TVs** with unauthorized high-resolution output or public communication |
 | Report concerns to **admin@opus-store.com** | Present someone else’s work **as if it were yours** or use it commercially without a licence |
 
 ---

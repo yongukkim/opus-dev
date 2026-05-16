@@ -17,7 +17,7 @@ export const en: Messages = {
       "How rights in authenticated editions listed on OPUS are held and what personal use covers. General notice draft pending legal review.",
     collectorGuideTitle: "Collector guide — copyright & sharing",
     collectorGuideDescription:
-      "How to share safely while protecting scarcity and market value, with context under international copyright and applicable law. Draft pending legal review.",
+      "How to share safely while protecting scarcity and market value; high-fidelity viewing is for authenticated smartphone and tablet mobile web only; international copyright context. Draft pending legal review.",
     curationIndexTitle: "Curated shelves",
     curationIndexDescription:
       "Operator-curated shelves grouping OPUS works by theme. A second reading of the archive.",
@@ -390,7 +390,7 @@ export const en: Messages = {
     title: "Collector guide",
     lead: "Summary shown when the public markdown cannot be loaded.",
     body:
-      "Use watermarked or downsampled images in public channels; keep masters inside OPUS-only flows you are entitled to use. Unauthorized copying or distribution may have serious legal consequences under international copyright treaties and applicable national law. Full text will be updated after legal review.",
+      "Use watermarked or downsampled images in public channels; keep masters inside OPUS-only flows you are entitled to use. High-fidelity viewing is for authenticated smartphone and tablet mobile web only; unauthorized printing or driving large monitors or TVs may be prohibited. Unauthorized copying or distribution may have serious legal consequences under international copyright treaties and applicable national law. Full text will be updated after legal review.",
   },
   aboutPage: {
     back: "← Back home",
@@ -424,7 +424,7 @@ export const en: Messages = {
     s4WebBody: "A surface for discovery and trust: comfortable browsing and clear context.",
     s4AppTitle: "Mobile web",
     s4AppBody:
-      "High-fidelity tiled viewing is delivered to **verified** collector and artist sessions on mobile web. Add OPUS to your home screen for an app-like shell; desktop browsers do not receive the high-resolution stream.",
+      "High-fidelity tiled viewing is delivered only to **verified** collector and artist sessions on **smartphone and tablet** mobile web. Print output and playback aimed at large external displays are outside the service’s intended design. Add OPUS to your home screen for an app-like shell; desktop browsers do not receive the high-resolution stream.",
     draftNote:
       "Please align final wording with Terms, Privacy, and Chronicle disclosure policy (including masked identifiers) through legal review.",
   },
@@ -976,6 +976,7 @@ export const en: Messages = {
       "Scarcity and market value are easier to protect when public sharing follows a simple rule set. Please review before you pay.",
     collectorGuideBullets: [
       "On public feeds, use watermarked or downsampled captures — do not repost masters or high-resolution files outside OPUS without permission.",
+      "High-fidelity viewing is for authenticated smartphone and tablet mobile web only. Printing or large-monitor / TV playback is not what OPUS is designed to support.",
       "Unauthorized copying or distribution may attract serious legal consequences under international copyright treaties and applicable national law.",
       "Read the full collector guide together with the copyright notice and terms.",
     ],
