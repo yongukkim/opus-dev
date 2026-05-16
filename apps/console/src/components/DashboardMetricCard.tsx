@@ -6,12 +6,14 @@
  * EN: KPI tiles show aggregates only, not per-user listings.
  */
 export function DashboardMetricCard({
+  id,
   title,
   body,
   value,
   suffix,
   unavailableLabel,
 }: {
+  id?: string;
   title: string;
   body: string;
   value: number | null;
@@ -20,7 +22,8 @@ export function DashboardMetricCard({
 }) {
   return (
     <div
-      className="grid grid-cols-1 gap-4 rounded-lg border border-white/10 bg-[#161616] p-5 shadow-sm md:grid-cols-[minmax(0,1fr)_minmax(5.5rem,32%)] md:items-stretch md:gap-6 md:p-6"
+      id={id}
+      className="scroll-mt-6 grid grid-cols-1 gap-4 rounded-lg border border-white/10 bg-[#161616] p-5 shadow-sm md:grid-cols-[minmax(0,1fr)_minmax(5.5rem,32%)] md:items-stretch md:gap-6 md:p-6"
       role="group"
       aria-label={value !== null ? `${title}. ${value} ${suffix}` : unavailableLabel}
     >

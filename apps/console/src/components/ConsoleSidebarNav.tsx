@@ -2,14 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { ConsoleMessages } from "@/i18n/types";
+import type { ConsoleStatsNavItem } from "@/lib/consoleStatsNav";
 
 function navClass(active: boolean) {
   if (active) {
     return "block rounded-md border border-[#DEB892]/40 bg-[#DEB892]/10 px-3 py-2 text-sm font-medium text-[#F6F4F0]";
   }
   return "block rounded-md px-3 py-2 text-sm font-medium text-[#F6F4F0]/70 transition hover:bg-white/5 hover:text-[#F6F4F0]";
+}
+
+function statsNavClass(active: boolean) {
+  if (active) {
+    return "block rounded-md border border-[#DEB892]/30 bg-[#DEB892]/8 py-1.5 pl-3 pr-2 text-xs font-medium text-[#F6F4F0]";
+  }
+  return "block rounded-md py-1.5 pl-3 pr-2 text-xs font-medium text-[#F6F4F0]/60 transition hover:bg-white/5 hover:text-[#F6F4F0]";
 }
 
 /**
@@ -21,18 +30,29 @@ function navClass(active: boolean) {
 export function ConsoleSidebarNav({
   locale,
   labels,
+  statsNav,
 }: {
   locale: Locale;
   labels: ConsoleMessages["chrome"];
+  statsNav: { sectionHeading: string; items: ConsoleStatsNavItem[] };
 }) {
   const pathname = usePathname() ?? "";
+  const [hash, setHash] = useState("");
   const home = `/${locale}/home`;
   const review = `/${locale}/review`;
   const payments = `/${locale}/payments`;
+  const onHome = pathname === home || pathname === `${home}/`;
+
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, [pathname]);
 
   return (
-    <nav className="flex flex-1 flex-col gap-1 p-3 text-sm" aria-label="Console">
-      <Link href={home} className={navClass(pathname === home)}>
+    <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3 text-sm" aria-label="Console">
+      <Link href={home} className={navClass(onHome && !hash)}>
         {labels.navHome}
       </Link>
       <Link href={review} className={navClass(pathname.startsWith(review))}>
@@ -41,6 +61,23 @@ export function ConsoleSidebarNav({
       <Link href={payments} className={navClass(pathname.startsWith(payments))}>
         {labels.navPayments}
       </Link>
+
+      <p className="mt-4 px-3 pb-1 font-mono text-[0.6rem] font-medium uppercase tracking-[0.28em] text-[#F6F4F0]/40">
+        {statsNav.sectionHeading}
+      </p>
+      <ul className="flex flex-col gap-0.5" aria-label={statsNav.sectionHeading}>
+        {statsNav.items.map((item) => {
+          const href = `${home}#${item.id}`;
+          const active = onHome && hash === `#${item.id}`;
+          return (
+            <li key={item.id}>
+              <Link href={href} className={statsNavClass(active)}>
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 }

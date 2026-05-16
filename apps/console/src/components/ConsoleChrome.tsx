@@ -5,6 +5,8 @@ import type { Locale } from "@/i18n/config";
 import type { ConsoleMessages } from "@/i18n/types";
 import { ConsoleSidebarNav } from "@/components/ConsoleSidebarNav";
 import { ConsoleLanguageSwitcher } from "@/components/ConsoleLanguageSwitcher";
+import { getDictionary } from "@/i18n/catalog";
+import { buildConsoleStatsNavItems } from "@/lib/consoleStatsNav";
 
 export function ConsoleChrome({
   user,
@@ -22,6 +24,7 @@ export function ConsoleChrome({
   langLabels: ConsoleMessages["lang"];
 }) {
   const signOutCallback = encodeURIComponent(`/${locale}/login`);
+  const statsNav = buildConsoleStatsNavItems(getDictionary(locale).dashboard);
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0E0E0E] text-[#F6F4F0]">
@@ -35,7 +38,7 @@ export function ConsoleChrome({
           <div className="flex h-14 items-center border-b border-white/10 px-4">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#DEB892]">{labels.brand}</span>
           </div>
-          <ConsoleSidebarNav locale={locale} labels={labels} />
+          <ConsoleSidebarNav locale={locale} labels={labels} statsNav={statsNav} />
           <div className="border-t border-white/10 p-4 text-xs text-[#F6F4F0]/50">
             <p className="truncate font-medium text-[#F6F4F0]/80">{user.email}</p>
             <div className="mt-2">

@@ -10,6 +10,7 @@ import { devPreviewDemoRows } from "@/lib/devPreviewDemoRows";
 import { countActionableSubmissions, normalizeSubmissionList } from "@/lib/submissionRow";
 import { fetchDashboardStatsForOperator, fetchSubmissionsForOperator } from "@/lib/webInternal";
 import type { ConsoleDashboardStats } from "@/lib/webInternal";
+import { CONSOLE_STATS_ANCHOR, CONSOLE_STATS_SECTION_ID } from "@/lib/consoleStatsNav";
 
 const PREVIEW_DASHBOARD_STATS: ConsoleDashboardStats = {
   membersTotal: 240,
@@ -126,12 +127,13 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
         </div>
       </div>
 
-      <div className="border-t border-white/10 px-6 py-8">
+      <div id={CONSOLE_STATS_SECTION_ID} className="scroll-mt-6 border-t border-white/10 px-6 py-8">
         <h2 className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.32em] text-[#F6F4F0]/45">
           {d.statsSectionHeading}
         </h2>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.members}
             title={d.statsMembersTitle}
             body={d.statsMembersBody}
             value={dashboardStats?.membersTotal ?? null}
@@ -139,6 +141,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             unavailableLabel={d.statsLoadError}
           />
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.artists}
             title={d.statsArtistsTitle}
             body={d.statsArtistsBody}
             value={dashboardStats?.artistsTotal ?? null}
@@ -146,6 +149,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             unavailableLabel={d.statsLoadError}
           />
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.artworks}
             title={d.statsArtworksTitle}
             body={d.statsArtworksBody}
             value={dashboardStats?.artworksTotal ?? null}
@@ -155,6 +159,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.auctions}
             title={d.statsAuctionsTitle}
             body={d.statsAuctionsBody}
             value={dashboardStats?.provenanceAuctionsTotal ?? null}
@@ -162,6 +167,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             unavailableLabel={d.statsLoadError}
           />
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.custodyFixed}
             title={d.statsCustodyFixedTitle}
             body={d.statsCustodyFixedBody}
             value={dashboardStats?.provenanceFixedPriceTotal ?? null}
@@ -169,6 +175,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             unavailableLabel={d.statsLoadError}
           />
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.certificates}
             title={d.statsCertificatesTitle}
             body={d.statsCertificatesBody}
             value={dashboardStats?.certificatesIssuedTotal ?? null}
