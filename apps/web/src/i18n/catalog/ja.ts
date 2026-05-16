@@ -1098,7 +1098,7 @@ export const ja: Messages = {
     certificateTimeAnchorAccordionSummary: "時点固定 · 公開検証（技術詳細）",
     certificateTimeAnchorTitle: "時点固定 · 公開検証（commitment）",
     certificateTimeAnchorBlurb:
-      "下記は認証書JSONの公開フィールドのみから再計算できるSHA-256のcommitmentです。OPUS署名で保護される記録ダイジェストと組み合わせ、同一内容・時点の独立検証を補助します。日本の著作権法上の「確定日付」など行政・制度上の効力を代替・保証するものではありません。オンチェーンや公的タイムスタンプは、将来 chainId・txHash などの任意フィールドで接続できます。",
+      "下記は認証書JSONの公開フィールドのみから再計算できるSHA-256のcommitmentです。OPUS署名で保護される記録ダイジェストと組み合わせ、同一内容・時点の独立検証を補助します。日本著作権に関する行政・制度上の効力を代替・保証するものではありません。",
     certificateTimeAnchorCommitmentLabel: "公開 commitment（SHA-256）",
     certificateTimeAnchorAnchoredAtLabel: "記録基準時刻",
     certificateTimeAnchorChainLabel: "チェーン（CAIP-2）",

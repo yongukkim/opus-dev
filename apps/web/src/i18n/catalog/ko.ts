@@ -1075,7 +1075,7 @@ export const ko: Messages = {
     certificateTimeAnchorAccordionSummary: "시점 고정 · 공개 검증 (기술 상세)",
     certificateTimeAnchorTitle: "시점 고정 · 공개 검증(commitment)",
     certificateTimeAnchorBlurb:
-      "아래 값은 인증서 JSON에 포함된 공개 필드만으로 재계산할 수 있는 SHA-256 commitment입니다. OPUS 서명으로 보호되는 기록 다이제스트와 결합되어, 동일 내용·시점에 대한 독립 검증을 돕습니다. 일본 저작권法상 「確定日付」 등 행정·제도상 효력을 대체하거나 보장한다는 의미는 아닙니다. 온체인 거래·공인 타임스탬프 등은 추후 chainId·txHash 등 필드로 연결할 수 있습니다.",
+      "아래 값은 인증서 JSON에 포함된 공개 필드만으로 재계산할 수 있는 SHA-256 commitment입니다. OPUS 서명으로 보호되는 기록 다이제스트와 결합되어, 동일 내용·시점에 대한 독립 검증을 돕습니다. 한국저작권 관련 행정·제도상 효력을 대체하거나 보장한다는 의미는 아닙니다.",
     certificateTimeAnchorCommitmentLabel: "공개 commitment (SHA-256)",
     certificateTimeAnchorAnchoredAtLabel: "기록 기준 시각",
     certificateTimeAnchorChainLabel: "체인 (CAIP-2)",

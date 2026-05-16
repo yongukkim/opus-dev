@@ -1081,7 +1081,7 @@ export const en: Messages = {
     certificateTimeAnchorAccordionSummary: "Time anchor · public verification (technical details)",
     certificateTimeAnchorTitle: "Time anchor · public commitment",
     certificateTimeAnchorBlurb:
-      "The value below is a SHA-256 commitment reproducible from the public fields in the certificate JSON. Together with the OPUS-signed record digest, it helps independent checks of the same content and issuance row. It does not replace or guarantee administrative effects such as Japan Copyright Act “kakutei hizuke” (date certification). On-chain anchors or qualified timestamps can later be linked via optional fields such as chainId and txHash.",
+      "The value below is a SHA-256 commitment reproducible from the public fields in the certificate JSON. Together with the OPUS-signed record digest, it helps independent checks of the same content and issuance row. It does not replace or guarantee administrative or institutional effects under global copyright law.",
     certificateTimeAnchorCommitmentLabel: "Public commitment (SHA-256)",
     certificateTimeAnchorAnchoredAtLabel: "Anchor reference time",
     certificateTimeAnchorChainLabel: "Chain (CAIP-2)",
