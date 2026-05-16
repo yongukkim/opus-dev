@@ -3,6 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getDictionary } from "@/i18n/catalog";
+import type { Locale } from "@/i18n/config";
+import type { Messages } from "@/i18n/types";
 import { normalizeLocale, withLocale } from "@/i18n/paths";
 import { opusArtworkGenreLabel } from "@/lib/artworkGenreDisplay";
 import {
@@ -17,16 +19,25 @@ import {
   getLatestEditionCertificate,
   verifyEditionCertificateRecord,
   verifyEditionCertificateTimeAnchor,
+  type EditionCertificateRecord,
 } from "@/lib/editionCertificate";
 import { VaultCertificateScrollShell } from "@/components/vault/VaultCertificateScrollShell";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Public-facing edition certificate: hide SHA-256 / chain / TSA technical panel for collector experience.
+ * KO: 일반 소장자 인증서 화면에서는 commitment 기술 블록을 숨기고, `editionCertificate`·JSON API 등 코드 경로는 유지한다.
+ * JA: 一般向け認証書UIでは commitment の技術ブロックを隠し、editionCertificate・JSON API 等のコードパスは維持する。
+ * EN: Omit the time-anchor technical block on the public certificate view; keep verification code in lib/API.
+ */
+const SHOW_EDITION_CERTIFICATE_TIME_ANCHOR_PANEL = false;
+
 type Props = {
   params: Promise<{ locale: string; submissionId: string; editionNumber: string }>;
 };
 
-function formatLocaleDateTime(iso: string, locale: "en" | "ja" | "ko"): string {
+function formatLocaleDateTime(iso: string, locale: Locale): string {
   const tag = locale === "ja" ? "ja-JP" : locale === "ko" ? "ko-KR" : "en-US";
   try {
     return new Intl.DateTimeFormat(tag, { dateStyle: "long", timeStyle: "short" }).format(new Date(iso));
@@ -157,7 +168,6 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
   }
 
   const verified = verifyEditionCertificateRecord(cert);
-  const timeAnchorVerify = verifyEditionCertificateTimeAnchor(cert);
   const workRegistered = formatLocaleDateTime(submission.createdAt, locale);
   const editionRegistered = formatLocaleDateTime(cert.approvedAtIso, locale);
   const issuedAt = formatLocaleDateTime(cert.issuedAtIso, locale);
@@ -247,72 +257,15 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
                   {cert.chronicleIssuanceId?.trim() ? cert.chronicleIssuanceId : v.certificateChronicleNone}
                 </dd>
               </div>
-              <div className="grid gap-2 border-b border-white/[0.06] pb-3">
-                {/* ISO 27001 A.12.4.1 (§5) — public commitment binds the signed digest; optional chain/TSA fields extend later without breaking HMAC payload. */}
-                {/* KO: 타임 앵커는 서명 페이로드 밖의 보조 증빙으로 두어 기존 서명 검증과 호환됩니다. */}
-                <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateTimeAnchorTitle}</dt>
-                <dd className="space-y-3 text-opus-warm/80">
-                  <p className="text-xs leading-relaxed text-opus-warm/52">{v.certificateTimeAnchorBlurb}</p>
-                  <div className="grid gap-1">
-                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
-                      {v.certificateTimeAnchorCommitmentLabel}
-                    </span>
-                    <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">
-                      {digestShort(timeAnchorVerify.computedCommitmentHex)}
-                    </span>
-                  </div>
-                  {cert.timeAnchor?.anchoredAtIso ? (
-                    <div className="grid gap-1">
-                      <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
-                        {v.certificateTimeAnchorAnchoredAtLabel}
-                      </span>
-                      <span className="text-sm">{formatLocaleDateTime(cert.timeAnchor.anchoredAtIso, locale)}</span>
-                    </div>
-                  ) : null}
-                  {cert.timeAnchor?.chainId?.trim() ? (
-                    <div className="grid gap-1">
-                      <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
-                        {v.certificateTimeAnchorChainLabel}
-                      </span>
-                      <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.chainId}</span>
-                    </div>
-                  ) : null}
-                  {cert.timeAnchor?.txHash?.trim() ? (
-                    <div className="grid gap-1">
-                      <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
-                        {v.certificateTimeAnchorTxLabel}
-                      </span>
-                      <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.txHash}</span>
-                    </div>
-                  ) : null}
-                  {cert.timeAnchor?.externalAttestationRef?.trim() ? (
-                    <div className="grid gap-1">
-                      <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
-                        {v.certificateTimeAnchorExternalRefLabel}
-                      </span>
-                      <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">
-                        {cert.timeAnchor.externalAttestationRef}
-                      </span>
-                    </div>
-                  ) : null}
-                  <p
-                    className={`font-mono text-[0.65rem] ${
-                      timeAnchorVerify.status === "ok"
-                        ? "text-emerald-400/90"
-                        : timeAnchorVerify.status === "mismatch"
-                          ? "text-amber-400/95"
-                          : "text-opus-warm/55"
-                    }`}
-                    role="status"
-                  >
-                    {timeAnchorVerify.status === "ok"
-                      ? v.certificateTimeAnchorVerifyOk
-                      : timeAnchorVerify.status === "mismatch"
-                        ? v.certificateTimeAnchorVerifyMismatch
-                        : v.certificateTimeAnchorVerifyLegacy}
-                  </p>
-                </dd>
-              </div>
+              {SHOW_EDITION_CERTIFICATE_TIME_ANCHOR_PANEL ? (
+                <EditionCertificateTimeAnchorPanel
+                  cert={cert}
+                  locale={locale}
+                  v={v}
+                  formatLocaleDateTime={formatLocaleDateTime}
+                  digestShort={digestShort}
+                />
+              ) : null}
               <div className="grid gap-1 border-b border-white/[0.06] pb-3">
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateFormatLabel}</dt>
                 <dd className="text-opus-warm/80">{opusArtworkGenreLabel(ct, submission.genre)}</dd>
@@ -368,6 +321,93 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
       </div>
     </main>
     </VaultCertificateScrollShell>
+  );
+}
+
+/**
+ * Optional time-anchor disclosure (off on the public certificate UI by default).
+ * ISO 27001 A.12.4.1 (§5) — public commitment binds the signed digest; optional chain/TSA fields extend later without breaking HMAC payload.
+ * KO: 타임 앵커는 서명 페이로드 밖의 보조 증빙으로 두어 기존 서명 검증과 호환됩니다.
+ */
+function EditionCertificateTimeAnchorPanel({
+  cert,
+  locale,
+  v,
+  formatLocaleDateTime: fmt,
+  digestShort: shortHex,
+}: {
+  cert: EditionCertificateRecord;
+  locale: Locale;
+  v: Messages["vault"];
+  formatLocaleDateTime: (iso: string, loc: Locale) => string;
+  digestShort: (hex: string) => string;
+}) {
+  const timeAnchorVerify = verifyEditionCertificateTimeAnchor(cert);
+  return (
+    <div className="grid gap-2 border-b border-white/[0.06] pb-3">
+      <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateTimeAnchorTitle}</dt>
+      <dd className="space-y-3 text-opus-warm/80">
+        <p className="text-xs leading-relaxed text-opus-warm/52">{v.certificateTimeAnchorBlurb}</p>
+        <div className="grid gap-1">
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+            {v.certificateTimeAnchorCommitmentLabel}
+          </span>
+          <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">
+            {shortHex(timeAnchorVerify.computedCommitmentHex)}
+          </span>
+        </div>
+        {cert.timeAnchor?.anchoredAtIso ? (
+          <div className="grid gap-1">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+              {v.certificateTimeAnchorAnchoredAtLabel}
+            </span>
+            <span className="text-sm">{fmt(cert.timeAnchor.anchoredAtIso, locale)}</span>
+          </div>
+        ) : null}
+        {cert.timeAnchor?.chainId?.trim() ? (
+          <div className="grid gap-1">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+              {v.certificateTimeAnchorChainLabel}
+            </span>
+            <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.chainId}</span>
+          </div>
+        ) : null}
+        {cert.timeAnchor?.txHash?.trim() ? (
+          <div className="grid gap-1">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+              {v.certificateTimeAnchorTxLabel}
+            </span>
+            <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">{cert.timeAnchor.txHash}</span>
+          </div>
+        ) : null}
+        {cert.timeAnchor?.externalAttestationRef?.trim() ? (
+          <div className="grid gap-1">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">
+              {v.certificateTimeAnchorExternalRefLabel}
+            </span>
+            <span className="break-all font-mono text-[0.72rem] text-opus-warm/70">
+              {cert.timeAnchor.externalAttestationRef}
+            </span>
+          </div>
+        ) : null}
+        <p
+          className={`font-mono text-[0.65rem] ${
+            timeAnchorVerify.status === "ok"
+              ? "text-emerald-400/90"
+              : timeAnchorVerify.status === "mismatch"
+                ? "text-amber-400/95"
+                : "text-opus-warm/55"
+          }`}
+          role="status"
+        >
+          {timeAnchorVerify.status === "ok"
+            ? v.certificateTimeAnchorVerifyOk
+            : timeAnchorVerify.status === "mismatch"
+              ? v.certificateTimeAnchorVerifyMismatch
+              : v.certificateTimeAnchorVerifyLegacy}
+        </p>
+      </dd>
+    </div>
   );
 }
 
