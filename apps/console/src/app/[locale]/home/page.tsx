@@ -69,59 +69,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
         ) : null}
       </div>
 
-      <div className="px-6 py-8">
-        <h2 className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.32em] text-[#F6F4F0]/45">
-          {d.statsSectionHeading}
-        </h2>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <DashboardMetricCard
-            title={d.statsMembersTitle}
-            body={d.statsMembersBody}
-            value={dashboardStats?.membersTotal ?? null}
-            suffix={d.statsMembersSuffix}
-            unavailableLabel={d.statsLoadError}
-          />
-          <DashboardMetricCard
-            title={d.statsArtistsTitle}
-            body={d.statsArtistsBody}
-            value={dashboardStats?.artistsTotal ?? null}
-            suffix={d.statsArtistsSuffix}
-            unavailableLabel={d.statsLoadError}
-          />
-          <DashboardMetricCard
-            title={d.statsArtworksTitle}
-            body={d.statsArtworksBody}
-            value={dashboardStats?.artworksTotal ?? null}
-            suffix={d.statsArtworksSuffix}
-            unavailableLabel={d.statsLoadError}
-          />
-        </div>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <DashboardMetricCard
-            title={d.statsAuctionsTitle}
-            body={d.statsAuctionsBody}
-            value={dashboardStats?.provenanceAuctionsTotal ?? null}
-            suffix={d.statsAuctionsSuffix}
-            unavailableLabel={d.statsLoadError}
-          />
-          <DashboardMetricCard
-            title={d.statsCustodyFixedTitle}
-            body={d.statsCustodyFixedBody}
-            value={dashboardStats?.provenanceFixedPriceTotal ?? null}
-            suffix={d.statsCustodyFixedSuffix}
-            unavailableLabel={d.statsLoadError}
-          />
-          <DashboardMetricCard
-            title={d.statsCertificatesTitle}
-            body={d.statsCertificatesBody}
-            value={dashboardStats?.certificatesIssuedTotal ?? null}
-            suffix={d.statsCertificatesSuffix}
-            unavailableLabel={d.statsLoadError}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-4 px-6 pb-8 md:grid-cols-3">
+      <div className="grid gap-4 px-6 pt-8 md:grid-cols-3">
         <Link
           href={`/${locale}/review`}
           aria-label={
@@ -175,6 +123,58 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
         <div className="flex flex-col rounded-lg border border-white/10 bg-[#161616] p-5">
           <h2 className="text-sm font-semibold text-[#F6F4F0]">{d.cardHealthTitle}</h2>
           <p className="mt-2 text-sm text-[#F6F4F0]/65">{d.cardHealthBody}</p>
+        </div>
+      </div>
+
+      <div className="border-t border-white/10 px-6 py-8">
+        <h2 className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.32em] text-[#F6F4F0]/45">
+          {d.statsSectionHeading}
+        </h2>
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <DashboardMetricCard
+            title={d.statsMembersTitle}
+            body={d.statsMembersBody}
+            value={dashboardStats?.membersTotal ?? null}
+            suffix={d.statsMembersSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            title={d.statsArtistsTitle}
+            body={d.statsArtistsBody}
+            value={dashboardStats?.artistsTotal ?? null}
+            suffix={d.statsArtistsSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            title={d.statsArtworksTitle}
+            body={d.statsArtworksBody}
+            value={dashboardStats?.artworksTotal ?? null}
+            suffix={d.statsArtworksSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <DashboardMetricCard
+            title={d.statsAuctionsTitle}
+            body={d.statsAuctionsBody}
+            value={dashboardStats?.provenanceAuctionsTotal ?? null}
+            suffix={d.statsAuctionsSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            title={d.statsCustodyFixedTitle}
+            body={d.statsCustodyFixedBody}
+            value={dashboardStats?.provenanceFixedPriceTotal ?? null}
+            suffix={d.statsCustodyFixedSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            title={d.statsCertificatesTitle}
+            body={d.statsCertificatesBody}
+            value={dashboardStats?.certificatesIssuedTotal ?? null}
+            suffix={d.statsCertificatesSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
         </div>
       </div>
     </ConsoleChrome>
