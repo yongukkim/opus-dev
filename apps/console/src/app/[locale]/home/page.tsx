@@ -72,7 +72,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
         <h2 className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.32em] text-[#F6F4F0]/45">
           {d.statsSectionHeading}
         </h2>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DashboardMetricCard
             title={d.statsMembersTitle}
             body={d.statsMembersBody}
@@ -94,6 +94,8 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             suffix={d.statsArtworksSuffix}
             unavailableLabel={d.statsLoadError}
           />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <DashboardMetricCard
             title={d.statsAuctionsTitle}
             body={d.statsAuctionsBody}
