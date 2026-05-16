@@ -95,9 +95,14 @@ export function SiteHeaderMobileNav({
               />
               <nav
                 id={panelId}
-                className="fixed inset-y-0 right-0 z-[101] flex w-[min(100%,18.5rem)] flex-col border-l border-white/[0.12] bg-[#0E0E0E] px-5 pb-8 pt-[calc(var(--opus-header-plus-trust)+0.5rem)] shadow-2xl md:hidden"
+                className="fixed inset-y-0 right-0 z-[101] flex w-[min(100%,18.5rem)] flex-col border-l border-white/[0.12] bg-[#0E0E0E] shadow-2xl md:hidden"
                 aria-label={menuLabel}
               >
+                {/*
+                  Drawer is portaled above the fixed header — no header-height padding on the list
+                  (that left empty space and pushed the last items off-screen on short viewports).
+                */}
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-[max(2rem,env(safe-area-inset-bottom,0px))] pt-[max(1rem,env(safe-area-inset-top,0px))]">
                 <ul className="divide-y divide-white/[0.07]">
                   {items.map((item) =>
                     item.kind === "link" ? (
@@ -138,6 +143,7 @@ export function SiteHeaderMobileNav({
                     ),
                   )}
                 </ul>
+                </div>
               </nav>
             </>,
             document.body,
