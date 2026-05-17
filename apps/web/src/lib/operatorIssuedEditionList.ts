@@ -1,7 +1,5 @@
-import {
-  buildArtworkTitleBySubmissionIdMap,
-  resolveEditionLedgerDisplay,
-} from "@/lib/editionLedgerBinding";
+import { resolveEditionLedgerDisplay } from "@/lib/editionLedgerBinding";
+import { buildArtworkTitleBySubmissionIdMap } from "@/lib/privateStorage";
 import { prisma } from "@/lib/prisma";
 
 export type OperatorIssuedEditionRow = {
