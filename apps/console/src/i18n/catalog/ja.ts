@@ -168,7 +168,8 @@ export const ja: ConsoleMessages = {
   },
   certificates: {
     title: "認証書データ",
-    subtitle: "正式発行済み（isIssued）エディション一覧です。作品名は作家が作品登録時に入力した提出原簿のタイトルのみ表示します。",
+    subtitle:
+      "正式発行済み（isIssued）エディションです。提出ID・作品名は DB にリンクされた原簿（opusSubmissionId）のみ表示し、他の提出を推測しません。",
     loadError: "発行エディション一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
     totalTpl: "合計 {count} 枚",
     searchLabel: "検索",
@@ -184,6 +185,9 @@ export const ja: ConsoleMessages = {
     colMinted: "発行日",
     colEditionId: "エディションID",
     colSubmissionId: "提出ID",
+    colLink: "原簿リンク",
+    linkLinked: "連結済み",
+    linkUnlinked: "未連結",
   },
   dashboard: {
     title: "ダッシュボード",

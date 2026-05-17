@@ -150,6 +150,7 @@ export async function syncIssuanceToPrismaAfterJsonl(
           storedFileBytes: written.storedFile.bytes,
         },
         update: {
+          opusSubmissionId: written.id,
           title,
           genre,
           year: written.year,

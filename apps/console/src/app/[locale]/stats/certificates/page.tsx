@@ -42,6 +42,7 @@ export default async function ConsoleCertificatesPage({
           [
             r.artworkTitle,
             r.submissionId ?? "",
+            r.linkStatus,
             r.editionId,
             r.ownerUserId ?? "",
             r.ownerName ?? "",

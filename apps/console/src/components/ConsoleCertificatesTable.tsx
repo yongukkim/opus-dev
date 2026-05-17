@@ -41,7 +41,7 @@ export function ConsoleCertificatesTable({
     [locale],
   );
 
-  const colSpan = 7;
+  const colSpan = 8;
 
   return (
     <div className="space-y-4">
@@ -78,6 +78,7 @@ export function ConsoleCertificatesTable({
             <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
               <th className="w-14 px-3 py-3 text-center">{labels.colNo}</th>
               <ConsoleSortableTh basePath={basePath} column="submission" label={labels.colSubmissionId} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="link" label={labels.colLink} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="title" label={labels.colTitle} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="owner" label={labels.colOwner} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="edition" label={labels.colEdition} listQuery={listQuery} />
@@ -99,8 +100,11 @@ export function ConsoleCertificatesTable({
                     {rowNumberStart + index}
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-neutral-500">{row.submissionId ?? "—"}</td>
+                  <td className="px-4 py-3 text-xs text-neutral-600">
+                    {row.linkStatus === "linked" ? labels.linkLinked : labels.linkUnlinked}
+                  </td>
                   <td className="px-4 py-3 font-medium text-neutral-900">
-                    {row.submissionId ? (
+                    {row.linkStatus === "linked" && row.submissionId ? (
                       <ConsoleArtworkTitleHoverPreview
                         title={row.artworkTitle}
                         submissionId={row.submissionId}

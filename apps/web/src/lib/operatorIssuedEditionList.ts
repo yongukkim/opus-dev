@@ -1,11 +1,15 @@
-import { artistRegisteredTitle, buildSubmissionLinkIndexes } from "@/lib/operatorEditionSubmissionLink";
+import {
+  buildArtworkTitleBySubmissionIdMap,
+  resolveEditionLedgerDisplay,
+} from "@/lib/editionLedgerBinding";
 import { prisma } from "@/lib/prisma";
 
 export type OperatorIssuedEditionRow = {
   editionId: string;
   submissionId: string | null;
-  /** Artist-entered title from `submissions.jsonl` only (작품 등록 폼 `artworkTitle`). */
+  /** Artist-entered title from linked submission ledger only. */
   artworkTitle: string;
+  linkStatus: "linked" | "unlinked";
   editionNumber: number;
   editionTotal: number;
   mintedAt: string | null;
@@ -15,7 +19,7 @@ export type OperatorIssuedEditionRow = {
 };
 
 export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEditionRow[]> {
-  const indexes = await buildSubmissionLinkIndexes();
+  const titleBySubmissionId = await buildArtworkTitleBySubmissionIdMap();
 
   const editions = await prisma.edition.findMany({
     where: { isIssued: true },
@@ -36,12 +40,12 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
   });
 
   return editions.map((e) => {
-    /** Never guess a submission id — avoids showing another ledger's artworkTitle (e.g. stray `kk`). */
-    const submissionId = e.artwork.opusSubmissionId?.trim() || null;
+    const ledger = resolveEditionLedgerDisplay(e.artwork.opusSubmissionId, titleBySubmissionId);
     return {
       editionId: e.id,
-      submissionId,
-      artworkTitle: submissionId ? artistRegisteredTitle(submissionId, indexes) : "",
+      submissionId: ledger.submissionId,
+      artworkTitle: ledger.artworkTitle,
+      linkStatus: ledger.linkStatus,
       editionNumber: e.editionNumber,
       editionTotal: e.editionTotal,
       mintedAt: e.mintedAt?.toISOString() ?? null,
@@ -52,7 +56,15 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
   });
 }
 
-const EDITION_SORT_KEYS = new Set(["title", "edition", "minted", "owner", "editionId", "submission"]);
+const EDITION_SORT_KEYS = new Set([
+  "title",
+  "edition",
+  "minted",
+  "owner",
+  "editionId",
+  "submission",
+  "link",
+]);
 
 function compareStrings(a: string, b: string): number {
   return a.localeCompare(b, undefined, { sensitivity: "base" });
@@ -69,6 +81,7 @@ export function filterOperatorIssuedEditionRows(
       r.artworkTitle,
       r.submissionId ?? "",
       r.editionId,
+      r.linkStatus,
       r.ownerUserId ?? "",
       r.ownerName ?? "",
       r.ownerEmail ?? "",
@@ -107,6 +120,9 @@ export function sortOperatorIssuedEditionRows(
         break;
       case "submission":
         cmp = compareStrings(a.submissionId ?? "", b.submissionId ?? "");
+        break;
+      case "link":
+        cmp = compareStrings(a.linkStatus, b.linkStatus);
         break;
       case "minted":
       default: {

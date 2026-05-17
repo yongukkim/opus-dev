@@ -75,6 +75,7 @@ export function devPreviewIssuedEditionRows(): ConsoleIssuedEditionRow[] {
       editionId: "preview-edition-1",
       submissionId: "preview-sub-1",
       artworkTitle: "Moonlit Terrace",
+      linkStatus: "linked",
       editionNumber: 1,
       editionTotal: 10,
       mintedAt: "2026-03-01T08:00:00.000Z",

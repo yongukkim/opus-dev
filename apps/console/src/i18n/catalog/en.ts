@@ -167,7 +167,8 @@ export const en: ConsoleMessages = {
   },
   certificates: {
     title: "Certificate data",
-    subtitle: "Formally issued editions (`isIssued`). Title is the artist-entered name from the submissions ledger only.",
+    subtitle:
+      "Formally issued editions (`isIssued`). Submission ID and title come only from the linked ledger (`opusSubmissionId`) — never inferred from another submission.",
     loadError: "Could not load issued editions. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
     totalTpl: "{count} issued",
     searchLabel: "Search",
@@ -183,6 +184,9 @@ export const en: ConsoleMessages = {
     colMinted: "Issued",
     colEditionId: "Edition ID",
     colSubmissionId: "Submission ID",
+    colLink: "Ledger link",
+    linkLinked: "Linked",
+    linkUnlinked: "Unlinked",
   },
   dashboard: {
     title: "Dashboard",

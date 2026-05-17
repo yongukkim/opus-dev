@@ -168,7 +168,8 @@ export const ko: ConsoleMessages = {
   },
   certificates: {
     title: "인증서 데이터",
-    subtitle: "정식 발행(isIssued)된 에디션 목록입니다. 작품명은 작가 등록 제출 원장의 제목만 표시합니다.",
+    subtitle:
+      "정식 발행(isIssued) 에디션입니다. 제출 ID·작품명은 DB에 연결된 원장(opusSubmissionId)에서만 표시하며, 추측으로 다른 원장을 읽지 않습니다.",
     loadError: "인증서(에디션) 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN·OPUS_INTERNAL_API_SECRET·스토어 가용성을 확인하세요.",
     totalTpl: "총 {count}건",
     searchLabel: "검색",
@@ -184,6 +185,9 @@ export const ko: ConsoleMessages = {
     colMinted: "발행일",
     colEditionId: "에디션 ID",
     colSubmissionId: "제출 ID",
+    colLink: "원장 연결",
+    linkLinked: "연결됨",
+    linkUnlinked: "미연결",
   },
   dashboard: {
     title: "대시보드",

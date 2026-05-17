@@ -149,8 +149,10 @@ export type ConsoleProvenanceListingRow = {
 export type ConsoleIssuedEditionRow = {
   editionId: string;
   submissionId: string | null;
-  /** Artist registration title from submissions ledger only. */
+  /** Artist registration title from linked submission ledger only. */
   artworkTitle: string;
+  /** `linked` = `Artwork.opusSubmissionId` set; `unlinked` = no cross-ledger display. */
+  linkStatus: "linked" | "unlinked";
   editionNumber: number;
   editionTotal: number;
   mintedAt: string | null;

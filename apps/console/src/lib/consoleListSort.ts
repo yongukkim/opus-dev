@@ -142,6 +142,9 @@ export function sortCertificateRows(
       case "submission":
         cmp = compareStrings(a.submissionId ?? "", b.submissionId ?? "");
         break;
+      case "link":
+        cmp = compareStrings(a.linkStatus, b.linkStatus);
+        break;
       default:
         cmp = compareStrings(a.mintedAt ?? "", b.mintedAt ?? "");
     }

@@ -181,6 +181,9 @@ export type ConsoleMessages = {
     colMinted: string;
     colEditionId: string;
     colSubmissionId: string;
+    colLink: string;
+    linkLinked: string;
+    linkUnlinked: string;
   };
   dashboard: {
     title: string;
