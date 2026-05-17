@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { ConsoleMessages } from "@/i18n/types";
 import type { ConsoleStatsNavItem } from "@/lib/consoleStatsNav";
@@ -37,22 +36,14 @@ export function ConsoleSidebarNav({
   statsNav: { sectionHeading: string; items: ConsoleStatsNavItem[] };
 }) {
   const pathname = usePathname() ?? "";
-  const [hash, setHash] = useState("");
   const home = `/${locale}/home`;
   const review = `/${locale}/review`;
   const payments = `/${locale}/payments`;
   const onHome = pathname === home || pathname === `${home}/`;
 
-  useEffect(() => {
-    const syncHash = () => setHash(window.location.hash);
-    syncHash();
-    window.addEventListener("hashchange", syncHash);
-    return () => window.removeEventListener("hashchange", syncHash);
-  }, [pathname]);
-
   return (
     <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3 text-sm" aria-label="Console">
-      <Link href={home} className={navClass(onHome && !hash)}>
+      <Link href={home} className={navClass(onHome)}>
         {labels.navHome}
       </Link>
       <Link href={review} className={navClass(pathname.startsWith(review))}>
@@ -67,8 +58,7 @@ export function ConsoleSidebarNav({
       </p>
       <ul className="flex flex-col gap-0.5" aria-label={statsNav.sectionHeading}>
         {statsNav.items.map((item) => {
-          const hashOnly = item.href.includes("#");
-          const active = hashOnly ? onHome && hash === `#${item.id}` : pathname === item.href || pathname === `${item.href}/`;
+          const active = pathname === item.href || pathname === `${item.href}/`;
           return (
             <li key={item.id}>
               <Link href={item.href} className={statsNavClass(active)}>

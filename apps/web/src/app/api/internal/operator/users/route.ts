@@ -32,7 +32,18 @@ export async function GET(req: NextRequest): Promise<Response> {
     return NextResponse.json({ ok: false, error: gate.error }, { status: gate.status });
   }
 
+  const roleParam = req.nextUrl.searchParams.get("role")?.trim().toLowerCase();
+  const roleWhere =
+    roleParam === "artist"
+      ? { role: "ARTIST" as const }
+      : roleParam === "operator"
+        ? { role: "OPERATOR" as const }
+        : roleParam === "collector"
+          ? { role: "COLLECTOR" as const }
+          : undefined;
+
   const users = await prisma.user.findMany({
+    where: roleWhere,
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
@@ -44,7 +55,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     },
   });
 
-  const rows: OperatorUserListRow[] = users.map((u) => ({
+  const rows: OperatorUserListRow[] = users.map((u: (typeof users)[number]) => ({
     id: u.id,
     name: u.name ?? "",
     email: u.email ?? "",

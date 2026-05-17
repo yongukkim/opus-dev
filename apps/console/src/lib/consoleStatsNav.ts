@@ -14,8 +14,13 @@ export const CONSOLE_STATS_ANCHOR = {
 } as const;
 
 /** Dedicated console routes for aggregate drill-downs (null = home hash only). */
-export const CONSOLE_STATS_ROUTE: Partial<Record<keyof typeof CONSOLE_STATS_ANCHOR, string>> = {
+export const CONSOLE_STATS_ROUTE: Record<keyof typeof CONSOLE_STATS_ANCHOR, string> = {
   members: "stats/members",
+  artists: "stats/artists",
+  artworks: "stats/artworks",
+  auctions: "stats/provenance-auctions",
+  custodyFixed: "stats/provenance-fixed",
+  certificates: "stats/certificates",
 };
 
 export type ConsoleStatsNavItem = {
@@ -31,7 +36,6 @@ export function buildConsoleStatsNavItems(
   sectionHeading: string;
   items: ConsoleStatsNavItem[];
 } {
-  const home = `/${locale}/home`;
   const defs: { key: keyof typeof CONSOLE_STATS_ANCHOR; label: string }[] = [
     { key: "members", label: dashboard.statsMembersTitle },
     { key: "artists", label: dashboard.statsArtistsTitle },
@@ -43,14 +47,10 @@ export function buildConsoleStatsNavItems(
 
   return {
     sectionHeading: dashboard.statsSectionHeading,
-    items: defs.map(({ key, label }) => {
-      const route = CONSOLE_STATS_ROUTE[key];
-      const id = CONSOLE_STATS_ANCHOR[key];
-      return {
-        id,
-        label,
-        href: route ? `/${locale}/${route}` : `${home}#${id}`,
-      };
-    }),
+    items: defs.map(({ key, label }) => ({
+      id: CONSOLE_STATS_ANCHOR[key],
+      label,
+      href: `/${locale}/${CONSOLE_STATS_ROUTE[key]}`,
+    })),
   };
 }
