@@ -5,6 +5,7 @@ import {
   appendSubmission,
   getSubmissionById,
   hasCollectorOwnershipEvent,
+  SubmissionLedgerValidationError,
   type SubmissionRecord,
 } from "@/lib/privateStorage";
 
@@ -73,6 +74,16 @@ export async function PATCH(
     lockEdition: parsed.value.lockEdition,
   };
 
-  await appendSubmission(next);
+  try {
+    await appendSubmission(next);
+  } catch (e) {
+    if (e instanceof SubmissionLedgerValidationError) {
+      return NextResponse.json(
+        { ok: false, error: "submission_identity_incomplete", fields: e.missingFields },
+        { status: 422 },
+      );
+    }
+    throw e;
+  }
   return NextResponse.json({ ok: true });
 }

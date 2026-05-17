@@ -5,6 +5,7 @@ import { enqueueMintJobForApprovedSubmission } from "@/lib/onchainMintQueue";
 import {
   appendSubmissionReviewPatch,
   getSubmissionById,
+  SubmissionLedgerValidationError,
   type SubmissionRecord,
 } from "@/lib/privateStorage";
 
@@ -78,14 +79,22 @@ export async function runOperatorSubmissionReview(input: {
     editionOverride = ep.value;
   }
 
-  const written = await appendSubmissionReviewPatch({
-    submission,
-    reviewerId,
-    reviewStatus: normalizedStatus,
-    contentRating,
-    reviewNote,
-    editionOverride,
-  });
+  let written: SubmissionRecord;
+  try {
+    written = await appendSubmissionReviewPatch({
+      submission,
+      reviewerId,
+      reviewStatus: normalizedStatus,
+      contentRating,
+      reviewNote,
+      editionOverride,
+    });
+  } catch (e) {
+    if (e instanceof SubmissionLedgerValidationError) {
+      return { ok: false, status: 422, error: "submission_identity_incomplete" };
+    }
+    throw e;
+  }
 
   let chronicleIssuanceId: string | null = null;
   try {

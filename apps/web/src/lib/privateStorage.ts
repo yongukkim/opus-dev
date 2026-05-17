@@ -85,8 +85,170 @@ export async function appendJsonl(filePath: string, obj: unknown): Promise<void>
   await writeFile(filePath, `${JSON.stringify(obj)}\n`, { flag: "a", encoding: "utf8" });
 }
 
-export async function appendSubmission(rec: SubmissionRecord): Promise<void> {
-  await appendJsonl(SUBMISSIONS_FILE, rec);
+type SubmissionJsonlRow = SubmissionRecord & { title?: string };
+
+/** Thrown when a submission ledger append would omit required identity fields. */
+export class SubmissionLedgerValidationError extends Error {
+  readonly code = "submission_ledger_invalid" as const;
+
+  constructor(readonly missingFields: string[]) {
+    super(`submission_ledger_invalid:${missingFields.join(",")}`);
+    this.name = "SubmissionLedgerValidationError";
+  }
+}
+
+/** Artist-entered title from one JSONL row (`artworkTitle`, legacy `title`). */
+export function artistTitleFromSubmissionRow(row: SubmissionJsonlRow): string {
+  const t = (typeof row.artworkTitle === "string" ? row.artworkTitle : row.title ?? "").trim();
+  return t;
+}
+
+function pickLastNonEmptyString(rows: SubmissionJsonlRow[], read: (r: SubmissionJsonlRow) => string | undefined): string {
+  for (let i = rows.length - 1; i >= 0; i -= 1) {
+    const v = read(rows[i]!)?.trim();
+    if (v) return v;
+  }
+  return "";
+}
+
+function pickStoredFile(rows: SubmissionJsonlRow[]): SubmissionRecord["storedFile"] {
+  for (let i = rows.length - 1; i >= 0; i -= 1) {
+    const sf = rows[i]!.storedFile;
+    if (sf?.relativePath?.trim() && sf?.filename?.trim() && sf?.mime?.trim()) return sf;
+  }
+  return rows[rows.length - 1]!.storedFile;
+}
+
+/** Merge append-only history into one complete submission snapshot (forward scan; last non-empty wins). */
+export function mergeSubmissionRows(rows: SubmissionJsonlRow[]): SubmissionRecord {
+  if (rows.length === 0) {
+    throw new SubmissionLedgerValidationError(["id"]);
+  }
+  const latest = rows[rows.length - 1]!;
+  let artworkTitle = "";
+  for (const r of rows) {
+    const t = artistTitleFromSubmissionRow(r);
+    if (t) artworkTitle = t;
+  }
+  const tags =
+    Array.isArray(latest.tags) && latest.tags.length > 0
+      ? latest.tags
+      : rows.reduce<string[]>((acc, r) => (r.tags?.length ? r.tags : acc), []);
+
+  return {
+    ...latest,
+    id: latest.id.trim(),
+    createdAt: pickLastNonEmptyString(rows, (r) => r.createdAt) || latest.createdAt,
+    artistId: pickLastNonEmptyString(rows, (r) => r.artistId) || latest.artistId,
+    artistName: pickLastNonEmptyString(rows, (r) => r.artistName) || latest.artistName,
+    nickname: pickLastNonEmptyString(rows, (r) => r.nickname) || latest.nickname,
+    artworkTitle,
+    genre: pickLastNonEmptyString(rows, (r) => r.genre) || latest.genre,
+    tags: tags.length > 0 ? tags : Array.isArray(latest.tags) ? latest.tags : [],
+    storedFile: pickStoredFile(rows),
+    editionMode: latest.editionMode === "limited" ? "limited" : "unique",
+    editionTotal: Number.isFinite(latest.editionTotal) ? latest.editionTotal : 1,
+    initialMint: Number.isFinite(latest.initialMint) ? latest.initialMint : 1,
+    numberingPolicy: latest.numberingPolicy === "manual" ? "manual" : "auto",
+    lockEdition: Boolean(latest.lockEdition),
+  };
+}
+
+function collectMissingSubmissionFields(rec: SubmissionRecord): string[] {
+  const missing: string[] = [];
+  if (!rec.id?.trim()) missing.push("id");
+  if (!rec.createdAt?.trim()) missing.push("createdAt");
+  if (!rec.artistId?.trim()) missing.push("artistId");
+  if (!rec.artistName?.trim()) missing.push("artistName");
+  if (!rec.nickname?.trim()) missing.push("nickname");
+  if (!rec.artworkTitle?.trim()) missing.push("artworkTitle");
+  if (!rec.genre?.trim()) missing.push("genre");
+  if (!Array.isArray(rec.tags)) missing.push("tags");
+  if (!rec.storedFile?.relativePath?.trim()) missing.push("storedFile.relativePath");
+  if (!rec.storedFile?.filename?.trim()) missing.push("storedFile.filename");
+  if (!rec.storedFile?.mime?.trim()) missing.push("storedFile.mime");
+  if (typeof rec.storedFile?.bytes !== "number" || rec.storedFile.bytes < 0) missing.push("storedFile.bytes");
+  if (rec.editionMode !== "unique" && rec.editionMode !== "limited") missing.push("editionMode");
+  if (!Number.isFinite(rec.editionTotal) || rec.editionTotal < 1) missing.push("editionTotal");
+  if (!Number.isFinite(rec.initialMint) || rec.initialMint < 1) missing.push("initialMint");
+  if (rec.numberingPolicy !== "auto" && rec.numberingPolicy !== "manual") missing.push("numberingPolicy");
+  if (typeof rec.lockEdition !== "boolean") missing.push("lockEdition");
+  return missing;
+}
+
+async function resolveExternalArtworkTitleForSubmission(submissionId: string): Promise<string> {
+  const id = submissionId.trim();
+  if (!id) return "";
+  const { listAllEditionCertificateRecords } = await import("@/lib/editionCertificate");
+  for (const c of await listAllEditionCertificateRecords()) {
+    if (c.submissionId === id && c.artworkTitle?.trim()) return c.artworkTitle.trim();
+  }
+  const { prisma } = await import("@/lib/prisma");
+  const artwork = await prisma.artwork.findFirst({
+    where: { opusSubmissionId: id },
+    select: { title: true },
+  });
+  return artwork?.title?.trim() ?? "";
+}
+
+/**
+ * ISO 27001 A.14.2.1 (§1) / A.12.4.1 (§5)
+ * KO: append 직전에 원장 이력·등록 제목을 병합하고 필수 식별 필드가 없으면 거부합니다.
+ * JA: append 直前に原簿履歴・登録タイトルを統合し、必須識別フィールド欠落時は拒否します。
+ * EN: Merge ledger history and registration title before append; reject when required identity fields are missing.
+ */
+export async function prepareSubmissionForLedgerAppend(rec: SubmissionJsonlRow): Promise<SubmissionRecord> {
+  const id = rec.id?.trim();
+  if (!id) throw new SubmissionLedgerValidationError(["id"]);
+
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
+  const history = records.filter((r) => r?.id === id);
+  const priorMerged = history.length > 0 ? mergeSubmissionRows(history) : null;
+
+  const rowTitle = artistTitleFromSubmissionRow(rec);
+  let artworkTitle = rowTitle || priorMerged?.artworkTitle?.trim() || "";
+  if (!artworkTitle) {
+    artworkTitle = await resolveExternalArtworkTitleForSubmission(id);
+  }
+
+  const merged: SubmissionRecord = priorMerged
+    ? {
+        ...priorMerged,
+        ...rec,
+        id,
+        artworkTitle,
+        nickname: rec.nickname?.trim() || priorMerged.nickname,
+        artistName: rec.artistName?.trim() || priorMerged.artistName,
+        genre: rec.genre?.trim() || priorMerged.genre,
+        artistId: rec.artistId?.trim() || priorMerged.artistId,
+        createdAt: rec.createdAt?.trim() || priorMerged.createdAt,
+        storedFile:
+          rec.storedFile?.relativePath?.trim() && rec.storedFile?.filename?.trim()
+            ? rec.storedFile
+            : priorMerged.storedFile,
+        tags: Array.isArray(rec.tags) && rec.tags.length > 0 ? rec.tags : priorMerged.tags,
+      }
+    : {
+        ...(rec as SubmissionRecord),
+        id,
+        artworkTitle,
+        tags: Array.isArray(rec.tags) ? rec.tags : [],
+      };
+
+  const missing = collectMissingSubmissionFields(merged);
+  if (missing.length > 0) throw new SubmissionLedgerValidationError(missing);
+  return merged;
+}
+
+/**
+ * ISO 27001 A.14.2.1 (§1) / A.12.4.1 (§5)
+ * KO: 제출 원장에 완전한 식별 스냅샷만 append하며, 작품명 등 필수값 누락 시 기록하지 않습니다.
+ * JA: 提出原簿には完全な識別スナップショットのみ追記し、作品名等の必須欠落時は書き込みません。
+ * EN: Append only complete identity snapshots to the submissions ledger; refuse when required fields are absent.
+ */
+export async function appendSubmission(rec: SubmissionRecord | SubmissionJsonlRow): Promise<void> {
+  const normalized = await prepareSubmissionForLedgerAppend(rec);
+  await appendJsonl(SUBMISSIONS_FILE, normalized);
 }
 
 export async function appendOwnershipEvent(state: OwnershipState): Promise<void> {
@@ -117,42 +279,46 @@ async function readJsonl<T>(filePath: string): Promise<T[]> {
 }
 
 export async function getSubmissionById(id: string): Promise<SubmissionRecord | null> {
-  const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
-  for (let i = records.length - 1; i >= 0; i -= 1) {
-    if (records[i]?.id === id) return records[i]!;
+  const sid = id.trim();
+  if (!sid) return null;
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
+  const history = records.filter((r) => r?.id === sid);
+  if (history.length === 0) return null;
+  let merged = mergeSubmissionRows(history);
+  if (!merged.artworkTitle.trim()) {
+    const external = await resolveExternalArtworkTitleForSubmission(sid);
+    if (external) merged = { ...merged, artworkTitle: external };
   }
-  return null;
+  return merged;
 }
 
 export async function getSubmissionByStoredFilename(filename: string): Promise<SubmissionRecord | null> {
   const f = filename.trim();
   if (!f) return null;
-  const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
   for (let i = records.length - 1; i >= 0; i -= 1) {
     const r = records[i];
-    if (r?.storedFile?.filename === f) return r;
+    if (r?.storedFile?.filename === f && r.id) return getSubmissionById(r.id);
   }
   return null;
 }
 
-/** Latest record per submission id (jsonl append order), across all artists. */
+/** Latest merged snapshot per submission id (jsonl append order), across all artists. */
 export async function listAllSubmissions(): Promise<SubmissionRecord[]> {
-  const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
-  const byId = new Map<string, SubmissionRecord>();
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
+  const byId = new Map<string, SubmissionJsonlRow[]>();
   for (const r of records) {
-    if (r?.id) byId.set(r.id, r);
+    if (!r?.id) continue;
+    const rows = byId.get(r.id) ?? [];
+    rows.push(r);
+    byId.set(r.id, rows);
   }
-  const out = [...byId.values()];
+  const out: SubmissionRecord[] = [];
+  for (const rows of byId.values()) {
+    out.push(mergeSubmissionRows(rows));
+  }
   out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   return out;
-}
-
-type SubmissionJsonlRow = SubmissionRecord & { title?: string };
-
-/** Artist-entered title from one JSONL row (`artworkTitle`, legacy `title`). */
-export function artistTitleFromSubmissionRow(row: SubmissionJsonlRow): string {
-  const t = (typeof row.artworkTitle === "string" ? row.artworkTitle : row.title ?? "").trim();
-  return t;
 }
 
 /**
@@ -327,18 +493,22 @@ export async function hasCollectorOwnershipEvent(submissionId: string): Promise<
  * EN: Withdrawn submissions are excluded from this list; append-only ledger rows remain.
  */
 export async function listArtistSubmissions(artistId: string): Promise<SubmissionRecord[]> {
-  if (!artistId.trim()) return [];
-  const records = await readJsonl<SubmissionRecord>(SUBMISSIONS_FILE);
-  const byId = new Map<string, SubmissionRecord>();
+  const aid = artistId.trim();
+  if (!aid) return [];
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
+  const byId = new Map<string, SubmissionJsonlRow[]>();
   for (const r of records) {
-    if (r?.id && r.artistId === artistId) {
-      byId.set(r.id, r);
-    }
+    if (!r?.id) continue;
+    const rows = byId.get(r.id) ?? [];
+    rows.push(r);
+    byId.set(r.id, rows);
   }
   const out: SubmissionRecord[] = [];
-  for (const rec of byId.values()) {
+  for (const rows of byId.values()) {
+    const rec = mergeSubmissionRows(rows);
+    if (rec.artistId !== aid) continue;
     const owner = await getCurrentOwner(rec.id, rec.artistId);
-    if (owner.ownerType === "artist" && owner.ownerId === artistId) {
+    if (owner.ownerType === "artist" && owner.ownerId === aid) {
       out.push(rec);
     }
   }
@@ -420,7 +590,10 @@ export async function acknowledgeAllArtistOperatorNotices(artistUserId: string):
 
 export type WithdrawArtistPendingResult =
   | { ok: true }
-  | { ok: false; error: "not_found" | "forbidden" | "not_withdrawable" | "already_withdrawn" | "after_sale" };
+  | {
+      ok: false;
+      error: "not_found" | "forbidden" | "not_withdrawable" | "already_withdrawn" | "after_sale" | "ledger_invalid";
+    };
 
 /**
  * ISO 27001 A.9.2.1 (§4), A.14.2.1 (§1) — artist-only while review not finalized; no collector ownership.
@@ -443,12 +616,19 @@ export async function withdrawArtistPendingSubmission(input: {
   if (st !== "pending_review" && st !== "changes_requested") return { ok: false, error: "not_withdrawable" };
   if (await hasCollectorOwnershipEvent(sub.id)) return { ok: false, error: "after_sale" };
   const now = new Date().toISOString();
-  await appendSubmission({
-    ...sub,
-    reviewStatus: "withdrawn",
-    artistWithdrawnAt: now,
-    reviewedAt: now,
-  });
+  try {
+    await appendSubmission({
+      ...sub,
+      reviewStatus: "withdrawn",
+      artistWithdrawnAt: now,
+      reviewedAt: now,
+    });
+  } catch (e) {
+    if (e instanceof SubmissionLedgerValidationError) {
+      return { ok: false, error: "ledger_invalid" };
+    }
+    throw e;
+  }
   return { ok: true };
 }
 

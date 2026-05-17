@@ -10,6 +10,7 @@ import {
   buildArtistWorkDir,
   ensureStorage,
   safeSlug,
+  SubmissionLedgerValidationError,
   type SubmissionRecord,
 } from "@/lib/privateStorage";
 
@@ -175,7 +176,13 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, id, filename, storedRelativePath, artistId: actor.userId }, { status: 201 });
-  } catch {
+  } catch (e) {
+    if (e instanceof SubmissionLedgerValidationError) {
+      return NextResponse.json(
+        { ok: false, error: "submission_identity_incomplete", fields: e.missingFields },
+        { status: 422 },
+      );
+    }
     // Intentionally avoid echoing internal details.
     return NextResponse.json({ ok: false, error: "invalid_request" }, { status: 400 });
   }
