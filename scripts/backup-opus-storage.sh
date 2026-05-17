@@ -12,9 +12,32 @@ COMPOSE_FILE="${COMPOSE_FILE:-compose.web.yaml}"
 SERVICE_NAME="${SERVICE_NAME:-opus-web}"
 BACKUP_ROOT="${BACKUP_ROOT:-/var/backups/opus-storage}"
 KEEP_DAYS="${KEEP_DAYS:-14}"
+KEEP_NEWEST="${KEEP_NEWEST:-3}"
+MIN_FREE_MB="${MIN_FREE_MB:-512}"
 
 log() { printf '[backup-opus-storage] %s\n' "$*"; }
+warn() { printf '[backup-opus-storage] WARN: %s\n' "$*" >&2; }
 die() { printf '[backup-opus-storage] ERROR: %s\n' "$*" >&2; exit 1; }
+
+free_mb_on_path() {
+  local path="$1"
+  df -BM "$path" 2>/dev/null | awk 'NR==2 { gsub(/M/, "", $4); print $4 }'
+}
+
+prune_old_backups() {
+  local out_dir="$1"
+  sudo find "$out_dir" -type f -name 'opus-storage-*.tgz' -mtime "+$KEEP_DAYS" -delete 2>/dev/null || true
+  # When the root volume is full, drop oldest archives until only KEEP_NEWEST remain.
+  mapfile -t archives < <(sudo find "$out_dir" -type f -name 'opus-storage-*.tgz' -printf '%T@ %p\n' 2>/dev/null | sort -n | awk '{ $1=""; sub(/^ /,""); print }')
+  local count="${#archives[@]}"
+  if (( count > KEEP_NEWEST )); then
+    local drop=$((count - KEEP_NEWEST))
+    log "pruning $drop oldest backup(s) (keep newest $KEEP_NEWEST)"
+    for ((i = 0; i < drop; i++)); do
+      sudo rm -f "${archives[$i]}"
+    done
+  fi
+}
 
 dc() {
   if docker info >/dev/null 2>&1; then
@@ -49,10 +72,22 @@ OUT_DIR="${BACKUP_ROOT%/}"
 OUT_FILE="${OUT_DIR}/opus-storage-${HOST_TAG}-${STAMP}.tgz"
 
 sudo install -d -m 0750 -o root -g root "$OUT_DIR"
+prune_old_backups "$OUT_DIR"
+
+FREE_MB="$(free_mb_on_path "$OUT_DIR" || echo 0)"
+if [[ -z "$FREE_MB" || "$FREE_MB" -lt "$MIN_FREE_MB" ]]; then
+  warn "skip: ${FREE_MB:-0}MiB free on backup volume (need >= ${MIN_FREE_MB}MiB) — prune /var/backups or docker images"
+  exit 0
+fi
+
 log "source=$SRC"
-log "backup=$OUT_FILE"
-sudo tar -C "$SRC" -czf "$OUT_FILE" .
+log "backup=$OUT_FILE (free=${FREE_MB}MiB)"
+if ! sudo tar -C "$SRC" -czf "$OUT_FILE" .; then
+  sudo rm -f "$OUT_FILE" 2>/dev/null || true
+  warn "backup failed (disk full?) — removed partial archive if any"
+  exit 1
+fi
 sudo chmod 0640 "$OUT_FILE"
-sudo find "$OUT_DIR" -type f -name 'opus-storage-*.tgz' -mtime "+$KEEP_DAYS" -delete
+prune_old_backups "$OUT_DIR"
 sudo ls -lh "$OUT_FILE"
 log "done"

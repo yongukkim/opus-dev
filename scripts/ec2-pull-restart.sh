@@ -39,18 +39,19 @@ export AUTH_URL_WEB="${AUTH_URL_WEB:-$BASE_URL}"
 # Storefront: only compose.web.yaml — strip host/repo COMPOSE_FILE so Docker does not merge extra files.
 dc_web() { env -u COMPOSE_FILE docker compose -f compose.web.yaml "$@"; }
 
-# Always take a point-in-time storage backup before rollout.
-if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then
-  APP_DIR="$APP_DIR" COMPOSE_FILE="compose.web.yaml" "$APP_DIR/scripts/backup-opus-storage.sh"
-else
-  echo "[ec2-pull-restart] WARN: backup-opus-storage.sh missing or not executable" >&2
-fi
-
-# On small EC2 disks, stale layers from previous deploys can block new pulls.
-# Best-effort cleanup keeps deploy automation resilient to "no space left on device".
+# On small EC2 disks, free Docker layers *before* storage backup so tar/gzip can succeed.
 docker image prune -af || true
 docker container prune -f || true
 docker builder prune -af || true
+
+# Point-in-time storage backup before rollout — must not block deploy when disk is tight.
+if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then
+  if ! APP_DIR="$APP_DIR" COMPOSE_FILE="compose.web.yaml" "$APP_DIR/scripts/backup-opus-storage.sh"; then
+    echo "[ec2-pull-restart] WARN: storage backup failed — continuing deploy (free disk under /var/backups and docker system df)" >&2
+  fi
+else
+  echo "[ec2-pull-restart] WARN: backup-opus-storage.sh missing or not executable" >&2
+fi
 
 docker pull "$OPUS_WEB_IMAGE"
 
