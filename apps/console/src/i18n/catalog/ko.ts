@@ -169,7 +169,7 @@ export const ko: ConsoleMessages = {
   certificates: {
     title: "인증서 데이터",
     subtitle:
-      "작가 등록이 아니라 운영 승인 시 서명 인증서 원장(JSONL)에 발행된 에디션입니다. 발행일은 인증서 issuedAt 기준이며, 제출 ID·작품명은 DB에 연결된 원장(opusSubmissionId)에서만 표시합니다.",
+      "작가 등록이 아니라 운영 승인 시 서명 인증서 원장(JSONL)에 발행된 에디션입니다. 「원장 연결」은 DB Artwork.opusSubmissionId가 제출 ID와 일치할 때입니다(목록을 열면 자동 보정 시도).",
     loadError: "인증서(에디션) 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN·OPUS_INTERNAL_API_SECRET·스토어 가용성을 확인하세요.",
     totalTpl: "총 {count}건",
     searchLabel: "검색",

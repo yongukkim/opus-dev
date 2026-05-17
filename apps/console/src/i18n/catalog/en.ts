@@ -168,7 +168,7 @@ export const en: ConsoleMessages = {
   certificates: {
     title: "Certificate data",
     subtitle:
-      "Signed edition certificates from the issuance ledger (written on operator approval, not at artist registration). Issued date uses certificate `issuedAt`. Submission ID and title use only the linked ledger (`opusSubmissionId`).",
+      "Signed edition certificates from the issuance ledger (on operator approval). “Ledger link” means DB `Artwork.opusSubmissionId` matches the submission id (auto-repair runs when you open this list).",
     loadError: "Could not load issued editions. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
     totalTpl: "{count} issued",
     searchLabel: "Search",

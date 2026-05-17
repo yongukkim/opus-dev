@@ -105,8 +105,9 @@ function logDualWriteFailure(written: SubmissionRecord, err: unknown): void {
 export async function syncIssuanceToPrismaAfterJsonl(
   written: SubmissionRecord,
   occurredAtIso: string,
+  options?: { force?: boolean },
 ): Promise<void> {
-  if (process.env[DUAL_WRITE_FLAG]?.trim() !== "1") return;
+  if (!options?.force && process.env[DUAL_WRITE_FLAG]?.trim() !== "1") return;
 
   const artistId = written.artistId?.trim();
   if (!artistId) return;

@@ -1,5 +1,10 @@
 import { editionBindingKey, listAllEditionCertificateRecords } from "@/lib/editionCertificate";
-import { buildArtworkTitleBySubmissionIdMap, getSubmissionById } from "@/lib/privateStorage";
+import { syncIssuanceToPrismaAfterJsonl } from "@/lib/chroniclePrismaSync";
+import {
+  buildArtworkTitleBySubmissionIdMap,
+  getCanonicalArtistArtworkTitle,
+  getSubmissionById,
+} from "@/lib/privateStorage";
 
 /**
  * Edition ↔ submission ledger binding (fail-closed).
@@ -120,15 +125,29 @@ export async function listCertificateLedgerBackfillCandidates(): Promise<{
         editionTotal: sub.editionTotal,
         OR: [{ opusSubmissionId: null }, { opusSubmissionId: submissionId }],
       },
-      select: { id: true, opusSubmissionId: true },
+      select: { id: true, opusSubmissionId: true, title: true },
     });
 
     const linkable = artworks.filter((a) => !a.opusSubmissionId?.trim());
     const already = artworks.filter((a) => a.opusSubmissionId?.trim() === submissionId);
     if (already.length >= 1) continue;
+
+    const canonicalTitle = (
+      (await getCanonicalArtistArtworkTitle(submissionId)) ||
+      sub.artworkTitle
+    ).trim();
+
+    let pick: (typeof linkable)[number] | null = null;
     if (linkable.length === 1) {
-      candidates.push({ artworkId: linkable[0]!.id, submissionId });
-    } else if (linkable.length > 1 || artworks.length > 1) {
+      pick = linkable[0]!;
+    } else if (linkable.length > 1 && canonicalTitle) {
+      const byTitle = linkable.filter((a) => a.title.trim() === canonicalTitle);
+      if (byTitle.length === 1) pick = byTitle[0]!;
+    }
+
+    if (pick) {
+      candidates.push({ artworkId: pick.id, submissionId });
+    } else if (linkable.length > 1) {
       for (const a of linkable) ambiguousArtworkIds.push(a.id);
     }
   }
@@ -153,6 +172,51 @@ export async function applyCertificateLedgerOpusSubmissionBackfill(dryRun: boole
     }
   }
   return { dryRun, linked: candidates.length, candidates };
+}
+
+/**
+ * ISO 27001 A.9.2.1 (§4) / A.12.4.1 (§5)
+ * KO: 인증서·제출 원장은 있는데 DB 카탈로그(Artwork/Edition)가 없을 때 OPERATOR 읽기 경로에서만 멱등 동기화합니다.
+ * JA: 認証書・提出原簿はあるがDBカタログがない場合、OPERATOR読取時のみ冪等同期します。
+ * EN: Idempotently mirror approved submissions into Prisma when certs exist but catalog rows were never dual-written.
+ */
+export async function ensurePrismaCatalogForCertifiedSubmissions(): Promise<number> {
+  const certs = await listAllEditionCertificateRecords();
+  const submissionIds = [...new Set(certs.map((c) => c.submissionId.trim()).filter(Boolean))];
+  if (submissionIds.length === 0) return 0;
+
+  const { prisma } = await import("@/lib/prisma");
+  const existing = await prisma.artwork.findMany({
+    where: { opusSubmissionId: { in: submissionIds } },
+    select: { opusSubmissionId: true },
+  });
+  const linked = new Set(existing.map((a) => a.opusSubmissionId?.trim()).filter(Boolean) as string[]);
+
+  let synced = 0;
+  for (const submissionId of submissionIds) {
+    if (linked.has(submissionId)) continue;
+    const sub = await getSubmissionById(submissionId);
+    if (!sub || (sub.reviewStatus ?? "pending_review") !== "approved") continue;
+    const occurredAt = sub.reviewedAt ?? sub.createdAt;
+    await syncIssuanceToPrismaAfterJsonl(sub, occurredAt, { force: true });
+    synced += 1;
+  }
+  return synced;
+}
+
+/** Run certificate backfill + optional Prisma catalog repair (operator list / repair APIs). */
+export async function repairEditionLedgerCatalogLinks(dryRun: boolean): Promise<{
+  dryRun: boolean;
+  opusSubmissionIdLinked: number;
+  prismaCatalogSynced: number;
+}> {
+  const backfill = await applyCertificateLedgerOpusSubmissionBackfill(dryRun);
+  const prismaCatalogSynced = dryRun ? 0 : await ensurePrismaCatalogForCertifiedSubmissions();
+  return {
+    dryRun,
+    opusSubmissionIdLinked: backfill.linked,
+    prismaCatalogSynced,
+  };
 }
 
 export async function listArtworkOpusSubmissionBackfillCandidates(): Promise<{

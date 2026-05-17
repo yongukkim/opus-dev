@@ -169,7 +169,7 @@ export const ja: ConsoleMessages = {
   certificates: {
     title: "認証書データ",
     subtitle:
-      "作家登録時ではなく運営承認時に署名認証書原簿（JSONL）へ発行されたエディションです。発行日は認証書の issuedAt 基準。提出ID・作品名は DB にリンクされた原簿（opusSubmissionId）のみ表示します。",
+      "作家登録時ではなく運営承認時に署名認証書原簿（JSONL）へ発行されたエディションです。「原簿リンク」は DB の Artwork.opusSubmissionId が提出IDと一致するときです（一覧表示時に自動補正を試みます）。",
     loadError: "発行エディション一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
     totalTpl: "合計 {count} 枚",
     searchLabel: "検索",

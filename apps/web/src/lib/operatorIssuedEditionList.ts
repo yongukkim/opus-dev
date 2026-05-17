@@ -1,8 +1,5 @@
 import { listAllEditionCertificateRecords } from "@/lib/editionCertificate";
-import {
-  applyCertificateLedgerOpusSubmissionBackfill,
-  resolveEditionLedgerDisplay,
-} from "@/lib/editionLedgerBinding";
+import { repairEditionLedgerCatalogLinks, resolveEditionLedgerDisplay } from "@/lib/editionLedgerBinding";
 import { buildArtworkTitleBySubmissionIdMap } from "@/lib/privateStorage";
 import { prisma } from "@/lib/prisma";
 
@@ -22,26 +19,36 @@ export type OperatorIssuedEditionRow = {
 };
 
 export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEditionRow[]> {
-  await applyCertificateLedgerOpusSubmissionBackfill(false);
+  await repairEditionLedgerCatalogLinks(false);
 
   const titleBySubmissionId = await buildArtworkTitleBySubmissionIdMap();
   const certs = await listAllEditionCertificateRecords();
+  const certSubmissionIds = [...new Set(certs.map((c) => c.submissionId.trim()).filter(Boolean))];
 
-  const prismaEditions = await prisma.edition.findMany({
-    where: { isIssued: true },
-    select: {
-      id: true,
-      editionNumber: true,
-      currentOwnerUserId: true,
-      artwork: { select: { opusSubmissionId: true } },
-      currentOwner: { select: { id: true, name: true, email: true } },
-    },
-  });
+  const [catalogArtworks, prismaEditions] = await Promise.all([
+    certSubmissionIds.length > 0
+      ? prisma.artwork.findMany({
+          where: { opusSubmissionId: { in: certSubmissionIds } },
+          select: { opusSubmissionId: true },
+        })
+      : Promise.resolve([]),
+    prisma.edition.findMany({
+      where: { isIssued: true },
+      select: {
+        id: true,
+        editionNumber: true,
+        currentOwnerUserId: true,
+        artwork: { select: { opusSubmissionId: true } },
+        currentOwner: { select: { id: true, name: true, email: true } },
+      },
+    }),
+  ]);
 
-  const prismaBySlot = new Map<
-    string,
-    (typeof prismaEditions)[number]
-  >();
+  const dbLinkedSubmissionIds = new Set(
+    catalogArtworks.map((a) => a.opusSubmissionId?.trim()).filter(Boolean) as string[],
+  );
+
+  const prismaBySlot = new Map<string, (typeof prismaEditions)[number]>();
   for (const e of prismaEditions) {
     const sid = e.artwork.opusSubmissionId?.trim();
     if (sid) prismaBySlot.set(`${sid}|${e.editionNumber}`, e);
@@ -60,9 +67,9 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
   return certs.map((cert) => {
     const submissionId = cert.submissionId.trim();
     const pe = prismaBySlot.get(`${submissionId}|${cert.editionNumber}`);
-    const opusOnArtwork = pe?.artwork.opusSubmissionId?.trim() || null;
-    const linkStatus: "linked" | "unlinked" =
-      opusOnArtwork === submissionId ? "linked" : "unlinked";
+    const linkStatus: "linked" | "unlinked" = dbLinkedSubmissionIds.has(submissionId)
+      ? "linked"
+      : "unlinked";
     const ledger = resolveEditionLedgerDisplay(submissionId, titleBySubmissionId);
     const artworkTitle = ledger.artworkTitle || cert.artworkTitle.trim();
 
