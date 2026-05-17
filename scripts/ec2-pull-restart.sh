@@ -36,13 +36,25 @@ export OPUS_WEB_IMAGE
 # OAuth / Auth.js canonical URL for the web container (overrides any AUTH_URL inside shared opus.env).
 export AUTH_URL_WEB="${AUTH_URL_WEB:-$BASE_URL}"
 
+# shellcheck source=scripts/ec2-free-disk-for-deploy.sh
+if [[ -f "$APP_DIR/scripts/ec2-free-disk-for-deploy.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$APP_DIR/scripts/ec2-free-disk-for-deploy.sh"
+  opus_free_disk_for_deploy || true
+fi
+
 # Storefront: only compose.web.yaml — strip host/repo COMPOSE_FILE so Docker does not merge extra files.
 dc_web() { env -u COMPOSE_FILE docker compose -f compose.web.yaml "$@"; }
 
-# On small EC2 disks, free Docker layers *before* storage backup so tar/gzip can succeed.
 docker image prune -af || true
 docker container prune -f || true
 docker builder prune -af || true
+
+if [[ -f "$APP_DIR/scripts/ec2-ghcr-login.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$APP_DIR/scripts/ec2-ghcr-login.sh"
+  opus_ghcr_login || echo "[ec2-pull-restart] WARN: GHCR login failed — pull may fail on private images" >&2
+fi
 
 # Point-in-time storage backup before rollout — must not block deploy when disk is tight.
 if [[ -x "$APP_DIR/scripts/backup-opus-storage.sh" ]]; then

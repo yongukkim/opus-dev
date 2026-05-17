@@ -14,6 +14,9 @@ on:
       - "compose.web.yaml"
       - "infra/caddy/**"
       - "scripts/ec2-pull-restart.sh"
+      - "scripts/ec2-free-disk-for-deploy.sh"
+      - "scripts/ec2-ghcr-login.sh"
+      - "scripts/backup-opus-storage.sh"
       - "scripts/ops-caddy-reload.sh"
       - "scripts/ops-diagnose-edge.sh"
       - "scripts/ec2-chown-web-storage.sh"
@@ -117,4 +120,4 @@ jobs:
           command_timeout: 20m
           script_stop: true
           script: |
-            bash -lc 'set -eo pipefail; IMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; echo "[deploy-web] web=$IMG br=$BR"; echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; APP="$HOME/opus-dev"; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; OPUS_WEB_IMAGE="$IMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'
+            bash -lc 'set -eo pipefail; IMG="${{ needs.build-and-push.outputs.image_ref }}"; BR="${{ github.ref_name }}"; APP="$HOME/opus-dev"; echo "[deploy-web] web=$IMG br=$BR"; docker system prune -af 2>/dev/null || sudo docker system prune -af || true; sudo find /var/backups/opus-storage -type f -name "opus-storage-*.tgz" 2>/dev/null | sort | head -n -1 | xargs -r sudo rm -f || true; rm -rf "$HOME/.cache"/* 2>/dev/null || true; df -h /; if [ ! -d "$APP/.git" ]; then if [ -d "$APP" ]; then rm -rf "$APP"; fi; git clone --depth 1 --branch "$BR" "https://github.com/${{ github.repository }}.git" "$APP"; fi; git -C "$APP" config --unset-all remote.origin.fetch || true; git -C "$APP" config --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; git -C "$APP" fetch --depth 1 origin "+$BR:refs/remotes/origin/$BR"; git -C "$APP" checkout -B "$BR" "origin/$BR"; GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}" GHCR_USER="${{ github.actor }}" OPUS_WEB_IMAGE="$IMG" BRANCH="$BR" APP_DIR="$APP" bash "$APP/scripts/ec2-pull-restart.sh"'

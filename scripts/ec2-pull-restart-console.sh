@@ -45,6 +45,12 @@ fi
 cd "$APP_DIR"
 export OPUS_CONSOLE_IMAGE
 
+if [[ -f "$APP_DIR/scripts/ec2-free-disk-for-deploy.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$APP_DIR/scripts/ec2-free-disk-for-deploy.sh"
+  opus_free_disk_for_deploy || true
+fi
+
 dc_console() {
   env -u COMPOSE_FILE "${DOCKER[@]}" compose -f compose.console.yaml "$@"
 }
@@ -52,6 +58,12 @@ dc_console() {
 "${DOCKER[@]}" image prune -af || true
 "${DOCKER[@]}" container prune -f || true
 "${DOCKER[@]}" builder prune -af || true
+
+if [[ -f "$APP_DIR/scripts/ec2-ghcr-login.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$APP_DIR/scripts/ec2-ghcr-login.sh"
+  opus_ghcr_login || echo "[ec2-pull-restart-console] WARN: GHCR login failed" >&2
+fi
 
 "${DOCKER[@]}" pull "$OPUS_CONSOLE_IMAGE"
 
