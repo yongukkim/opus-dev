@@ -63,7 +63,7 @@ export const ko: ConsoleMessages = {
       "승인 대기 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 네트워크를 확인하세요.",
   },
   members: {
-    title: "전체 회원",
+    title: "이용자 데이터",
     subtitle: "공용 데이터베이스에 등록된 계정 목록입니다. 운영자(OPERATOR) 전용 화면입니다.",
     loadError:
       "회원 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, 스토어 가용성을 확인하세요.",
@@ -101,7 +101,7 @@ export const ko: ConsoleMessages = {
     verifiedNo: "미완료",
   },
   artworks: {
-    title: "작품 등록",
+    title: "작품 데이터",
     subtitle: "제출 원장의 최신 행 기준, 고유 제출 ID별 작품 등록 목록입니다.",
     loadError: "작품 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN·OPUS_INTERNAL_API_SECRET·스토어 가용성을 확인하세요.",
     totalTpl: "총 {count}건",
@@ -177,13 +177,13 @@ export const ko: ConsoleMessages = {
       "공개 스토어와 분리된 백오피스입니다. 아래 지표는 집계 수치이며, 승인 대기 검수는 지금 사용할 수 있습니다. 결제·대사 도구는 KOMOJU 연동 후 단계적으로 열립니다.",
     statsSectionHeading: "집계 지표",
     statsLoadError: "지표를 불러오지 못했습니다. OPUS_WEB_ORIGIN·OPUS_INTERNAL_API_SECRET·스토어 가용성을 확인하세요.",
-    statsMembersTitle: "전체 회원 수",
+    statsMembersTitle: "이용자 데이터",
     statsMembersBody: "스토어·콘솔에 등록된 계정(역할 포함)입니다.",
     statsMembersSuffix: "명",
     statsArtistsTitle: "작가 역할 계정",
     statsArtistsBody: "DB에서 ARTIST 역할로 표시된 계정 수입니다.",
     statsArtistsSuffix: "명",
-    statsArtworksTitle: "작품 등록 건수",
+    statsArtworksTitle: "작품 데이터",
     statsArtworksBody: "제출 원장에 누적된 작품 등록(최신 행 기준 고유 제출 ID)입니다.",
     statsArtworksSuffix: "건",
     statsAuctionsTitle: "소장품 · 경매 등록",

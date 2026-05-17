@@ -62,7 +62,7 @@ export const en: ConsoleMessages = {
     loadError: "Could not load pending items. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and network access.",
   },
   members: {
-    title: "All members",
+    title: "User data",
     subtitle: "Accounts registered in the shared database. Operator (OPERATOR) access only.",
     loadError:
       "Could not load the member list. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
@@ -100,7 +100,7 @@ export const en: ConsoleMessages = {
     verifiedNo: "No",
   },
   artworks: {
-    title: "Artwork registrations",
+    title: "Artwork data",
     subtitle: "Distinct submission IDs on the submissions ledger (latest row per id).",
     loadError: "Could not load artworks. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
     totalTpl: "{count} works total",
@@ -183,7 +183,7 @@ export const en: ConsoleMessages = {
     statsArtistsTitle: "Artist-role accounts",
     statsArtistsBody: "Users whose role is ARTIST in the shared database.",
     statsArtistsSuffix: "artists",
-    statsArtworksTitle: "Artwork registrations",
+    statsArtworksTitle: "Artwork data",
     statsArtworksBody: "Distinct submission IDs on the submissions ledger (latest row per id).",
     statsArtworksSuffix: "works",
     statsAuctionsTitle: "Provenance — auctions",

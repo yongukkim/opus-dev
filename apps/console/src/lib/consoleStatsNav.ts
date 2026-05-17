@@ -4,27 +4,23 @@ import type { ConsoleMessages } from "@/i18n/types";
 /** Hash targets on `/{locale}/home` — keep in sync with dashboard metric cards. */
 export const CONSOLE_STATS_SECTION_ID = "console-stats";
 
-export const CONSOLE_STATS_ANCHOR = {
-  members: "stats-members",
-  artists: "stats-artists",
-  artworks: "stats-artworks",
-  auctions: "stats-auctions",
-  custodyFixed: "stats-custody-fixed",
-  certificates: "stats-certificates",
-} as const;
+/** Sidebar + dashboard KPI anchors (active drill-downs only). */
+export const CONSOLE_STATS_NAV_KEYS = ["members", "artworks"] as const;
 
-/** Dedicated console routes for aggregate drill-downs (null = home hash only). */
-export const CONSOLE_STATS_ROUTE: Record<keyof typeof CONSOLE_STATS_ANCHOR, string> = {
+export type ConsoleStatsNavKey = (typeof CONSOLE_STATS_NAV_KEYS)[number];
+
+export const CONSOLE_STATS_ANCHOR: Record<ConsoleStatsNavKey, string> = {
+  members: "stats-members",
+  artworks: "stats-artworks",
+};
+
+export const CONSOLE_STATS_ROUTE: Record<ConsoleStatsNavKey, string> = {
   members: "stats/members",
-  artists: "stats/artists",
   artworks: "stats/artworks",
-  auctions: "stats/provenance-auctions",
-  custodyFixed: "stats/provenance-fixed",
-  certificates: "stats/certificates",
 };
 
 export type ConsoleStatsNavItem = {
-  id: (typeof CONSOLE_STATS_ANCHOR)[keyof typeof CONSOLE_STATS_ANCHOR];
+  id: string;
   label: string;
   href: string;
 };
@@ -36,13 +32,9 @@ export function buildConsoleStatsNavItems(
   sectionHeading: string;
   items: ConsoleStatsNavItem[];
 } {
-  const defs: { key: keyof typeof CONSOLE_STATS_ANCHOR; label: string }[] = [
+  const defs: { key: ConsoleStatsNavKey; label: string }[] = [
     { key: "members", label: dashboard.statsMembersTitle },
-    { key: "artists", label: dashboard.statsArtistsTitle },
     { key: "artworks", label: dashboard.statsArtworksTitle },
-    { key: "auctions", label: dashboard.statsAuctionsTitle },
-    { key: "custodyFixed", label: dashboard.statsCustodyFixedTitle },
-    { key: "certificates", label: dashboard.statsCertificatesTitle },
   ];
 
   return {

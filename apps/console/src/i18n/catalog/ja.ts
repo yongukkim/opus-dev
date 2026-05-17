@@ -63,7 +63,7 @@ export const ja: ConsoleMessages = {
       "承認待ちリストを読み込めませんでした。OPUS_WEB_ORIGIN、OPUS_INTERNAL_API_SECRET、ネットワークを確認してください。",
   },
   members: {
-    title: "全会員",
+    title: "利用者データ",
     subtitle: "共有データベースに登録されたアカウント一覧です。運用者（OPERATOR）専用です。",
     loadError:
       "会員一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
@@ -101,7 +101,7 @@ export const ja: ConsoleMessages = {
     verifiedNo: "未",
   },
   artworks: {
-    title: "作品登録",
+    title: "作品データ",
     subtitle: "提出原簿の最新行ベース、一意の提出IDごとの作品登録一覧です。",
     loadError: "作品一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
     totalTpl: "合計 {count} 件",
@@ -178,13 +178,13 @@ export const ja: ConsoleMessages = {
     statsSectionHeading: "集計指標",
     statsLoadError:
       "指標を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストア側の疎通を確認してください。",
-    statsMembersTitle: "全会員数",
+    statsMembersTitle: "利用者データ",
     statsMembersBody: "ストア・コンソールに登録されたアカウント（全ロール）です。",
     statsMembersSuffix: "名",
     statsArtistsTitle: "作家ロールのアカウント",
     statsArtistsBody: "共有DBで ARTIST ロールのユーザー数です。",
     statsArtistsSuffix: "名",
-    statsArtworksTitle: "作品登録件数",
+    statsArtworksTitle: "作品データ",
     statsArtworksBody: "提出原簿に累積された作品登録（最新行ベースの一意の提出ID）です。",
     statsArtworksSuffix: "件",
     statsAuctionsTitle: "来歴 · オークション出品",
