@@ -1,5 +1,9 @@
 import { listAllEditionCertificateRecords } from "@/lib/editionCertificate";
-import { listAllSubmissions, type SubmissionRecord } from "@/lib/privateStorage";
+import {
+  buildArtworkTitleBySubmissionIdMap,
+  listAllSubmissions,
+  type SubmissionRecord,
+} from "@/lib/privateStorage";
 
 export type OperatorEditionLinkContext = {
   editionNumber: number;
@@ -41,14 +45,13 @@ function uniqueCandidate(ids: string[] | undefined): string | null {
 export async function buildSubmissionLinkIndexes(): Promise<SubmissionLinkIndexes> {
   const submissions = await listAllSubmissions();
   const submissionById = new Map(submissions.map((s) => [s.id, s]));
-  const titleBySubmissionId = new Map<string, string>();
+  const titleBySubmissionId = await buildArtworkTitleBySubmissionIdMap();
   const byArtistEditionSlot = new Map<string, string[]>();
   const byArtistEditionTotal = new Map<string, string[]>();
   const byArtistTitle = new Map<string, string[]>();
 
   for (const s of submissions) {
-    const title = s.artworkTitle?.trim();
-    if (title) titleBySubmissionId.set(s.id, title);
+    const title = titleBySubmissionId.get(s.id) ?? "";
     if ((s.reviewStatus ?? "pending_review") !== "approved") continue;
     pushIndex(byArtistEditionTotal, `${s.artistId}|${s.editionTotal}`, s.id);
     if (title) pushIndex(byArtistTitle, `${s.artistId}|${normTitle(title)}`, s.id);
@@ -117,9 +120,13 @@ export function inferSubmissionIdForEdition(
 export function artistRegisteredTitle(
   submissionId: string | null,
   indexes: Pick<SubmissionLinkIndexes, "titleBySubmissionId">,
+  /** Prisma `Artwork.title` from artist registration at approval (not filename/catalog). */
+  registrationTitleFallback?: string,
 ): string {
   if (!submissionId) return "";
-  return indexes.titleBySubmissionId.get(submissionId) ?? "";
+  const fromLedger = indexes.titleBySubmissionId.get(submissionId)?.trim();
+  if (fromLedger) return fromLedger;
+  return registrationTitleFallback?.trim() ?? "";
 }
 
 export type ArtworkBackfillCandidate = {

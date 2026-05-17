@@ -147,6 +147,49 @@ export async function listAllSubmissions(): Promise<SubmissionRecord[]> {
   return out;
 }
 
+type SubmissionJsonlRow = SubmissionRecord & { title?: string };
+
+/** Artist-entered title from one JSONL row (`artworkTitle`, legacy `title`). */
+export function artistTitleFromSubmissionRow(row: SubmissionJsonlRow): string {
+  const t = (typeof row.artworkTitle === "string" ? row.artworkTitle : row.title ?? "").trim();
+  return t;
+}
+
+/**
+ * Best-effort 작품명 per submission for operator surfaces.
+ * KO: append-only 원장의 모든 행에서 비어 있지 않은 제목을 모은 뒤, 없으면 발행 인증서·Prisma 등록 제목으로 보완한다.
+ * JA: append-only 原簿の全行から非空タイトルを集め、無ければ発行認証書・Prisma登録タイトルで補う。
+ * EN: Collect non-empty titles across all ledger lines, then fall back to issued certificate / Prisma registration title.
+ */
+export async function buildArtworkTitleBySubmissionIdMap(): Promise<Map<string, string>> {
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
+  const map = new Map<string, string>();
+  for (const r of records) {
+    if (!r?.id) continue;
+    const title = artistTitleFromSubmissionRow(r);
+    if (title) map.set(r.id, title);
+  }
+
+  const { listAllEditionCertificateRecords } = await import("@/lib/editionCertificate");
+  for (const c of await listAllEditionCertificateRecords()) {
+    const ct = c.artworkTitle?.trim();
+    if (ct) map.set(c.submissionId, ct);
+  }
+
+  const { prisma } = await import("@/lib/prisma");
+  const linkedArtworks = await prisma.artwork.findMany({
+    where: { opusSubmissionId: { not: null } },
+    select: { opusSubmissionId: true, title: true },
+  });
+  for (const a of linkedArtworks) {
+    const sid = a.opusSubmissionId?.trim();
+    const t = a.title?.trim();
+    if (sid && t && !map.get(sid)) map.set(sid, t);
+  }
+
+  return map;
+}
+
 export async function appendSubmissionReviewPatch(input: {
   submission: SubmissionRecord;
   reviewerId: string;

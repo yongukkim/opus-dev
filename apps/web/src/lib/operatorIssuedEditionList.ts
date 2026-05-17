@@ -53,7 +53,7 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
     return {
       editionId: e.id,
       submissionId,
-      artworkTitle: artistRegisteredTitle(submissionId, indexes),
+      artworkTitle: artistRegisteredTitle(submissionId, indexes, e.artwork.title),
       editionNumber: e.editionNumber,
       editionTotal: e.editionTotal,
       mintedAt: e.mintedAt?.toISOString() ?? null,
