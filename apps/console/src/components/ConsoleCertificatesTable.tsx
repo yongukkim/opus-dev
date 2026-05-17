@@ -6,6 +6,12 @@ import type { ConsoleMessages } from "@/i18n/types";
 import type { ConsoleListQueryParams } from "@/lib/consoleListQuery";
 import type { ConsoleIssuedEditionRow } from "@/lib/webInternal";
 
+function ownerLabel(row: ConsoleIssuedEditionRow): string {
+  if (row.ownerName?.trim()) return row.ownerName.trim();
+  if (row.ownerEmail?.trim()) return row.ownerEmail.trim();
+  return "—";
+}
+
 export function ConsoleCertificatesTable({
   rows,
   labels,
@@ -32,7 +38,7 @@ export function ConsoleCertificatesTable({
     [locale],
   );
 
-  const colSpan = 6;
+  const colSpan = 7;
 
   return (
     <div className="space-y-4">
@@ -64,11 +70,12 @@ export function ConsoleCertificatesTable({
         </form>
 
         <div className="overflow-x-auto rounded-lg border border-neutral-200 bg-white shadow-sm">
-          <table className="w-full min-w-[52rem] border-collapse text-left text-sm">
+          <table className="w-full min-w-[60rem] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
                 <th className="w-14 px-3 py-3 text-center">{labels.colNo}</th>
                 <ConsoleSortableTh basePath={basePath} column="title" label={labels.colTitle} listQuery={listQuery} />
+                <ConsoleSortableTh basePath={basePath} column="owner" label={labels.colOwner} listQuery={listQuery} />
                 <ConsoleSortableTh basePath={basePath} column="edition" label={labels.colEdition} listQuery={listQuery} />
                 <ConsoleSortableTh basePath={basePath} column="minted" label={labels.colMinted} listQuery={listQuery} />
                 <ConsoleSortableTh basePath={basePath} column="editionId" label={labels.colEditionId} listQuery={listQuery} />
@@ -94,6 +101,7 @@ export function ConsoleCertificatesTable({
                       {rowNumberStart + index}
                     </td>
                     <td className="px-4 py-3 font-medium text-neutral-900">{row.artworkTitle || "—"}</td>
+                    <td className="px-4 py-3 text-neutral-700">{ownerLabel(row)}</td>
                     <td className="px-4 py-3 tabular-nums text-neutral-700">
                       {row.editionNumber}/{row.editionTotal}
                     </td>

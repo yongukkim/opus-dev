@@ -39,9 +39,15 @@ export default async function ConsoleCertificatesPage({
     const needle = q.toLowerCase();
     const filtered = needle
       ? rows.filter((r) =>
-          [r.artworkTitle, r.submissionId ?? "", r.editionId, `${r.editionNumber}/${r.editionTotal}`].some((x) =>
-            x.toLowerCase().includes(needle),
-          ),
+          [
+            r.artworkTitle,
+            r.submissionId ?? "",
+            r.editionId,
+            r.ownerUserId ?? "",
+            r.ownerName ?? "",
+            r.ownerEmail ?? "",
+            `${r.editionNumber}/${r.editionTotal}`,
+          ].some((x) => x.toLowerCase().includes(needle)),
         )
       : rows;
     const sorted = sortCertificateRows(filtered, sort, order);

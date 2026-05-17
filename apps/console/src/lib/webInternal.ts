@@ -153,6 +153,9 @@ export type ConsoleIssuedEditionRow = {
   editionNumber: number;
   editionTotal: number;
   mintedAt: string | null;
+  ownerUserId: string | null;
+  ownerName: string | null;
+  ownerEmail: string | null;
 };
 
 export type FetchArtworksForOperatorResult = {

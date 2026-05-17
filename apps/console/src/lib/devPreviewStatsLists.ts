@@ -78,6 +78,9 @@ export function devPreviewIssuedEditionRows(): ConsoleIssuedEditionRow[] {
       editionNumber: 1,
       editionTotal: 10,
       mintedAt: "2026-03-01T08:00:00.000Z",
+      ownerUserId: "preview-collector-1",
+      ownerName: "Kim Collector",
+      ownerEmail: "collector@preview.local",
     },
   ];
 }

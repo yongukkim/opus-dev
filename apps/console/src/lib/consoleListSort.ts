@@ -130,6 +130,12 @@ export function sortCertificateRows(
       case "minted":
         cmp = compareStrings(a.mintedAt ?? "", b.mintedAt ?? "");
         break;
+      case "owner": {
+        const al = a.ownerName ?? a.ownerEmail ?? "";
+        const bl = b.ownerName ?? b.ownerEmail ?? "";
+        cmp = compareStrings(al, bl);
+        break;
+      }
       case "editionId":
         cmp = compareStrings(a.editionId, b.editionId);
         break;

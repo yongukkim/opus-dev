@@ -77,13 +77,13 @@ export function ConsoleArtworksTable({
           <thead>
             <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
               <th className="w-14 px-3 py-3 text-center">{labels.colNo}</th>
-              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colTitle} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="id" label={labels.colSubmissionId} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colLedgerTitle} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="penName" label={labels.colPenName} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="genre" label={labels.colGenre} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="status" label={labels.colStatus} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="edition" label={labels.colEdition} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="created" label={labels.colRegistered} listQuery={listQuery} />
-              <ConsoleSortableTh basePath={basePath} column="id" label={labels.colSubmissionId} listQuery={listQuery} />
             </tr>
           </thead>
           <tbody>
@@ -99,6 +99,7 @@ export function ConsoleArtworksTable({
                   <td className="px-3 py-3 text-center font-mono text-xs tabular-nums text-neutral-500">
                     {rowNumberStart + index}
                   </td>
+                  <td className="px-4 py-3 font-mono text-xs text-neutral-500">{row.id}</td>
                   <td className="px-4 py-3 font-medium text-neutral-900">
                     <ConsoleArtworkTitleHoverPreview
                       title={row.artworkTitle}
@@ -111,7 +112,6 @@ export function ConsoleArtworksTable({
                   <td className="px-4 py-3 text-neutral-700">{artworkReviewStatusLabel(labels, row.reviewStatus)}</td>
                   <td className="px-4 py-3 text-neutral-600">{editionLabel(row)}</td>
                   <td className="px-4 py-3 text-neutral-600">{dateFmt.format(new Date(row.createdAt))}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-neutral-500">{row.id}</td>
                 </tr>
               ))
             )}
