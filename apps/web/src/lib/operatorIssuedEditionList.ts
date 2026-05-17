@@ -1,5 +1,8 @@
 import { listAllEditionCertificateRecords } from "@/lib/editionCertificate";
-import { resolveEditionLedgerDisplay } from "@/lib/editionLedgerBinding";
+import {
+  applyCertificateLedgerOpusSubmissionBackfill,
+  resolveEditionLedgerDisplay,
+} from "@/lib/editionLedgerBinding";
 import { buildArtworkTitleBySubmissionIdMap } from "@/lib/privateStorage";
 import { prisma } from "@/lib/prisma";
 
@@ -19,6 +22,8 @@ export type OperatorIssuedEditionRow = {
 };
 
 export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEditionRow[]> {
+  await applyCertificateLedgerOpusSubmissionBackfill(false);
+
   const titleBySubmissionId = await buildArtworkTitleBySubmissionIdMap();
   const certs = await listAllEditionCertificateRecords();
 
@@ -58,10 +63,7 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
     const opusOnArtwork = pe?.artwork.opusSubmissionId?.trim() || null;
     const linkStatus: "linked" | "unlinked" =
       opusOnArtwork === submissionId ? "linked" : "unlinked";
-    const ledger = resolveEditionLedgerDisplay(
-      linkStatus === "linked" ? submissionId : null,
-      titleBySubmissionId,
-    );
+    const ledger = resolveEditionLedgerDisplay(submissionId, titleBySubmissionId);
     const artworkTitle = ledger.artworkTitle || cert.artworkTitle.trim();
 
     const ownerFromPrisma = pe?.currentOwner;

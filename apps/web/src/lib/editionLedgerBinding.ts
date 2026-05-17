@@ -76,12 +76,92 @@ export type ArtworkOpusSubmissionBackfillCandidate = {
   submissionId: string;
 };
 
+/**
+ * Certificates prove every `initialMint` slot — link the sole matching Artwork even when Prisma `isIssued` was never dual-written.
+ * KO: DB 에디션 플래그 없이도 인증서 원장만으로 `opusSubmissionId` 백필 후보를 찾습니다.
+ * JA: DB の isIssued がなくても、認証書原簿だけで `opusSubmissionId` バックフィル候補を特定します。
+ * EN: Find backfill candidates from the certificate ledger alone when Prisma issuance flags were never mirrored.
+ */
+export async function listCertificateLedgerBackfillCandidates(): Promise<{
+  candidates: ArtworkOpusSubmissionBackfillCandidate[];
+  ambiguousArtworkIds: string[];
+}> {
+  const { prisma } = await import("@/lib/prisma");
+  const certs = await listAllEditionCertificateRecords();
+  const bySubmission = new Map<string, typeof certs>();
+  for (const c of certs) {
+    const sid = c.submissionId.trim();
+    if (!sid) continue;
+    const list = bySubmission.get(sid) ?? [];
+    list.push(c);
+    bySubmission.set(sid, list);
+  }
+
+  const candidates: ArtworkOpusSubmissionBackfillCandidate[] = [];
+  const ambiguousArtworkIds: string[] = [];
+
+  for (const [submissionId, rows] of bySubmission) {
+    const sub = await getSubmissionById(submissionId);
+    if (!sub || (sub.reviewStatus ?? "pending_review") !== "approved") continue;
+
+    const slotsOk = Array.from({ length: sub.initialMint }, (_, i) => i + 1).every((n) =>
+      rows.some(
+        (r) =>
+          r.editionNumber === n &&
+          r.editionTotal === sub.editionTotal &&
+          r.bindingKey === editionBindingKey(submissionId, n),
+      ),
+    );
+    if (!slotsOk) continue;
+
+    const artworks = await prisma.artwork.findMany({
+      where: {
+        artistUserId: sub.artistId,
+        editionTotal: sub.editionTotal,
+        OR: [{ opusSubmissionId: null }, { opusSubmissionId: submissionId }],
+      },
+      select: { id: true, opusSubmissionId: true },
+    });
+
+    const linkable = artworks.filter((a) => !a.opusSubmissionId?.trim());
+    const already = artworks.filter((a) => a.opusSubmissionId?.trim() === submissionId);
+    if (already.length >= 1) continue;
+    if (linkable.length === 1) {
+      candidates.push({ artworkId: linkable[0]!.id, submissionId });
+    } else if (linkable.length > 1 || artworks.length > 1) {
+      for (const a of linkable) ambiguousArtworkIds.push(a.id);
+    }
+  }
+
+  return { candidates, ambiguousArtworkIds };
+}
+
+/** Idempotently persist cert-proven `opusSubmissionId` links (safe to call on operator list reads). */
+export async function applyCertificateLedgerOpusSubmissionBackfill(dryRun: boolean): Promise<{
+  dryRun: boolean;
+  linked: number;
+  candidates: ArtworkOpusSubmissionBackfillCandidate[];
+}> {
+  const { candidates } = await listCertificateLedgerBackfillCandidates();
+  if (!dryRun && candidates.length > 0) {
+    const { prisma } = await import("@/lib/prisma");
+    for (const c of candidates) {
+      await prisma.artwork.update({
+        where: { id: c.artworkId },
+        data: { opusSubmissionId: c.submissionId },
+      });
+    }
+  }
+  return { dryRun, linked: candidates.length, candidates };
+}
+
 export async function listArtworkOpusSubmissionBackfillCandidates(): Promise<{
   candidates: ArtworkOpusSubmissionBackfillCandidate[];
   ambiguousArtworkIds: string[];
   stillUnlinkedArtworkIds: string[];
 }> {
   const { prisma } = await import("@/lib/prisma");
+  const certLedger = await listCertificateLedgerBackfillCandidates();
   const artworks = await prisma.artwork.findMany({
     where: { opusSubmissionId: null },
     select: {
@@ -130,7 +210,16 @@ export async function listArtworkOpusSubmissionBackfillCandidates(): Promise<{
     candidates.push({ artworkId: a.id, submissionId: proven });
   }
 
-  return { candidates, ambiguousArtworkIds, stillUnlinkedArtworkIds };
+  const merged = new Map<string, ArtworkOpusSubmissionBackfillCandidate>();
+  for (const c of [...certLedger.candidates, ...candidates]) {
+    merged.set(c.artworkId, c);
+  }
+
+  return {
+    candidates: [...merged.values()],
+    ambiguousArtworkIds: [...new Set([...ambiguousArtworkIds, ...certLedger.ambiguousArtworkIds])],
+    stillUnlinkedArtworkIds,
+  };
 }
 
 export async function applyArtworkOpusSubmissionBackfill(dryRun: boolean): Promise<{

@@ -1,6 +1,7 @@
 import { parseEditionObject, type ParsedEdition } from "@/lib/editionFields";
 import { appendIssuanceChronicleIfNewlyApproved } from "@/lib/chronicleLedger";
 import { issueEditionCertificatesOnApprovalWithResult } from "@/lib/editionCertificate";
+import { applyCertificateLedgerOpusSubmissionBackfill } from "@/lib/editionLedgerBinding";
 import { enqueueMintJobForApprovedSubmission } from "@/lib/onchainMintQueue";
 import {
   appendSubmissionReviewPatch,
@@ -114,6 +115,12 @@ export async function runOperatorSubmissionReview(input: {
         detail: certResult.detail,
       }),
     );
+  } else if (normalizedStatus === "approved" && (certResult.issued > 0 || certResult.skippedExisting > 0)) {
+    try {
+      await applyCertificateLedgerOpusSubmissionBackfill(false);
+    } catch {
+      /* auxiliary — JSONL + cert rows remain authoritative */
+    }
   }
 
   try {

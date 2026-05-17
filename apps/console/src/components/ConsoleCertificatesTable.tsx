@@ -104,7 +104,7 @@ export function ConsoleCertificatesTable({
                     {row.linkStatus === "linked" ? labels.linkLinked : labels.linkUnlinked}
                   </td>
                   <td className="px-4 py-3 font-medium text-neutral-900">
-                    {row.linkStatus === "linked" && row.submissionId ? (
+                    {row.submissionId ? (
                       <ConsoleArtworkTitleHoverPreview
                         title={row.artworkTitle}
                         submissionId={row.submissionId}
