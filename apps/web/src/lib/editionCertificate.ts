@@ -266,28 +266,74 @@ export async function getLatestEditionCertificate(
  */
 export async function ensureEditionCertificatesBackfill(submission: SubmissionRecord): Promise<void> {
   if (submission.reviewStatus !== "approved") return;
-  try {
-    await issueEditionCertificatesOnApproval(submission, null);
-  } catch {
-    /* signing secret misconfiguration or IO — leave absent; callers still show not-found */
+  const result = await issueEditionCertificatesOnApprovalWithResult(submission, null);
+  if (!result.ok) {
+    console.error("[edition-certificate]", JSON.stringify({ event: "backfill_failed", ...result, submissionId: submission.id }));
   }
 }
 
-export async function issueEditionCertificatesOnApproval(
+/** Approved submissions in JSONL that are missing at least one expected certificate binding. */
+export async function listApprovedSubmissionsMissingCertificates(): Promise<string[]> {
+  const { listAllSubmissions } = await import("@/lib/privateStorage");
+  const submissions = await listAllSubmissions();
+  const approved = submissions.filter((s) => (s.reviewStatus ?? "pending_review") === "approved");
+  const missing: string[] = [];
+  for (const sub of approved) {
+    for (let n = 1; n <= sub.initialMint; n += 1) {
+      const existing = await getLatestEditionCertificate(sub.id, n);
+      if (!existing) {
+        missing.push(sub.id);
+        break;
+      }
+    }
+  }
+  return [...new Set(missing)];
+}
+
+export type EditionCertificateIssuanceResult =
+  | { ok: true; issued: number; skippedExisting: number }
+  | {
+      ok: false;
+      reason: "not_approved" | "missing_title" | "signing_error";
+      detail?: string;
+    };
+
+/**
+ * ISO 27001 A.12.4.1 (§5)
+ * KO: 승인 시 인증서 JSONL 발행 결과를 반환합니다(실패 시 운영 로그·보정 API에서 확인 가능).
+ * JA: 承認時の認証書JSONL発行結果を返します（失敗時は運用ログ・補完APIで確認）。
+ * EN: Returns signed certificate JSONL issuance outcome (failures are visible to ops logs/repair APIs).
+ */
+export async function issueEditionCertificatesOnApprovalWithResult(
   submission: SubmissionRecord,
   chronicleIssuanceId: string | null,
-): Promise<void> {
-  if (submission.reviewStatus !== "approved") return;
+): Promise<EditionCertificateIssuanceResult> {
+  if (submission.reviewStatus !== "approved") {
+    return { ok: false, reason: "not_approved" };
+  }
   const secret = editionCertificateSecret();
   const approvedAt = submission.reviewedAt ?? new Date().toISOString();
   const artistDisplayName = (submission.nickname || submission.artistName || "").trim().slice(0, 256);
   const title = ((await getCanonicalArtistArtworkTitle(submission.id)) || submission.artworkTitle).trim().slice(0, 256);
-  if (!title) return;
+  if (!title) {
+    console.error(
+      "[edition-certificate]",
+      JSON.stringify({ event: "issuance_skipped_missing_title", submissionId: submission.id }),
+    );
+    return { ok: false, reason: "missing_title", detail: submission.id };
+  }
 
+  let issued = 0;
+  let skippedExisting = 0;
+
+  try {
   for (let n = 1; n <= submission.initialMint; n += 1) {
     const bindingKey = editionBindingKey(submission.id, n);
     const existing = await getLatestEditionCertificate(submission.id, n);
-    if (existing) continue;
+    if (existing) {
+      skippedExisting += 1;
+      continue;
+    }
 
     const issuedAtIso = new Date().toISOString();
     const signing = canonicalSigningPayload({
@@ -337,7 +383,81 @@ export async function issueEditionCertificatesOnApproval(
       timeAnchor: buildEditionCertificateTimeAnchor(rowBase),
     };
     await appendJsonl(CERT_FILE, row);
+    issued += 1;
   }
+  } catch (err: unknown) {
+    const name = err instanceof Error ? err.name : "UnknownError";
+    console.error(
+      "[edition-certificate]",
+      JSON.stringify({ event: "issuance_failed", submissionId: submission.id, errorName: name }),
+    );
+    return { ok: false, reason: "signing_error", detail: name };
+  }
+
+  return { ok: true, issued, skippedExisting };
+}
+
+export async function issueEditionCertificatesOnApproval(
+  submission: SubmissionRecord,
+  chronicleIssuanceId: string | null,
+): Promise<void> {
+  await issueEditionCertificatesOnApprovalWithResult(submission, chronicleIssuanceId);
+}
+
+/** Idempotently issue missing signed certificate rows for approved submissions (ops repair). */
+export async function issueMissingEditionCertificates(input?: {
+  dryRun?: boolean;
+  submissionIds?: string[];
+}): Promise<{
+  scanned: number;
+  missingSubmissionIds: string[];
+  issued: number;
+  skippedExisting: number;
+  failures: Array<{ submissionId: string; reason: string; detail?: string }>;
+}> {
+  const dryRun = input?.dryRun === true;
+  const filter = input?.submissionIds?.map((id) => id.trim()).filter(Boolean);
+  const filterSet = filter && filter.length > 0 ? new Set(filter) : null;
+
+  const { listAllSubmissions } = await import("@/lib/privateStorage");
+  const submissions = await listAllSubmissions();
+  const approved = submissions.filter((s) => (s.reviewStatus ?? "pending_review") === "approved");
+  const missingSubmissionIds = await listApprovedSubmissionsMissingCertificates();
+  const targets = missingSubmissionIds.filter((id) => !filterSet || filterSet.has(id));
+
+  if (dryRun) {
+    return {
+      scanned: approved.length,
+      missingSubmissionIds: targets,
+      issued: 0,
+      skippedExisting: 0,
+      failures: [],
+    };
+  }
+
+  let issued = 0;
+  let skippedExisting = 0;
+  const failures: Array<{ submissionId: string; reason: string; detail?: string }> = [];
+
+  for (const submissionId of targets) {
+    const submission = approved.find((s) => s.id === submissionId);
+    if (!submission) continue;
+    const result = await issueEditionCertificatesOnApprovalWithResult(submission, null);
+    if (result.ok) {
+      issued += result.issued;
+      skippedExisting += result.skippedExisting;
+    } else {
+      failures.push({ submissionId, reason: result.reason, detail: result.detail });
+    }
+  }
+
+  return {
+    scanned: approved.length,
+    missingSubmissionIds: targets,
+    issued,
+    skippedExisting,
+    failures,
+  };
 }
 
 /**

@@ -168,7 +168,7 @@ export const en: ConsoleMessages = {
   certificates: {
     title: "Certificate data",
     subtitle:
-      "Formally issued editions (`isIssued`). Submission ID and title come only from the linked ledger (`opusSubmissionId`) — never inferred from another submission.",
+      "Signed edition certificates from the issuance ledger (written on operator approval, not at artist registration). Issued date uses certificate `issuedAt`. Submission ID and title use only the linked ledger (`opusSubmissionId`).",
     loadError: "Could not load issued editions. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
     totalTpl: "{count} issued",
     searchLabel: "Search",
@@ -213,7 +213,7 @@ export const en: ConsoleMessages = {
     statsCertificatesDataTitle: "Certificate data",
     statsCertificatesTitle: "Edition certificates issued",
     statsCertificatesBody:
-      "Editions marked formally issued in the catalog database (`isIssued`). Aligns with the public edition certificate view.",
+      "Latest signed certificate rows on the issuance ledger (one per edition slot). Issued automatically on approval; counted independently of catalog DB dual-write.",
     statsCertificatesSuffix: "issued",
     cardSubmissionsTitle: "Pending Approval",
     cardSubmissionsBody: "Review and approve artwork registration submissions.",

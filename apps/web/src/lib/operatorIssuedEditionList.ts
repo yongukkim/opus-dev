@@ -1,3 +1,4 @@
+import { listAllEditionCertificateRecords } from "@/lib/editionCertificate";
 import { resolveEditionLedgerDisplay } from "@/lib/editionLedgerBinding";
 import { buildArtworkTitleBySubmissionIdMap } from "@/lib/privateStorage";
 import { prisma } from "@/lib/prisma";
@@ -10,6 +11,7 @@ export type OperatorIssuedEditionRow = {
   linkStatus: "linked" | "unlinked";
   editionNumber: number;
   editionTotal: number;
+  /** Certificate `issuedAtIso` (authoritative issuance ledger), not Prisma `mintedAt` alone. */
   mintedAt: string | null;
   ownerUserId: string | null;
   ownerName: string | null;
@@ -18,38 +20,70 @@ export type OperatorIssuedEditionRow = {
 
 export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEditionRow[]> {
   const titleBySubmissionId = await buildArtworkTitleBySubmissionIdMap();
+  const certs = await listAllEditionCertificateRecords();
 
-  const editions = await prisma.edition.findMany({
+  const prismaEditions = await prisma.edition.findMany({
     where: { isIssued: true },
-    orderBy: [{ mintedAt: "desc" }, { createdAt: "desc" }],
     select: {
       id: true,
       editionNumber: true,
-      editionTotal: true,
-      mintedAt: true,
       currentOwnerUserId: true,
-      artwork: {
-        select: { opusSubmissionId: true },
-      },
-      currentOwner: {
-        select: { id: true, name: true, email: true },
-      },
+      artwork: { select: { opusSubmissionId: true } },
+      currentOwner: { select: { id: true, name: true, email: true } },
     },
   });
 
-  return editions.map((e) => {
-    const ledger = resolveEditionLedgerDisplay(e.artwork.opusSubmissionId, titleBySubmissionId);
+  const prismaBySlot = new Map<
+    string,
+    (typeof prismaEditions)[number]
+  >();
+  for (const e of prismaEditions) {
+    const sid = e.artwork.opusSubmissionId?.trim();
+    if (sid) prismaBySlot.set(`${sid}|${e.editionNumber}`, e);
+  }
+
+  const custodyIds = [...new Set(certs.map((c) => c.custodyUserId.trim()).filter(Boolean))];
+  const custodyUsers =
+    custodyIds.length > 0
+      ? await prisma.user.findMany({
+          where: { id: { in: custodyIds } },
+          select: { id: true, name: true, email: true },
+        })
+      : [];
+  const userById = new Map(custodyUsers.map((u: (typeof custodyUsers)[number]) => [u.id, u]));
+
+  return certs.map((cert) => {
+    const submissionId = cert.submissionId.trim();
+    const pe = prismaBySlot.get(`${submissionId}|${cert.editionNumber}`);
+    const opusOnArtwork = pe?.artwork.opusSubmissionId?.trim() || null;
+    const linkStatus: "linked" | "unlinked" =
+      opusOnArtwork === submissionId ? "linked" : "unlinked";
+    const ledger = resolveEditionLedgerDisplay(
+      linkStatus === "linked" ? submissionId : null,
+      titleBySubmissionId,
+    );
+    const artworkTitle = ledger.artworkTitle || cert.artworkTitle.trim();
+
+    const ownerFromPrisma = pe?.currentOwner;
+    const ownerFromCert = userById.get(cert.custodyUserId.trim());
+    const custodyUserId = cert.custodyUserId.trim();
+    const ownerUserId = pe?.currentOwnerUserId ?? (custodyUserId || null);
+    const ownerName =
+      ownerFromPrisma?.name?.trim() || ownerFromCert?.name?.trim() || null;
+    const ownerEmail =
+      ownerFromPrisma?.email?.trim() || ownerFromCert?.email?.trim() || null;
+
     return {
-      editionId: e.id,
-      submissionId: ledger.submissionId,
-      artworkTitle: ledger.artworkTitle,
-      linkStatus: ledger.linkStatus,
-      editionNumber: e.editionNumber,
-      editionTotal: e.editionTotal,
-      mintedAt: e.mintedAt?.toISOString() ?? null,
-      ownerUserId: e.currentOwnerUserId,
-      ownerName: e.currentOwner?.name?.trim() || null,
-      ownerEmail: e.currentOwner?.email?.trim() || null,
+      editionId: pe?.id ?? `cert:${cert.bindingKey}`,
+      submissionId,
+      artworkTitle,
+      linkStatus,
+      editionNumber: cert.editionNumber,
+      editionTotal: cert.editionTotal,
+      mintedAt: cert.issuedAtIso,
+      ownerUserId,
+      ownerName,
+      ownerEmail,
     };
   });
 }

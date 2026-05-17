@@ -169,7 +169,7 @@ export const ja: ConsoleMessages = {
   certificates: {
     title: "認証書データ",
     subtitle:
-      "正式発行済み（isIssued）エディションです。提出ID・作品名は DB にリンクされた原簿（opusSubmissionId）のみ表示し、他の提出を推測しません。",
+      "作家登録時ではなく運営承認時に署名認証書原簿（JSONL）へ発行されたエディションです。発行日は認証書の issuedAt 基準。提出ID・作品名は DB にリンクされた原簿（opusSubmissionId）のみ表示します。",
     loadError: "発行エディション一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
     totalTpl: "合計 {count} 枚",
     searchLabel: "検索",
@@ -214,7 +214,7 @@ export const ja: ConsoleMessages = {
     statsCertificatesDataTitle: "認証書データ",
     statsCertificatesTitle: "発行済み認定書の枚数",
     statsCertificatesBody:
-      "カタログDBで正式発行済み（isIssued）となったエディション数です。公開のエディション認定書に概ね対応します。",
+      "署名認証書原簿の最新発行件数（エディション枠ごとに1件）。承認時に自動発行され、DB の dual-write とは独立して集計します。",
     statsCertificatesSuffix: "枚",
     cardSubmissionsTitle: "承認待ち",
     cardSubmissionsBody: "作品登録の提出を審査し承認します。",

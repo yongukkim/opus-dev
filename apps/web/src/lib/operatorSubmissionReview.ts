@@ -1,6 +1,6 @@
 import { parseEditionObject, type ParsedEdition } from "@/lib/editionFields";
 import { appendIssuanceChronicleIfNewlyApproved } from "@/lib/chronicleLedger";
-import { issueEditionCertificatesOnApproval } from "@/lib/editionCertificate";
+import { issueEditionCertificatesOnApprovalWithResult } from "@/lib/editionCertificate";
 import { enqueueMintJobForApprovedSubmission } from "@/lib/onchainMintQueue";
 import {
   appendSubmissionReviewPatch,
@@ -103,10 +103,17 @@ export async function runOperatorSubmissionReview(input: {
     /* auxiliary failure — see route comment ISO A.12.4.1 */
   }
 
-  try {
-    await issueEditionCertificatesOnApproval(written, chronicleIssuanceId);
-  } catch {
-    /* auxiliary failure — certificate append must not block review */
+  const certResult = await issueEditionCertificatesOnApprovalWithResult(written, chronicleIssuanceId);
+  if (!certResult.ok) {
+    console.error(
+      "[operator-review]",
+      JSON.stringify({
+        event: "certificate_issuance_failed",
+        submissionId: written.id,
+        reason: certResult.reason,
+        detail: certResult.detail,
+      }),
+    );
   }
 
   try {

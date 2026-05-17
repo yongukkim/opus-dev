@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { listOpenCollectorTransferListings } from "@/lib/collectorTransferListings";
 import { authorizeInternalOperatorRequest } from "@/lib/internalOperatorGate";
 import { prisma } from "@/lib/prisma";
+import { listAllEditionCertificateRecords } from "@/lib/editionCertificate";
 import { listAllSubmissions } from "@/lib/privateStorage";
 
 export const runtime = "nodejs";
@@ -13,7 +14,7 @@ export type OperatorDashboardStats = {
   artworksTotal: number;
   provenanceAuctionsTotal: number;
   provenanceFixedPriceTotal: number;
-  /** Editions formally issued in the catalog DB (`Edition.isIssued`); each maps to a public edition certificate surface. */
+  /** Latest signed edition certificate rows on the issuance ledger (one per binding). */
   certificatesIssuedTotal: number;
 };
 
@@ -29,13 +30,14 @@ export async function GET(req: NextRequest): Promise<Response> {
     return NextResponse.json({ ok: false, error: gate.error }, { status: gate.status });
   }
 
-  const [membersTotal, artistsTotal, submissions, listings, certificatesIssuedTotal] = await Promise.all([
+  const [membersTotal, artistsTotal, submissions, listings, certificateRecords] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { role: "ARTIST" } }),
     listAllSubmissions(),
     listOpenCollectorTransferListings(),
-    prisma.edition.count({ where: { isIssued: true } }),
+    listAllEditionCertificateRecords(),
   ]);
+  const certificatesIssuedTotal = certificateRecords.length;
 
   const artworksTotal = submissions.length;
   let provenanceAuctionsTotal = 0;

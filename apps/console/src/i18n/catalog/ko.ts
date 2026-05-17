@@ -169,7 +169,7 @@ export const ko: ConsoleMessages = {
   certificates: {
     title: "인증서 데이터",
     subtitle:
-      "정식 발행(isIssued) 에디션입니다. 제출 ID·작품명은 DB에 연결된 원장(opusSubmissionId)에서만 표시하며, 추측으로 다른 원장을 읽지 않습니다.",
+      "작가 등록이 아니라 운영 승인 시 서명 인증서 원장(JSONL)에 발행된 에디션입니다. 발행일은 인증서 issuedAt 기준이며, 제출 ID·작품명은 DB에 연결된 원장(opusSubmissionId)에서만 표시합니다.",
     loadError: "인증서(에디션) 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN·OPUS_INTERNAL_API_SECRET·스토어 가용성을 확인하세요.",
     totalTpl: "총 {count}건",
     searchLabel: "검색",
@@ -212,7 +212,8 @@ export const ko: ConsoleMessages = {
     statsCustodyFixedSuffix: "건",
     statsCertificatesDataTitle: "인증서 데이터",
     statsCertificatesTitle: "현재 발행된 인증서 수량",
-    statsCertificatesBody: "카탈로그 DB에서 정식 발행 완료(isIssued)로 표시된 에디션 수입니다. 공개 인증서 화면과 1:1에 가깝게 대응합니다.",
+    statsCertificatesBody:
+      "서명 인증서 원장의 최신 발행 건수(에디션 슬롯당 1건)입니다. 승인 시 자동 발행되며, DB dual-write와 무관하게 집계합니다.",
     statsCertificatesSuffix: "건",
     cardSubmissionsTitle: "승인 대기",
     cardSubmissionsBody: "작품 등록 신청을 검토하고 승인합니다.",
