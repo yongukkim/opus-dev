@@ -4,8 +4,8 @@ import { prisma } from "@/lib/prisma";
 export type OperatorIssuedEditionRow = {
   editionId: string;
   submissionId: string | null;
-  /** Aligns with 작품 데이터 — submission ledger title when linked, else catalog Artwork.title. */
-  artworkTitle: string;
+  /** Title on the submission ledger (`submissions.jsonl`); empty when unlinked or missing. */
+  ledgerTitle: string;
   editionNumber: number;
   editionTotal: number;
   mintedAt: string | null;
@@ -22,18 +22,6 @@ async function submissionTitleById(): Promise<Map<string, string>> {
     if (title) map.set(s.id, title);
   }
   return map;
-}
-
-function resolveArtworkTitle(
-  catalogTitle: string,
-  submissionId: string | null,
-  ledgerTitles: Map<string, string>,
-): string {
-  if (submissionId) {
-    const fromLedger = ledgerTitles.get(submissionId);
-    if (fromLedger) return fromLedger;
-  }
-  return catalogTitle.trim() || "—";
 }
 
 export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEditionRow[]> {
@@ -56,17 +44,21 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
     },
   });
 
-  return editions.map((e) => ({
-    editionId: e.id,
-    submissionId: e.artwork.opusSubmissionId,
-    artworkTitle: resolveArtworkTitle(e.artwork.title, e.artwork.opusSubmissionId, ledgerTitles),
-    editionNumber: e.editionNumber,
-    editionTotal: e.editionTotal,
-    mintedAt: e.mintedAt?.toISOString() ?? null,
-    ownerUserId: e.currentOwnerUserId,
-    ownerName: e.currentOwner?.name?.trim() || null,
-    ownerEmail: e.currentOwner?.email?.trim() || null,
-  }));
+  return editions.map((e) => {
+    const submissionId = e.artwork.opusSubmissionId;
+    const ledgerTitle = submissionId ? (ledgerTitles.get(submissionId) ?? "") : "";
+    return {
+      editionId: e.id,
+      submissionId,
+      ledgerTitle,
+      editionNumber: e.editionNumber,
+      editionTotal: e.editionTotal,
+      mintedAt: e.mintedAt?.toISOString() ?? null,
+      ownerUserId: e.currentOwnerUserId,
+      ownerName: e.currentOwner?.name?.trim() || null,
+      ownerEmail: e.currentOwner?.email?.trim() || null,
+    };
+  });
 }
 
 const EDITION_SORT_KEYS = new Set(["title", "edition", "minted", "owner", "editionId", "submission"]);
@@ -83,7 +75,7 @@ export function filterOperatorIssuedEditionRows(
   if (!needle) return rows;
   return rows.filter((r) =>
     [
-      r.artworkTitle,
+      r.ledgerTitle,
       r.submissionId ?? "",
       r.editionId,
       r.ownerUserId ?? "",
@@ -107,7 +99,7 @@ export function sortOperatorIssuedEditionRows(
     let cmp = 0;
     switch (key) {
       case "title":
-        cmp = compareStrings(a.artworkTitle, b.artworkTitle);
+        cmp = compareStrings(a.ledgerTitle, b.ledgerTitle);
         break;
       case "edition":
         cmp = a.editionNumber - b.editionNumber;

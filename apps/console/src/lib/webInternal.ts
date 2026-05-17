@@ -149,7 +149,7 @@ export type ConsoleProvenanceListingRow = {
 export type ConsoleIssuedEditionRow = {
   editionId: string;
   submissionId: string | null;
-  artworkTitle: string;
+  ledgerTitle: string;
   editionNumber: number;
   editionTotal: number;
   mintedAt: string | null;

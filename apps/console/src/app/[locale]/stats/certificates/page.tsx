@@ -40,7 +40,7 @@ export default async function ConsoleCertificatesPage({
     const filtered = needle
       ? rows.filter((r) =>
           [
-            r.artworkTitle,
+            r.ledgerTitle,
             r.submissionId ?? "",
             r.editionId,
             r.ownerUserId ?? "",
@@ -97,6 +97,7 @@ export default async function ConsoleCertificatesPage({
           basePath={basePath}
           listQuery={{ q, sort, order }}
           rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
+          previewMode={preview}
         />
         <ConsoleListPagination
           basePath={basePath}
