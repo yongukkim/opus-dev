@@ -5,6 +5,7 @@ import {
   filterOperatorArtworkRows,
   listOperatorArtworkRows,
   paginateOperatorArtworkRows,
+  sortOperatorArtworkRows,
   type OperatorArtworkListRow,
 } from "@/lib/operatorArtworkList";
 
@@ -36,10 +37,14 @@ export async function GET(req: NextRequest): Promise<Response> {
   const q = sp.get("q")?.trim() ?? "";
   const page = parsePositiveInt(sp.get("page"), 1);
   const pageSize = parsePositiveInt(sp.get("pageSize"), DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
+  const sort = sp.get("sort")?.trim() || undefined;
+  const orderRaw = sp.get("order")?.trim().toLowerCase();
+  const order = orderRaw === "asc" || orderRaw === "desc" ? orderRaw : sort ? "asc" : undefined;
 
   const all = await listOperatorArtworkRows();
   const filtered = filterOperatorArtworkRows(all, q);
-  const paged = paginateOperatorArtworkRows(filtered, page, pageSize);
+  const sorted = sortOperatorArtworkRows(filtered, sort, order);
+  const paged = paginateOperatorArtworkRows(sorted, page, pageSize);
 
   const body: {
     ok: true;

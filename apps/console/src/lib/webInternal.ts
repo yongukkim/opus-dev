@@ -55,6 +55,8 @@ export type FetchUsersForOperatorOptions = {
   page?: number;
   pageSize?: number;
   q?: string;
+  sort?: string;
+  order?: "asc" | "desc";
   /** When true, omit page params and load the full list (legacy / low-volume role filters). */
   all?: boolean;
 };
@@ -78,6 +80,8 @@ export async function fetchUsersForOperator(
     sp.set("page", String(options.page ?? 1));
     sp.set("pageSize", String(options.pageSize ?? 25));
     if (options.q?.trim()) sp.set("q", options.q.trim());
+    if (options.sort?.trim()) sp.set("sort", options.sort.trim());
+    if (options.order) sp.set("order", options.order);
   }
   const qs = sp.toString();
   const res = await fetch(`${origin}/api/internal/operator/users${qs ? `?${qs}` : ""}`, {
@@ -161,13 +165,15 @@ export type FetchArtworksForOperatorResult = {
 
 export async function fetchArtworksForOperator(
   actingUserId: string,
-  options: { page?: number; pageSize?: number; q?: string } = {},
+  options: { page?: number; pageSize?: number; q?: string; sort?: string; order?: "asc" | "desc" } = {},
 ): Promise<FetchArtworksForOperatorResult> {
   const origin = requireWebOrigin();
   const sp = new URLSearchParams();
   sp.set("page", String(options.page ?? 1));
   sp.set("pageSize", String(options.pageSize ?? 25));
   if (options.q?.trim()) sp.set("q", options.q.trim());
+  if (options.sort?.trim()) sp.set("sort", options.sort.trim());
+  if (options.order) sp.set("order", options.order);
   const res = await fetch(`${origin}/api/internal/operator/artworks?${sp.toString()}`, {
     headers: internalOperatorHeaders(actingUserId),
     cache: "no-store",

@@ -2,6 +2,8 @@ import { ConsoleChrome } from "@/components/ConsoleChrome";
 import { ConsoleArtworksTable } from "@/components/ConsoleArtworksTable";
 import { CONSOLE_LIST_PAGE_SIZE, ConsoleListPagination } from "@/components/ConsoleListPagination";
 import { ConsoleStatsPageShell } from "@/components/ConsoleStatsPageShell";
+import { parseConsoleListSortOrder } from "@/lib/consoleListQuery";
+import { sortArtworkRows } from "@/lib/consoleListSort";
 import { devPreviewArtworkRows } from "@/lib/devPreviewStatsLists";
 import { loadConsoleStatsPage } from "@/lib/loadConsoleStatsPage";
 import { fetchArtworksForOperator } from "@/lib/webInternal";
@@ -16,7 +18,7 @@ export default async function ConsoleArtworksPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ page?: string; q?: string }>;
+  searchParams: Promise<{ page?: string; q?: string; sort?: string; order?: string }>;
 }) {
   const { locale, preview, chromeUser, t, actingUserId } = await loadConsoleStatsPage(params);
   const sp = await searchParams;
@@ -24,6 +26,8 @@ export default async function ConsoleArtworksPage({
   const back = t.members.backToDashboard;
   const page = parsePage(sp.page);
   const q = sp.q?.trim() ?? "";
+  const sort = sp.sort?.trim() || undefined;
+  const order = parseConsoleListSortOrder(sp.order);
 
   let rows = devPreviewArtworkRows();
   let total = rows.length;
@@ -40,17 +44,20 @@ export default async function ConsoleArtworksPage({
           ),
         )
       : rows;
-    total = filtered.length;
+    const sorted = sortArtworkRows(filtered, sort, order);
+    total = sorted.length;
     totalPages = Math.max(1, Math.ceil(total / CONSOLE_LIST_PAGE_SIZE));
     currentPage = Math.min(page, totalPages);
     const start = (currentPage - 1) * CONSOLE_LIST_PAGE_SIZE;
-    rows = filtered.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
+    rows = sorted.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
   } else if (actingUserId) {
     try {
       const data = await fetchArtworksForOperator(actingUserId, {
         page,
         pageSize: CONSOLE_LIST_PAGE_SIZE,
         q,
+        sort,
+        order,
       });
       rows = data.artworks;
       total = data.total;
@@ -82,7 +89,7 @@ export default async function ConsoleArtworksPage({
           labels={labels}
           locale={locale}
           basePath={basePath}
-          searchQuery={q}
+          listQuery={{ q, sort, order }}
           rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
         />
         <ConsoleListPagination
@@ -90,7 +97,7 @@ export default async function ConsoleArtworksPage({
           page={currentPage}
           totalPages={totalPages}
           total={total}
-          q={q}
+          listQuery={{ q, sort, order }}
           labels={{
             prev: labels.paginationPrev,
             next: labels.paginationNext,

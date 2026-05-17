@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buildConsoleListQuery, type ConsoleListQueryParams } from "@/lib/consoleListQuery";
 
 /** Default page size for operator console data tables (users, artworks, …). */
 export const CONSOLE_LIST_PAGE_SIZE = 25;
@@ -6,13 +7,7 @@ export const CONSOLE_LIST_PAGE_SIZE = 25;
 /** @deprecated Use CONSOLE_LIST_PAGE_SIZE */
 export const CONSOLE_MEMBERS_PAGE_SIZE = CONSOLE_LIST_PAGE_SIZE;
 
-export function buildConsoleListQuery(params: { page?: number; q?: string }): string {
-  const sp = new URLSearchParams();
-  if (params.q?.trim()) sp.set("q", params.q.trim());
-  if (params.page != null && params.page > 1) sp.set("page", String(params.page));
-  const qs = sp.toString();
-  return qs ? `?${qs}` : "";
-}
+export { buildConsoleListQuery };
 
 type PaginationLabels = {
   prev: string;
@@ -25,14 +20,14 @@ export function ConsoleListPagination({
   page,
   totalPages,
   total,
-  q,
+  listQuery,
   labels,
 }: {
   basePath: string;
   page: number;
   totalPages: number;
   total: number;
-  q: string;
+  listQuery: ConsoleListQueryParams;
   labels: PaginationLabels;
 }) {
   if (totalPages <= 1) return null;
@@ -57,14 +52,14 @@ export function ConsoleListPagination({
       <p className="font-mono text-xs uppercase tracking-[0.18em] text-neutral-500">{pageOf}</p>
       <div className="flex items-center gap-2">
         {prevPage ? (
-          <Link href={`${basePath}${buildConsoleListQuery({ page: prevPage, q })}`} className={linkClass}>
+          <Link href={`${basePath}${buildConsoleListQuery({ ...listQuery, page: prevPage })}`} className={linkClass}>
             {labels.prev}
           </Link>
         ) : (
           <span className={disabledClass}>{labels.prev}</span>
         )}
         {nextPage ? (
-          <Link href={`${basePath}${buildConsoleListQuery({ page: nextPage, q })}`} className={linkClass}>
+          <Link href={`${basePath}${buildConsoleListQuery({ ...listQuery, page: nextPage })}`} className={linkClass}>
             {labels.next}
           </Link>
         ) : (

@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+import { ConsoleSortableTh } from "@/components/ConsoleSortableTh";
 import type { ConsoleMessages } from "@/i18n/types";
 import { artworkReviewStatusLabel } from "@/lib/artworkReviewStatusLabel";
+import type { ConsoleListQueryParams } from "@/lib/consoleListQuery";
 import type { ConsoleArtworkRow } from "@/lib/webInternal";
 
 function editionLabel(row: ConsoleArtworkRow): string {
@@ -15,16 +17,17 @@ export function ConsoleArtworksTable({
   labels,
   locale,
   basePath,
-  searchQuery,
+  listQuery,
   rowNumberStart,
 }: {
   rows: ConsoleArtworkRow[];
   labels: ConsoleMessages["artworks"];
   locale: string;
   basePath: string;
-  searchQuery: string;
+  listQuery: ConsoleListQueryParams;
   rowNumberStart: number;
 }) {
+  const searchQuery = listQuery.q ?? "";
   const dateFmt = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {
@@ -55,6 +58,8 @@ export function ConsoleArtworksTable({
             placeholder={labels.searchPlaceholder}
             className="min-w-0 flex-1 rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 outline-none transition focus:border-[#DEB892] focus:ring-1 focus:ring-[#DEB892]/40"
           />
+          {listQuery.sort ? <input type="hidden" name="sort" value={listQuery.sort} /> : null}
+          {listQuery.order ? <input type="hidden" name="order" value={listQuery.order} /> : null}
           <button
             type="submit"
             className="rounded-md border border-[#DEB892]/50 bg-[#DEB892]/15 px-4 py-2 text-sm font-medium text-neutral-800 transition hover:bg-[#DEB892]/25"
@@ -69,13 +74,13 @@ export function ConsoleArtworksTable({
           <thead>
             <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
               <th className="w-14 px-3 py-3 text-center">{labels.colNo}</th>
-              <th className="px-4 py-3">{labels.colTitle}</th>
-              <th className="px-4 py-3">{labels.colPenName}</th>
-              <th className="px-4 py-3">{labels.colGenre}</th>
-              <th className="px-4 py-3">{labels.colStatus}</th>
-              <th className="px-4 py-3">{labels.colEdition}</th>
-              <th className="px-4 py-3">{labels.colRegistered}</th>
-              <th className="px-4 py-3">{labels.colSubmissionId}</th>
+              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colTitle} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="penName" label={labels.colPenName} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="genre" label={labels.colGenre} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="status" label={labels.colStatus} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="edition" label={labels.colEdition} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="created" label={labels.colRegistered} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="id" label={labels.colSubmissionId} listQuery={listQuery} />
             </tr>
           </thead>
           <tbody>

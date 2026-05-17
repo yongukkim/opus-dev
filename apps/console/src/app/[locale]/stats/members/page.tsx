@@ -5,6 +5,8 @@ import {
 } from "@/components/ConsoleListPagination";
 import { ConsoleMembersTable } from "@/components/ConsoleMembersTable";
 import { ConsoleStatsPageShell } from "@/components/ConsoleStatsPageShell";
+import { parseConsoleListSortOrder } from "@/lib/consoleListQuery";
+import { sortMemberRows } from "@/lib/consoleListSort";
 import { devPreviewMemberRows } from "@/lib/devPreviewMembers";
 import { loadConsoleStatsPage } from "@/lib/loadConsoleStatsPage";
 import { fetchMembersForOperator } from "@/lib/webInternal";
@@ -19,13 +21,15 @@ export default async function ConsoleMembersPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ page?: string; q?: string }>;
+  searchParams: Promise<{ page?: string; q?: string; sort?: string; order?: string }>;
 }) {
   const { locale, preview, chromeUser, t, actingUserId } = await loadConsoleStatsPage(params);
   const sp = await searchParams;
   const m = t.members;
   const page = parsePage(sp.page);
   const q = sp.q?.trim() ?? "";
+  const sort = sp.sort?.trim() || undefined;
+  const order = parseConsoleListSortOrder(sp.order);
 
   let rows = devPreviewMemberRows();
   let total = rows.length;
@@ -40,17 +44,20 @@ export default async function ConsoleMembersPage({
           [r.id, r.name, r.email, r.role].some((x) => x.toLowerCase().includes(needle)),
         )
       : rows;
-    total = filtered.length;
+    const sorted = sortMemberRows(filtered, sort, order);
+    total = sorted.length;
     totalPages = Math.max(1, Math.ceil(total / CONSOLE_LIST_PAGE_SIZE));
     currentPage = Math.min(page, totalPages);
     const start = (currentPage - 1) * CONSOLE_LIST_PAGE_SIZE;
-    rows = filtered.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
+    rows = sorted.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
   } else if (actingUserId) {
     try {
       const data = await fetchMembersForOperator(actingUserId, {
         page,
         pageSize: CONSOLE_LIST_PAGE_SIZE,
         q,
+        sort,
+        order,
       });
       rows = data.users;
       total = data.total;
@@ -82,7 +89,7 @@ export default async function ConsoleMembersPage({
           labels={m}
           locale={locale}
           basePath={basePath}
-          searchQuery={q}
+          listQuery={{ q, sort, order }}
           rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
         />
         <ConsoleListPagination
@@ -90,7 +97,7 @@ export default async function ConsoleMembersPage({
           page={currentPage}
           totalPages={totalPages}
           total={total}
-          q={q}
+          listQuery={{ q, sort, order }}
           labels={{
             prev: m.paginationPrev,
             next: m.paginationNext,

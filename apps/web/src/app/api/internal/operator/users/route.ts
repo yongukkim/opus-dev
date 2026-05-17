@@ -59,6 +59,36 @@ function parsePositiveInt(raw: string | null, fallback: number, max?: number): n
   return n;
 }
 
+const USER_SORT_KEYS = new Set(["name", "email", "role", "created", "verified", "artworkCount", "id"]);
+
+function parseUserSort(
+  sortRaw: string | null,
+  orderRaw: string | null,
+): { sort: string; order: "asc" | "desc" } | null {
+  const sort = sortRaw?.trim();
+  if (!sort || !USER_SORT_KEYS.has(sort)) return null;
+  const order = orderRaw?.trim().toLowerCase() === "desc" ? "desc" : "asc";
+  return { sort, order };
+}
+
+function prismaUserOrderBy(sort: string, order: "asc" | "desc"): Prisma.UserOrderByWithRelationInput {
+  switch (sort) {
+    case "name":
+      return { name: order };
+    case "email":
+      return { email: order };
+    case "role":
+      return { role: order };
+    case "verified":
+      return { emailVerified: order };
+    case "id":
+      return { id: order };
+    case "created":
+    default:
+      return { createdAt: order };
+  }
+}
+
 /**
  * ISO 27001 A.9.2.1 / A.18.1.4 (CLAUDE.md §4, §7) — Operator-only PII listing for the dedicated console.
  * KO: 콘솔 전용 비밀·OPERATOR 검증 하에 회원 식별에 필요한 최소 필드만 페이지 단위로 반환한다.
@@ -83,7 +113,8 @@ export async function GET(req: NextRequest): Promise<Response> {
           : undefined;
 
   const q = sp.get("q")?.trim() ?? "";
-  const paginate = sp.has("page") || sp.has("pageSize") || q.length > 0;
+  const sortSpec = parseUserSort(sp.get("sort"), sp.get("order"));
+  const paginate = sp.has("page") || sp.has("pageSize") || q.length > 0 || sortSpec != null;
   const page = parsePositiveInt(sp.get("page"), 1);
   const pageSize = parsePositiveInt(sp.get("pageSize"), DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
 
@@ -127,15 +158,35 @@ export async function GET(req: NextRequest): Promise<Response> {
   const totalPages = total === 0 ? 1 : Math.max(1, Math.ceil(total / pageSize));
   const safePage = total === 0 ? 1 : Math.min(page, totalPages);
 
-  const users = await prisma.user.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    skip: (safePage - 1) * pageSize,
-    take: pageSize,
-    select,
-  });
+  let rows: OperatorUserListRow[];
 
-  const rows = enrichUserRows(users, artworkByArtistId);
+  if (sortSpec?.sort === "artworkCount") {
+    const users = await prisma.user.findMany({
+      where,
+      select,
+    });
+    rows = enrichUserRows(users, artworkByArtistId);
+    rows.sort((a, b) => {
+      const av = a.artworkCount ?? -1;
+      const bv = b.artworkCount ?? -1;
+      const cmp = av - bv;
+      return sortSpec.order === "asc" ? cmp : -cmp;
+    });
+    const start = (safePage - 1) * pageSize;
+    rows = rows.slice(start, start + pageSize);
+  } else {
+    const orderBy = sortSpec
+      ? prismaUserOrderBy(sortSpec.sort, sortSpec.order)
+      : { createdAt: "desc" as const };
+    const users = await prisma.user.findMany({
+      where,
+      orderBy,
+      skip: (safePage - 1) * pageSize,
+      take: pageSize,
+      select,
+    });
+    rows = enrichUserRows(users, artworkByArtistId);
+  }
 
   return NextResponse.json({
     ok: true,
