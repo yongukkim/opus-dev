@@ -153,6 +153,17 @@ function buildEditionCertificateTimeAnchor(
   };
 }
 
+/** Latest row per `bindingKey` (highest `version`). */
+export async function listAllEditionCertificateRecords(): Promise<EditionCertificateRecord[]> {
+  const rows = (await readAllCertificates()).filter(isRecord);
+  const byBinding = new Map<string, EditionCertificateRecord>();
+  for (const r of rows) {
+    const prev = byBinding.get(r.bindingKey);
+    if (!prev || r.version > prev.version) byBinding.set(r.bindingKey, r);
+  }
+  return [...byBinding.values()];
+}
+
 async function readAllCertificates(): Promise<EditionCertificateRecord[]> {
   try {
     const raw = await readFile(CERT_FILE, "utf8");
@@ -214,6 +225,12 @@ export function verifyEditionCertificateRecord(record: EditionCertificateRecord)
   } catch {
     return false;
   }
+}
+
+/** All valid certificate rows (operator list enrichment). */
+export async function listAllEditionCertificates(): Promise<EditionCertificateRecord[]> {
+  const rows = await readAllCertificates();
+  return rows.filter(isRecord);
 }
 
 export async function getLatestEditionCertificate(

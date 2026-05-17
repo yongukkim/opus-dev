@@ -40,7 +40,7 @@ export default async function ConsoleCertificatesPage({
     const filtered = needle
       ? rows.filter((r) =>
           [
-            r.ledgerTitle,
+            r.artworkTitle,
             r.submissionId ?? "",
             r.editionId,
             r.ownerUserId ?? "",

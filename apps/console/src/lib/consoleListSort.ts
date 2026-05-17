@@ -121,7 +121,7 @@ export function sortCertificateRows(
     let cmp = 0;
     switch (sort) {
       case "title":
-        cmp = compareStrings(a.ledgerTitle, b.ledgerTitle);
+        cmp = compareStrings(a.artworkTitle, b.artworkTitle);
         break;
       case "edition":
         cmp = a.editionNumber - b.editionNumber;

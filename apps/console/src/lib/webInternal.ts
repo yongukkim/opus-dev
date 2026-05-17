@@ -149,7 +149,8 @@ export type ConsoleProvenanceListingRow = {
 export type ConsoleIssuedEditionRow = {
   editionId: string;
   submissionId: string | null;
-  ledgerTitle: string;
+  /** Artist registration title from submissions ledger only. */
+  artworkTitle: string;
   editionNumber: number;
   editionTotal: number;
   mintedAt: string | null;

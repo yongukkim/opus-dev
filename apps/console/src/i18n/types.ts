@@ -114,7 +114,7 @@ export type ConsoleMessages = {
     paginationPrev: string;
     paginationNext: string;
     paginationPageOf: string;
-    colLedgerTitle: string;
+    colTitle: string;
     colPenName: string;
     colGenre: string;
     colStatus: string;
@@ -175,7 +175,7 @@ export type ConsoleMessages = {
     paginationPrev: string;
     paginationNext: string;
     paginationPageOf: string;
-    colLedgerTitle: string;
+    colTitle: string;
     colOwner: string;
     colEdition: string;
     colMinted: string;

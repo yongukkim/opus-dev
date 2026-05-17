@@ -78,7 +78,7 @@ export function ConsoleArtworksTable({
             <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
               <th className="w-14 px-3 py-3 text-center">{labels.colNo}</th>
               <ConsoleSortableTh basePath={basePath} column="id" label={labels.colSubmissionId} listQuery={listQuery} />
-              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colLedgerTitle} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colTitle} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="penName" label={labels.colPenName} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="genre" label={labels.colGenre} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="status" label={labels.colStatus} listQuery={listQuery} />

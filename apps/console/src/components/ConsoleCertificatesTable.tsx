@@ -78,7 +78,7 @@ export function ConsoleCertificatesTable({
             <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
               <th className="w-14 px-3 py-3 text-center">{labels.colNo}</th>
               <ConsoleSortableTh basePath={basePath} column="submission" label={labels.colSubmissionId} listQuery={listQuery} />
-              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colLedgerTitle} listQuery={listQuery} />
+              <ConsoleSortableTh basePath={basePath} column="title" label={labels.colTitle} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="owner" label={labels.colOwner} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="edition" label={labels.colEdition} listQuery={listQuery} />
               <ConsoleSortableTh basePath={basePath} column="minted" label={labels.colMinted} listQuery={listQuery} />
@@ -102,12 +102,12 @@ export function ConsoleCertificatesTable({
                   <td className="px-4 py-3 font-medium text-neutral-900">
                     {row.submissionId ? (
                       <ConsoleArtworkTitleHoverPreview
-                        title={row.ledgerTitle}
+                        title={row.artworkTitle}
                         submissionId={row.submissionId}
                         previewMode={previewMode}
                       />
                     ) : (
-                      row.ledgerTitle || "—"
+                      row.artworkTitle || "—"
                     )}
                   </td>
                   <td className="px-4 py-3 text-neutral-700">{ownerLabel(row)}</td>
