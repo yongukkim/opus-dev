@@ -1,8 +1,4 @@
-import {
-  artistRegisteredTitle,
-  buildSubmissionLinkIndexes,
-  inferSubmissionIdForEdition,
-} from "@/lib/operatorEditionSubmissionLink";
+import { artistRegisteredTitle, buildSubmissionLinkIndexes } from "@/lib/operatorEditionSubmissionLink";
 import { prisma } from "@/lib/prisma";
 
 export type OperatorIssuedEditionRow = {
@@ -31,7 +27,7 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
       mintedAt: true,
       currentOwnerUserId: true,
       artwork: {
-        select: { opusSubmissionId: true, artistUserId: true, title: true },
+        select: { opusSubmissionId: true },
       },
       currentOwner: {
         select: { id: true, name: true, email: true },
@@ -40,22 +36,12 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
   });
 
   return editions.map((e) => {
-    const submissionId =
-      e.artwork.opusSubmissionId?.trim() ||
-      inferSubmissionIdForEdition(
-        {
-          editionNumber: e.editionNumber,
-          editionTotal: e.editionTotal,
-          artistUserId: e.artwork.artistUserId,
-          opusSubmissionId: e.artwork.opusSubmissionId,
-          catalogTitle: e.artwork.title,
-        },
-        indexes,
-      );
+    /** Never guess a submission id — avoids showing another ledger's artworkTitle (e.g. stray `kk`). */
+    const submissionId = e.artwork.opusSubmissionId?.trim() || null;
     return {
       editionId: e.id,
       submissionId,
-      artworkTitle: artistRegisteredTitle(submissionId, indexes),
+      artworkTitle: submissionId ? artistRegisteredTitle(submissionId, indexes) : "",
       editionNumber: e.editionNumber,
       editionTotal: e.editionTotal,
       mintedAt: e.mintedAt?.toISOString() ?? null,
