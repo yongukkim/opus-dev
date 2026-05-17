@@ -1,6 +1,6 @@
 import { ConsoleChrome } from "@/components/ConsoleChrome";
 import {
-  CONSOLE_MEMBERS_PAGE_SIZE,
+  CONSOLE_LIST_PAGE_SIZE,
   ConsoleListPagination,
 } from "@/components/ConsoleListPagination";
 import { ConsoleMembersTable } from "@/components/ConsoleMembersTable";
@@ -41,15 +41,15 @@ export default async function ConsoleMembersPage({
         )
       : rows;
     total = filtered.length;
-    totalPages = Math.max(1, Math.ceil(total / CONSOLE_MEMBERS_PAGE_SIZE));
+    totalPages = Math.max(1, Math.ceil(total / CONSOLE_LIST_PAGE_SIZE));
     currentPage = Math.min(page, totalPages);
-    const start = (currentPage - 1) * CONSOLE_MEMBERS_PAGE_SIZE;
-    rows = filtered.slice(start, start + CONSOLE_MEMBERS_PAGE_SIZE);
+    const start = (currentPage - 1) * CONSOLE_LIST_PAGE_SIZE;
+    rows = filtered.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
   } else if (actingUserId) {
     try {
       const data = await fetchMembersForOperator(actingUserId, {
         page,
-        pageSize: CONSOLE_MEMBERS_PAGE_SIZE,
+        pageSize: CONSOLE_LIST_PAGE_SIZE,
         q,
       });
       rows = data.users;
@@ -83,7 +83,7 @@ export default async function ConsoleMembersPage({
           locale={locale}
           basePath={basePath}
           searchQuery={q}
-          rowNumberStart={(currentPage - 1) * CONSOLE_MEMBERS_PAGE_SIZE + 1}
+          rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
         />
         <ConsoleListPagination
           basePath={basePath}

@@ -1,84 +1,71 @@
 import { ConsoleChrome } from "@/components/ConsoleChrome";
-import { ConsoleSearchableTable, type ConsoleTableColumn } from "@/components/ConsoleSearchableTable";
+import { ConsoleArtworksTable } from "@/components/ConsoleArtworksTable";
+import { CONSOLE_LIST_PAGE_SIZE, ConsoleListPagination } from "@/components/ConsoleListPagination";
 import { ConsoleStatsPageShell } from "@/components/ConsoleStatsPageShell";
-import { artworkReviewStatusLabel } from "@/lib/artworkReviewStatusLabel";
 import { devPreviewArtworkRows } from "@/lib/devPreviewStatsLists";
-import { formatConsoleDate } from "@/lib/formatConsoleDate";
 import { loadConsoleStatsPage } from "@/lib/loadConsoleStatsPage";
-import { fetchArtworksForOperator, type ConsoleArtworkRow } from "@/lib/webInternal";
-import type { ConsoleMessages } from "@/i18n/types";
+import { fetchArtworksForOperator } from "@/lib/webInternal";
 
-function editionLabel(row: ConsoleArtworkRow): string {
-  if (row.editionMode === "unique") return "1/1";
-  return `${row.editionTotal} max`;
+function parsePage(raw: string | undefined): number {
+  const n = Number.parseInt(raw ?? "", 10);
+  return Number.isFinite(n) && n > 0 ? n : 1;
 }
 
-function artworkColumns(labels: ConsoleMessages["artworks"], locale: string): ConsoleTableColumn<ConsoleArtworkRow>[] {
-  return [
-    {
-      id: "title",
-      header: labels.colTitle,
-      searchValue: (r) => `${r.artworkTitle} ${r.nickname} ${r.id} ${r.genre} ${r.artistId}`,
-      cell: (r) => <span className="font-medium text-neutral-900">{r.artworkTitle || "—"}</span>,
-    },
-    {
-      id: "pen",
-      header: labels.colPenName,
-      cell: (r) => <span className="text-neutral-700">{r.nickname || "—"}</span>,
-    },
-    {
-      id: "genre",
-      header: labels.colGenre,
-      cell: (r) => <span className="text-neutral-700">{r.genre || "—"}</span>,
-    },
-    {
-      id: "status",
-      header: labels.colStatus,
-      cell: (r) => <span className="text-neutral-700">{artworkReviewStatusLabel(labels, r.reviewStatus)}</span>,
-    },
-    {
-      id: "edition",
-      header: labels.colEdition,
-      cell: (r) => <span className="text-neutral-600">{editionLabel(r)}</span>,
-    },
-    {
-      id: "created",
-      header: labels.colRegistered,
-      cell: (r) => <span className="text-neutral-600">{formatConsoleDate(locale, r.createdAt)}</span>,
-    },
-    {
-      id: "submission",
-      header: labels.colSubmissionId,
-      cell: (r) => <span className="font-mono text-xs text-neutral-500">{r.id}</span>,
-    },
-    {
-      id: "artist",
-      header: labels.colArtistId,
-      cell: (r) => <span className="font-mono text-xs text-neutral-500">{r.artistId}</span>,
-    },
-  ];
-}
-
-export default async function ConsoleArtworksPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ConsoleArtworksPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
+}) {
   const { locale, preview, chromeUser, t, actingUserId } = await loadConsoleStatsPage(params);
+  const sp = await searchParams;
   const labels = t.artworks;
   const back = t.members.backToDashboard;
+  const page = parsePage(sp.page);
+  const q = sp.q?.trim() ?? "";
 
   let rows = devPreviewArtworkRows();
   let total = rows.length;
+  let totalPages = 1;
+  let currentPage = page;
   let loadError: string | null = null;
 
-  if (!preview && actingUserId) {
+  if (preview) {
+    const needle = q.toLowerCase();
+    const filtered = needle
+      ? rows.filter((r) =>
+          [r.id, r.artworkTitle, r.nickname, r.genre, r.artistId, r.reviewStatus].some((x) =>
+            x.toLowerCase().includes(needle),
+          ),
+        )
+      : rows;
+    total = filtered.length;
+    totalPages = Math.max(1, Math.ceil(total / CONSOLE_LIST_PAGE_SIZE));
+    currentPage = Math.min(page, totalPages);
+    const start = (currentPage - 1) * CONSOLE_LIST_PAGE_SIZE;
+    rows = filtered.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
+  } else if (actingUserId) {
     try {
-      const data = await fetchArtworksForOperator(actingUserId);
+      const data = await fetchArtworksForOperator(actingUserId, {
+        page,
+        pageSize: CONSOLE_LIST_PAGE_SIZE,
+        q,
+      });
       rows = data.artworks;
       total = data.total;
+      totalPages = data.totalPages;
+      currentPage = data.page;
     } catch {
       loadError = labels.loadError;
       rows = [];
       total = 0;
+      totalPages = 1;
+      currentPage = 1;
     }
   }
+
+  const basePath = `/${locale}/stats/artworks`;
 
   return (
     <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome} langLabels={t.lang}>
@@ -90,16 +77,25 @@ export default async function ConsoleArtworksPage({ params }: { params: Promise<
         totalLine={loadError ? null : labels.totalTpl.replace("{count}", String(total))}
         loadError={loadError}
       >
-        <ConsoleSearchableTable
+        <ConsoleArtworksTable
           rows={rows}
-          columns={artworkColumns(labels, locale)}
-          rowKey={(r) => r.id}
+          labels={labels}
+          locale={locale}
+          basePath={basePath}
+          searchQuery={q}
+          rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
+        />
+        <ConsoleListPagination
+          basePath={basePath}
+          page={currentPage}
+          totalPages={totalPages}
+          total={total}
+          q={q}
           labels={{
-            searchLabel: labels.searchLabel,
-            searchPlaceholder: labels.searchPlaceholder,
-            empty: labels.empty,
+            prev: labels.paginationPrev,
+            next: labels.paginationNext,
+            pageOf: labels.paginationPageOf,
           }}
-          minWidthClass="min-w-[64rem]"
         />
       </ConsoleStatsPageShell>
     </ConsoleChrome>

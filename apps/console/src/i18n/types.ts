@@ -110,6 +110,10 @@ export type ConsoleMessages = {
     searchLabel: string;
     searchPlaceholder: string;
     empty: string;
+    colNo: string;
+    paginationPrev: string;
+    paginationNext: string;
+    paginationPageOf: string;
     colTitle: string;
     colPenName: string;
     colGenre: string;

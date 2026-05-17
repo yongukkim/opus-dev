@@ -1,5 +1,3 @@
-import { mapSubmissionsToArtworkRows } from "./consoleArtworkRows";
-
 export function requireWebOrigin(): string {
   const u = process.env["OPUS_WEB_ORIGIN"]?.trim();
   if (!u) {
@@ -153,13 +151,51 @@ export type ConsoleIssuedEditionRow = {
   mintedAt: string | null;
 };
 
-export async function fetchArtworksForOperator(actingUserId: string): Promise<{
+export type FetchArtworksForOperatorResult = {
   artworks: ConsoleArtworkRow[];
   total: number;
-}> {
-  const raw = await fetchSubmissionsForOperator(actingUserId);
-  const artworks = mapSubmissionsToArtworkRows(raw);
-  return { artworks, total: artworks.length };
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
+export async function fetchArtworksForOperator(
+  actingUserId: string,
+  options: { page?: number; pageSize?: number; q?: string } = {},
+): Promise<FetchArtworksForOperatorResult> {
+  const origin = requireWebOrigin();
+  const sp = new URLSearchParams();
+  sp.set("page", String(options.page ?? 1));
+  sp.set("pageSize", String(options.pageSize ?? 25));
+  if (options.q?.trim()) sp.set("q", options.q.trim());
+  const res = await fetch(`${origin}/api/internal/operator/artworks?${sp.toString()}`, {
+    headers: internalOperatorHeaders(actingUserId),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`artworks_list_failed:${res.status}`);
+  }
+  const body = (await res.json()) as {
+    ok?: boolean;
+    artworks?: ConsoleArtworkRow[];
+    total?: number;
+    page?: number;
+    pageSize?: number;
+    totalPages?: number;
+    error?: string;
+  };
+  if (!body?.ok || !Array.isArray(body.artworks)) {
+    throw new Error(`artworks_list_invalid:${body?.error ?? "unknown"}`);
+  }
+  const total = body.total ?? body.artworks.length;
+  const pageSize = body.pageSize ?? body.artworks.length;
+  return {
+    artworks: body.artworks,
+    total,
+    page: body.page ?? 1,
+    pageSize,
+    totalPages: body.totalPages ?? Math.max(1, Math.ceil(total / Math.max(1, pageSize))),
+  };
 }
 
 export async function fetchProvenanceListingsForOperator(

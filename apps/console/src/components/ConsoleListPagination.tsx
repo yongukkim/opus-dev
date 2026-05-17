@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-export const CONSOLE_MEMBERS_PAGE_SIZE = 25;
+/** Default page size for operator console data tables (users, artworks, …). */
+export const CONSOLE_LIST_PAGE_SIZE = 25;
+
+/** @deprecated Use CONSOLE_LIST_PAGE_SIZE */
+export const CONSOLE_MEMBERS_PAGE_SIZE = CONSOLE_LIST_PAGE_SIZE;
 
 export function buildConsoleListQuery(params: { page?: number; q?: string }): string {
   const sp = new URLSearchParams();
