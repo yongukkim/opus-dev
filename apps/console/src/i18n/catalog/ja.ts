@@ -171,7 +171,11 @@ export const ja: ConsoleMessages = {
     subtitle:
       "作家登録時ではなく運営承認時に署名認証書原簿（JSONL）へ発行されたエディションです。「原簿リンク」は DB の Artwork.opusSubmissionId が提出IDと一致するときです（一覧表示時に自動補正を試みます）。",
     loadError: "発行エディション一覧を読み込めませんでした。OPUS_WEB_ORIGIN・OPUS_INTERNAL_API_SECRET・ストアの疎通を確認してください。",
-    totalTpl: "合計 {count} 枚",
+    totalTpl: "作品 {artworks} 点 · 認証書 {certificates} 枚",
+    expandEditions: "{title} — エディションを展開",
+    collapseEditions: "{title} — エディションを折りたたむ",
+    issuedEditionsTpl: "{issued}/{total} 発行",
+    editionRowLabel: "エディション {n}",
     searchLabel: "検索",
     searchPlaceholder: "作品名 / 所有者 / 提出ID / エディションID",
     empty: "条件に一致する発行エディションがありません。",

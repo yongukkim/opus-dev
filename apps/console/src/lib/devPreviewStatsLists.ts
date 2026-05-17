@@ -70,18 +70,20 @@ export function devPreviewProvenanceFixedRows(): ConsoleProvenanceListingRow[] {
 }
 
 export function devPreviewIssuedEditionRows(): ConsoleIssuedEditionRow[] {
-  return [
-    {
-      editionId: "preview-edition-1",
-      submissionId: "preview-sub-1",
-      artworkTitle: "Moonlit Terrace",
-      linkStatus: "linked",
-      editionNumber: 1,
-      editionTotal: 10,
-      mintedAt: "2026-03-01T08:00:00.000Z",
-      ownerUserId: "preview-collector-1",
-      ownerName: "Kim Collector",
-      ownerEmail: "collector@preview.local",
-    },
-  ];
+  const submissionId = "preview-sub-1";
+  const base = {
+    submissionId,
+    artworkTitle: "Moonlit Terrace",
+    linkStatus: "linked" as const,
+    editionTotal: 3,
+    ownerUserId: "preview-collector-1",
+    ownerName: "Kim Collector",
+    ownerEmail: "collector@preview.local",
+  };
+  return [1, 2, 3].map((n) => ({
+    editionId: `preview-edition-${n}`,
+    ...base,
+    editionNumber: n,
+    mintedAt: `2026-03-0${n}T08:00:00.000Z`,
+  }));
 }

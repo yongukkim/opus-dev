@@ -168,6 +168,10 @@ export type ConsoleMessages = {
     subtitle: string;
     loadError: string;
     totalTpl: string;
+    expandEditions: string;
+    collapseEditions: string;
+    issuedEditionsTpl: string;
+    editionRowLabel: string;
     searchLabel: string;
     searchPlaceholder: string;
     empty: string;

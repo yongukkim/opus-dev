@@ -170,7 +170,11 @@ export const en: ConsoleMessages = {
     subtitle:
       "Signed edition certificates from the issuance ledger (on operator approval). “Ledger link” means DB `Artwork.opusSubmissionId` matches the submission id (auto-repair runs when you open this list).",
     loadError: "Could not load issued editions. Check OPUS_WEB_ORIGIN, OPUS_INTERNAL_API_SECRET, and storefront availability.",
-    totalTpl: "{count} issued",
+    totalTpl: "{artworks} artworks · {certificates} certificates",
+    expandEditions: "Expand editions for {title}",
+    collapseEditions: "Collapse editions for {title}",
+    issuedEditionsTpl: "{issued}/{total} issued",
+    editionRowLabel: "Edition {n}",
     searchLabel: "Search",
     searchPlaceholder: "Artwork title / owner / submission ID / edition ID",
     empty: "No issued editions match your query.",

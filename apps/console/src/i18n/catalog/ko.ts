@@ -171,7 +171,11 @@ export const ko: ConsoleMessages = {
     subtitle:
       "작가 등록이 아니라 운영 승인 시 서명 인증서 원장(JSONL)에 발행된 에디션입니다. 「원장 연결」은 DB Artwork.opusSubmissionId가 제출 ID와 일치할 때입니다(목록을 열면 자동 보정 시도).",
     loadError: "인증서(에디션) 목록을 불러오지 못했습니다. OPUS_WEB_ORIGIN·OPUS_INTERNAL_API_SECRET·스토어 가용성을 확인하세요.",
-    totalTpl: "총 {count}건",
+    totalTpl: "총 {artworks}작품 · {certificates}매 인증서",
+    expandEditions: "{title} — 에디션 펼치기",
+    collapseEditions: "{title} — 에디션 접기",
+    issuedEditionsTpl: "{issued}/{total} 발행",
+    editionRowLabel: "에디션 {n}",
     searchLabel: "검색",
     searchPlaceholder: "작품명 / 소유주 / 제출 ID / 에디션 ID",
     empty: "조건에 맞는 발행 에디션이 없습니다.",

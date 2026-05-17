@@ -161,6 +161,16 @@ export type ConsoleIssuedEditionRow = {
   ownerEmail: string | null;
 };
 
+export type ConsoleIssuedEditionGroup = {
+  submissionId: string | null;
+  artworkTitle: string;
+  linkStatus: "linked" | "unlinked";
+  editionTotal: number;
+  issuedCount: number;
+  latestMintedAt: string | null;
+  editions: ConsoleIssuedEditionRow[];
+};
+
 export type FetchArtworksForOperatorResult = {
   artworks: ConsoleArtworkRow[];
   total: number;
@@ -238,8 +248,11 @@ export async function fetchProvenanceListingsForOperator(
 }
 
 export type FetchIssuedEditionsForOperatorResult = {
-  editions: ConsoleIssuedEditionRow[];
+  groups: ConsoleIssuedEditionGroup[];
+  /** Distinct artworks (submission ids) in the filtered set. */
   total: number;
+  /** Total certificate rows across all groups. */
+  certificateTotal: number;
   page: number;
   pageSize: number;
   totalPages: number;
@@ -265,21 +278,23 @@ export async function fetchIssuedEditionsForOperator(
   }
   const body = (await res.json()) as {
     ok?: boolean;
-    editions?: ConsoleIssuedEditionRow[];
+    groups?: ConsoleIssuedEditionGroup[];
     total?: number;
+    certificateTotal?: number;
     page?: number;
     pageSize?: number;
     totalPages?: number;
     error?: string;
   };
-  if (!body?.ok || !Array.isArray(body.editions)) {
+  if (!body?.ok || !Array.isArray(body.groups)) {
     throw new Error(`issued_editions_invalid:${body?.error ?? "unknown"}`);
   }
-  const total = body.total ?? body.editions.length;
-  const pageSize = body.pageSize ?? body.editions.length;
+  const total = body.total ?? body.groups.length;
+  const pageSize = body.pageSize ?? body.groups.length;
   return {
-    editions: body.editions,
+    groups: body.groups,
     total,
+    certificateTotal: body.certificateTotal ?? total,
     page: body.page ?? 1,
     pageSize,
     totalPages: body.totalPages ?? Math.max(1, Math.ceil(total / Math.max(1, pageSize))),

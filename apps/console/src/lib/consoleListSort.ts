@@ -1,4 +1,9 @@
-import type { ConsoleArtworkRow, ConsoleIssuedEditionRow, ConsoleMemberRow } from "@/lib/webInternal";
+import type {
+  ConsoleArtworkRow,
+  ConsoleIssuedEditionGroup,
+  ConsoleIssuedEditionRow,
+  ConsoleMemberRow,
+} from "@/lib/webInternal";
 import type { ConsoleListSortOrder } from "@/lib/consoleListQuery";
 
 const ROLE_RANK: Record<ConsoleMemberRow["role"], number> = {
@@ -108,15 +113,45 @@ export function sortArtworkRows(
   return out;
 }
 
-export function sortCertificateRows(
-  rows: ConsoleIssuedEditionRow[],
+export function groupCertificateRows(rows: ConsoleIssuedEditionRow[]): ConsoleIssuedEditionGroup[] {
+  const byKey = new Map<string, ConsoleIssuedEditionRow[]>();
+  for (const row of rows) {
+    const key = row.submissionId?.trim() || `__edition:${row.editionId}`;
+    const list = byKey.get(key) ?? [];
+    list.push(row);
+    byKey.set(key, list);
+  }
+  const groups: ConsoleIssuedEditionGroup[] = [];
+  for (const [, editions] of byKey) {
+    editions.sort((a, b) => a.editionNumber - b.editionNumber);
+    const head = editions[0]!;
+    let latestMintedAt: string | null = null;
+    for (const e of editions) {
+      const m = e.mintedAt?.trim();
+      if (m && (!latestMintedAt || m > latestMintedAt)) latestMintedAt = m;
+    }
+    groups.push({
+      submissionId: head.submissionId,
+      artworkTitle: head.artworkTitle,
+      linkStatus: head.linkStatus,
+      editionTotal: head.editionTotal,
+      issuedCount: editions.length,
+      latestMintedAt,
+      editions,
+    });
+  }
+  return groups;
+}
+
+export function sortCertificateGroups(
+  groups: ConsoleIssuedEditionGroup[],
   sort: string | undefined,
   order: ConsoleListSortOrder | undefined,
-): ConsoleIssuedEditionRow[] {
+): ConsoleIssuedEditionGroup[] {
   if (!sort || !order) {
-    return [...rows].sort((a, b) => (b.mintedAt ?? "").localeCompare(a.mintedAt ?? ""));
+    return [...groups].sort((a, b) => (b.latestMintedAt ?? "").localeCompare(a.latestMintedAt ?? ""));
   }
-  const out = [...rows];
+  const out = [...groups];
   out.sort((a, b) => {
     let cmp = 0;
     switch (sort) {
@@ -124,20 +159,20 @@ export function sortCertificateRows(
         cmp = compareStrings(a.artworkTitle, b.artworkTitle);
         break;
       case "edition":
-        cmp = a.editionNumber - b.editionNumber;
+        cmp = a.issuedCount - b.issuedCount;
         if (cmp === 0) cmp = a.editionTotal - b.editionTotal;
         break;
       case "minted":
-        cmp = compareStrings(a.mintedAt ?? "", b.mintedAt ?? "");
+        cmp = compareStrings(a.latestMintedAt ?? "", b.latestMintedAt ?? "");
         break;
       case "owner": {
-        const al = a.ownerName ?? a.ownerEmail ?? "";
-        const bl = b.ownerName ?? b.ownerEmail ?? "";
+        const al = a.editions[0]?.ownerName ?? a.editions[0]?.ownerEmail ?? "";
+        const bl = b.editions[0]?.ownerName ?? b.editions[0]?.ownerEmail ?? "";
         cmp = compareStrings(al, bl);
         break;
       }
       case "editionId":
-        cmp = compareStrings(a.editionId, b.editionId);
+        cmp = compareStrings(a.editions[0]?.editionId ?? "", b.editions[0]?.editionId ?? "");
         break;
       case "submission":
         cmp = compareStrings(a.submissionId ?? "", b.submissionId ?? "");
@@ -146,7 +181,7 @@ export function sortCertificateRows(
         cmp = compareStrings(a.linkStatus, b.linkStatus);
         break;
       default:
-        cmp = compareStrings(a.mintedAt ?? "", b.mintedAt ?? "");
+        cmp = compareStrings(a.latestMintedAt ?? "", b.latestMintedAt ?? "");
     }
     return applyDir(cmp, order);
   });
