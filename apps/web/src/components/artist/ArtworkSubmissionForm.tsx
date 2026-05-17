@@ -125,16 +125,19 @@ export function ArtworkSubmissionForm({
   m,
   artistLegalName,
   artistPenName,
+  sessionUserId,
 }: {
   locale: Locale;
   m: Messages;
   artistLegalName: string;
   artistPenName: string;
+  /** Auth.js artist user id — always used in production (headers are dev-only). */
+  sessionUserId: string;
 }) {
   const s = m.submitArtwork;
 
   const [draft, setDraft] = useState<Draft>({
-    actorUserId: "artist-demo-001",
+    actorUserId: sessionUserId.trim(),
     artistName: artistLegalName.trim(),
     artistNameVisibility: "private",
     artworkTitle: "",
@@ -431,20 +434,22 @@ export function ArtworkSubmissionForm({
           </div>
         ) : null}
 
-        <div className="grid gap-4 md:grid-cols-1">
-          <div>
-            <p className={labelClass()}>Actor userId (dev)</p>
-            <input
-              name="actorUserId"
-              value={draft.actorUserId}
-              onChange={onText}
-              className={inputClass(false)}
-              autoComplete="off"
-            />
+        {process.env.NODE_ENV !== "production" ? (
+          <div className="grid gap-4 md:grid-cols-1">
+            <div>
+              <p className={labelClass()}>Actor userId (dev)</p>
+              <input
+                name="actorUserId"
+                value={draft.actorUserId}
+                onChange={onText}
+                className={inputClass(false)}
+                autoComplete="off"
+              />
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className={process.env.NODE_ENV !== "production" ? "mt-4 grid gap-4 md:grid-cols-2" : "grid gap-4 md:grid-cols-2"}>
           <div>
             <p className={labelClass()}>{s.artistNameLabel}</p>
             <input

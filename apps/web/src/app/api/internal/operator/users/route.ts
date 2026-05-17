@@ -17,7 +17,7 @@ export type OperatorUserListRow = {
   role: "collector" | "artist" | "operator";
   createdAt: string;
   emailVerified: boolean;
-  /** Submission-ledger registration count; set only when role is artist. */
+  /** Approved works (submissions ledger + Prisma); set only when role is artist. */
   artworkCount: number | null;
 };
 

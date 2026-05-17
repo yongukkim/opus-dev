@@ -73,7 +73,7 @@ export const ja: ConsoleMessages = {
     empty: "条件に一致する会員がいません。",
     colNo: "番号",
     colName: "名前",
-    colArtworkCount: "作品数",
+    colArtworkCount: "承認作品",
     colEmail: "メール",
     colRole: "役割",
     colCreated: "登録日",

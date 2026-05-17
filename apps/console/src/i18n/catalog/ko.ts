@@ -73,7 +73,7 @@ export const ko: ConsoleMessages = {
     empty: "조건에 맞는 회원이 없습니다.",
     colNo: "번호",
     colName: "이름",
-    colArtworkCount: "작품수",
+    colArtworkCount: "승인 작품",
     colEmail: "이메일",
     colRole: "역할",
     colCreated: "가입일",

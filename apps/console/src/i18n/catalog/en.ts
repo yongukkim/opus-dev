@@ -72,7 +72,7 @@ export const en: ConsoleMessages = {
     empty: "No members match your query.",
     colNo: "No.",
     colName: "Name",
-    colArtworkCount: "Works",
+    colArtworkCount: "Approved",
     colEmail: "Email",
     colRole: "Role",
     colCreated: "Joined",

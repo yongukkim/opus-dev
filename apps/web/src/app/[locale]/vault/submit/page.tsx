@@ -109,7 +109,13 @@ export default async function VaultSubmitArtworkPage({ params }: Props) {
       </div>
 
       <div className="mt-10">
-        <ArtworkSubmissionForm locale={locale} m={m} artistLegalName={session.user.name?.trim() ?? ""} artistPenName={artistPenName} />
+        <ArtworkSubmissionForm
+          locale={locale}
+          m={m}
+          artistLegalName={session.user.name?.trim() ?? ""}
+          artistPenName={artistPenName}
+          sessionUserId={session.user.id}
+        />
       </div>
     </main>
   );
