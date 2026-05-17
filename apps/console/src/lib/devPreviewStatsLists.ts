@@ -14,6 +14,7 @@ export function devPreviewArtistRows(): ConsoleMemberRow[] {
       role: "artist",
       createdAt: "2025-12-10T14:30:00.000Z",
       emailVerified: true,
+      artworkCount: 1,
     },
   ];
 }

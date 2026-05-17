@@ -47,17 +47,42 @@ export type ConsoleMemberRow = {
   role: "collector" | "artist" | "operator";
   createdAt: string;
   emailVerified: boolean;
+  artworkCount: number | null;
 };
 
 export type ConsoleUserRoleFilter = "artist" | "collector" | "operator";
 
+export type FetchUsersForOperatorOptions = {
+  role?: ConsoleUserRoleFilter;
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  /** When true, omit page params and load the full list (legacy / low-volume role filters). */
+  all?: boolean;
+};
+
+export type FetchUsersForOperatorResult = {
+  users: ConsoleMemberRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
 export async function fetchUsersForOperator(
   actingUserId: string,
-  role?: ConsoleUserRoleFilter,
-): Promise<{ users: ConsoleMemberRow[]; total: number }> {
+  options: FetchUsersForOperatorOptions = {},
+): Promise<FetchUsersForOperatorResult> {
   const origin = requireWebOrigin();
-  const qs = role ? `?role=${encodeURIComponent(role)}` : "";
-  const res = await fetch(`${origin}/api/internal/operator/users${qs}`, {
+  const sp = new URLSearchParams();
+  if (options.role) sp.set("role", options.role);
+  if (!options.all) {
+    sp.set("page", String(options.page ?? 1));
+    sp.set("pageSize", String(options.pageSize ?? 25));
+    if (options.q?.trim()) sp.set("q", options.q.trim());
+  }
+  const qs = sp.toString();
+  const res = await fetch(`${origin}/api/internal/operator/users${qs ? `?${qs}` : ""}`, {
     headers: internalOperatorHeaders(actingUserId),
     cache: "no-store",
   });
@@ -68,19 +93,30 @@ export async function fetchUsersForOperator(
     ok?: boolean;
     users?: ConsoleMemberRow[];
     total?: number;
+    page?: number;
+    pageSize?: number;
+    totalPages?: number;
     error?: string;
   };
   if (!body?.ok || !Array.isArray(body.users)) {
     throw new Error(`users_list_invalid:${body?.error ?? "unknown"}`);
   }
-  return { users: body.users, total: body.total ?? body.users.length };
+  const total = body.total ?? body.users.length;
+  const pageSize = body.pageSize ?? body.users.length;
+  return {
+    users: body.users,
+    total,
+    page: body.page ?? 1,
+    pageSize,
+    totalPages: body.totalPages ?? Math.max(1, Math.ceil(total / Math.max(1, pageSize))),
+  };
 }
 
-export async function fetchMembersForOperator(actingUserId: string): Promise<{
-  users: ConsoleMemberRow[];
-  total: number;
-}> {
-  return fetchUsersForOperator(actingUserId);
+export async function fetchMembersForOperator(
+  actingUserId: string,
+  options: Omit<FetchUsersForOperatorOptions, "role" | "all"> = {},
+): Promise<FetchUsersForOperatorResult> {
+  return fetchUsersForOperator(actingUserId, options);
 }
 
 export type ConsoleArtworkRow = {

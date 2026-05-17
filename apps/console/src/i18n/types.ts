@@ -68,7 +68,9 @@ export type ConsoleMessages = {
     searchLabel: string;
     searchPlaceholder: string;
     empty: string;
+    colNo: string;
     colName: string;
+    colArtworkCount: string;
     colEmail: string;
     colRole: string;
     colCreated: string;
@@ -80,6 +82,9 @@ export type ConsoleMessages = {
     roleArtist: string;
     roleOperator: string;
     backToDashboard: string;
+    paginationPrev: string;
+    paginationNext: string;
+    paginationPageOf: string;
   };
   artists: {
     title: string;

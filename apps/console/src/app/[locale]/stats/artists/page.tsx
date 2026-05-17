@@ -51,7 +51,7 @@ export default async function ConsoleArtistsPage({ params }: { params: Promise<{
 
   if (!preview && actingUserId) {
     try {
-      const data = await fetchUsersForOperator(actingUserId, "artist");
+      const data = await fetchUsersForOperator(actingUserId, { role: "artist", all: true });
       rows = data.users;
       total = data.total;
     } catch {
