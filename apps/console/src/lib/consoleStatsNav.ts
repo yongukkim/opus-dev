@@ -17,13 +17,14 @@ export const CONSOLE_STATS_ANCHOR = {
 export type ConsoleStatsAnchorKey = keyof typeof CONSOLE_STATS_ANCHOR;
 
 /** Left sidebar drill-downs only (dashboard still shows every KPI). */
-export const CONSOLE_STATS_SIDEBAR_KEYS = ["members", "artworks"] as const satisfies readonly ConsoleStatsAnchorKey[];
+export const CONSOLE_STATS_SIDEBAR_KEYS = ["members", "artworks", "certificates"] as const satisfies readonly ConsoleStatsAnchorKey[];
 
 export type ConsoleStatsSidebarKey = (typeof CONSOLE_STATS_SIDEBAR_KEYS)[number];
 
 export const CONSOLE_STATS_ROUTE: Record<ConsoleStatsSidebarKey, string> = {
   members: "stats/members",
   artworks: "stats/artworks",
+  certificates: "stats/certificates",
 };
 
 export type ConsoleStatsNavItem = {
@@ -35,6 +36,7 @@ export type ConsoleStatsNavItem = {
 const SIDEBAR_LABEL: Record<ConsoleStatsSidebarKey, (d: ConsoleMessages["dashboard"]) => string> = {
   members: (d) => d.statsMembersTitle,
   artworks: (d) => d.statsArtworksTitle,
+  certificates: (d) => d.statsCertificatesDataTitle,
 };
 
 export function buildConsoleStatsNavItems(

@@ -231,12 +231,26 @@ export async function fetchProvenanceListingsForOperator(
   return { listings: body.listings, total: body.total ?? body.listings.length };
 }
 
-export async function fetchIssuedEditionsForOperator(actingUserId: string): Promise<{
+export type FetchIssuedEditionsForOperatorResult = {
   editions: ConsoleIssuedEditionRow[];
   total: number;
-}> {
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
+export async function fetchIssuedEditionsForOperator(
+  actingUserId: string,
+  options: { page?: number; pageSize?: number; q?: string; sort?: string; order?: "asc" | "desc" } = {},
+): Promise<FetchIssuedEditionsForOperatorResult> {
   const origin = requireWebOrigin();
-  const res = await fetch(`${origin}/api/internal/operator/issued-editions`, {
+  const sp = new URLSearchParams();
+  sp.set("page", String(options.page ?? 1));
+  sp.set("pageSize", String(options.pageSize ?? 25));
+  if (options.q?.trim()) sp.set("q", options.q.trim());
+  if (options.sort?.trim()) sp.set("sort", options.sort.trim());
+  if (options.order) sp.set("order", options.order);
+  const res = await fetch(`${origin}/api/internal/operator/issued-editions?${sp.toString()}`, {
     headers: internalOperatorHeaders(actingUserId),
     cache: "no-store",
   });
@@ -247,12 +261,23 @@ export async function fetchIssuedEditionsForOperator(actingUserId: string): Prom
     ok?: boolean;
     editions?: ConsoleIssuedEditionRow[];
     total?: number;
+    page?: number;
+    pageSize?: number;
+    totalPages?: number;
     error?: string;
   };
   if (!body?.ok || !Array.isArray(body.editions)) {
     throw new Error(`issued_editions_invalid:${body?.error ?? "unknown"}`);
   }
-  return { editions: body.editions, total: body.total ?? body.editions.length };
+  const total = body.total ?? body.editions.length;
+  const pageSize = body.pageSize ?? body.editions.length;
+  return {
+    editions: body.editions,
+    total,
+    page: body.page ?? 1,
+    pageSize,
+    totalPages: body.totalPages ?? Math.max(1, Math.ceil(total / Math.max(1, pageSize))),
+  };
 }
 
 export async function fetchDashboardStatsForOperator(actingUserId: string): Promise<ConsoleDashboardStats> {

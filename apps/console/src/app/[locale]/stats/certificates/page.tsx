@@ -1,71 +1,78 @@
 import { ConsoleChrome } from "@/components/ConsoleChrome";
-import { ConsoleSearchableTable, type ConsoleTableColumn } from "@/components/ConsoleSearchableTable";
+import { ConsoleCertificatesTable } from "@/components/ConsoleCertificatesTable";
+import { CONSOLE_LIST_PAGE_SIZE, ConsoleListPagination } from "@/components/ConsoleListPagination";
 import { ConsoleStatsPageShell } from "@/components/ConsoleStatsPageShell";
-import type { ConsoleMessages } from "@/i18n/types";
+import { parseConsoleListSortOrder } from "@/lib/consoleListQuery";
+import { sortCertificateRows } from "@/lib/consoleListSort";
 import { devPreviewIssuedEditionRows } from "@/lib/devPreviewStatsLists";
-import { formatConsoleDate } from "@/lib/formatConsoleDate";
 import { loadConsoleStatsPage } from "@/lib/loadConsoleStatsPage";
-import { fetchIssuedEditionsForOperator, type ConsoleIssuedEditionRow } from "@/lib/webInternal";
+import { fetchIssuedEditionsForOperator } from "@/lib/webInternal";
 
-function certificateColumns(
-  labels: ConsoleMessages["certificates"],
-  locale: string,
-): ConsoleTableColumn<ConsoleIssuedEditionRow>[] {
-  return [
-    {
-      id: "title",
-      header: labels.colTitle,
-      searchValue: (r) =>
-        `${r.artworkTitle} ${r.submissionId ?? ""} ${r.editionId} ${r.editionNumber}/${r.editionTotal}`,
-      cell: (r) => <span className="font-medium text-neutral-900">{r.artworkTitle}</span>,
-    },
-    {
-      id: "edition",
-      header: labels.colEdition,
-      cell: (r) => (
-        <span className="tabular-nums text-neutral-700">
-          {r.editionNumber}/{r.editionTotal}
-        </span>
-      ),
-    },
-    {
-      id: "minted",
-      header: labels.colMinted,
-      cell: (r) => <span className="text-neutral-600">{formatConsoleDate(locale, r.mintedAt ?? "")}</span>,
-    },
-    {
-      id: "editionId",
-      header: labels.colEditionId,
-      cell: (r) => <span className="font-mono text-xs text-neutral-500">{r.editionId}</span>,
-    },
-    {
-      id: "submission",
-      header: labels.colSubmissionId,
-      cell: (r) => <span className="font-mono text-xs text-neutral-500">{r.submissionId ?? "—"}</span>,
-    },
-  ];
+function parsePage(raw: string | undefined): number {
+  const n = Number.parseInt(raw ?? "", 10);
+  return Number.isFinite(n) && n > 0 ? n : 1;
 }
 
-export default async function ConsoleCertificatesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ConsoleCertificatesPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string; q?: string; sort?: string; order?: string }>;
+}) {
   const { locale, preview, chromeUser, t, actingUserId } = await loadConsoleStatsPage(params);
+  const sp = await searchParams;
   const labels = t.certificates;
   const back = t.members.backToDashboard;
+  const page = parsePage(sp.page);
+  const q = sp.q?.trim() ?? "";
+  const sort = sp.sort?.trim() || undefined;
+  const order = parseConsoleListSortOrder(sp.order);
 
   let rows = devPreviewIssuedEditionRows();
   let total = rows.length;
+  let totalPages = 1;
+  let currentPage = page;
   let loadError: string | null = null;
 
-  if (!preview && actingUserId) {
+  if (preview) {
+    const needle = q.toLowerCase();
+    const filtered = needle
+      ? rows.filter((r) =>
+          [r.artworkTitle, r.submissionId ?? "", r.editionId, `${r.editionNumber}/${r.editionTotal}`].some((x) =>
+            x.toLowerCase().includes(needle),
+          ),
+        )
+      : rows;
+    const sorted = sortCertificateRows(filtered, sort, order);
+    total = sorted.length;
+    totalPages = Math.max(1, Math.ceil(total / CONSOLE_LIST_PAGE_SIZE));
+    currentPage = Math.min(page, totalPages);
+    const start = (currentPage - 1) * CONSOLE_LIST_PAGE_SIZE;
+    rows = sorted.slice(start, start + CONSOLE_LIST_PAGE_SIZE);
+  } else if (actingUserId) {
     try {
-      const data = await fetchIssuedEditionsForOperator(actingUserId);
+      const data = await fetchIssuedEditionsForOperator(actingUserId, {
+        page,
+        pageSize: CONSOLE_LIST_PAGE_SIZE,
+        q,
+        sort,
+        order,
+      });
       rows = data.editions;
       total = data.total;
+      totalPages = data.totalPages;
+      currentPage = data.page;
     } catch {
       loadError = labels.loadError;
       rows = [];
       total = 0;
+      totalPages = 1;
+      currentPage = 1;
     }
   }
+
+  const basePath = `/${locale}/stats/certificates`;
 
   return (
     <ConsoleChrome user={chromeUser} previewMode={preview} locale={locale} labels={t.chrome} langLabels={t.lang}>
@@ -77,16 +84,25 @@ export default async function ConsoleCertificatesPage({ params }: { params: Prom
         totalLine={loadError ? null : labels.totalTpl.replace("{count}", String(total))}
         loadError={loadError}
       >
-        <ConsoleSearchableTable
+        <ConsoleCertificatesTable
           rows={rows}
-          columns={certificateColumns(labels, locale)}
-          rowKey={(r) => r.editionId}
+          labels={labels}
+          locale={locale}
+          basePath={basePath}
+          listQuery={{ q, sort, order }}
+          rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
+        />
+        <ConsoleListPagination
+          basePath={basePath}
+          page={currentPage}
+          totalPages={totalPages}
+          total={total}
+          listQuery={{ q, sort, order }}
           labels={{
-            searchLabel: labels.searchLabel,
-            searchPlaceholder: labels.searchPlaceholder,
-            empty: labels.empty,
+            prev: labels.paginationPrev,
+            next: labels.paginationNext,
+            pageOf: labels.paginationPageOf,
           }}
-          minWidthClass="min-w-[52rem]"
         />
       </ConsoleStatsPageShell>
     </ConsoleChrome>

@@ -171,6 +171,10 @@ export type ConsoleMessages = {
     searchLabel: string;
     searchPlaceholder: string;
     empty: string;
+    colNo: string;
+    paginationPrev: string;
+    paginationNext: string;
+    paginationPageOf: string;
     colTitle: string;
     colEdition: string;
     colMinted: string;
@@ -197,6 +201,7 @@ export type ConsoleMessages = {
     statsCustodyFixedTitle: string;
     statsCustodyFixedBody: string;
     statsCustodyFixedSuffix: string;
+    statsCertificatesDataTitle: string;
     statsCertificatesTitle: string;
     statsCertificatesBody: string;
     statsCertificatesSuffix: string;

@@ -1,4 +1,4 @@
-import type { ConsoleArtworkRow, ConsoleMemberRow } from "@/lib/webInternal";
+import type { ConsoleArtworkRow, ConsoleIssuedEditionRow, ConsoleMemberRow } from "@/lib/webInternal";
 import type { ConsoleListSortOrder } from "@/lib/consoleListQuery";
 
 const ROLE_RANK: Record<ConsoleMemberRow["role"], number> = {
@@ -102,6 +102,42 @@ export function sortArtworkRows(
         break;
       default:
         cmp = compareStrings(a.createdAt, b.createdAt);
+    }
+    return applyDir(cmp, order);
+  });
+  return out;
+}
+
+export function sortCertificateRows(
+  rows: ConsoleIssuedEditionRow[],
+  sort: string | undefined,
+  order: ConsoleListSortOrder | undefined,
+): ConsoleIssuedEditionRow[] {
+  if (!sort || !order) {
+    return [...rows].sort((a, b) => (b.mintedAt ?? "").localeCompare(a.mintedAt ?? ""));
+  }
+  const out = [...rows];
+  out.sort((a, b) => {
+    let cmp = 0;
+    switch (sort) {
+      case "title":
+        cmp = compareStrings(a.artworkTitle, b.artworkTitle);
+        break;
+      case "edition":
+        cmp = a.editionNumber - b.editionNumber;
+        if (cmp === 0) cmp = a.editionTotal - b.editionTotal;
+        break;
+      case "minted":
+        cmp = compareStrings(a.mintedAt ?? "", b.mintedAt ?? "");
+        break;
+      case "editionId":
+        cmp = compareStrings(a.editionId, b.editionId);
+        break;
+      case "submission":
+        cmp = compareStrings(a.submissionId ?? "", b.submissionId ?? "");
+        break;
+      default:
+        cmp = compareStrings(a.mintedAt ?? "", b.mintedAt ?? "");
     }
     return applyDir(cmp, order);
   });
