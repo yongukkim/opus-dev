@@ -91,6 +91,7 @@ export default async function ConsoleArtworksPage({
           basePath={basePath}
           listQuery={{ q, sort, order }}
           rowNumberStart={(currentPage - 1) * CONSOLE_LIST_PAGE_SIZE + 1}
+          previewMode={preview}
         />
         <ConsoleListPagination
           basePath={basePath}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { ConsoleArtworkTitleHoverPreview } from "@/components/ConsoleArtworkTitleHoverPreview";
 import { ConsoleSortableTh } from "@/components/ConsoleSortableTh";
 import type { ConsoleMessages } from "@/i18n/types";
 import { artworkReviewStatusLabel } from "@/lib/artworkReviewStatusLabel";
@@ -19,6 +20,7 @@ export function ConsoleArtworksTable({
   basePath,
   listQuery,
   rowNumberStart,
+  previewMode,
 }: {
   rows: ConsoleArtworkRow[];
   labels: ConsoleMessages["artworks"];
@@ -26,6 +28,7 @@ export function ConsoleArtworksTable({
   basePath: string;
   listQuery: ConsoleListQueryParams;
   rowNumberStart: number;
+  previewMode: boolean;
 }) {
   const searchQuery = listQuery.q ?? "";
   const dateFmt = useMemo(
@@ -96,7 +99,13 @@ export function ConsoleArtworksTable({
                   <td className="px-3 py-3 text-center font-mono text-xs tabular-nums text-neutral-500">
                     {rowNumberStart + index}
                   </td>
-                  <td className="px-4 py-3 font-medium text-neutral-900">{row.artworkTitle || "—"}</td>
+                  <td className="px-4 py-3 font-medium text-neutral-900">
+                    <ConsoleArtworkTitleHoverPreview
+                      title={row.artworkTitle}
+                      submissionId={row.id}
+                      previewMode={previewMode}
+                    />
+                  </td>
                   <td className="px-4 py-3 text-neutral-700">{row.nickname || "—"}</td>
                   <td className="px-4 py-3 text-neutral-700">{row.genre || "—"}</td>
                   <td className="px-4 py-3 text-neutral-700">{artworkReviewStatusLabel(labels, row.reviewStatus)}</td>
