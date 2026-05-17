@@ -4,17 +4,24 @@ import type { ConsoleMessages } from "@/i18n/types";
 /** Hash targets on `/{locale}/home` — keep in sync with dashboard metric cards. */
 export const CONSOLE_STATS_SECTION_ID = "console-stats";
 
-/** Sidebar + dashboard KPI anchors (active drill-downs only). */
-export const CONSOLE_STATS_NAV_KEYS = ["members", "artworks"] as const;
-
-export type ConsoleStatsNavKey = (typeof CONSOLE_STATS_NAV_KEYS)[number];
-
-export const CONSOLE_STATS_ANCHOR: Record<ConsoleStatsNavKey, string> = {
+/** All dashboard KPI card anchors. */
+export const CONSOLE_STATS_ANCHOR = {
   members: "stats-members",
+  artists: "stats-artists",
   artworks: "stats-artworks",
-};
+  auctions: "stats-auctions",
+  custodyFixed: "stats-custody-fixed",
+  certificates: "stats-certificates",
+} as const;
 
-export const CONSOLE_STATS_ROUTE: Record<ConsoleStatsNavKey, string> = {
+export type ConsoleStatsAnchorKey = keyof typeof CONSOLE_STATS_ANCHOR;
+
+/** Left sidebar drill-downs only (dashboard still shows every KPI). */
+export const CONSOLE_STATS_SIDEBAR_KEYS = ["members", "artworks"] as const satisfies readonly ConsoleStatsAnchorKey[];
+
+export type ConsoleStatsSidebarKey = (typeof CONSOLE_STATS_SIDEBAR_KEYS)[number];
+
+export const CONSOLE_STATS_ROUTE: Record<ConsoleStatsSidebarKey, string> = {
   members: "stats/members",
   artworks: "stats/artworks",
 };
@@ -25,6 +32,11 @@ export type ConsoleStatsNavItem = {
   href: string;
 };
 
+const SIDEBAR_LABEL: Record<ConsoleStatsSidebarKey, (d: ConsoleMessages["dashboard"]) => string> = {
+  members: (d) => d.statsMembersTitle,
+  artworks: (d) => d.statsArtworksTitle,
+};
+
 export function buildConsoleStatsNavItems(
   locale: Locale,
   dashboard: ConsoleMessages["dashboard"],
@@ -32,16 +44,11 @@ export function buildConsoleStatsNavItems(
   sectionHeading: string;
   items: ConsoleStatsNavItem[];
 } {
-  const defs: { key: ConsoleStatsNavKey; label: string }[] = [
-    { key: "members", label: dashboard.statsMembersTitle },
-    { key: "artworks", label: dashboard.statsArtworksTitle },
-  ];
-
   return {
     sectionHeading: dashboard.statsSectionHeading,
-    items: defs.map(({ key, label }) => ({
+    items: CONSOLE_STATS_SIDEBAR_KEYS.map((key) => ({
       id: CONSOLE_STATS_ANCHOR[key],
-      label,
+      label: SIDEBAR_LABEL[key](dashboard),
       href: `/${locale}/${CONSOLE_STATS_ROUTE[key]}`,
     })),
   };

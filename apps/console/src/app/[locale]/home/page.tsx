@@ -131,7 +131,7 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
         <h2 className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.32em] text-[#F6F4F0]/45">
           {d.statsSectionHeading}
         </h2>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DashboardMetricCard
             id={CONSOLE_STATS_ANCHOR.members}
             title={d.statsMembersTitle}
@@ -141,11 +141,45 @@ export default async function ConsoleHomePage({ params }: { params: Promise<{ lo
             unavailableLabel={d.statsLoadError}
           />
           <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.artists}
+            title={d.statsArtistsTitle}
+            body={d.statsArtistsBody}
+            value={dashboardStats?.artistsTotal ?? null}
+            suffix={d.statsArtistsSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
             id={CONSOLE_STATS_ANCHOR.artworks}
             title={d.statsArtworksTitle}
             body={d.statsArtworksBody}
             value={dashboardStats?.artworksTotal ?? null}
             suffix={d.statsArtworksSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.auctions}
+            title={d.statsAuctionsTitle}
+            body={d.statsAuctionsBody}
+            value={dashboardStats?.provenanceAuctionsTotal ?? null}
+            suffix={d.statsAuctionsSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.custodyFixed}
+            title={d.statsCustodyFixedTitle}
+            body={d.statsCustodyFixedBody}
+            value={dashboardStats?.provenanceFixedPriceTotal ?? null}
+            suffix={d.statsCustodyFixedSuffix}
+            unavailableLabel={d.statsLoadError}
+          />
+          <DashboardMetricCard
+            id={CONSOLE_STATS_ANCHOR.certificates}
+            title={d.statsCertificatesTitle}
+            body={d.statsCertificatesBody}
+            value={dashboardStats?.certificatesIssuedTotal ?? null}
+            suffix={d.statsCertificatesSuffix}
             unavailableLabel={d.statsLoadError}
           />
         </div>
