@@ -1,5 +1,8 @@
-import { listAllEditionCertificateRecords } from "@/lib/editionCertificate";
-import { listAllSubmissions } from "@/lib/privateStorage";
+import {
+  artistRegisteredTitle,
+  buildSubmissionLinkIndexes,
+  inferSubmissionIdForEdition,
+} from "@/lib/operatorEditionSubmissionLink";
 import { prisma } from "@/lib/prisma";
 
 export type OperatorIssuedEditionRow = {
@@ -15,43 +18,8 @@ export type OperatorIssuedEditionRow = {
   ownerEmail: string | null;
 };
 
-/** Latest `artworkTitle` per submission id — sole source for operator console display. */
-async function artistRegisteredTitleBySubmissionId(): Promise<Map<string, string>> {
-  const submissions = await listAllSubmissions();
-  const map = new Map<string, string>();
-  for (const s of submissions) {
-    const title = s.artworkTitle?.trim();
-    if (title) map.set(s.id, title);
-  }
-  return map;
-}
-
-function resolveSubmissionId(
-  opusSubmissionId: string | null,
-  artistUserId: string,
-  editionNumber: number,
-  certRows: { submissionId: string; editionNumber: number }[],
-  submissionArtistById: Map<string, string>,
-): string | null {
-  if (opusSubmissionId) return opusSubmissionId;
-  const matches: string[] = [];
-  for (const c of certRows) {
-    if (c.editionNumber !== editionNumber) continue;
-    const artistId = submissionArtistById.get(c.submissionId);
-    if (artistId === artistUserId) matches.push(c.submissionId);
-  }
-  if (matches.length === 1) return matches[0]!;
-  return null;
-}
-
 export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEditionRow[]> {
-  const titleBySubmissionId = await artistRegisteredTitleBySubmissionId();
-  const submissions = await listAllSubmissions();
-  const submissionArtistById = new Map(submissions.map((s) => [s.id, s.artistId]));
-  const certRows = (await listAllEditionCertificateRecords()).map((c) => ({
-    submissionId: c.submissionId,
-    editionNumber: c.editionNumber,
-  }));
+  const indexes = await buildSubmissionLinkIndexes();
 
   const editions = await prisma.edition.findMany({
     where: { isIssued: true },
@@ -63,7 +31,7 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
       mintedAt: true,
       currentOwnerUserId: true,
       artwork: {
-        select: { opusSubmissionId: true, artistUserId: true },
+        select: { opusSubmissionId: true, artistUserId: true, title: true },
       },
       currentOwner: {
         select: { id: true, name: true, email: true },
@@ -72,18 +40,20 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
   });
 
   return editions.map((e) => {
-    const submissionId = resolveSubmissionId(
-      e.artwork.opusSubmissionId,
-      e.artwork.artistUserId,
-      e.editionNumber,
-      certRows,
-      submissionArtistById,
+    const submissionId = inferSubmissionIdForEdition(
+      {
+        editionNumber: e.editionNumber,
+        editionTotal: e.editionTotal,
+        artistUserId: e.artwork.artistUserId,
+        opusSubmissionId: e.artwork.opusSubmissionId,
+        catalogTitle: e.artwork.title,
+      },
+      indexes,
     );
-    const artworkTitle = submissionId ? (titleBySubmissionId.get(submissionId) ?? "") : "";
     return {
       editionId: e.id,
       submissionId,
-      artworkTitle,
+      artworkTitle: artistRegisteredTitle(submissionId, indexes),
       editionNumber: e.editionNumber,
       editionTotal: e.editionTotal,
       mintedAt: e.mintedAt?.toISOString() ?? null,
