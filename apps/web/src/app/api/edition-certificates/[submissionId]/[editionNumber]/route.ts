@@ -68,7 +68,12 @@ export async function GET(
 
   const verified = verifyEditionCertificateRecord(cert);
   const timeAnchorVerification = verifyEditionCertificateTimeAnchor(cert);
-  const body = { ok: true as const, verified, certificate: cert, timeAnchorVerification };
+  const ledgerTitle = submission.artworkTitle.trim();
+  const certificate =
+    ledgerTitle && ledgerTitle !== cert.artworkTitle.trim()
+      ? { ...cert, artworkTitle: ledgerTitle }
+      : cert;
+  const body = { ok: true as const, verified, certificate, timeAnchorVerification };
   const filename = `opus-edition-certificate-${submissionId}-e${editionNum}-v${cert.version}.json`;
 
   return new NextResponse(JSON.stringify(body, null, 2), {

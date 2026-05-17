@@ -103,12 +103,25 @@ export function artistTitleFromSubmissionRow(row: SubmissionJsonlRow): string {
   return t;
 }
 
+function pickFirstNonEmptyString(rows: SubmissionJsonlRow[], read: (r: SubmissionJsonlRow) => string | undefined): string {
+  for (const r of rows) {
+    const v = read(r)?.trim();
+    if (v) return v;
+  }
+  return "";
+}
+
 function pickLastNonEmptyString(rows: SubmissionJsonlRow[], read: (r: SubmissionJsonlRow) => string | undefined): string {
   for (let i = rows.length - 1; i >= 0; i -= 1) {
     const v = read(rows[i]!)?.trim();
     if (v) return v;
   }
   return "";
+}
+
+/** First append with a title wins — artist registration input is immutable on the ledger. */
+export function firstArtistArtworkTitleFromRows(rows: SubmissionJsonlRow[]): string {
+  return pickFirstNonEmptyString(rows, (r) => artistTitleFromSubmissionRow(r) || undefined);
 }
 
 function pickStoredFile(rows: SubmissionJsonlRow[]): SubmissionRecord["storedFile"] {
@@ -119,17 +132,18 @@ function pickStoredFile(rows: SubmissionJsonlRow[]): SubmissionRecord["storedFil
   return rows[rows.length - 1]!.storedFile;
 }
 
-/** Merge append-only history into one complete submission snapshot (forward scan; last non-empty wins). */
+/**
+ * Merge append-only history: artist identity from the first registration row; lifecycle fields from the latest row.
+ * KO: 작품명은 최초 등록 행만 유효하며 이후 append로 바뀌지 않습니다.
+ * JA: 作品名は初回登録行のみ有効で、以降の append では変わりません。
+ * EN: Artwork title is taken only from the first registration row and never overridden by later appends.
+ */
 export function mergeSubmissionRows(rows: SubmissionJsonlRow[]): SubmissionRecord {
   if (rows.length === 0) {
     throw new SubmissionLedgerValidationError(["id"]);
   }
   const latest = rows[rows.length - 1]!;
-  let artworkTitle = "";
-  for (const r of rows) {
-    const t = artistTitleFromSubmissionRow(r);
-    if (t) artworkTitle = t;
-  }
+  const artworkTitle = firstArtistArtworkTitleFromRows(rows);
   const tags =
     Array.isArray(latest.tags) && latest.tags.length > 0
       ? latest.tags
@@ -138,12 +152,12 @@ export function mergeSubmissionRows(rows: SubmissionJsonlRow[]): SubmissionRecor
   return {
     ...latest,
     id: latest.id.trim(),
-    createdAt: pickLastNonEmptyString(rows, (r) => r.createdAt) || latest.createdAt,
-    artistId: pickLastNonEmptyString(rows, (r) => r.artistId) || latest.artistId,
-    artistName: pickLastNonEmptyString(rows, (r) => r.artistName) || latest.artistName,
-    nickname: pickLastNonEmptyString(rows, (r) => r.nickname) || latest.nickname,
+    createdAt: pickFirstNonEmptyString(rows, (r) => r.createdAt) || latest.createdAt,
+    artistId: pickFirstNonEmptyString(rows, (r) => r.artistId) || latest.artistId,
+    artistName: pickFirstNonEmptyString(rows, (r) => r.artistName) || latest.artistName,
+    nickname: pickFirstNonEmptyString(rows, (r) => r.nickname) || latest.nickname,
     artworkTitle,
-    genre: pickLastNonEmptyString(rows, (r) => r.genre) || latest.genre,
+    genre: pickFirstNonEmptyString(rows, (r) => r.genre) || latest.genre,
     tags: tags.length > 0 ? tags : Array.isArray(latest.tags) ? latest.tags : [],
     storedFile: pickStoredFile(rows),
     editionMode: latest.editionMode === "limited" ? "limited" : "unique",
@@ -176,19 +190,13 @@ function collectMissingSubmissionFields(rec: SubmissionRecord): string[] {
   return missing;
 }
 
-async function resolveExternalArtworkTitleForSubmission(submissionId: string): Promise<string> {
+/** Canonical artist-entered title for a submission (first non-empty row in submissions.jsonl only). */
+export async function getCanonicalArtistArtworkTitle(submissionId: string): Promise<string> {
   const id = submissionId.trim();
   if (!id) return "";
-  const { listAllEditionCertificateRecords } = await import("@/lib/editionCertificate");
-  for (const c of await listAllEditionCertificateRecords()) {
-    if (c.submissionId === id && c.artworkTitle?.trim()) return c.artworkTitle.trim();
-  }
-  const { prisma } = await import("@/lib/prisma");
-  const artwork = await prisma.artwork.findFirst({
-    where: { opusSubmissionId: id },
-    select: { title: true },
-  });
-  return artwork?.title?.trim() ?? "";
+  const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
+  const history = records.filter((r) => r?.id === id);
+  return firstArtistArtworkTitleFromRows(history);
 }
 
 /**
@@ -206,10 +214,9 @@ export async function prepareSubmissionForLedgerAppend(rec: SubmissionJsonlRow):
   const priorMerged = history.length > 0 ? mergeSubmissionRows(history) : null;
 
   const rowTitle = artistTitleFromSubmissionRow(rec);
-  let artworkTitle = rowTitle || priorMerged?.artworkTitle?.trim() || "";
-  if (!artworkTitle) {
-    artworkTitle = await resolveExternalArtworkTitleForSubmission(id);
-  }
+  const firstTitle = history.length > 0 ? firstArtistArtworkTitleFromRows(history) : "";
+  /** New submission: incoming title required. Patches: always preserve first registration title. */
+  const artworkTitle = history.length === 0 ? rowTitle : firstTitle;
 
   const merged: SubmissionRecord = priorMerged
     ? {
@@ -284,12 +291,7 @@ export async function getSubmissionById(id: string): Promise<SubmissionRecord | 
   const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
   const history = records.filter((r) => r?.id === sid);
   if (history.length === 0) return null;
-  let merged = mergeSubmissionRows(history);
-  if (!merged.artworkTitle.trim()) {
-    const external = await resolveExternalArtworkTitleForSubmission(sid);
-    if (external) merged = { ...merged, artworkTitle: external };
-  }
-  return merged;
+  return mergeSubmissionRows(history);
 }
 
 export async function getSubmissionByStoredFilename(filename: string): Promise<SubmissionRecord | null> {
@@ -323,36 +325,19 @@ export async function listAllSubmissions(): Promise<SubmissionRecord[]> {
 
 /**
  * Best-effort 작품명 per submission for operator surfaces.
- * KO: append-only 원장의 모든 행에서 비어 있지 않은 제목을 모은 뒤, 없으면 발행 인증서·Prisma 등록 제목으로 보완한다.
- * JA: append-only 原簿の全行から非空タイトルを集め、無ければ発行認証書・Prisma登録タイトルで補う。
- * EN: Collect non-empty titles across all ledger lines, then fall back to issued certificate / Prisma registration title.
+ * KO: 작가 등록 원장 최초 행의 `artworkTitle`만 사용합니다(인증서·Prisma로 덮지 않음).
+ * JA: 作家登録原簿の初回行 `artworkTitle` のみを使います（認証書・Prismaで上書きしない）。
+ * EN: Use only the first artist registration `artworkTitle` in submissions.jsonl — never certificates or Prisma.
  */
 export async function buildArtworkTitleBySubmissionIdMap(): Promise<Map<string, string>> {
   const records = await readJsonl<SubmissionJsonlRow>(SUBMISSIONS_FILE);
   const map = new Map<string, string>();
   for (const r of records) {
     if (!r?.id) continue;
+    if (map.has(r.id)) continue;
     const title = artistTitleFromSubmissionRow(r);
     if (title) map.set(r.id, title);
   }
-
-  const { listAllEditionCertificateRecords } = await import("@/lib/editionCertificate");
-  for (const c of await listAllEditionCertificateRecords()) {
-    const ct = c.artworkTitle?.trim();
-    if (ct) map.set(c.submissionId, ct);
-  }
-
-  const { prisma } = await import("@/lib/prisma");
-  const linkedArtworks = await prisma.artwork.findMany({
-    where: { opusSubmissionId: { not: null } },
-    select: { opusSubmissionId: true, title: true },
-  });
-  for (const a of linkedArtworks) {
-    const sid = a.opusSubmissionId?.trim();
-    const t = a.title?.trim();
-    if (sid && t && !map.get(sid)) map.set(sid, t);
-  }
-
   return map;
 }
 
@@ -601,6 +586,31 @@ export type WithdrawArtistPendingResult =
  * JA: 審査待ち・修正依頼段階の提出のみ作家が登録取下げ可能で、所蔵履歴が変わった後は禁止します。
  * EN: Artist may withdraw registration only while pending review or changes-requested; blocked after ownership changes.
  */
+/**
+ * ISO 27001 A.12.4.1 (§5) — append full canonical snapshots (operator repair).
+ * KO: 기존 제출마다 병합된 완전 스냅샷을 원장 끝에 한 줄씩 추가해 이후 읽기·표시가 작가 최초 작품명과 일치하게 합니다.
+ * JA: 既存提出ごとに統合済み完全スナップショットを原簿末尾へ追記し、以降の表示を作家初回作品名に揃えます。
+ * EN: Append one merged full snapshot per submission so later reads use the first artist registration title.
+ */
+export async function repairCanonicalSubmissionLedgerSnapshots(dryRun: boolean): Promise<{
+  dryRun: boolean;
+  appended: number;
+  skippedEmptyTitle: number;
+}> {
+  const submissions = await listAllSubmissions();
+  let appended = 0;
+  let skippedEmptyTitle = 0;
+  for (const sub of submissions) {
+    if (!sub.artworkTitle.trim()) {
+      skippedEmptyTitle += 1;
+      continue;
+    }
+    if (!dryRun) await appendSubmission(sub);
+    appended += 1;
+  }
+  return { dryRun, appended, skippedEmptyTitle };
+}
+
 export async function withdrawArtistPendingSubmission(input: {
   submissionId: string;
   artistUserId: string;

@@ -1,9 +1,4 @@
-import {
-  artistTitleFromSubmissionRow,
-  buildArtworkTitleBySubmissionIdMap,
-  listAllSubmissions,
-  type SubmissionRecord,
-} from "@/lib/privateStorage";
+import { listAllSubmissions, type SubmissionRecord } from "@/lib/privateStorage";
 
 export type OperatorArtworkListRow = {
   id: string;
@@ -30,19 +25,11 @@ function asReviewStatus(v: unknown): OperatorArtworkListRow["reviewStatus"] {
   return "pending_review";
 }
 
-export function mapSubmissionToArtworkRow(
-  rec: SubmissionRecord,
-  titleById?: Map<string, string>,
-): OperatorArtworkListRow {
-  const resolved =
-    titleById?.get(rec.id)?.trim() ||
-    artistTitleFromSubmissionRow(rec) ||
-    rec.artworkTitle?.trim() ||
-    "";
+export function mapSubmissionToArtworkRow(rec: SubmissionRecord): OperatorArtworkListRow {
   return {
     id: rec.id,
     createdAt: rec.createdAt,
-    artworkTitle: resolved,
+    artworkTitle: rec.artworkTitle.trim(),
     nickname: rec.nickname,
     artistId: rec.artistId,
     genre: rec.genre,
@@ -53,8 +40,8 @@ export function mapSubmissionToArtworkRow(
 }
 
 export async function listOperatorArtworkRows(): Promise<OperatorArtworkListRow[]> {
-  const [submissions, titleById] = await Promise.all([listAllSubmissions(), buildArtworkTitleBySubmissionIdMap()]);
-  return submissions.map((rec) => mapSubmissionToArtworkRow(rec, titleById));
+  const submissions = await listAllSubmissions();
+  return submissions.map(mapSubmissionToArtworkRow);
 }
 
 const ARTWORK_SORT_KEYS = new Set(["title", "penName", "genre", "status", "edition", "created", "id"]);

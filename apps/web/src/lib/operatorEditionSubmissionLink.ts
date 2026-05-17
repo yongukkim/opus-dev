@@ -19,13 +19,8 @@ export type SubmissionLinkIndexes = {
   submissionById: Map<string, SubmissionRecord>;
   byArtistEditionSlot: Map<string, string[]>;
   byArtistEditionTotal: Map<string, string[]>;
-  byArtistTitle: Map<string, string[]>;
   byCertBinding: Map<string, string>;
 };
-
-function normTitle(s: string): string {
-  return s.trim().toLowerCase();
-}
 
 function slotKey(artistUserId: string, editionNumber: number, editionTotal: number): string {
   return `${artistUserId}|${editionNumber}|${editionTotal}`;
@@ -48,13 +43,10 @@ export async function buildSubmissionLinkIndexes(): Promise<SubmissionLinkIndexe
   const titleBySubmissionId = await buildArtworkTitleBySubmissionIdMap();
   const byArtistEditionSlot = new Map<string, string[]>();
   const byArtistEditionTotal = new Map<string, string[]>();
-  const byArtistTitle = new Map<string, string[]>();
 
   for (const s of submissions) {
-    const title = titleBySubmissionId.get(s.id) ?? "";
     if ((s.reviewStatus ?? "pending_review") !== "approved") continue;
     pushIndex(byArtistEditionTotal, `${s.artistId}|${s.editionTotal}`, s.id);
-    if (title) pushIndex(byArtistTitle, `${s.artistId}|${normTitle(title)}`, s.id);
   }
 
   const byCertBinding = new Map<string, string>();
@@ -71,7 +63,6 @@ export async function buildSubmissionLinkIndexes(): Promise<SubmissionLinkIndexe
     submissionById,
     byArtistEditionSlot,
     byArtistEditionTotal,
-    byArtistTitle,
     byCertBinding,
   };
 }
@@ -98,35 +89,16 @@ export function inferSubmissionIdForEdition(
   const fromBinding = uniqueCandidate(bindingCandidates);
   if (fromBinding) return fromBinding;
 
-  const aetPool = indexes.byArtistEditionTotal.get(`${ctx.artistUserId}|${ctx.editionTotal}`) ?? [];
-  const mintOk = aetPool.filter((id) => {
-    const sub = indexes.submissionById.get(id);
-    return sub != null && ctx.editionNumber <= sub.initialMint;
-  });
-  const fromMint = uniqueCandidate(mintOk);
-  if (fromMint) return fromMint;
-
-  const catalogNorm = normTitle(ctx.catalogTitle);
-  if (catalogNorm) {
-    const fromTitle = uniqueCandidate(
-      indexes.byArtistTitle.get(`${ctx.artistUserId}|${catalogNorm}`),
-    );
-    if (fromTitle) return fromTitle;
-  }
-
   return null;
 }
 
+/** Artist registration title from submissions.jsonl (first row only). */
 export function artistRegisteredTitle(
   submissionId: string | null,
   indexes: Pick<SubmissionLinkIndexes, "titleBySubmissionId">,
-  /** Prisma `Artwork.title` from artist registration at approval (not filename/catalog). */
-  registrationTitleFallback?: string,
 ): string {
   if (!submissionId) return "";
-  const fromLedger = indexes.titleBySubmissionId.get(submissionId)?.trim();
-  if (fromLedger) return fromLedger;
-  return registrationTitleFallback?.trim() ?? "";
+  return indexes.titleBySubmissionId.get(submissionId)?.trim() ?? "";
 }
 
 export type ArtworkBackfillCandidate = {

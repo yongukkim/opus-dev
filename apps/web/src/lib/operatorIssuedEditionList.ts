@@ -40,20 +40,22 @@ export async function listOperatorIssuedEditionRows(): Promise<OperatorIssuedEdi
   });
 
   return editions.map((e) => {
-    const submissionId = inferSubmissionIdForEdition(
-      {
-        editionNumber: e.editionNumber,
-        editionTotal: e.editionTotal,
-        artistUserId: e.artwork.artistUserId,
-        opusSubmissionId: e.artwork.opusSubmissionId,
-        catalogTitle: e.artwork.title,
-      },
-      indexes,
-    );
+    const submissionId =
+      e.artwork.opusSubmissionId?.trim() ||
+      inferSubmissionIdForEdition(
+        {
+          editionNumber: e.editionNumber,
+          editionTotal: e.editionTotal,
+          artistUserId: e.artwork.artistUserId,
+          opusSubmissionId: e.artwork.opusSubmissionId,
+          catalogTitle: e.artwork.title,
+        },
+        indexes,
+      );
     return {
       editionId: e.id,
       submissionId,
-      artworkTitle: artistRegisteredTitle(submissionId, indexes, e.artwork.title),
+      artworkTitle: artistRegisteredTitle(submissionId, indexes),
       editionNumber: e.editionNumber,
       editionTotal: e.editionTotal,
       mintedAt: e.mintedAt?.toISOString() ?? null,

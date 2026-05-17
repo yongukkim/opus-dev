@@ -1,7 +1,12 @@
 import { createHash, createHmac, randomBytes } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { LEDGER_FILES } from "@/lib/ledgerStores";
-import { appendJsonl, getSubmissionById, type SubmissionRecord } from "@/lib/privateStorage";
+import {
+  appendJsonl,
+  getCanonicalArtistArtworkTitle,
+  getSubmissionById,
+  type SubmissionRecord,
+} from "@/lib/privateStorage";
 
 const CERT_FILE = LEDGER_FILES.editionCertificates;
 const SCHEMA = "opus.edition_certificate.v1" as const;
@@ -276,7 +281,8 @@ export async function issueEditionCertificatesOnApproval(
   const secret = editionCertificateSecret();
   const approvedAt = submission.reviewedAt ?? new Date().toISOString();
   const artistDisplayName = (submission.nickname || submission.artistName || "").trim().slice(0, 256);
-  const title = submission.artworkTitle.trim().slice(0, 256);
+  const title = ((await getCanonicalArtistArtworkTitle(submission.id)) || submission.artworkTitle).trim().slice(0, 256);
+  if (!title) return;
 
   for (let n = 1; n <= submission.initialMint; n += 1) {
     const bindingKey = editionBindingKey(submission.id, n);
@@ -355,7 +361,8 @@ export async function reissueEditionCertificatesOnCustodyTransfer(input: {
   const secret = editionCertificateSecret();
   const approvedAt = submission.reviewedAt ?? new Date().toISOString();
   const artistDisplayName = (submission.nickname || submission.artistName || "").trim().slice(0, 256);
-  const title = submission.artworkTitle.trim().slice(0, 256);
+  const title = ((await getCanonicalArtistArtworkTitle(submission.id)) || submission.artworkTitle).trim().slice(0, 256);
+  if (!title) return;
 
   for (let n = 1; n <= submission.initialMint; n += 1) {
     const latest = await getLatestEditionCertificate(submissionId, n);

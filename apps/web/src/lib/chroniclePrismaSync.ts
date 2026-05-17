@@ -118,7 +118,8 @@ export async function syncIssuanceToPrismaAfterJsonl(
   const occurredAt = new Date(occurredAtIso);
   const occurredAtIsoNorm = occurredAt.toISOString();
   const note = issuanceNote(written);
-  const title = written.artworkTitle.trim().slice(0, 256);
+  const { getCanonicalArtistArtworkTitle } = await import("@/lib/privateStorage");
+  const title = ((await getCanonicalArtistArtworkTitle(written.id)) || written.artworkTitle).trim().slice(0, 256);
   const genre = written.genre?.trim().slice(0, 64) || null;
   const description = written.description?.trim() ? written.description.trim().slice(0, 50_000) : null;
 

@@ -160,6 +160,8 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
   }
 
   const verified = verifyEditionCertificateRecord(cert);
+  /** Display title follows submissions ledger (first artist registration), not a stale cert snapshot. */
+  const displayArtworkTitle = submission.artworkTitle.trim() || cert.artworkTitle;
   const workRegistered = formatLocaleDateTime(submission.createdAt, locale);
   const editionRegistered = formatLocaleDateTime(cert.approvedAtIso, locale);
   const issuedAt = formatLocaleDateTime(cert.issuedAtIso, locale);
@@ -197,7 +199,7 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
                 {/* eslint-disable-next-line @next/next/no-img-element -- same-origin API preview; matches collection card */}
                 <img
                   src={previewSrc}
-                  alt={cert.artworkTitle}
+                  alt={displayArtworkTitle}
                   className="h-full w-full object-cover opacity-95"
                 />
               </div>
@@ -210,7 +212,7 @@ export default async function VaultEditionCertificatePage({ params }: Props) {
               </div>
               <div className="grid gap-1 border-b border-white/[0.06] pb-3">
                 <dt className="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-opus-warm/45">{v.certificateWorkTitleLabel}</dt>
-                <dd className="text-base text-opus-warm/90">{cert.artworkTitle}</dd>
+                <dd className="text-base text-opus-warm/90">{displayArtworkTitle}</dd>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="grid gap-1">
